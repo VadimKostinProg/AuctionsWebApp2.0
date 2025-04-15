@@ -1,0 +1,110 @@
+<header>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary w-100">
+        <div class="container-fluid">
+            <a class="navbar-brand"
+               routerLink="/">BidMaster Online</a>
+            <button class="navbar-toggler"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#navbarText"
+                    aria-controls="navbarText"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse header-container"
+                 id="navbarText">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li *ngIf="user != null"
+                        class="nav-item dropdown"
+                        ngbDropdown>
+                        <a class="nav-link dropdown-toggle"
+                           id="navbarScrollingDropdown"
+                           role="button"
+                           data-bs-toggle="dropdown"
+                           aria-expanded="false"
+                           ngbDropdownToggle>
+                            Actions
+                        </a>
+                        <ul class="dropdown-menu"
+                            ngbDropdownMenu
+                            aria-labelledby="navbarScrollingDropdown">
+                            <li *ngIf="user.role == 'Admin'"
+                                ngbDropdownItem>
+                                <a class="dropdown-item"
+                                   routerLink="/auction-creation-requests-list">Auction creation requests</a>
+                            </li>
+                            <li *ngIf="user.role == 'Admin'"
+                                ngbDropdownItem>
+                                <a class="dropdown-item"
+                                   routerLink="/categories">Categories management</a>
+                            </li>
+                            <li *ngIf="user.role == 'Admin'"
+                                ngbDropdownItem>
+                                <a class="dropdown-item"
+                                   routerLink="/staff-management">Staff management</a>
+                            </li>
+
+                            <li *ngIf="user.role == 'TechnicalSupportSpecialist'"
+                                ngbDropdownItem>
+                                <a class="dropdown-item"
+                                   routerLink="/customers-management">Customers management</a>
+                            </li>
+                            <li *ngIf="user.role == 'TechnicalSupportSpecialist'"
+                                ngbDropdownItem>
+                                <a class="dropdown-item"
+                                   routerLink="/technical-support-requests">Technical support requests</a>
+                            </li>
+                            <li *ngIf="user.role == 'TechnicalSupportSpecialist'"
+                                ngbDropdownItem>
+                                <a class="dropdown-item"
+                                   routerLink="/complaints">Complaints</a>
+                            </li>
+
+                            <li *ngIf="user.role == 'Customer'"
+                                ngbDropdownItem>
+                                <a class="dropdown-item"
+                                   routerLink="/create-auction">New auction</a>
+                            </li>
+                            <li *ngIf="user.role == 'Customer'"
+                                ngbDropdownItem>
+                                <a class="dropdown-item"
+                                   routerLink="/technical-support">Technical support</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                <span class="navbar-text">
+                    <div *ngIf="user == null; else authenticatedTemplate">
+                        <a routerLink="/sign-in">Sign In</a>
+                    </div>
+
+                    <ng-template #authenticatedTemplate>
+                        <a routerLink="/profile">
+                            <i class="fa-solid fa-user"></i>
+                        </a>
+                        <a class="logout-btn"
+                           routerLink="/"
+                           (click)="onLogOutClick()">
+                            <i class="fa-solid fa-right-from-bracket"></i>
+                        </a>
+                    </ng-template>
+                </span>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<main>
+    <div class="container-fluid w-75 mt-3">
+        <router-outlet></router-outlet>
+    </div>
+</main>
+
+<footer class="border-top footer">
+    <div class="container text-center">
+        <span>
+            &copy; 2023 - BidMaster Online
+        </span>
+    </div>
+</footer>

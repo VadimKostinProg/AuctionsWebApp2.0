@@ -1,0 +1,169 @@
+<ng-container>
+    <div class=" d-flex justify-content-between">
+        <h3>Comments</h3>
+
+        <button class="add-comment-button"
+                (click)="open(commentModal)"
+                [disabled]="user && (user.role == 'Admin' || user.role == 'TechnicalSupportSpecialist')">
+            <i class="fa-solid fa-circle-plus fa-2xl"></i>
+        </button>
+    </div>
+
+    <div *ngIf="comments"
+         class="mt-3">
+        <div *ngFor="let comment of comments"
+             class="mt-1 d-flex justify-content-between">
+            <div class="comment">
+                <a class="h5"
+                   routerLink="/profile"
+                   [queryParams]="{ 'userId': comment.userId }">
+                    {{comment.username}}
+                </a>
+                <br>
+                <span>{{comment.dateAndTime}}</span>
+                <p>{{comment.commentText}}</p>
+            </div>
+
+            <ng-template #actionsPopContent>
+                <div class="actions-container">
+                    <button *ngIf="user.role == 'Customer' && comment.userId != user.userId"
+                            class="btn"
+                            (click)="openActionModal(complaintOnCommentModal, comment)">
+                        Complain
+                    </button>
+                    <button *ngIf="comment.userId == user.userId || user.role == 'TechnicalSupportSpecialist'"
+                            class="btn"
+                            (click)="openActionModal(deleteCommentModal, comment)">
+                        Delete
+                    </button>
+                </div>
+            </ng-template>
+
+            <button *ngIf="user && user.role != 'Admin'"
+                    type="button"
+                    class="btn actions-button"
+                    placement="bottom"
+                    [ngbPopover]="actionsPopContent">
+                <i class="fa-solid fa-ellipsis"></i>
+            </button>
+        </div>
+    </div>
+</ng-container>
+
+<ng-template #commentModal
+             let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title"
+            id="modal-basic-title">
+            Leave a comment
+        </h4>
+        <button type="button"
+                class="btn-close"
+                aria-label="Close"
+                (click)="modal.close()"></button>
+    </div>
+    <div class="modal-body">
+        <form *ngIf="commentForm"
+              [formGroup]="commentForm">
+            <div class="form-field flex mb-2">
+                <div>
+                    <label for="amount"
+                           class="form-label pt">Comment text:</label>
+                </div>
+
+                <div class="flex-1">
+                    <textarea id="commentText"
+                              class="form-control"
+                              formControlName="commentText"></textarea>
+                </div>
+
+                <div *ngIf="!commentText?.valid && (commentText?.dirty || commentText?.touched)">
+                    <div *ngIf="commentText?.errors?.['required']">
+                        <span class="text-danger">Comment text is required.</span>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer d-flex justify-content-between">
+        <button type="button"
+                class="btn btn-outline"
+                aria-label="Close"
+                (click)="modal.close()">Cancel</button>
+        <button type="button"
+                class="btn default-btn-background"
+                (click)="leaveComment(modal)">Submit</button>
+    </div>
+</ng-template>
+
+<ng-template #deleteCommentModal
+             let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title"
+            id="modal-basic-title">
+            Delete comment
+        </h4>
+        <button type="button"
+                class="btn-close"
+                aria-label="Close"
+                (click)="modal.close()"></button>
+    </div>
+    <div class="modal-body">
+        <span>Are you shure you want to delete comment?</span>
+    </div>
+    <div class="modal-footer d-flex justify-content-between">
+        <button type="button"
+                class="btn btn-outline"
+                aria-label="Close"
+                (click)="modal.close()">Cancel</button>
+        <button type="button"
+                class="btn default-btn-background"
+                (click)="deleteComment(modal)">Delete</button>
+    </div>
+</ng-template>
+
+<ng-template #complaintOnCommentModal
+             let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title"
+            id="modal-basic-title">
+            Complaint
+        </h4>
+        <button type="button"
+                class="btn-close"
+                aria-label="Close"
+                (click)="modal.close()"></button>
+    </div>
+    <div class="modal-body">
+        <form *ngIf="complaintForm"
+              [formGroup]="complaintForm">
+            <div class="form-field flex mb-2">
+                <div>
+                    <label for="complaint"
+                           class="form-label pt">Complaint text:</label>
+                </div>
+
+                <div class="flex-1">
+                    <textarea id="complaintText"
+                              class="form-control"
+                              formControlName="complaintText"></textarea>
+                </div>
+
+                <div *ngIf="!complaintText?.valid && (complaintText?.dirty || complaintText?.touched)">
+                    <div *ngIf="complaintText?.errors?.['required']">
+                        <span class="text-danger">Complaint text is required.</span>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer d-flex justify-content-between">
+        <button type="button"
+                class="btn btn-outline"
+                aria-label="Close"
+                (click)="modal.close()">Cancel</button>
+        <button type="button"
+                class="btn default-btn-background"
+                (click)="complainOnComment(modal)">Submit</button>
+    </div>
+</ng-template>

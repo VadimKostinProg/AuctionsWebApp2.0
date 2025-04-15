@@ -1,0 +1,38 @@
+<div class="container-fluid">
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <button class="nav-link"
+                    [ngClass]="currentType == ComplaintTypeEnum.ComplaintOnAuctionContent ? 'active' : ''"
+                    (click)="onTypeChange(ComplaintTypeEnum.ComplaintOnAuctionContent)">
+                Auctions content
+            </button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link"
+                    [ngClass]="currentType == ComplaintTypeEnum.ComplaintOnUserComment ? 'active' : ''"
+                    (click)="onTypeChange(ComplaintTypeEnum.ComplaintOnUserComment)">
+                Users comment
+            </button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link"
+                    [ngClass]="currentType == ComplaintTypeEnum.ComplaintOnUserNonPayemnt ? 'active' : ''"
+                    (click)="onTypeChange(ComplaintTypeEnum.ComplaintOnUserNonPayemnt)">
+                Payment absence
+            </button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link"
+                    [ngClass]="currentType == ComplaintTypeEnum.ComplaintOnUserNonProvidingLot ? 'active' : ''"
+                    (click)="onTypeChange(ComplaintTypeEnum.ComplaintOnUserNonProvidingLot)">
+                Delivery absence
+            </button>
+        </li>
+    </ul>
+    <div class="container-fluid border">
+        <data-table [apiUrl]="getComplaintsDataTableApiUrl()"
+                    [options]="options"
+                    (onAction)="onViewExecuted($event)">
+        </data-table>
+    </div>
+</div>

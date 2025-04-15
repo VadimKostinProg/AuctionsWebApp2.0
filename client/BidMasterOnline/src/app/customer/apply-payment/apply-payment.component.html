@@ -1,0 +1,32 @@
+<div class="margin-auto">
+    <div *ngIf="auctionDetails"
+         class="custom-form-container">
+        <div class="d-flex justify-content-between">
+            <div>
+                <div class="auction-info-container">
+                    <h3> Payment bill </h3>
+                    <span class="h5 mt-1">
+                        <b class="auction-details-property">Auction lot:</b>
+                        <a routerLink="/auction-details"
+                           [queryParams]="{ auctionId: auctionDetails.id }">
+                            {{ auctionDetails.name }}
+                        </a>
+                    </span>
+                    <span class="h5">
+                        <b class="auction-details-property">Category:</b>
+                        {{ auctionDetails.category }}
+                    </span>
+                    <span class="h5">
+                        <b class="auction-details-property">Price:</b>
+                        {{ auctionDetails.currentBid }}$
+                    </span>
+                </div>
+
+                <button class="btn default-btn-background w-100"
+                        (click)="checkout()">
+                    Pay
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

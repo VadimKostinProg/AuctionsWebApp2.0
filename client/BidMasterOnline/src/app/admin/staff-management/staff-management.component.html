@@ -1,0 +1,10 @@
+<div class="container-fluid">
+    <search-bar [placeholder]="placeholder"
+                (onSubmit)="onSearchClicked()"></search-bar>
+
+    <data-table [apiUrl]="getStaffUsersApiUrl()"
+                [options]="options"
+                (onCreate)="onUserCreate()"
+                (onDelete)="onUserDelete($event)">
+    </data-table>
+</div>

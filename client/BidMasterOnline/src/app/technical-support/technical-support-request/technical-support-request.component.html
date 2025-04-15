@@ -1,0 +1,58 @@
+<div class="margin-auto">
+    <div class="custom-form-container">
+        <div *ngIf="request">
+            <div class="row mt-2">
+                <h3 class="p-0">Technical support request</h3>
+                <div class="request-info-container mt-2">
+                    <span class="h5">
+                        <b class="complaint-details-property">Date and time:</b>
+                        {{ request.dateAndTime }}
+                    </span>
+                    <span class="h5 mt-2">
+                        <b class="complaint-details-property">User: </b>
+                        <a routerLink="/auction-details"
+                           [queryParams]="{ userId: request.userId }">
+                            {{ request.username }}
+                        </a>
+                    </span>
+                    <h5 class="mt-2"><b class="complaint-details-property">Request text:</b></h5>
+                    <span>
+                        {{ request.requestText }}
+                    </span>
+                </div>
+            </div>
+            <div class="row mt-3 button-end">
+                <button class="btn default-btn-background"
+                        (click)="open(handleRequestModal)">
+                    Handle
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #handleRequestModal
+             let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title"
+            id="modal-basic-title">
+            Handle technical support request
+        </h4>
+        <button type="button"
+                class="btn-close"
+                aria-label="Close"
+                (click)="modal.close()"></button>
+    </div>
+    <div class="modal-body">
+        <span>Are you shure you want to set this technical support request as handled?</span>
+    </div>
+    <div class="modal-footer d-flex justify-content-between">
+        <button type="button"
+                class="btn btn-outline"
+                aria-label="Close"
+                (click)="modal.close()">Cancel</button>
+        <button type="button"
+                class="btn default-btn-background"
+                (click)="handleRequest(modal)">Handle</button>
+    </div>
+</ng-template>

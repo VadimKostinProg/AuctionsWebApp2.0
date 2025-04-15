@@ -1,0 +1,10 @@
+<ng-container>
+    <div class="d-flex score-bar-container"
+         (mouseout)="activeList = []">
+        <i *ngFor="let score of allScores"
+           class="fa-solid fa-star fa-xl mr-3"
+           [ngStyle]="{ 'color': activeList.includes(score) ? '#b6d714' : '#8c8c8c' }"
+           (mouseover)="onMouseHover(score)"
+           (click)="setScore(score)"></i>
+    </div>
+</ng-container>

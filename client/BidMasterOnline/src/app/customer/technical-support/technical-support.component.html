@@ -1,0 +1,195 @@
+<div class="container-fluid">
+    <h3>Technical support</h3>
+
+    <span>What is the question you need help with?</span>
+
+    <div id="accordion">
+        <div class="card">
+            <div class="card-header"
+                 id="headingOne">
+                <h5 class="mb-0">
+                    <button class="btn btn-link"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#collapseOne"
+                            aria-expanded="false"
+                            aria-controls="collapseOne">
+                        Auctionist does not apply a delivery of the lot.
+                    </button>
+                </h5>
+            </div>
+
+            <div id="collapseOne"
+                 class="collapse"
+                 aria-labelledby="headingOne"
+                 data-bs-parent="#accordion">
+                <div class="p-3">
+                    <div *ngIf="notConfirmedAuctionsForAuctioner.length > 0; else noAuctionsForAuctioner">
+                        <h4>Complaint against the auctionist for the delivery absence.</h4>
+                        <form *ngIf="complaintOnNoDeliveryForm"
+                              [formGroup]="complaintOnNoDeliveryForm"
+                              class="w-50">
+                            <div class="form-field flex mb-2">
+                                <div>
+                                    <label for="auctionIdNoDelivery"
+                                           class="form-label pt">Auction:</label>
+                                </div>
+
+                                <div class="flex-1">
+                                    <select class="form-control"
+                                            formControlName="auctionIdNoDelivery">
+                                        <option *ngFor="let auction of notConfirmedAuctionsForAuctioner"
+                                                [value]="auction.id">
+                                            {{ auction.name }}
+                                        </option>
+                                    </select>
+                                </div>
+
+                                <div
+                                     *ngIf="!auctionIdNoDelivery?.valid && (auctionIdNoDelivery?.dirty || auctionIdNoDelivery?.touched)">
+                                    <span class="text-danger">Auction is required.</span>
+                                </div>
+                            </div>
+
+                            <div class="form-field flex mb-2">
+                                <div>
+                                    <label for="complaintTextNoDelivery"
+                                           class="form-label pt">Complaint text:</label>
+                                </div>
+
+                                <div class="flex-1">
+                                    <textarea class="form-control"
+                                              formControlName="complaintTextNoDelivery"></textarea>
+                                </div>
+
+                                <div
+                                     *ngIf="!complaintTextNoDelivery?.valid && (complaintTextNoDelivery?.dirty || complaintTextNoDelivery?.touched)">
+                                    <span class="text-danger">Complaint text is required.</span>
+                                </div>
+                            </div>
+                        </form>
+
+                        <button class="btn default-btn-background mt-3 "
+                                (click)="sendComplaintOnNoDelivery()">Submit</button>
+                    </div>
+
+                    <ng-template #noAuctionsForAuctioner>
+                        <span>You have not won any auction where auctionist had not applyed delivery.</span>
+                    </ng-template>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header"
+                 id="headingTwo">
+                <h5 class="mb-0">
+                    <button class="btn btn-link collapsed"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#collapseTwo"
+                            aria-expanded="false"
+                            aria-controls="collapseTwo">
+                        Winner of my auction does not pay for the lot.
+                    </button>
+                </h5>
+            </div>
+            <div id="collapseTwo"
+                 class="collapse"
+                 aria-labelledby="headingTwo"
+                 data-bs-parent="#accordion">
+                <div class="p-3">
+                    <div *ngIf="notConfirmedAuctionsForAuctionist.length > 0; else noAuctionsForAuctionist">
+                        <h4>Complaint against the auction winner for the payment absence.</h4>
+                        <form *ngIf="complaintOnNoPaymentForm"
+                              [formGroup]="complaintOnNoPaymentForm"
+                              class="w-50">
+                            <div class="form-field flex mb-2">
+                                <div>
+                                    <label for="auctionIdNoPayment"
+                                           class="form-label pt">Auction:</label>
+                                </div>
+
+                                <div class="flex-1">
+                                    <select class="form-control"
+                                            formControlName="auctionIdNoPayment">
+                                        <option *ngFor="let auction of notConfirmedAuctionsForAuctionist"
+                                                [value]="auction.id">
+                                            {{ auction.name }}
+                                        </option>
+                                    </select>
+                                </div>
+
+                                <div
+                                     *ngIf="!auctionIdNoPayment?.valid && (auctionIdNoPayment?.dirty || auctionIdNoPayment?.touched)">
+                                    <span class="text-danger">Auction is required.</span>
+                                </div>
+                            </div>
+
+                            <div class="form-field flex mb-2">
+                                <div>
+                                    <label for="complaintTextNoPayment"
+                                           class="form-label pt">Complaint text:</label>
+                                </div>
+
+                                <div class="flex-1">
+                                    <textarea class="form-control"
+                                              formControlName="complaintTextNoPayment"></textarea>
+                                </div>
+
+                                <div
+                                     *ngIf="!complaintTextNoPayment?.valid && (complaintTextNoPayment?.dirty || complaintTextNoPayment?.touched)">
+                                    <span class="text-danger">Complaint text is required.</span>
+                                </div>
+                            </div>
+                        </form>
+
+                        <button class="btn default-btn-background mt-3 "
+                                (click)="sendComplaintOnNoPayment()">Submit</button>
+                    </div>
+
+                    <ng-template #noAuctionsForAuctionist>
+                        <span>You have not had any auctions where winner had not applyed payment.</span>
+                    </ng-template>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header"
+                 id="headingThree">
+                <h5 class="mb-0">
+                    <button class="btn btn-link collapsed"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#collapseThree"
+                            aria-expanded="false"
+                            aria-controls="collapseThree">
+                        Other question.
+                    </button>
+                </h5>
+            </div>
+            <div id="collapseThree"
+                 class="collapse"
+                 aria-labelledby="headingThree"
+                 data-bs-parent="#accordion">
+                <div class="p-3">
+                    <span>If you have other question not related to auctions payment and deliveyr please send the
+                        technical
+                        support request here:</span>
+                    <form *ngIf="requestForm"
+                          [formGroup]="requestForm">
+                        <div class="form-field flex mb-2">
+                            <div class="flex-1">
+                                <textarea class="form-control"
+                                          formControlName="requestText"></textarea>
+                            </div>
+
+                            <div *ngIf="!requestText?.valid && (requestText?.dirty || requestText?.touched)">
+                                <span class="text-danger">Complaint text is required.</span>
+                            </div>
+                        </div>
+                    </form>
+
+                    <button class="btn default-btn-background mt-3"
+                            (click)="sendTechnicalSupportRequest()">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,18 @@
+version: '3.4'
+
+services:
+  bidmasteronline.api:
+    image: ${DOCKER_REGISTRY-}bidmasteronlineapi
+    build:
+      context: .
+      dockerfile: BidMasterOnline.API/Dockerfile
+
+  auctionsdb:
+    image: mcr.microsoft.com/mssql/server:2017-latest
+
+  client:
+    image: ${DOCKER_REGISTRY-}client
+    build:
+      context: ../../client/BidMasterOnline
+      dockerfile: Dockerfile
+      

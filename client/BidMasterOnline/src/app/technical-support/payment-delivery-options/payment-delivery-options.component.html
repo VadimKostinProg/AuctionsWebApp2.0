@@ -1,0 +1,103 @@
+<div *ngIf="paymentDeliveryOptions"
+     class="container-fluid">
+    <h4>Auctions payment and delivery options</h4>
+    <span *ngIf="paymentDeliveryOptions.winner; else noWinnersMessage"
+          class="h5">
+        <b class="auction-details-property">Winner:</b>
+        <a routerLink="/profile"
+           [queryParams]="{ userId: paymentDeliveryOptions.winnerId }">
+            {{ paymentDeliveryOptions.winner }}
+        </a>
+    </span>
+    <ng-template #noWinnersMessage>
+        <span>Auction has no winners.</span>
+    </ng-template>
+    <table class="table table-bordered mt-3">
+        <tr>
+            <th></th>
+            <th>Payment options</th>
+            <th>Delivery options</th>
+        </tr>
+        <tr>
+            <td>Set</td>
+            <td>
+                <i *ngIf="paymentDeliveryOptions.arePaymentOptionsSet"
+                   class="fa-regular fa-circle-check fa-xl"
+                   style="color: #94ef0b;"></i>
+                <i *ngIf="!paymentDeliveryOptions.arePaymentOptionsSet"
+                   class="fa-solid fa-xmark fa-xl"
+                   style="color: #ff2424;"></i>
+            </td>
+            <td>
+                <i *ngIf="paymentDeliveryOptions.areDeliveryOptionsSet"
+                   class="fa-regular fa-circle-check fa-xl"
+                   style="color: #94ef0b;"></i>
+                <i *ngIf="!paymentDeliveryOptions.areDeliveryOptionsSet"
+                   class="fa-solid fa-xmark fa-xl"
+                   style="color: #ff2424;"></i>
+            </td>
+        </tr>
+        <tr>
+            <td>Set date and time</td>
+            <td>
+                {{ paymentDeliveryOptions.paymentOptionsSetDateTime }}
+            </td>
+            <td>
+                {{ paymentDeliveryOptions.deliveryOptionsSetDateTime }}
+            </td>
+        </tr>
+        <tr>
+            <td>Options</td>
+            <td>
+                <div *ngIf="paymentDeliveryOptions.arePaymentOptionsSet"
+                     class="d-flex flex-column justify-content-between">
+                    <span class="h5">
+                        <b>IBAN: {{ paymentDeliveryOptions.iban }}</b>
+                    </span>
+                </div>
+            </td>
+            <td>
+                <div *ngIf="paymentDeliveryOptions.areDeliveryOptionsSet"
+                     class="d-flex flex-column justify-content-between">
+                    <span class="h5">
+                        <b>Country: {{ paymentDeliveryOptions.country }}</b>
+                    </span>
+                    <span class="h5">
+                        <b>City: {{ paymentDeliveryOptions.city }}</b>
+                    </span>
+                    <span class="h5">
+                        <b>ZIP code: {{ paymentDeliveryOptions.zipCode }}</b>
+                    </span>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>Confirmed</td>
+            <td>
+                <i *ngIf="paymentDeliveryOptions.isPaymentConfirmed"
+                   class="fa-regular fa-circle-check fa-xl"
+                   style="color: #94ef0b;"></i>
+                <i *ngIf="!paymentDeliveryOptions.isPaymentConfirmed"
+                   class="fa-solid fa-xmark fa-xl"
+                   style="color: #ff2424;"></i>
+            </td>
+            <td>
+                <i *ngIf="paymentDeliveryOptions.isDeliveryConfirmed"
+                   class="fa-regular fa-circle-check fa-xl"
+                   style="color: #94ef0b;"></i>
+                <i *ngIf="!paymentDeliveryOptions.isDeliveryConfirmed"
+                   class="fa-solid fa-xmark fa-xl"
+                   style="color: #ff2424;"></i>
+            </td>
+        </tr>
+        <tr>
+            <td>Confirmation date and time</td>
+            <td>
+                {{ paymentDeliveryOptions.paymentConfirmationDateTime }}
+            </td>
+            <td>
+                {{ paymentDeliveryOptions.deliveryConfirmationDateTime }}
+            </td>
+        </tr>
+    </table>
+</div>
