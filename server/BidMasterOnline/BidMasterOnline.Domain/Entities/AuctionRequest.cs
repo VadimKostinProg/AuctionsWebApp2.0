@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace BidMasterOnline.Domain.Entities
 {
-    public class Auction : EntityBase
+    public class AuctionRequest : EntityBase
     {
         public long AuctionCategoryId { get; set; }
 
@@ -11,9 +11,7 @@ namespace BidMasterOnline.Domain.Entities
 
         public long AuctionFinishMethodId { get; set; }
 
-        public long AuctionistId { get; set; }
-
-        public long? WinnerId { get; set; }
+        public long RequestedByUserId { get; set; }
 
         [MaxLength(500)]
         public required string LotTitle { get; set; }
@@ -21,23 +19,20 @@ namespace BidMasterOnline.Domain.Entities
         [MaxLength(5000)]
         public required string LotDescription { get; set; }
 
-        public DateTime StartTime { get; set; }
+        // ASAP if null
+        public DateTime? RequestedStartTime { get; set; }
 
-        public DateTime? FinishTime { get; set; }
+        public decimal StartPrice { get; set; }
 
         public long? FinishTimeIntervalInTicks { get; set; }
 
         public decimal BidAmountInterval { get; set; }
 
-        public decimal CurrentPrice { get; set; }
+        public AuctionRequestStatus Status { get; set; }
 
-        public double AverageScore { get; set; }
+        public string? ReasonDeclined { get; set; }
 
-        public AuctionStatus Status { get; set; }
-
-        public User? Auctionist { get; set; }
-
-        public User? Winner { get; set; }
+        public User? RequestedByUser { get; set; }
 
         public AuctionCategory? Category { get; set; }
 
@@ -46,7 +41,5 @@ namespace BidMasterOnline.Domain.Entities
         public AuctionFinishMethod? FinishMechanism { get; set; }
 
         public ICollection<AuctionImage>? Images { get; set; }
-
-        public ICollection<Bid>? Bids { get; set; }
     }
 }

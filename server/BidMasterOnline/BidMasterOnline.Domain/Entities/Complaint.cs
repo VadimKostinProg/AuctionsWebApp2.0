@@ -1,38 +1,35 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using BidMasterOnline.Domain.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace BidMasterOnline.Domain.Entities
 {
     public class Complaint : EntityBase
     {
-        public Guid AccusingUserId { get; set; }
+        public long AccusingUserId { get; set; }
 
-        public Guid AccusedUserId { get; set; }
+        public long? AccusedUserId { get; set; }
 
-        public Guid AuctionId { get; set; }
+        public long? AccusedAuctionId { get; set; }
 
-        public Guid? CommentId { get; set; }
+        public long? AccusedCommentId { get; set; }
 
-        public Guid ComplaintTypeId { get; set; }
+        public long? ModeratorId { get; set; }
 
-        public DateTime DateAndTime { get; set; }
-
+        [MaxLength(5000)]
         public required string ComplaintText { get; set; }
 
-        public bool IsHandled { get; set; }
+        public ComplaintType Type { get; set; }
 
-        [ForeignKey(nameof(AccusedUserId))]
-        public User? AccusedUser { get; set; }
+        public ComplaintStatus Status { get; set; }
 
-        [ForeignKey(nameof(AccusingUserId))]
+        public User? Moderator { get; set; }
+
         public User? AccusingUser { get; set; }
 
-        [ForeignKey(nameof(AuctionId))]
-        public Auction? Auction { get; set; }
+        public User? AccusedUser { get; set; }
 
-        [ForeignKey(nameof(CommentId))]
-        public AuctionComment? Comment { get; set; }
+        public Auction? AccusedAuction { get; set; }
 
-        [ForeignKey(nameof(ComplaintTypeId))]
-        public ComplaintType? ComplaintType { get; set; }
+        public AuctionComment? AccusedComment { get; set; }
     }
 }

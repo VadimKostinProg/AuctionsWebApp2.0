@@ -2,7 +2,9 @@
 {
     public class AuctionImage : EntityBase
     {
-        public Guid AuctionId { get; set; }
+        public long? AuctionId { get; set; }
+
+        public long? AuctionRequestId { get; set; }
 
         public required string Url { get; set; }
 

@@ -1,10 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using BidMasterOnline.Domain.Enums;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BidMasterOnline.Domain.Entities
 {
     public class User : EntityBase
     {
+        public long RoleId { get; set; }
+
         [MaxLength(30)]
         public required string Username { get; set; }
         
@@ -24,18 +27,14 @@ namespace BidMasterOnline.Domain.Entities
 
         public DateTime? UnblockDateTime { get; set; }
 
-        public Guid RoleId { get; set; }
+        public double AverageScore { get; set; }
 
-        public Guid UserStatusId { get; set; }
+        public UserStatus Status { get; set; }
 
         public string? ImageUrl { get; set; }
 
         public string? ImagePublicId { get; set; }
 
-        [ForeignKey(nameof(RoleId))]
         public Role? Role { get; set; }
-
-        [ForeignKey(nameof(UserStatusId))]
-        public UserStatus? UserStatus { get; set; }
     }
 }

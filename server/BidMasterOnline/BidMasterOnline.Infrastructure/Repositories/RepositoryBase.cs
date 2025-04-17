@@ -33,7 +33,7 @@ namespace BidMasterOnline.Infrastructure.Repositories
         public virtual Task<int> CountAsync<T>(Expression<Func<T, bool>> predicate) where T : EntityBase
             => context.Set<T>().CountAsync(predicate);
 
-        public virtual async Task DeleteAsync<T>(Guid id) where T : EntityBase
+        public virtual async Task DeleteAsync<T>(long id) where T : EntityBase
         {
             await context.Set<T>().Where(x => x.Id == id).ExecuteDeleteAsync();
         }
@@ -91,7 +91,7 @@ namespace BidMasterOnline.Infrastructure.Repositories
             return Task.FromResult(query);
         }
 
-        public virtual async Task<T?> GetByIdAsync<T>(Guid id, bool disableTracking = false) where T : EntityBase
+        public virtual async Task<T?> GetByIdAsync<T>(long id, bool disableTracking = false) where T : EntityBase
         {
             var query = context.Set<T>().AsQueryable();
 

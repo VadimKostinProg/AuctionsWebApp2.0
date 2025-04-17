@@ -1,5 +1,4 @@
-﻿using BidMasterOnline.Application.Constants;
-using BidMasterOnline.Domain.Entities;
+﻿using BidMasterOnline.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace BidMasterOnline.Infrastructure.DatabaseContext
@@ -7,20 +6,21 @@ namespace BidMasterOnline.Infrastructure.DatabaseContext
     public class ApplicationContext : DbContext
     {
         public virtual DbSet<Auction> Auctions { get; set; }
-        public virtual DbSet<AuctionFinishType> AuctionFinishTypes { get; set; }
-        public virtual DbSet<AuctionStatus> AuctionStatuses { get; set; }
-        public virtual DbSet<AuctionScore> AuctionScores { get; set; }
+        public virtual DbSet<AuctionRequest> AuctionRequests { get; set; }
+        public virtual DbSet<AuctionCategory> Categories { get; set; }
+        public virtual DbSet<AuctionType> AuctionTypes { get; set; }
+        public virtual DbSet<AuctionFinishMethod> AuctionFinishMethods { get; set; }
         public virtual DbSet<AuctionImage> AuctionImages { get; set; }
-        public virtual DbSet<AuctionPaymentDeliveryOptions> AuctionPaymentDeliveryOptions { get; set; }
         public virtual DbSet<Bid> Bids { get; set; }
-        public virtual DbSet<Category> Categories { get; set; }
         public virtual DbSet<AuctionComment> Comments { get; set; }
         public virtual DbSet<Complaint> Complaints { get; set; }
-        public virtual DbSet<ComplaintType> ComplaintTypes { get; set; }
         public virtual DbSet<Role> Roles { get; set; }
         public virtual DbSet<TechnicalSupportRequest> TechnicalSupportRequests { get; set; }
         public virtual DbSet<User> Users { get; set; }
-        public virtual DbSet<UserStatus> UserStatuses { get; set; }
+        public virtual DbSet<WatchList> WatchLists { get; set; }
+        public virtual DbSet<Payment> Payments { get; set; }
+        public virtual DbSet<Delivery> Deliveries { get; set; }
+        public virtual DbSet<ModerationLog> ModerationLogs { get; set; }
 
         public ApplicationContext(DbContextOptions options) : base(options)
         {
@@ -30,79 +30,206 @@ namespace BidMasterOnline.Infrastructure.DatabaseContext
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Auction>().ToTable("Auctions");
-            modelBuilder.Entity<AuctionFinishType>().ToTable("AuctionFinishTypes");
-            modelBuilder.Entity<AuctionStatus>().ToTable("AuctionStatuses");
-            modelBuilder.Entity<AuctionScore>().ToTable("AuctionScores");
-            modelBuilder.Entity<AuctionImage>().ToTable("AuctionImages");
-            modelBuilder.Entity<AuctionPaymentDeliveryOptions>().ToTable("AuctionPaymentDeliveryOptions");
-            modelBuilder.Entity<Bid>().ToTable("Bids");
-            modelBuilder.Entity<Category>().ToTable("Categories");
-            modelBuilder.Entity<AuctionComment>().ToTable("Comments");
-            modelBuilder.Entity<Complaint>().ToTable("Complaints");
-            modelBuilder.Entity<ComplaintType>().ToTable("ComplaintTypes");
-            modelBuilder.Entity<Role>().ToTable("Roles");
-            modelBuilder.Entity<TechnicalSupportRequest>().ToTable("TechnicalSupportRequests");
-            modelBuilder.Entity<User>().ToTable("Users");
-            modelBuilder.Entity<UserStatus>().ToTable("UserStatuses");
-
-            // Seed Data 
-            modelBuilder.Entity<Role>().HasData(new List<Role>
+            modelBuilder.Entity<User>(options =>
             {
-                new Role { Name = UserRoles.Customer },
-                new Role { Name = UserRoles.Admin },
-                new Role { Name = UserRoles.TechnicalSupportSpecialist },
+                options.HasMany<UserFeedback>()
+                    .WithOne()
+                    .HasForeignKey(uf => uf.FromUserId);
+
+                options.HasMany<UserFeedback>()
+                    .WithOne()
+                    .HasForeignKey(uf => uf.ToUserId);
+
+                options.HasOne(x => x.Role)
+                    .WithMany()
+                    .HasForeignKey(u => u.RoleId);
+
+                options.HasMany<WatchList>()
+                    .WithOne()
+                    .HasForeignKey(wl => wl.UserId);
+
+                options.HasMany<Bid>()
+                    .WithOne(b => b.Bidder)
+                    .HasForeignKey(b => b.BidderId);
+
+                options.HasMany<AuctionComment>()
+                    .WithOne(c => c.User)
+                    .HasForeignKey(c => c.UserId);
             });
 
-            modelBuilder.Entity<UserStatus>().HasData(new List<UserStatus>
+            modelBuilder.Entity<Auction>(options =>
             {
-                new UserStatus { Name = Application.Enums.UserStatus.Active.ToString() },
-                new UserStatus { Name = Application.Enums.UserStatus.Blocked.ToString() },
-                new UserStatus { Name = Application.Enums.UserStatus.Deleted.ToString() }
+                options.HasOne(a => a.Category)
+                    .WithMany()
+                    .HasForeignKey(a => a.AuctionCategoryId);
+
+                options.HasOne(a => a.Type)
+                    .WithMany()
+                    .HasForeignKey(a => a.AuctionTypeId);
+
+                options.HasOne(a => a.FinishMechanism)
+                    .WithMany()
+                    .HasForeignKey(a => a.AuctionFinishMethodId);
+
+                options.HasOne(a => a.Auctionist)
+                    .WithMany()
+                    .HasForeignKey(a => a.AuctionistId);
+
+                options.HasOne(a => a.Winner)
+                    .WithMany()
+                    .HasForeignKey(a => a.WinnerId);
+
+                options.HasMany(a => a.Bids)
+                    .WithOne()
+                    .HasForeignKey(b => b.AuctionId);
+
+                options.HasMany(a => a.Images)
+                    .WithOne()
+                    .HasForeignKey(i => i.AuctionId);
+
+                options.HasMany<WatchList>()
+                    .WithOne(wl => wl.Auction)
+                    .HasForeignKey(wl => wl.AuctionId);
+
+                options.HasMany<Bid>()
+                    .WithOne(b => b.Auction)
+                    .HasForeignKey(b => b.AuctionId);
+
+                options.HasMany<AuctionComment>()
+                    .WithOne(c => c.Auction)
+                    .HasForeignKey(c => c.AuctionId);
             });
 
-            modelBuilder.Entity<AuctionStatus>().HasData(new List<AuctionStatus>
+            modelBuilder.Entity<AuctionRequest>(options =>
             {
-                new AuctionStatus { Name = Application.Enums.AuctionStatus.Active.ToString() },
-                new AuctionStatus { Name = Application.Enums.AuctionStatus.Canceled.ToString() },
-                new AuctionStatus { Name = Application.Enums.AuctionStatus.Finished.ToString() }
+                options.HasOne(ar => ar.Category)
+                    .WithMany()
+                    .HasForeignKey(ar => ar.AuctionCategoryId);
+
+                options.HasOne(ar => ar.Type)
+                    .WithMany()
+                    .HasForeignKey(ar => ar.AuctionTypeId);
+
+                options.HasOne(ar => ar.FinishMechanism)
+                    .WithMany()
+                    .HasForeignKey(ar => ar.AuctionFinishMethodId);
+
+                options.HasOne(ar => ar.RequestedByUser)
+                    .WithMany()
+                    .HasForeignKey(ar => ar.RequestedByUserId);
+
+                options.HasMany(ar => ar.Images)
+                    .WithOne()
+                    .HasForeignKey(i => i.AuctionRequestId);
             });
 
-            modelBuilder.Entity<AuctionFinishType>().HasData(new List<AuctionFinishType>
+            modelBuilder.Entity<Complaint>(options =>
             {
-                new AuctionFinishType
+                options.HasOne(c => c.AccusingUser)
+                    .WithMany()
+                    .HasForeignKey(c => c.AccusingUserId);
+
+                options.HasOne(c => c.AccusedUser)
+                    .WithMany()
+                    .HasForeignKey(c => c.AccusedUserId);
+
+                options.HasOne(c => c.AccusedAuction)
+                    .WithMany()
+                    .HasForeignKey(c => c.AccusedAuctionId);
+
+                options.HasOne(c => c.AccusedComment)
+                    .WithMany()
+                    .HasForeignKey(c => c.AccusedCommentId);
+
+                options.HasOne(c => c.Moderator)
+                    .WithMany()
+                    .HasForeignKey(c => c.ModeratorId);
+            });
+
+            modelBuilder.Entity<TechnicalSupportRequest>(options =>
+            {
+                options.HasOne(tsr => tsr.User)
+                    .WithMany()
+                    .HasForeignKey(tsr => tsr.UserId);
+
+                options.HasOne(tsr => tsr.Moderator)
+                    .WithMany()
+                    .HasForeignKey(tsr => tsr.ModeratorId);
+            });
+
+            modelBuilder.Entity<Delivery>(options =>
+            {
+                options.HasOne<Auction>()
+                    .WithOne()
+                    .HasForeignKey<Delivery>(p => p.AuctionId);
+
+                options.HasOne<User>()
+                    .WithOne()
+                    .HasForeignKey<Delivery>(p => p.SellerId);
+
+                options.HasOne<User>()
+                    .WithOne()
+                    .HasForeignKey<Delivery>(p => p.BuyerId);
+            });
+
+            modelBuilder.Entity<ModerationLog>(options =>
+            {
+                options.HasOne<User>()
+                    .WithMany()
+                    .HasForeignKey(ml => ml.UserId);
+
+                options.HasOne<Auction>()
+                    .WithMany()
+                    .HasForeignKey(ml => ml.AuctionId);
+
+                options.HasOne<AuctionRequest>()
+                    .WithMany()
+                    .HasForeignKey(ml => ml.AuctionRequestId);
+
+                options.HasOne<AuctionComment>()
+                    .WithMany()
+                    .HasForeignKey(ml => ml.AuctionCommentId);
+
+                options.HasOne<Complaint>()
+                    .WithMany()
+                    .HasForeignKey(ml => ml.ComplaintId);
+
+                options.HasOne<TechnicalSupportRequest>()
+                    .WithMany()
+                    .HasForeignKey(ml => ml.TechnicalSupportRequestId);
+            });
+
+            // Seed Data
+            // TODO: add roles, move names to consts or enums, add descriptions where required
+            modelBuilder.Entity<AuctionFinishMethod>().HasData(new List<AuctionFinishMethod>
+            {
+                new AuctionFinishMethod
                 {
-                    Name = Application.Enums.AuctionFinishType.StaticFinishTime.ToString(),
-                    Description = "Auction finishes in the defined statis time."
+                    Name = "Static finish method",
+                    Description = "Auction finishes in the defined statis time.",
+                    CreatedBy = "system"
                 },
-                new AuctionFinishType
+                new AuctionFinishMethod
                 {
-                    Name = Application.Enums.AuctionFinishType.IncreasingFinishTime.ToString(),
-                    Description = "Auction finish time increases on the defined interval after every new bid."
+                    Name = "Dynamic finish method",
+                    Description = "Auction finish time increases on the defined interval after every new bid.",
+                    CreatedBy = "system"
                 }
             });
 
-            modelBuilder.Entity<ComplaintType>().HasData(new List<ComplaintType>
+            modelBuilder.Entity<AuctionType>().HasData(new List<AuctionType>
             {
-                new ComplaintType
+                new AuctionType
                 {
-                    Name = Application.Enums.ComplaintType.ComplaintOnUserNonPayemnt.ToString(),
-                    Description = "Complaint on user which has not payed for the lot of the auction."
+                    Name = "English",
+                    Description = "",
+                    CreatedBy = "system"
                 },
-                new ComplaintType
+                new AuctionType
                 {
-                    Name = Application.Enums.ComplaintType.ComplaintOnUserNonProvidingLot.ToString(),
-                    Description = "Complaint on user which has not provided the lot of the auction."
-                },
-                new ComplaintType
-                {
-                    Name = Application.Enums.ComplaintType.ComplaintOnAuctionContent.ToString(),
-                    Description = "Complaint on the auction content."
-                },
-                new ComplaintType
-                {
-                    Name = Application.Enums.ComplaintType.ComplaintOnUserComment.ToString(),
-                    Description = "Complaint on the user comment."
+                    Name = "Golland",
+                    Description = "",
+                    CreatedBy = "system"
                 }
             });
         }
