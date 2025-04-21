@@ -43,7 +43,7 @@ namespace BidMasterOnline.Domain.Entities
 
         public AuctionType? Type { get; set; }
 
-        public AuctionFinishMethod? FinishMechanism { get; set; }
+        public AuctionFinishMethod? FinishMethod { get; set; }
 
         public ICollection<AuctionImage>? Images { get; set; }
 

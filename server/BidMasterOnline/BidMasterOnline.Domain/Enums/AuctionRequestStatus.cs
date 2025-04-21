@@ -3,6 +3,7 @@
     public enum AuctionRequestStatus
     {
         Pending,
+        CanceledByUser,
         Approved,
         Declined
     }

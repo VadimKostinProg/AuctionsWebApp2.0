@@ -22,6 +22,8 @@ namespace BidMasterOnline.Domain.Entities
         // ASAP if null
         public DateTime? RequestedStartTime { get; set; }
 
+        public long RequestedAuctionTimeInTicks { get; set; }
+
         public decimal StartPrice { get; set; }
 
         public long? FinishTimeIntervalInTicks { get; set; }
@@ -38,7 +40,7 @@ namespace BidMasterOnline.Domain.Entities
 
         public AuctionType? Type { get; set; }
 
-        public AuctionFinishMethod? FinishMechanism { get; set; }
+        public AuctionFinishMethod? FinishMethod { get; set; }
 
         public ICollection<AuctionImage>? Images { get; set; }
     }

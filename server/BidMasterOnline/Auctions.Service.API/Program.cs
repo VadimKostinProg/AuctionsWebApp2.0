@@ -1,3 +1,6 @@
+using Auctions.Service.API.ServiceContracts;
+using Auctions.Service.API.Services;
+using BidMasterOnline.Core;
 using BidMasterOnline.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,7 +12,10 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddInfrastructure(builder.Configuration)
+    .AddCoreServices();
+
+builder.Services.AddScoped<IAuctionRequestsService, AuctionRequestsService>();
 
 var app = builder.Build();
 
