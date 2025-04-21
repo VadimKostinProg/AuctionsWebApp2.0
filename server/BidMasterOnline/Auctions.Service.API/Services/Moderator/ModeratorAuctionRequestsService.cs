@@ -157,6 +157,7 @@ namespace Auctions.Service.API.Services.Moderator
             if (auctionRequest == null)
             {
                 result.StatusCode = HttpStatusCode.NotFound;
+                result.IsSuccessfull = false;
                 result.Errors.Add("Auction request not found.");
 
                 return result;

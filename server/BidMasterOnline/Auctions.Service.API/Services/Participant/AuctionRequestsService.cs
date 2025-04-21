@@ -74,6 +74,7 @@ namespace Auctions.Service.API.Services.Participant
             if (auctionRequest == null)
             {
                 result.StatusCode = HttpStatusCode.NotFound;
+                result.IsSuccessfull = false;
                 result.Errors.Add("Auction request not found or you have not permission to access it.");
 
                 return result;
@@ -128,6 +129,7 @@ namespace Auctions.Service.API.Services.Participant
                 await transaction.RollbackAsync();
 
                 result.StatusCode = HttpStatusCode.BadRequest;
+                result.IsSuccessfull = false;
                 result.Errors.Add("Something went wrong during processing your request.");
             }
 
@@ -146,16 +148,19 @@ namespace Auctions.Service.API.Services.Participant
             if (entity == null)
             {
                 result.StatusCode = HttpStatusCode.NotFound;
+                result.IsSuccessfull = false;
                 result.Errors.Add("Auction request not found or you have not permission to access it.");
             }
             else if (entity.Status == AuctionRequestStatus.CanceledByUser)
             {
                 result.StatusCode = HttpStatusCode.BadRequest;
+                result.IsSuccessfull = false;
                 result.Errors.Add("Auction request has been already cancelled before.");
             }
             else if (entity.Status != AuctionRequestStatus.Pending)
             {
                 result.StatusCode = HttpStatusCode.BadRequest;
+                result.IsSuccessfull = false;
                 result.Errors.Add("Could not cancel this auction request, as it has been already approved or rejected.");
             }
             else

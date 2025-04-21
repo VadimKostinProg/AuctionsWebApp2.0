@@ -7,6 +7,7 @@
         ApprovingAuctionRequest,
         DecliningAuctionRequest,
         CancelingAuction,
+        RecoveringAuction,
         DeletingComment,
         PickingUpTechnicalSupportRequest,
         CompletingTechnicalSupportRequest,

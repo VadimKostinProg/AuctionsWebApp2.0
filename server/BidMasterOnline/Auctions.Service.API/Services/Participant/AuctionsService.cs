@@ -55,6 +55,7 @@ namespace Auctions.Service.API.Services.Participant
             if (auction == null)
             {
                 result.StatusCode = System.Net.HttpStatusCode.NotFound;
+                result.IsSuccessfull = false;
                 result.Errors.Add("Auction not found.");
 
                 return result;
@@ -76,6 +77,7 @@ namespace Auctions.Service.API.Services.Participant
             if (auction == null)
             {
                 result.StatusCode = System.Net.HttpStatusCode.NotFound;
+                result.IsSuccessfull = false;
                 result.Errors.Add("Auction not found.");
 
                 return result;

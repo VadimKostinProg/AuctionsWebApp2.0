@@ -13,18 +13,18 @@ namespace Auctions.Service.API.GrpcServices
             _service = service;
         }
 
-        public override async Task<ActionResponse> Approve(ApproveAuctionRequest request, ServerCallContext context)
+        public override async Task<AuctionActionResponse> Approve(ApproveAuctionRequest request, ServerCallContext context)
         {
-            ActionResponse response = new();
+            AuctionActionResponse response = new();
 
             response.Success = await _service.ApproveAuctionRequestAsync(request.AuctionRequestId);
 
             return response;
         }
 
-        public override async Task<ActionResponse> Decline(DeclineAuctionRequest request, ServerCallContext context)
+        public override async Task<AuctionActionResponse> Decline(DeclineAuctionRequest request, ServerCallContext context)
         {
-            ActionResponse response = new();
+            AuctionActionResponse response = new();
 
             response.Success = await _service.DeclineAuctionRequestAsync(request.AuctionRequestId, request.Reason);
 

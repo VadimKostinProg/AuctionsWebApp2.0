@@ -7,6 +7,8 @@ namespace BidMasterOnline.Core.DTO
     {
         public string? Message { get; set; }
 
+        public bool IsSuccessfull { get; set; } = true;
+
         [JsonIgnore]
         public HttpStatusCode StatusCode { get; set; } = HttpStatusCode.OK;
 
@@ -16,6 +18,8 @@ namespace BidMasterOnline.Core.DTO
     public class ServiceResult<T>
     {
         public T? Data { get; set; }
+
+        public bool IsSuccessfull { get; set; } = true;
 
         [JsonIgnore]
         public HttpStatusCode StatusCode { get; set; } = HttpStatusCode.OK;

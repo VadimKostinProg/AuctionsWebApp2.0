@@ -13,18 +13,18 @@ namespace Auctions.Service.API.GrpcServices
             _service = service;
         }
 
-        public override async Task<ActionResponse> Cancel(CancelRequest request, ServerCallContext context)
+        public override async Task<AuctionActionResponse> Cancel(CancelRequest request, ServerCallContext context)
         {
-            ActionResponse response = new();
+            AuctionActionResponse response = new();
 
             response.Success = await _service.CancelAuctionAsync(request.AuctionId, request.Reason);
 
             return response;
         }
 
-        public override async Task<ActionResponse> Recover(RecoverRequest request, ServerCallContext context)
+        public override async Task<AuctionActionResponse> Recover(RecoverRequest request, ServerCallContext context)
         {
-            ActionResponse response = new();
+            AuctionActionResponse response = new();
 
             response.Success = await _service.RecoverAuctionAsync(request.AuctionId);
 
