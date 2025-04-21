@@ -1,5 +1,5 @@
 ﻿using BidMasterOnline.Core.Enums;
-using BidMasterOnline.Domain.Entities;
+using BidMasterOnline.Domain.Models.Entities;
 using System.Linq.Expressions;
 
 namespace BidMasterOnline.Core.Specifications

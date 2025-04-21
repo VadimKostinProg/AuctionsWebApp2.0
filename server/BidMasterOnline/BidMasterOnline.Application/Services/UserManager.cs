@@ -5,7 +5,7 @@ using BidMasterOnline.Application.Helpers;
 using BidMasterOnline.Application.RepositoryContracts;
 using BidMasterOnline.Application.ServiceContracts;
 using BidMasterOnline.Application.Specifications;
-using BidMasterOnline.Domain.Entities;
+using BidMasterOnline.Domain.Models.Entities;
 
 namespace BidMasterOnline.Application.Services
 {
@@ -121,7 +121,7 @@ namespace BidMasterOnline.Application.Services
             var passwordSalt = CryptographyHelper.GenerateSalt(size: 128);
             var password = CryptographyHelper.Hash(request.Password, passwordSalt);
 
-            var roleToAssign = await _repository.FirstOrDefaultAsync<Domain.Entities.Role>(x =>
+            var roleToAssign = await _repository.FirstOrDefaultAsync<Role>(x =>
                 x.Name == role.ToString());
             var status = await _repository.FirstOrDefaultAsync<Domain.Entities.UserStatus>(x =>
                 x.Name == Enums.UserStatus.Active.ToString());

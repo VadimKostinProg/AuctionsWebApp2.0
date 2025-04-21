@@ -1,13 +1,13 @@
 ﻿using Auctions.Service.API.DTO;
+using Auctions.Service.API.DTO.Participant;
 using Auctions.Service.API.Extensions;
 using Auctions.Service.API.ServiceContracts.Participant;
 using BidMasterOnline.Core.DTO;
 using BidMasterOnline.Core.RepositoryContracts;
 using BidMasterOnline.Core.ServiceContracts;
 using BidMasterOnline.Core.Specifications;
-using BidMasterOnline.Domain.Entities;
 using BidMasterOnline.Domain.Models;
-using System;
+using BidMasterOnline.Domain.Models.Entities;
 
 namespace Auctions.Service.API.Services.Participant
 {
@@ -23,18 +23,24 @@ namespace Auctions.Service.API.Services.Participant
             _userAccessor = userAccessor;
         }
 
-        public async Task<ServiceResult<ListModel<AuctionSummaryDTO>>> GetAuctionsListAsync(AuctionSpecificationsDTO specifications)
+        public async Task<ServiceResult<PaginatedList<AuctionSummaryDTO>>> GetAuctionsListAsync(AuctionSpecificationsDTO specifications)
         {
-            ServiceResult<ListModel<AuctionSummaryDTO>> result = new();
+            ServiceResult<PaginatedList<AuctionSummaryDTO>> result = new();
 
             ISpecification<Auction> specification = GetSpecification(specifications);
 
             ListModel<Auction> auctionsList = await _repository.GetFilteredAndPaginated(specification);
 
-            result.Data = new ListModel<AuctionSummaryDTO>
+            result.Data = new PaginatedList<AuctionSummaryDTO>
             {
-                Items = auctionsList.Items.Select(x => x.ToSummaryDTO()).ToList(),
-                Pagination = auctionsList.Pagination
+                Items = auctionsList.Items.Select(x => x.ToParticipantSummaryDTO()).ToList(),
+                Pagination = new()
+                {
+                    TotalCount = auctionsList.TotalCount,
+                    TotalPages = auctionsList.TotalPages,
+                    CurrentPage = auctionsList.CurrentPage,
+                    PageSize = auctionsList.PageSize
+                }
             };
 
             return result;
@@ -54,12 +60,12 @@ namespace Auctions.Service.API.Services.Participant
                 return result;
             }
 
-            result.Data = auction.ToDTO();
+            result.Data = auction.ToParticipantDTO();
 
             return result;
         }
 
-        public async Task<ServiceResult> CancelAuctionAsync(long id)
+        public virtual async Task<ServiceResult> CancelAuctionAsync(long id)
         {
             ServiceResult result = new();
 
@@ -129,6 +135,5 @@ namespace Auctions.Service.API.Services.Participant
 
             return builder.Build();
         }
-
     }
 }

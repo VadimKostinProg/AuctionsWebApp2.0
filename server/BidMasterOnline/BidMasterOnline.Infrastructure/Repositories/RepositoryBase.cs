@@ -1,10 +1,10 @@
-﻿using BidMasterOnline.Domain.Entities;
-using BidMasterOnline.Infrastructure.DatabaseContext;
+﻿using BidMasterOnline.Infrastructure.DatabaseContext;
 using BidMasterOnline.Core.RepositoryContracts;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 using BidMasterOnline.Domain.Models;
 using BidMasterOnline.Core.Specifications;
+using BidMasterOnline.Domain.Models.Entities;
 
 namespace BidMasterOnline.Infrastructure.Repositories
 {
@@ -99,7 +99,7 @@ namespace BidMasterOnline.Infrastructure.Repositories
         }
 
         public virtual IQueryable<T> GetFiltered<T>(Expression<Func<T, bool>> predicate,
-            bool disableTracking = false) 
+            bool disableTracking = false)
             where T : EntityBase
         {
             var query = context.Set<T>().Where(predicate);
@@ -120,7 +120,7 @@ namespace BidMasterOnline.Infrastructure.Repositories
         public Task<int> SaveChangesAsync()
             => context.SaveChangesAsync();
 
-        public async Task<ListModel<T>> GetFilteredAndPaginated<T>(ISpecification<T> specification, bool disableTracking = false) 
+        public async Task<ListModel<T>> GetFilteredAndPaginated<T>(ISpecification<T> specification, bool disableTracking = false)
             where T : EntityBase
         {
             IQueryable<T> query = context.Set<T>();
@@ -139,13 +139,10 @@ namespace BidMasterOnline.Infrastructure.Repositories
             return new ListModel<T>
             {
                 Items = items,
-                Pagination = new()
-                {
-                    TotalCount = totalCount,
-                    TotalPages = totalPages,
-                    CurrentPage = specification.PageNumber,
-                    PageSize = specification.PageSize,
-                }
+                TotalCount = totalCount,
+                TotalPages = totalPages,
+                CurrentPage = specification.PageNumber,
+                PageSize = specification.PageSize
             };
         }
     }

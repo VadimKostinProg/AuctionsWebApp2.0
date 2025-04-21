@@ -3,7 +3,7 @@ using BidMasterOnline.Application.Helpers;
 using BidMasterOnline.Application.RepositoryContracts;
 using BidMasterOnline.Application.ServiceContracts;
 using BidMasterOnline.Application.Sessions;
-using BidMasterOnline.Domain.Entities;
+using BidMasterOnline.Domain.Models.Entities;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;

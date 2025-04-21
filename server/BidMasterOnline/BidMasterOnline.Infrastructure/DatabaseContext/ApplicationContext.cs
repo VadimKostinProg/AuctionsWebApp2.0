@@ -1,4 +1,4 @@
-﻿using BidMasterOnline.Domain.Entities;
+﻿using BidMasterOnline.Domain.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace BidMasterOnline.Infrastructure.DatabaseContext

@@ -1,14 +1,15 @@
-﻿using Auctions.Service.API.DTO;
+﻿using Auctions.Service.API.DTO.Participant;
 using Auctions.Service.API.Extensions;
 using Auctions.Service.API.ServiceContracts.Participant;
 using BidMasterOnline.Core.DTO;
 using BidMasterOnline.Core.Enums;
 using BidMasterOnline.Core.RepositoryContracts;
 using BidMasterOnline.Core.ServiceContracts;
-using BidMasterOnline.Domain.Entities;
+using BidMasterOnline.Core.Specifications;
 using BidMasterOnline.Domain.Enums;
+using BidMasterOnline.Domain.Models;
+using BidMasterOnline.Domain.Models.Entities;
 using CloudinaryDotNet.Actions;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using System.Net;
 
@@ -32,22 +33,36 @@ namespace Auctions.Service.API.Services.Participant
             _transactionsService = transactionsService;
         }
 
-        public async Task<ServiceResult<List<AuctionRequestSummaryDTO>>> GetUserAuctionRequests()
+        public async Task<ServiceResult<PaginatedList<AuctionRequestSummaryDTO>>> GetUserAuctionRequestsAsync(PaginationRequestDTO pagination)
         {
+            ServiceResult<PaginatedList<AuctionRequestSummaryDTO>> result = new();
+
             long userId = _userAccessor.UserId;
 
-            List<AuctionRequest> auctionRequests = await _repository.GetFiltered<AuctionRequest>(x => x.RequestedByUserId == userId)
-                .ToListAsync();
+            ISpecification<AuctionRequest> specification = new SpecificationBuilder<AuctionRequest>()
+                .With(e => e.RequestedByUserId == userId)
+                .WithPagination(pagination.PageSize, pagination.PageNumber)
+                .Build();
 
-            ServiceResult<List<AuctionRequestSummaryDTO>> result = new()
+            ListModel<AuctionRequest> auctionRequestsList = await _repository.GetFilteredAndPaginated(specification);
+
+
+            result.Data = new PaginatedList<AuctionRequestSummaryDTO>
             {
-                Data = auctionRequests.Select(e => e.ToSummaryDTO()).ToList(),
+                Items = auctionRequestsList.Items.Select(e => e.ToParticipantSummaryDTO()).ToList(),
+                Pagination = new()
+                {
+                    TotalCount = auctionRequestsList.TotalCount,
+                    TotalPages = auctionRequestsList.TotalPages,
+                    CurrentPage = auctionRequestsList.CurrentPage,
+                    PageSize = auctionRequestsList.PageSize
+                }
             };
 
             return result;
         }
 
-        public async Task<ServiceResult<AuctionRequestDTO>> GetUserAuctionRequestById(long id)
+        public async Task<ServiceResult<AuctionRequestDTO>> GetAuctionRequestByIdAsync(long id)
         {
             long userId = _userAccessor.UserId;
 
@@ -64,12 +79,12 @@ namespace Auctions.Service.API.Services.Participant
                 return result;
             }
 
-            result.Data = auctionRequest.ToDTO();
+            result.Data = auctionRequest.ToParticipantDTO();
 
             return result;
         }
 
-        public async Task<ServiceResult> PostAuctionRequest(PostAuctionRequestDTO requestDTO)
+        public async Task<ServiceResult> PostAuctionRequestAsync(PostAuctionRequestDTO requestDTO)
         {
             ServiceResult result = new();
 
@@ -77,7 +92,7 @@ namespace Auctions.Service.API.Services.Participant
 
             try
             {
-                AuctionRequest entity = requestDTO.ToDomain();
+                AuctionRequest entity = requestDTO.ToParticipantDomain();
                 entity.Status = AuctionRequestStatus.Pending;
                 entity.RequestedByUserId = _userAccessor.UserId;
 
@@ -119,7 +134,7 @@ namespace Auctions.Service.API.Services.Participant
             return result;
         }
 
-        public async Task<ServiceResult> CancelAuctionRequestById(long id)
+        public async Task<ServiceResult> CancelAuctionRequestByIdAsync(long id)
         {
             ServiceResult result = new();
 

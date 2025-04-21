@@ -1,5 +1,5 @@
 ﻿using BidMasterOnline.Application.DTO;
-using BidMasterOnline.Domain.Entities;
+using BidMasterOnline.Domain.Models.Entities;
 
 namespace BidMasterOnline.Application.ServiceContracts
 {

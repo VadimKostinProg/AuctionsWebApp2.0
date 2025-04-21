@@ -1,12 +1,12 @@
 ﻿using Auctions.Service.API.DTO;
+using Auctions.Service.API.DTO.Participant;
 using BidMasterOnline.Core.DTO;
-using BidMasterOnline.Domain.Models;
 
 namespace Auctions.Service.API.ServiceContracts.Participant
 {
     public interface IAuctionsService
     {
-        Task<ServiceResult<ListModel<AuctionSummaryDTO>>> GetAuctionsListAsync(AuctionSpecificationsDTO specifications);
+        Task<ServiceResult<PaginatedList<AuctionSummaryDTO>>> GetAuctionsListAsync(AuctionSpecificationsDTO specifications);
 
         Task<ServiceResult<AuctionDTO>> GetAuctionByIdAsync(long id);
 

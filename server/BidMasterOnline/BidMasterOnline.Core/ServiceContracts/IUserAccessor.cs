@@ -7,5 +7,7 @@
         public string UserName { get; }
 
         public string Email { get; }
+
+        public string Role { get; }
     }
 }

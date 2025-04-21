@@ -1,6 +1,6 @@
 ﻿using BidMasterOnline.Core.RepositoryContracts;
 using BidMasterOnline.Core.ServiceContracts;
-using BidMasterOnline.Domain.Entities;
+using BidMasterOnline.Domain.Models.Entities;
 using Microsoft.AspNetCore.Http;
 
 namespace BidMasterOnline.Core.Services
@@ -40,6 +40,16 @@ namespace BidMasterOnline.Core.Services
                 this.EnsureUserInitialized();
 
                 return _user!.Email;
+            }
+        }
+
+        public string Role
+        {
+            get
+            {
+                this.EnsureUserInitialized();
+
+                return _user!.Role!.Name;
             }
         }
 
