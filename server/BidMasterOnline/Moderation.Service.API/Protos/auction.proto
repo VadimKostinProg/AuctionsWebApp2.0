@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+option csharp_namespace = "AuctionsGrpcClient";
+
+package Auctions;
+
+service Auctions {
+	rpc Cancel(CancelRequest) returns (AuctionActionResponse) {
+
+	}
+
+	rpc Recover(RecoverRequest) returns (AuctionActionResponse) {
+
+	}
+}
+
+service AuctionRequests {
+	rpc Approve(ApproveAuctionRequest) returns (AuctionActionResponse) {
+
+	}
+
+	rpc Decline(DeclineAuctionRequest) returns (AuctionActionResponse) {
+
+	}
+}
+
+message ApproveAuctionRequest {
+	int64 auctionRequestId = 1;
+}
+
+message DeclineAuctionRequest {
+	int64 auctionRequestId = 1;
+	string reason = 2;
+}
+
+message CancelRequest {
+	int64 auctionId = 1;
+	string reason = 2;
+}
+
+message RecoverRequest {
+	int64 auctionId = 1;
+}
+
+message AuctionActionResponse {
+	bool success = 1;
+}

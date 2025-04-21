@@ -1,5 +1,5 @@
 ﻿using BidMasterOnline.Application.Specifications;
-using BidMasterOnline.Domain.Entities;
+using BidMasterOnline.Domain.Models.Entities;
 using System.Linq.Expressions;
 
 namespace BidMasterOnline.Application.RepositoryContracts

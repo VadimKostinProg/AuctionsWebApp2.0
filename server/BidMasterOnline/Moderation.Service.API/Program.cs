@@ -1,4 +1,7 @@
+using BidMasterOnline.Core;
 using BidMasterOnline.Infrastructure;
+using Moderation.Service.API.ServiceContracts;
+using Moderation.Service.API.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,7 +12,15 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddGrpc();
+
+builder.Services.AddHttpContextAccessor();
+
+builder.Services.AddInfrastructure(builder.Configuration)
+    .AddCoreServices();
+
+builder.Services.AddScoped<IModerationLogger, ModerationLogger>();
+builder.Services.AddScoped<IAuctionsClient, AuctionsClient>();
 
 var app = builder.Build();
 

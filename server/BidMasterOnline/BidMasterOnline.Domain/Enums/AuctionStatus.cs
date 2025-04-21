@@ -4,7 +4,8 @@
     {
         Pending,
         Active,
-        Canceled,
+        CancelledByAuctionist,
+        CancelledByModerator,
         Finished
     }
 }

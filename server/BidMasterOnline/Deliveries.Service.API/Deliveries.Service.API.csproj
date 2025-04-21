@@ -10,4 +10,14 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Controllers\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BidMasterOnline.Core\BidMasterOnline.Core.csproj" />
+    <ProjectReference Include="..\BidMasterOnline.Domain\BidMasterOnline.Domain.csproj" />
+    <ProjectReference Include="..\BidMasterOnline.Infrastructure\BidMasterOnline.Infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>

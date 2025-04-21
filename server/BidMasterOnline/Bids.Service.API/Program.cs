@@ -1,4 +1,5 @@
 using BidMasterOnline.Infrastructure;
+using BidMasterOnline.Core;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,7 +10,10 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddHttpContextAccessor();
+
+builder.Services.AddInfrastructure(builder.Configuration)
+    .AddCoreServices();
 
 var app = builder.Build();
 

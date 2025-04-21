@@ -1,4 +1,4 @@
-﻿using BidMasterOnline.Domain.Entities;
+﻿using BidMasterOnline.Domain.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace BidMasterOnline.Infrastructure.DatabaseContext
@@ -67,7 +67,7 @@ namespace BidMasterOnline.Infrastructure.DatabaseContext
                     .WithMany()
                     .HasForeignKey(a => a.AuctionTypeId);
 
-                options.HasOne(a => a.FinishMechanism)
+                options.HasOne(a => a.FinishMethod)
                     .WithMany()
                     .HasForeignKey(a => a.AuctionFinishMethodId);
 
@@ -110,7 +110,7 @@ namespace BidMasterOnline.Infrastructure.DatabaseContext
                     .WithMany()
                     .HasForeignKey(ar => ar.AuctionTypeId);
 
-                options.HasOne(ar => ar.FinishMechanism)
+                options.HasOne(ar => ar.FinishMethod)
                     .WithMany()
                     .HasForeignKey(ar => ar.AuctionFinishMethodId);
 

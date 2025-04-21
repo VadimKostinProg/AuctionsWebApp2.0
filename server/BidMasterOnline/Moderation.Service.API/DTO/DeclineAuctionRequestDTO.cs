@@ -1,0 +1,9 @@
+﻿namespace Moderation.Service.API.DTO
+{
+    public class DeclineAuctionRequestDTO
+    {
+        public long AuctionRequestId { get; set; }
+
+        public required string Reason { get; set; }
+    }
+}

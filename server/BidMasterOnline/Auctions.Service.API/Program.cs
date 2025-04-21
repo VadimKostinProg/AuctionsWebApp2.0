@@ -1,3 +1,8 @@
+using Auctions.Service.API.ServiceContracts.Moderator;
+using Auctions.Service.API.ServiceContracts.Participant;
+using Auctions.Service.API.Services.Moderator;
+using Auctions.Service.API.Services.Participant;
+using BidMasterOnline.Core;
 using BidMasterOnline.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,7 +14,17 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddGrpc();
+
+builder.Services.AddHttpContextAccessor();
+
+builder.Services.AddInfrastructure(builder.Configuration)
+    .AddCoreServices();
+
+builder.Services.AddScoped<IModeratorAuctionRequestsService, ModeratorAuctionRequestsService>();
+
+builder.Services.AddScoped<IAuctionRequestsService, AuctionRequestsService>();
+builder.Services.AddScoped<IAuctionsService, AuctionsService>();
 
 var app = builder.Build();
 

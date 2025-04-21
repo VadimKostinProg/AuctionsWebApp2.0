@@ -1,6 +1,8 @@
-﻿using BidMasterOnline.Application.RepositoryContracts;
+﻿using BidMasterOnline.Core.RepositoryContracts;
+using BidMasterOnline.Core.ServiceContracts;
 using BidMasterOnline.Infrastructure.DatabaseContext;
 using BidMasterOnline.Infrastructure.Repositories;
+using BidMasterOnline.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,6 +20,7 @@ namespace BidMasterOnline.Infrastructure
             });
 
             services.AddScoped<IRepository, RepositoryBase>();
+            services.AddScoped<ITransactionsService, TransactionsService>();
 
             return services;
         }
