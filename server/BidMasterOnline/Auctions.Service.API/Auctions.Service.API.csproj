@@ -16,4 +16,9 @@
     <ProjectReference Include="..\BidMasterOnline.Infrastructure\BidMasterOnline.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="ServiceContracts\Moderator\" />
+    <Folder Include="Services\Moderator\" />
+  </ItemGroup>
+
 </Project>

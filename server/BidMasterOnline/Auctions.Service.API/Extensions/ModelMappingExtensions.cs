@@ -95,8 +95,10 @@ namespace Auctions.Service.API.Extensions
                 Status = entity.Status,
                 StartTime = entity.StartTime,
                 FinishTime = entity.FinishTime,
+                StartPrice = entity.StartPrice,
                 CurrentPrice = entity.CurrentPrice,
                 AverageScore = entity.AverageScore,
+                CancellationReason = entity.CancellationReason,
                 Auctionist = entity.Auctionist == null
                     ? null
                     : new BidMasterOnline.Core.DTO.UserSummaryDTO

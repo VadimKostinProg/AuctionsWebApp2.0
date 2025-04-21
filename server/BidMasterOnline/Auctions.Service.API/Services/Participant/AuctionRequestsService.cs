@@ -1,6 +1,6 @@
 ﻿using Auctions.Service.API.DTO;
 using Auctions.Service.API.Extensions;
-using Auctions.Service.API.ServiceContracts;
+using Auctions.Service.API.ServiceContracts.Participant;
 using BidMasterOnline.Core.DTO;
 using BidMasterOnline.Core.Enums;
 using BidMasterOnline.Core.RepositoryContracts;
@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using System.Net;
 
-namespace Auctions.Service.API.Services
+namespace Auctions.Service.API.Services.Participant
 {
     public class AuctionRequestsService : IAuctionRequestsService
     {
@@ -32,14 +32,14 @@ namespace Auctions.Service.API.Services
             _transactionsService = transactionsService;
         }
 
-        public async Task<Result<List<AuctionRequestSummaryDTO>>> GetUserAuctionRequests()
+        public async Task<ServiceResult<List<AuctionRequestSummaryDTO>>> GetUserAuctionRequests()
         {
             long userId = _userAccessor.UserId;
 
             List<AuctionRequest> auctionRequests = await _repository.GetFiltered<AuctionRequest>(x => x.RequestedByUserId == userId)
                 .ToListAsync();
 
-            Result<List<AuctionRequestSummaryDTO>> result = new()
+            ServiceResult<List<AuctionRequestSummaryDTO>> result = new()
             {
                 Data = auctionRequests.Select(e => e.ToSummaryDTO()).ToList(),
             };
@@ -47,18 +47,18 @@ namespace Auctions.Service.API.Services
             return result;
         }
 
-        public async Task<Result<AuctionRequestDTO>> GetUserAuctionRequestById(long id)
+        public async Task<ServiceResult<AuctionRequestDTO>> GetUserAuctionRequestById(long id)
         {
             long userId = _userAccessor.UserId;
 
             AuctionRequest? auctionRequest = await _repository
                 .GetFirstOrDefaultAsync<AuctionRequest>(x => x.Id == id && x.RequestedByUserId == userId);
 
-            Result<AuctionRequestDTO> result = new();
+            ServiceResult<AuctionRequestDTO> result = new();
 
             if (auctionRequest == null)
             {
-                result.StatusCode = System.Net.HttpStatusCode.NotFound;
+                result.StatusCode = HttpStatusCode.NotFound;
                 result.Errors.Add("Auction request not found or you have not permission to access it.");
 
                 return result;
@@ -69,16 +69,16 @@ namespace Auctions.Service.API.Services
             return result;
         }
 
-        public async Task<Result<string>> PostAuctionRequest(PostAuctionRequestDTO requestDTO)
+        public async Task<ServiceResult> PostAuctionRequest(PostAuctionRequestDTO requestDTO)
         {
-            Result<string> result = new();
+            ServiceResult result = new();
 
             IDbContextTransaction transaction = _transactionsService.BeginTransaction();
 
             try
             {
                 AuctionRequest entity = requestDTO.ToDomain();
-                entity.Status = BidMasterOnline.Domain.Enums.AuctionRequestStatus.Pending;
+                entity.Status = AuctionRequestStatus.Pending;
                 entity.RequestedByUserId = _userAccessor.UserId;
 
                 await _repository.AddAsync(entity);
@@ -88,7 +88,7 @@ namespace Auctions.Service.API.Services
                 {
                     ImageUploadResult uploadResult = await _imagesService.AddImageAsync(image, ImageType.ImageForAuction);
 
-                    if (uploadResult.StatusCode != System.Net.HttpStatusCode.OK)
+                    if (uploadResult.StatusCode != HttpStatusCode.OK)
                         throw new ArgumentException();
 
                     AuctionImage auctionImage = new()
@@ -105,7 +105,7 @@ namespace Auctions.Service.API.Services
 
                 await transaction.CommitAsync();
 
-                result.Data = "Your auction request has been submitted!";
+                result.Message = "Your auction request has been submitted!";
             }
             catch (Exception)
             {
@@ -119,9 +119,9 @@ namespace Auctions.Service.API.Services
             return result;
         }
 
-        public async Task<Result<string>> CancelAuctionRequestById(long id)
+        public async Task<ServiceResult> CancelAuctionRequestById(long id)
         {
-            Result<string> result = new();
+            ServiceResult result = new();
 
             long userId = _userAccessor.UserId;
 
@@ -150,7 +150,7 @@ namespace Auctions.Service.API.Services
 
                 await _repository.SaveChangesAsync();
 
-                result.Data = "Auction request has been cancelled successfully!";
+                result.Message = "Auction request has been cancelled successfully!";
             }
 
             return result;

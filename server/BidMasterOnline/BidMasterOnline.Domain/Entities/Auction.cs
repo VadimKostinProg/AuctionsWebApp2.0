@@ -29,11 +29,15 @@ namespace BidMasterOnline.Domain.Entities
 
         public decimal BidAmountInterval { get; set; }
 
+        public decimal StartPrice { get; set; }
+
         public decimal CurrentPrice { get; set; }
 
         public double AverageScore { get; set; }
 
         public AuctionStatus Status { get; set; }
+
+        public string? CancellationReason { get; set; }
 
         public User? Auctionist { get; set; }
 

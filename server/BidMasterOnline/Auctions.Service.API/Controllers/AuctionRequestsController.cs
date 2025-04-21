@@ -1,5 +1,5 @@
 ﻿using Auctions.Service.API.DTO;
-using Auctions.Service.API.ServiceContracts;
+using Auctions.Service.API.ServiceContracts.Participant;
 using BidMasterOnline.Core.DTO;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,7 +18,7 @@ public class AuctionRequestsController : BaseController
     [HttpGet]
     public async Task<IActionResult> GetUserAuctionRequests()
     {
-        Result<List<AuctionRequestSummaryDTO>> result = await _service.GetUserAuctionRequests();
+        ServiceResult<List<AuctionRequestSummaryDTO>> result = await _service.GetUserAuctionRequests();
 
         return FromResult(result);
     }
@@ -28,7 +28,7 @@ public class AuctionRequestsController : BaseController
     [HttpGet("{id}")]
     public async Task<IActionResult> GetUserAuctionRequestById([FromRoute] long id)
     {
-        Result<AuctionRequestDTO> result = await _service.GetUserAuctionRequestById(id);
+        ServiceResult<AuctionRequestDTO> result = await _service.GetUserAuctionRequestById(id);
 
         return FromResult(result);
     }
@@ -36,7 +36,7 @@ public class AuctionRequestsController : BaseController
     [HttpPost]
     public async Task<IActionResult> PostAuctionRequest([FromBody] PostAuctionRequestDTO requestDTO)
     {
-        Result<string> result = await _service.PostAuctionRequest(requestDTO);
+        ServiceResult<string> result = await _service.PostAuctionRequest(requestDTO);
 
         return FromResult(result);
     }
@@ -44,7 +44,7 @@ public class AuctionRequestsController : BaseController
     [HttpPut("{id}/cancell")]
     public async Task<IActionResult> CancellAuctionRequest([FromRoute] long id)
     {
-        Result<string> result = await _service.CancelAuctionRequestById(id);
+        ServiceResult<string> result = await _service.CancelAuctionRequestById(id);
 
         return FromResult(result);
     }

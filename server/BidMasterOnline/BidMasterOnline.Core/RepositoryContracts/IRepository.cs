@@ -1,4 +1,6 @@
-﻿using BidMasterOnline.Domain.Entities;
+﻿using BidMasterOnline.Core.Specifications;
+using BidMasterOnline.Domain.Entities;
+using BidMasterOnline.Domain.Models;
 using System.Linq.Expressions;
 
 namespace BidMasterOnline.Core.RepositoryContracts
@@ -38,9 +40,11 @@ namespace BidMasterOnline.Core.RepositoryContracts
         /// <param name="predicate">Expression to filter entities.</param>
         /// <param name="disableTracking">Flag for enabling a tracking.</param>
         /// <returns>Queryable collection of filtered entities.</returns>
-        IQueryable<T> GetFiltered<T>(Expression<Func<T, bool>> predicate,
-                                     bool disableTracking = false)
+        IQueryable<T> GetFiltered<T>(Expression<Func<T, bool>> predicate, bool disableTracking = false)
                                      where T : EntityBase;
+
+        Task<ListModel<T>> GetFilteredAndPaginated<T>(ISpecification<T> specification, bool disableTracking = false)
+            where T : EntityBase;
 
 
         /// <summary>

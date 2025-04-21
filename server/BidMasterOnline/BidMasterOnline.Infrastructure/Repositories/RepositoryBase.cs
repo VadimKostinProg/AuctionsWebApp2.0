@@ -3,6 +3,8 @@ using BidMasterOnline.Infrastructure.DatabaseContext;
 using BidMasterOnline.Core.RepositoryContracts;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
+using BidMasterOnline.Domain.Models;
+using BidMasterOnline.Core.Specifications;
 
 namespace BidMasterOnline.Infrastructure.Repositories
 {
@@ -117,5 +119,34 @@ namespace BidMasterOnline.Infrastructure.Repositories
 
         public Task<int> SaveChangesAsync()
             => context.SaveChangesAsync();
+
+        public async Task<ListModel<T>> GetFilteredAndPaginated<T>(ISpecification<T> specification, bool disableTracking = false) 
+            where T : EntityBase
+        {
+            IQueryable<T> query = context.Set<T>();
+
+            if (disableTracking)
+            {
+                query.AsNoTracking();
+            }
+
+            query = query.ApplySpecifications(specification);
+
+            int totalCount = await this.CountAsync(specification.Predicate);
+            int totalPages = (int)Math.Ceiling((double)totalCount / specification.PageSize);
+            List<T> items = await query.ToListAsync();
+
+            return new ListModel<T>
+            {
+                Items = items,
+                Pagination = new()
+                {
+                    TotalCount = totalCount,
+                    TotalPages = totalPages,
+                    CurrentPage = specification.PageNumber,
+                    PageSize = specification.PageSize,
+                }
+            };
+        }
     }
 }

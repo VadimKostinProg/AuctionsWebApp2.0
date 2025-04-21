@@ -1,5 +1,5 @@
-using Auctions.Service.API.ServiceContracts;
-using Auctions.Service.API.Services;
+using Auctions.Service.API.ServiceContracts.Participant;
+using Auctions.Service.API.Services.Participant;
 using BidMasterOnline.Core;
 using BidMasterOnline.Infrastructure;
 
