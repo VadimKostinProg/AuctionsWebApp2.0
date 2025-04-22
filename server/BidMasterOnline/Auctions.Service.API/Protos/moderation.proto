@@ -1,0 +1,20 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "ModerationGrpc";
+
+package ModerationGrpc;
+
+service ModerationLogger {
+	rpc LogModeration(ModerationLogRequest) returns (ModerationActionResponse) {
+
+	}
+}
+
+message ModerationLogRequest {
+	int32 actionCode = 1;
+	int64 resourceId = 2;
+}
+
+message ModerationActionResponse {
+	bool success = 1;
+}

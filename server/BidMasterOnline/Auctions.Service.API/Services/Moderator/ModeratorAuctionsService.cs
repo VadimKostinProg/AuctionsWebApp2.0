@@ -1,6 +1,7 @@
 ﻿using Auctions.Service.API.DTO;
 using Auctions.Service.API.DTO.Moderator;
 using Auctions.Service.API.Extensions;
+using Auctions.Service.API.GrpcServices.Client;
 using Auctions.Service.API.ServiceContracts.Moderator;
 using BidMasterOnline.Core.DTO;
 using BidMasterOnline.Core.RepositoryContracts;
@@ -10,6 +11,7 @@ using BidMasterOnline.Domain.Enums;
 using BidMasterOnline.Domain.Models;
 using BidMasterOnline.Domain.Models.Entities;
 using Microsoft.EntityFrameworkCore.Storage;
+using System.Net;
 
 namespace Auctions.Service.API.Services.Moderator
 {
@@ -18,29 +20,37 @@ namespace Auctions.Service.API.Services.Moderator
         private readonly IRepository _repository;
         private readonly ITransactionsService _transactionService;
         private readonly ILogger<ModeratorAuctionsService> _logger;
+        private readonly ModerationClient _moderationClient;
 
-        public ModeratorAuctionsService(IRepository repository, 
-            ITransactionsService transactionService, 
-            ILogger<ModeratorAuctionsService> logger)
+        public ModeratorAuctionsService(IRepository repository,
+            ITransactionsService transactionService,
+            ILogger<ModeratorAuctionsService> logger,
+            ModerationClient moderationClient)
         {
             _repository = repository;
             _transactionService = transactionService;
             _logger = logger;
+            _moderationClient = moderationClient;
         }
 
-        public async Task<bool> CancelAuctionAsync(long auctionId, string reason)
+        public async Task<ServiceResult> CancelAuctionAsync(CancelAuctionDTO requestDTO)
         {
+            ServiceResult result = new();
+
             IDbContextTransaction transaction = _transactionService.BeginTransaction();
 
             try
             {
-                Auction entity = await _repository.GetByIdAsync<Auction>(auctionId);
+                Auction entity = await _repository.GetByIdAsync<Auction>(requestDTO.AuctionId);
 
                 if (entity.Status != AuctionStatus.Pending && entity.Status != AuctionStatus.Active)
                 {
                     await transaction.RollbackAsync();
 
-                    return false;
+                    result.IsSuccessfull = false;
+                    result.StatusCode = HttpStatusCode.BadRequest;
+                    result.Errors.Add("Auction has been already cancelled or finished.");
+                    return result;
                 }
 
                 entity.Status = AuctionStatus.CancelledByModerator;
@@ -49,19 +59,76 @@ namespace Auctions.Service.API.Services.Moderator
                 _repository.Update(entity);
                 await _repository.SaveChangesAsync();
 
+                await _moderationClient.LogModerationAction(ModerationAction.CancelingAuction, entity.Id);
+
                 // TODO: notify auctionist and auctioners
 
                 await transaction.CommitAsync();
 
-                return true;
+                result.Message = "Auction has been successfully cancelled!";
             }
             catch (Exception ex)
             {
                 await transaction.RollbackAsync();
                 _logger.LogError(ex, "An error occurred while canceling auction.");
 
-                return false;
+                result.IsSuccessfull = false;
+                result.StatusCode = HttpStatusCode.InternalServerError;
+                result.Errors.Add("An error occurred while canceling auction.");
             }
+
+            return result;
+        }
+
+        public async Task<ServiceResult> RecoverAuctionAsync(RecoverAuctionDTO requestDTO)
+        {
+            ServiceResult result = new();
+
+            IDbContextTransaction transaction = _transactionService.BeginTransaction();
+
+            try
+            {
+                Auction entity = await _repository.GetByIdAsync<Auction>(requestDTO.AuctionId);
+
+                if (entity.Status != AuctionStatus.CancelledByAuctionist && 
+                    entity.Status != AuctionStatus.CancelledByModerator)
+                {
+                    await transaction.RollbackAsync();
+
+                    result.IsSuccessfull = false;
+                    result.StatusCode = HttpStatusCode.BadRequest;
+                    result.Errors.Add("Auction is not cancelled.");
+                    return result;
+                }
+
+                entity.Status = AuctionStatus.Active;
+                entity.StartTime = DateTime.UtcNow;
+                entity.FinishTime = entity.StartTime.AddTicks(entity.AuctionTimeInTicks);
+
+                _repository.Update(entity);
+                await _repository.SaveChangesAsync();
+
+                await _moderationClient.LogModerationAction(ModerationAction.RecoveringAuction, entity.Id);
+
+                // TODO: clear all bids
+
+                // TODO: notify auctionist and auctioners
+
+                await transaction.CommitAsync();
+
+                result.Message = "Auction has been successfully recovered.";
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                _logger.LogError(ex, "An error occurred while recovering auction.");
+
+                result.IsSuccessfull = false;
+                result.StatusCode = HttpStatusCode.InternalServerError;
+                result.Errors.Add("An error occurred while recovering auction.");
+            }
+
+            return result;
         }
 
         public async Task<ServiceResult<AuctionDTO>> GetAuctionByIdAsync(long id)
@@ -106,46 +173,6 @@ namespace Auctions.Service.API.Services.Moderator
             };
 
             return result;
-        }
-
-        public async Task<bool> RecoverAuctionAsync(long auctionId)
-        {
-            IDbContextTransaction transaction = _transactionService.BeginTransaction();
-
-            try
-            {
-                Auction entity = await _repository.GetByIdAsync<Auction>(auctionId);
-
-                if (entity.Status != AuctionStatus.CancelledByAuctionist && 
-                    entity.Status != AuctionStatus.CancelledByModerator)
-                {
-                    await transaction.RollbackAsync();
-
-                    return false;
-                }
-
-                entity.Status = AuctionStatus.Active;
-                entity.StartTime = DateTime.UtcNow;
-                entity.FinishTime = entity.StartTime.AddTicks(entity.AuctionTimeInTicks);
-
-                _repository.Update(entity);
-                await _repository.SaveChangesAsync();
-
-                // TODO: clear all bids
-
-                // TODO: notify auctionist and auctioners
-
-                await transaction.CommitAsync();
-
-                return true;
-            }
-            catch (Exception ex)
-            {
-                await transaction.RollbackAsync();
-                _logger.LogError(ex, "An error occurred while canceling auction.");
-
-                return false;
-            }
         }
 
         private ISpecification<Auction> GetSpecification(AuctionSpecificationsDTO specifications)

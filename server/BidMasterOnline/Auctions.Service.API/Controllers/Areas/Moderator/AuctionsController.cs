@@ -35,4 +35,20 @@ public class AuctionsController : BaseController
 
         return FromResult(result);
     }
+
+    [HttpPost("cancel")]
+    public async Task<IActionResult> CancelAuction([FromBody] CancelAuctionDTO requestDTO)
+    {
+        ServiceResult result = await _service.CancelAuctionAsync(requestDTO);
+
+        return FromResult(result);
+    }
+
+    [HttpPost("recover")]
+    public async Task<IActionResult> RecoverAuction([FromBody] RecoverAuctionDTO requestDTO)
+    {
+        ServiceResult result = await _service.RecoverAuctionAsync(requestDTO);
+
+        return FromResult(result);
+    }
 }

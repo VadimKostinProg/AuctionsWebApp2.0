@@ -8,7 +8,7 @@ namespace Auctions.Service.API.ServiceContracts.Moderator
     {
         Task<ServiceResult<PaginatedList<AuctionSummaryDTO>>> GetAuctionsListAsync(AuctionSpecificationsDTO specifications);
         Task<ServiceResult<AuctionDTO>> GetAuctionByIdAsync(long id);
-        Task<bool> CancelAuctionAsync(long auctionId, string reason);
-        Task<bool> RecoverAuctionAsync(long auctionId);
+        Task<ServiceResult> CancelAuctionAsync(CancelAuctionDTO requestDTO);
+        Task<ServiceResult> RecoverAuctionAsync(RecoverAuctionDTO requestDTO);
     }
 }

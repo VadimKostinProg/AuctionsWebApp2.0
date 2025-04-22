@@ -1,6 +1,7 @@
 ﻿using Auctions.Service.API.DTO;
 using Auctions.Service.API.DTO.Moderator;
 using Auctions.Service.API.Extensions;
+using Auctions.Service.API.GrpcServices.Client;
 using Auctions.Service.API.ServiceContracts.Moderator;
 using BidMasterOnline.Core.DTO;
 using BidMasterOnline.Core.RepositoryContracts;
@@ -19,29 +20,37 @@ namespace Auctions.Service.API.Services.Moderator
         private readonly IRepository _repository;
         private readonly ITransactionsService _transactionsService;
         private readonly ILogger<ModeratorAuctionRequestsService> _logger;
+        private readonly ModerationClient _moderationClient;
 
         public ModeratorAuctionRequestsService(IRepository repository,
-            ITransactionsService transactionsService, 
-            ILogger<ModeratorAuctionRequestsService> logger)
+            ITransactionsService transactionsService,
+            ILogger<ModeratorAuctionRequestsService> logger,
+            ModerationClient moderationClient)
         {
             _repository = repository;
             _transactionsService = transactionsService;
             _logger = logger;
+            _moderationClient = moderationClient;
         }
 
-        public async Task<bool> ApproveAuctionRequestAsync(long auctionRequestId)
+        public async Task<ServiceResult> ApproveAuctionRequestAsync(ApproveAuctionRequestDTO requestDTO)
         {
+            ServiceResult result = new();
+
             IDbContextTransaction transaction = _transactionsService.BeginTransaction();
 
             try
             {
-                AuctionRequest auctionRequest = await _repository.GetByIdAsync<AuctionRequest>(auctionRequestId);
+                AuctionRequest auctionRequest = await _repository.GetByIdAsync<AuctionRequest>(requestDTO.AuctionRequestId);
 
                 if (auctionRequest.Status != AuctionRequestStatus.Pending)
                 {
                     await transaction.RollbackAsync();
 
-                    return false;
+                    result.IsSuccessfull = false;
+                    result.StatusCode = HttpStatusCode.BadRequest;
+                    result.Errors.Add("Auction request has been already approved or declined.");
+                    return result;
                 }
 
                 auctionRequest.Status = AuctionRequestStatus.Approved;
@@ -70,54 +79,71 @@ namespace Auctions.Service.API.Services.Moderator
                 await _repository.AddAsync(newAuction);
                 await _repository.SaveChangesAsync();
 
+                await _moderationClient.LogModerationAction(ModerationAction.ApprovingAuctionRequest, auctionRequest.Id);
+
                 // TODO: notify auctionist
 
                 await transaction.CommitAsync();
-
-                return true;
             }
             catch (Exception ex)
             {
                 await transaction.RollbackAsync();
                 _logger.LogError(ex, "An error occured during declining auction request.");
 
-                return false;
+                result.IsSuccessfull = false;
+                result.StatusCode = HttpStatusCode.InternalServerError;
+                result.Errors.Add("An error occured during approving auction request.");
             }
+
+            return result;
         }
 
-        public async Task<bool> DeclineAuctionRequestAsync(long auctionRequestId, string reason)
+        public async Task<ServiceResult> DeclineAuctionRequestAsync(DeclineAuctionRequestDTO requestDTO)
         {
+            ServiceResult result = new();
+
             IDbContextTransaction transaction = _transactionsService.BeginTransaction();
 
             try
             {
-                AuctionRequest auctionRequest = await _repository.GetByIdAsync<AuctionRequest>(auctionRequestId);
+                AuctionRequest auctionRequest = await _repository.GetByIdAsync<AuctionRequest>(requestDTO.AuctionRequestId);
 
                 if (auctionRequest.Status != AuctionRequestStatus.Pending)
                 {
-                    return false;
+                    await transaction.RollbackAsync();
+
+                    result.IsSuccessfull = false;
+                    result.StatusCode = HttpStatusCode.BadRequest;
+                    result.Errors.Add("Auction request has been already approved or declined.");
+                    return result;
                 }
 
                 auctionRequest.Status = AuctionRequestStatus.Declined;
-                auctionRequest.ReasonDeclined = reason;
+                auctionRequest.ReasonDeclined = requestDTO.Reason;
 
                 _repository.Update(auctionRequest);
 
                 await _repository.SaveChangesAsync();
 
+                await _moderationClient.LogModerationAction(ModerationAction.DecliningAuctionRequest, auctionRequest.Id);
+
                 // TODO: notify auctionist
 
                 await transaction.CommitAsync();
 
-                return true;
+                result.Message = "Auction request has been successfully approved!";
             }
             catch (Exception ex)
             {
                 await transaction.RollbackAsync();
                 _logger.LogError(ex, "An error occured during declining auction request.");
 
-                return false;
+                result.IsSuccessfull = false;
+                result.StatusCode = HttpStatusCode.InternalServerError;
+                result.Errors.Add("An error occured during declining auction request.");
             }
+
+            return result;
         }
 
         public async Task<ServiceResult<PaginatedList<AuctionRequestSummaryDTO>>> GetAllAuctionRequestAsync(AuctionRequestSpecificationsDTO specifications)

@@ -7,7 +7,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<Protobuf Include="Protos\auction.proto" GrpcServices="Server" />
+		<Protobuf Include="Protos\moderation.proto" GrpcServices="Client" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -25,10 +25,6 @@
 		<ProjectReference Include="..\BidMasterOnline.Core\BidMasterOnline.Core.csproj" />
 		<ProjectReference Include="..\BidMasterOnline.Domain\BidMasterOnline.Domain.csproj" />
 		<ProjectReference Include="..\BidMasterOnline.Infrastructure\BidMasterOnline.Infrastructure.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<Folder Include="Protos\" />
 	</ItemGroup>
 
 </Project>
