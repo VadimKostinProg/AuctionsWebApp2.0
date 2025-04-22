@@ -1,4 +1,5 @@
-﻿using BidMasterOnline.Domain.Models.Entities;
+﻿using BidMasterOnline.Core.DTO;
+using BidMasterOnline.Domain.Models.Entities;
 
 namespace Auctions.Service.API.Extensions
 {
@@ -163,6 +164,14 @@ namespace Auctions.Service.API.Extensions
                     : TimeSpan.FromTicks(entity.FinishTimeIntervalInTicks.Value),
                 BidAmountInterval = entity.BidAmountInterval,
                 Status = entity.Status,
+                RequestedByUser = entity.RequestedByUser == null
+                    ? null
+                    : new UserSummaryDTO()
+                    {
+                        Id = entity.RequestedByUser.Id,
+                        Username = entity.RequestedByUser.Username,
+                        Email = entity.RequestedByUser.Email,
+                    },
                 ReasonDeclined = entity.ReasonDeclined,
                 CreatedAt = entity.CreatedAt,
                 CreatedBy = entity.CreatedBy,

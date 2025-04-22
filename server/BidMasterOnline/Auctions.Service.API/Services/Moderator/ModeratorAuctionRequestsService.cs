@@ -10,6 +10,7 @@ using BidMasterOnline.Core.Specifications;
 using BidMasterOnline.Domain.Enums;
 using BidMasterOnline.Domain.Models;
 using BidMasterOnline.Domain.Models.Entities;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using System.Net;
 
@@ -146,7 +147,8 @@ namespace Auctions.Service.API.Services.Moderator
             return result;
         }
 
-        public async Task<ServiceResult<PaginatedList<AuctionRequestSummaryDTO>>> GetAllAuctionRequestAsync(AuctionRequestSpecificationsDTO specifications)
+        public async Task<ServiceResult<PaginatedList<AuctionRequestSummaryDTO>>> GetAllAuctionRequestAsync(
+            AuctionRequestSpecificationsDTO specifications)
         {
             ServiceResult<PaginatedList<AuctionRequestSummaryDTO>> result = new();
 
@@ -156,7 +158,8 @@ namespace Auctions.Service.API.Services.Moderator
                 .WithPagination(specifications.PageSize, specifications.PageNumber)
                 .Build();
 
-            ListModel<AuctionRequest> auctionRequestsList = await _repository.GetFilteredAndPaginated(specification);
+            ListModel<AuctionRequest> auctionRequestsList = await _repository.GetFilteredAndPaginated(specification,
+                includeQuery: query => query.Include(e => e.Images)!);
 
             result.Data = new PaginatedList<AuctionRequestSummaryDTO>
             {
@@ -176,7 +179,12 @@ namespace Auctions.Service.API.Services.Moderator
         public async Task<ServiceResult<AuctionRequestDTO>> GetAuctionRequestById(long id)
         {
             AuctionRequest? auctionRequest = await _repository
-                .GetFirstOrDefaultAsync<AuctionRequest>(x => x.Id == id);
+                .GetFirstOrDefaultAsync<AuctionRequest>(x => x.Id == id,
+                    includeQuery: query => query.Include(e => e.Category)
+                                                .Include(e => e.Type)
+                                                .Include(e => e.FinishMethod)
+                                                .Include(e => e.RequestedByUser)
+                                                .Include(e => e.Images)!);
 
             ServiceResult<AuctionRequestDTO> result = new();
 

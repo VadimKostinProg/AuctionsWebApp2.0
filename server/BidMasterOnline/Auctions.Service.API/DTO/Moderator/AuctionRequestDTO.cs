@@ -1,4 +1,6 @@
-﻿namespace Auctions.Service.API.DTO.Moderator
+﻿using BidMasterOnline.Core.DTO;
+
+namespace Auctions.Service.API.DTO.Moderator
 {
     public class AuctionRequestDTO : AuctionRequestSummaryDTO
     {
@@ -17,6 +19,8 @@
         public decimal BidAmountInterval { get; set; }
 
         public string? ReasonDeclined { get; set; }
+
+        public UserSummaryDTO? RequestedByUser { get; set; }
 
         public List<AuctionImageDTO> Images { get; set; } = [];
     }

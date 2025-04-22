@@ -22,9 +22,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Folder Include="Controllers\Areas\Participant\" />
 		<Folder Include="Protos\" />
-		<Folder Include="Services\Moderator\" />
 		<Folder Include="Services\Participant\" />
 	</ItemGroup>
 

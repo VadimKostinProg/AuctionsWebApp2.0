@@ -1,4 +1,6 @@
-﻿namespace Auctions.Service.API.DTO.Participant
+﻿using BidMasterOnline.Core.DTO;
+
+namespace Auctions.Service.API.DTO.Participant
 {
     public class AuctionRequestDTO : AuctionRequestSummaryDTO
     {

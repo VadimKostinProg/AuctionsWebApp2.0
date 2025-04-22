@@ -10,6 +10,7 @@ using BidMasterOnline.Core.Specifications;
 using BidMasterOnline.Domain.Enums;
 using BidMasterOnline.Domain.Models;
 using BidMasterOnline.Domain.Models.Entities;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using System.Net;
 
@@ -138,7 +139,13 @@ namespace Auctions.Service.API.Services.Moderator
         {
             ServiceResult<AuctionDTO> result = new();
 
-            Auction? auction = await _repository.GetFirstOrDefaultAsync<Auction>(x => x.Id == id);
+            Auction? auction = await _repository.GetFirstOrDefaultAsync<Auction>(x => x.Id == id,
+                includeQuery: query => query.Include(e => e.Category)
+                                            .Include(e => e.Type)
+                                            .Include(e => e.FinishMethod)
+                                            .Include(e => e.Auctionist)
+                                            .Include(e => e.Winner)
+                                            .Include(e => e.Images)!);
 
             if (auction == null)
             {
@@ -161,7 +168,9 @@ namespace Auctions.Service.API.Services.Moderator
 
             ISpecification<Auction> specification = GetSpecification(specifications);
 
-            ListModel<Auction> auctionsList = await _repository.GetFilteredAndPaginated(specification);
+            ListModel<Auction> auctionsList = await _repository.GetFilteredAndPaginated(specification,
+                includeQuery: query => query.Include(e => e.Auctionist)
+                                            .Include(e => e.Images)!);
 
             result.Data = new PaginatedList<AuctionSummaryDTO>
             {
