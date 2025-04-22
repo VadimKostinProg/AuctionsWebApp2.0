@@ -28,6 +28,7 @@ builder.Services.AddScoped<IAuctionRequestsService, AuctionRequestsService>();
 builder.Services.AddScoped<IAuctionsService, AuctionsService>();
 
 builder.Services.AddScoped<ModerationClient>();
+builder.Services.AddScoped<BidsClient>();
 
 var app = builder.Build();
 

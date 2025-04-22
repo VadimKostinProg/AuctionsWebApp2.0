@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Auctions.Service.API.Controllers.Areas.Participant;
 
-[Route("api/participants/auctions/requests")]
+[Route("api/participant/auctions/requests")]
 [Authorize(Roles = UserRoles.Participant)]
 public class AuctionRequestsController : BaseController
 {

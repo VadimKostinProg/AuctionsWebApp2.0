@@ -1,0 +1,35 @@
+﻿using BidMasterOnline.Core.DTO;
+using Bids.Service.API.DTO.Moderator;
+using Bids.Service.API.ServiceContracts.Moderator;
+using Microsoft.AspNetCore.Mvc;
+
+namespace Bids.Service.API.Controllers.Areas.Moderator
+{
+    [Route("api/moderator")]
+    [ApiController]
+    public class BidsController : BaseController
+    {
+        private readonly IModeratorBidsService _service;
+
+        public BidsController(IModeratorBidsService service)
+        {
+            _service = service;
+        }
+
+        [HttpGet("users/{userId}/bids")]
+        public async Task<IActionResult> GetUserBids([FromRoute] long userId)
+        {
+            ServiceResult<PaginatedList<UserBidDTO>> result = await _service.GetUserBidsAsync(userId);
+
+            return FromResult(result);
+        }
+
+        [HttpGet("auctions/{auctionId}/bids")]
+        public async Task<IActionResult> GetAuctionBids([FromRoute] long auctionId)
+        {
+            ServiceResult<PaginatedList<AuctionBidDTO>> result = await _service.GetAuctionBidsAsync(auctionId);
+
+            return FromResult(result);
+        }
+    }
+}

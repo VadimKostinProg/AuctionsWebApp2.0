@@ -21,16 +21,19 @@ namespace Auctions.Service.API.Services.Moderator
         private readonly ITransactionsService _transactionService;
         private readonly ILogger<ModeratorAuctionsService> _logger;
         private readonly ModerationClient _moderationClient;
+        private readonly BidsClient _bidsClient;
 
         public ModeratorAuctionsService(IRepository repository,
             ITransactionsService transactionService,
             ILogger<ModeratorAuctionsService> logger,
-            ModerationClient moderationClient)
+            ModerationClient moderationClient,
+            BidsClient bidsClient)
         {
             _repository = repository;
             _transactionService = transactionService;
             _logger = logger;
             _moderationClient = moderationClient;
+            _bidsClient = bidsClient;
         }
 
         public async Task<ServiceResult> CancelAuctionAsync(CancelAuctionDTO requestDTO)
@@ -110,7 +113,7 @@ namespace Auctions.Service.API.Services.Moderator
 
                 await _moderationClient.LogModerationAction(ModerationAction.RecoveringAuction, entity.Id);
 
-                // TODO: clear all bids
+                await _bidsClient.ClearAllBidsForAuctionAsync(entity.Id);
 
                 // TODO: notify auctionist and auctioners
 
