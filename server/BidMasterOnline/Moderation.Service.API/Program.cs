@@ -19,8 +19,7 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddInfrastructure(builder.Configuration)
     .AddCoreServices();
 
-builder.Services.AddScoped<IModerationLogger, ModerationLogger>();
-builder.Services.AddScoped<IAuctionsClient, AuctionsClient>();
+builder.Services.AddScoped<IModerationLogsService, ModerationLogsService>();
 
 var app = builder.Build();
 

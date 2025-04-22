@@ -34,4 +34,20 @@ public class AuctionRequestsController : BaseController
 
         return FromResult(result);
     }
+
+    [HttpPost("requests/approve")]
+    public async Task<IActionResult> ApproveAuctionRequest([FromBody] ApproveAuctionRequestDTO requestDTO)
+    {
+        ServiceResult result = await _service.ApproveAuctionRequestAsync(requestDTO);
+
+        return FromResult(result);
+    }
+
+    [HttpPost("requests/decline")]
+    public async Task<IActionResult> DeclineAuctionRequest([FromBody] DeclineAuctionRequestDTO requestDTO)
+    {
+        ServiceResult result = await _service.DeclineAuctionRequestAsync(requestDTO);
+
+        return FromResult(result);
+    }
 }

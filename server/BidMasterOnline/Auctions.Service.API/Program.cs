@@ -1,3 +1,4 @@
+using Auctions.Service.API.GrpcServices.Client;
 using Auctions.Service.API.ServiceContracts.Moderator;
 using Auctions.Service.API.ServiceContracts.Participant;
 using Auctions.Service.API.Services.Moderator;
@@ -25,6 +26,8 @@ builder.Services.AddScoped<IModeratorAuctionRequestsService, ModeratorAuctionReq
 
 builder.Services.AddScoped<IAuctionRequestsService, AuctionRequestsService>();
 builder.Services.AddScoped<IAuctionsService, AuctionsService>();
+
+builder.Services.AddScoped<ModerationClient>();
 
 var app = builder.Build();
 
