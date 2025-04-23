@@ -10,6 +10,6 @@ namespace Bids.Service.API.DTO.Moderator
 
         public decimal Amount { get; set; }
 
-        public string AuctionName { get; set; } = string.Empty;
+        public string BidderUsername { get; set; } = string.Empty;
     }
 }

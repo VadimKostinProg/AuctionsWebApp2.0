@@ -23,7 +23,7 @@ namespace BidMasterOnline.Domain.Models.Entities
 
         public DateTime StartTime { get; set; }
 
-        public DateTime? FinishTime { get; set; }
+        public DateTime FinishTime { get; set; }
 
         public long AuctionTimeInTicks { get; set; }
 
@@ -34,6 +34,8 @@ namespace BidMasterOnline.Domain.Models.Entities
         public decimal StartPrice { get; set; }
 
         public decimal CurrentPrice { get; set; }
+
+        public decimal? AimPrice { get; set; }
 
         public double AverageScore { get; set; }
 

@@ -186,5 +186,12 @@ namespace BidMasterOnline.Infrastructure.Repositories
                 PageSize = specification.PageSize
             };
         }
+
+        public Task<int> UpdateManyAsync<T>(Expression<Func<T, bool>> predicate, 
+            Func<T, object> setProperyExpression, 
+            object value) where T : EntityBase
+        {
+            return context.Set<T>().Where(predicate).ExecuteUpdateAsync(a => a.SetProperty(setProperyExpression, value));
+        }
     }
 }

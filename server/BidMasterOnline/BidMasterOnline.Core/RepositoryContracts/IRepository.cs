@@ -2,6 +2,7 @@
 using BidMasterOnline.Domain.Models;
 using BidMasterOnline.Domain.Models.Entities;
 using Microsoft.EntityFrameworkCore.Query;
+using Newtonsoft.Json.Linq;
 using System.Linq.Expressions;
 
 namespace BidMasterOnline.Core.RepositoryContracts
@@ -44,6 +45,11 @@ namespace BidMasterOnline.Core.RepositoryContracts
         Task AddAsync<T>(T entity) where T : EntityBase;
 
         void Update<T>(T entity) where T : EntityBase;
+
+        Task<int> UpdateManyAsync<T>(Expression<Func<T, bool>> predicate,
+            Func<T, object> setProperyExpression,
+            object value) 
+            where T : EntityBase;
 
         void Delete<T>(T entity) where T : EntityBase;
 

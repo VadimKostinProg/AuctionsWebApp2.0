@@ -39,6 +39,5 @@ namespace Bids.Service.API.Controllers.Areas.Participant
 
             return FromResult(result);
         }
-
     }
 }

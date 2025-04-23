@@ -6,7 +6,7 @@ namespace Bids.Service.API.ServiceContracts.Participant
     public interface IParticipantBidsService
     {
         Task<ServiceResult> PostBidOnAuctionAsync(PostBidDTO bidDTO);
-        Task<ServiceResult<PaginatedList<AuctionBidDTO>>> GetAuctionBidsAsync(long auctionId);
-        Task<ServiceResult<PaginatedList<UserBidDTO>>> GetUserBidsAsync();
+        Task<ServiceResult<PaginatedList<AuctionBidDTO>>> GetAuctionBidsAsync(long auctionId, PaginationRequestDTO pagination);
+        Task<ServiceResult<PaginatedList<UserBidDTO>>> GetUserBidsAsync(PaginationRequestDTO pagination);
     }
 }

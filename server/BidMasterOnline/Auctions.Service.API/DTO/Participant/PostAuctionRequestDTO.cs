@@ -26,7 +26,6 @@ namespace Auctions.Service.API.DTO.Participant
         [Range(10, 10e9)]
         public decimal BidAmountInterval { get; set; }
 
-        [MinLength(1)]
         public List<IFormFile> Images { get; set; } = [];
     }
 }
