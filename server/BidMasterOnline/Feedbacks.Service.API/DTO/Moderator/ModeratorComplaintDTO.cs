@@ -1,9 +1,10 @@
-﻿using BidMasterOnline.Domain.Enums;
+﻿using BidMasterOnline.Core.DTO;
+using BidMasterOnline.Domain.Enums;
 using System.ComponentModel.DataAnnotations;
 
-namespace BidMasterOnline.Domain.Models.Entities
+namespace Feedbacks.Service.API.DTO.Moderator
 {
-    public class Complaint : EntityBase
+    public class ModeratorComplaintDTO : BaseDTO
     {
         public long AccusingUserId { get; set; }
 
@@ -17,24 +18,24 @@ namespace BidMasterOnline.Domain.Models.Entities
 
         public long? ModeratorId { get; set; }
 
-        [MaxLength(10000)]
         public required string ComplaintText { get; set; }
 
         public ComplaintType Type { get; set; }
 
         public ComplaintStatus Status { get; set; }
 
-        [MaxLength(10000)]
         public string? ModeratorConclusion { get; set; }
 
-        public User? Moderator { get; set; }
+        public string? ModeratorName { get; set; }
 
-        public User? AccusingUser { get; set; }
+        public string AccusingUserName { get; set; } = string.Empty;
 
-        public User? AccusedUser { get; set; }
+        public string AccusedUsername { get; set; } = string.Empty;
 
-        public Auction? AccusedAuction { get; set; }
+        public string? AccusedAuctionName { get; set; }
 
-        public AuctionComment? AccusedComment { get; set; }
+        public ModeratorAuctionCommentDTO? AccusedComment { get; set; }
+
+        public ModeratorUserFeedbackDTO? AccusedUserFeedback { get; set; }
     }
 }

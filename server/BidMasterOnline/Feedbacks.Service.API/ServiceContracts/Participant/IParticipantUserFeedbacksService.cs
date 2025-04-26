@@ -9,5 +9,7 @@ namespace Feedbacks.Service.API.ServiceContracts.Participant
 
         Task<ServiceResult<PaginatedList<ParticipantUserFeedbackDTO>>> GetUserFeedbacksAsync(long userId,
             PaginationRequestDTO pagination);
+
+        Task<ServiceResult> DeleteUserFeedbackAsync(long userFeedbackId);
     }
 }

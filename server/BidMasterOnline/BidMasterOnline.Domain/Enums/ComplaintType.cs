@@ -5,6 +5,7 @@
     {
         ComplaintOnAuctionContent,
         ComplaintOnAuctionComment,
+        ComplaintOnUserBehaviour,
         ComplaintOnUserFeedback
     }
 }

@@ -1,12 +1,15 @@
-﻿using BidMasterOnline.Core.DTO;
+﻿using BidMasterOnline.Core.Constants;
+using BidMasterOnline.Core.DTO;
 using Feedbacks.Service.API.DTO.Participant;
 using Feedbacks.Service.API.ServiceContracts.Participant;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Feedbacks.Service.API.Controllers.Areas.Participant
 {
     [Route("api/participant/support-tickets")]
     [ApiController]
+    [Authorize(Roles = UserRoles.Participant)]
     public class SupportTicketsController : BaseController
     {
         private readonly IParticipantSupportTicketsService _service;

@@ -17,8 +17,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="DTO\Moderator\" />
-    <Folder Include="ServiceContracts\Moderator\" />
     <Folder Include="Services\" />
   </ItemGroup>
 

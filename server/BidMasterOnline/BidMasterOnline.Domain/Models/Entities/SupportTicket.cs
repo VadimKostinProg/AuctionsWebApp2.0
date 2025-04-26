@@ -17,6 +17,7 @@ namespace BidMasterOnline.Domain.Models.Entities
 
         public SupportTicketStatus State { get; set; }
 
+        [MaxLength(10000)]
         public string? ModeratorComment { get; set; }
 
         public User? User { get; set; }
