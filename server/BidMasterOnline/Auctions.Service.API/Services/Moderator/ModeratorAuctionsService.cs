@@ -10,6 +10,7 @@ using BidMasterOnline.Core.Specifications;
 using BidMasterOnline.Domain.Enums;
 using BidMasterOnline.Domain.Models;
 using BidMasterOnline.Domain.Models.Entities;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using System.Net;
 
@@ -21,16 +22,19 @@ namespace Auctions.Service.API.Services.Moderator
         private readonly ITransactionsService _transactionService;
         private readonly ILogger<ModeratorAuctionsService> _logger;
         private readonly ModerationClient _moderationClient;
+        private readonly BidsClient _bidsClient;
 
         public ModeratorAuctionsService(IRepository repository,
             ITransactionsService transactionService,
             ILogger<ModeratorAuctionsService> logger,
-            ModerationClient moderationClient)
+            ModerationClient moderationClient,
+            BidsClient bidsClient)
         {
             _repository = repository;
             _transactionService = transactionService;
             _logger = logger;
             _moderationClient = moderationClient;
+            _bidsClient = bidsClient;
         }
 
         public async Task<ServiceResult> CancelAuctionAsync(CancelAuctionDTO requestDTO)
@@ -110,7 +114,7 @@ namespace Auctions.Service.API.Services.Moderator
 
                 await _moderationClient.LogModerationAction(ModerationAction.RecoveringAuction, entity.Id);
 
-                // TODO: clear all bids
+                await _bidsClient.ClearAllBidsForAuctionAsync(entity.Id);
 
                 // TODO: notify auctionist and auctioners
 
@@ -135,7 +139,13 @@ namespace Auctions.Service.API.Services.Moderator
         {
             ServiceResult<AuctionDTO> result = new();
 
-            Auction? auction = await _repository.GetFirstOrDefaultAsync<Auction>(x => x.Id == id);
+            Auction? auction = await _repository.GetFirstOrDefaultAsync<Auction>(x => x.Id == id,
+                includeQuery: query => query.Include(e => e.Category)
+                                            .Include(e => e.Type)
+                                            .Include(e => e.FinishMethod)
+                                            .Include(e => e.Auctionist)
+                                            .Include(e => e.Winner)
+                                            .Include(e => e.Images)!);
 
             if (auction == null)
             {
@@ -158,7 +168,9 @@ namespace Auctions.Service.API.Services.Moderator
 
             ISpecification<Auction> specification = GetSpecification(specifications);
 
-            ListModel<Auction> auctionsList = await _repository.GetFilteredAndPaginated(specification);
+            ListModel<Auction> auctionsList = await _repository.GetFilteredAndPaginated(specification,
+                includeQuery: query => query.Include(e => e.Auctionist)
+                                            .Include(e => e.Images)!);
 
             result.Data = new PaginatedList<AuctionSummaryDTO>
             {

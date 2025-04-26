@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Auctions.Service.API.Controllers.Areas.Moderator;
 
-[Route("api/moderators/auctions/requests")]
+[Route("api/moderator/auctions/requests")]
 [Authorize(Roles = UserRoles.Moderator)]
 public class AuctionRequestsController : BaseController
 {

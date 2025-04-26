@@ -10,6 +10,7 @@ using BidMasterOnline.Domain.Enums;
 using BidMasterOnline.Domain.Models;
 using BidMasterOnline.Domain.Models.Entities;
 using CloudinaryDotNet.Actions;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using System.Net;
 
@@ -44,7 +45,8 @@ namespace Auctions.Service.API.Services.Participant
                 .WithPagination(pagination.PageSize, pagination.PageNumber)
                 .Build();
 
-            ListModel<AuctionRequest> auctionRequestsList = await _repository.GetFilteredAndPaginated(specification);
+            ListModel<AuctionRequest> auctionRequestsList = await _repository.GetFilteredAndPaginated(specification,
+                includeQuery: query => query.Include(e => e.Images)!);
 
 
             result.Data = new PaginatedList<AuctionRequestSummaryDTO>
@@ -67,7 +69,11 @@ namespace Auctions.Service.API.Services.Participant
             long userId = _userAccessor.UserId;
 
             AuctionRequest? auctionRequest = await _repository
-                .GetFirstOrDefaultAsync<AuctionRequest>(x => x.Id == id && x.RequestedByUserId == userId);
+                .GetFirstOrDefaultAsync<AuctionRequest>(x => x.Id == id && x.RequestedByUserId == userId,
+                    includeQuery: query => query.Include(e => e.Category)
+                                                .Include(e => e.Type)
+                                                .Include(e => e.FinishMethod)
+                                                .Include(e => e.Images)!);
 
             ServiceResult<AuctionRequestDTO> result = new();
 

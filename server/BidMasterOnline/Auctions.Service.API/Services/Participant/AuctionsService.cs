@@ -8,6 +8,7 @@ using BidMasterOnline.Core.ServiceContracts;
 using BidMasterOnline.Core.Specifications;
 using BidMasterOnline.Domain.Models;
 using BidMasterOnline.Domain.Models.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace Auctions.Service.API.Services.Participant
 {
@@ -29,7 +30,9 @@ namespace Auctions.Service.API.Services.Participant
 
             ISpecification<Auction> specification = GetSpecification(specifications);
 
-            ListModel<Auction> auctionsList = await _repository.GetFilteredAndPaginated(specification);
+            ListModel<Auction> auctionsList = await _repository.GetFilteredAndPaginated(specification,
+                includeQuery: query => query.Include(e => e.Auctionist)
+                                            .Include(e => e.Images)!);
 
             result.Data = new PaginatedList<AuctionSummaryDTO>
             {
@@ -50,7 +53,13 @@ namespace Auctions.Service.API.Services.Participant
         {
             ServiceResult<AuctionDTO> result = new();
 
-            Auction? auction = await _repository.GetFirstOrDefaultAsync<Auction>(x => x.Id == id);
+            Auction? auction = await _repository.GetFirstOrDefaultAsync<Auction>(x => x.Id == id,
+                includeQuery: query => query.Include(e => e.Category)
+                                            .Include(e => e.Type)
+                                            .Include(e => e.FinishMethod)
+                                            .Include(e => e.Auctionist)
+                                            .Include(e => e.Winner)
+                                            .Include(e => e.Images)!);
 
             if (auction == null)
             {

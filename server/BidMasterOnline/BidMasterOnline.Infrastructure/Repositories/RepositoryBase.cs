@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using BidMasterOnline.Domain.Models;
 using BidMasterOnline.Core.Specifications;
 using BidMasterOnline.Domain.Models.Entities;
+using Microsoft.EntityFrameworkCore.Query;
 
 namespace BidMasterOnline.Infrastructure.Repositories
 {
@@ -49,44 +50,66 @@ namespace BidMasterOnline.Infrastructure.Repositories
             context.Set<T>().RemoveRange(entities);
         }
 
-        public virtual async Task<T?> GetFirstOrDefaultAsync<T>(Expression<Func<T, bool>> expression, bool disableTracking = false) where T : EntityBase
-        {
-            var query = context.Set<T>().AsQueryable();
-
-            if (disableTracking)
-            {
-                query = query.AsNoTracking();
-            }
-
-            return await query.FirstOrDefaultAsync(expression);
-        }
-
-        public virtual IQueryable<T> GetAll<T>(bool disableTracking = false) where T : EntityBase
-        {
-            var query = context.Set<T>().AsQueryable();
-
-            if (disableTracking)
-            {
-                query = query.AsNoTracking();
-            }
-
-            return query;
-        }
-
-        public virtual T GetById<T>(long id, bool disableTracking = false) where T : EntityBase
+        public virtual async Task<T?> GetFirstOrDefaultAsync<T>(Expression<Func<T, bool>> expression, 
+            bool disableTracking = false,
+            Func<IQueryable<T>, IIncludableQueryable<T, object>>? includeQuery = null) where T : EntityBase
         {
             IQueryable<T> query = context.Set<T>().AsQueryable();
 
             if (disableTracking)
             {
                 query = query.AsNoTracking();
+            }
+
+            if (includeQuery != null)
+            {
+                query = includeQuery(query);
+            }
+
+            return await query.FirstOrDefaultAsync(expression);
+        }
+
+        public virtual IQueryable<T> GetAll<T>(bool disableTracking = false,
+            Func<IQueryable<T>, IIncludableQueryable<T, object>>? includeQuery = null) where T : EntityBase
+        {
+            var query = context.Set<T>().AsQueryable();
+
+            if (disableTracking)
+            {
+                query = query.AsNoTracking();
+            }
+
+            if (includeQuery != null)
+            {
+                query = includeQuery(query);
+            }
+
+            return query;
+        }
+
+        public virtual T GetById<T>(long id, 
+            bool disableTracking = false,
+            Func<IQueryable<T>, IIncludableQueryable<T, object>>? includeQuery = null) where T : EntityBase
+        {
+            IQueryable<T> query = context.Set<T>().AsQueryable();
+
+            if (disableTracking)
+            {
+                query = query.AsNoTracking();
+            }
+
+            if (includeQuery != null)
+            {
+                query = includeQuery(query);
             }
 
             return query.First(x => x.Id == id);
 
         }
 
-        public virtual async Task<T> GetByIdAsync<T>(long id, bool disableTracking = false) where T : EntityBase
+        public virtual async Task<T> GetByIdAsync<T>(long id, 
+            bool disableTracking = false,
+            Func<IQueryable<T>, IIncludableQueryable<T, object>>? includeQuery = null) where T : EntityBase
         {
             IQueryable<T> query = context.Set<T>().AsQueryable();
 
@@ -95,11 +118,17 @@ namespace BidMasterOnline.Infrastructure.Repositories
                 query = query.AsNoTracking();
             }
 
+            if (includeQuery != null)
+            {
+                query = includeQuery(query);
+            }
+
             return await query.FirstAsync(x => x.Id == id);
         }
 
         public virtual IQueryable<T> GetFiltered<T>(Expression<Func<T, bool>> predicate,
-            bool disableTracking = false)
+            bool disableTracking = false,
+            Func<IQueryable<T>, IIncludableQueryable<T, object>>? includeQuery = null)
             where T : EntityBase
         {
             var query = context.Set<T>().Where(predicate);
@@ -107,6 +136,11 @@ namespace BidMasterOnline.Infrastructure.Repositories
             if (disableTracking)
             {
                 query = query.AsNoTracking();
+            }
+
+            if (includeQuery != null)
+            {
+                query = includeQuery(query);
             }
 
             return query;
@@ -120,7 +154,9 @@ namespace BidMasterOnline.Infrastructure.Repositories
         public Task<int> SaveChangesAsync()
             => context.SaveChangesAsync();
 
-        public async Task<ListModel<T>> GetFilteredAndPaginated<T>(ISpecification<T> specification, bool disableTracking = false)
+        public async Task<ListModel<T>> GetFilteredAndPaginated<T>(ISpecification<T> specification,
+            bool disableTracking = false,
+            Func<IQueryable<T>, IIncludableQueryable<T, object>>? includeQuery = null)
             where T : EntityBase
         {
             IQueryable<T> query = context.Set<T>();
@@ -128,6 +164,11 @@ namespace BidMasterOnline.Infrastructure.Repositories
             if (disableTracking)
             {
                 query.AsNoTracking();
+            }
+
+            if (includeQuery != null)
+            {
+                query = includeQuery(query);
             }
 
             query = query.ApplySpecifications(specification);
@@ -144,6 +185,13 @@ namespace BidMasterOnline.Infrastructure.Repositories
                 CurrentPage = specification.PageNumber,
                 PageSize = specification.PageSize
             };
+        }
+
+        public Task<int> UpdateManyAsync<T>(Expression<Func<T, bool>> predicate, 
+            Func<T, object> setProperyExpression, 
+            object value) where T : EntityBase
+        {
+            return context.Set<T>().Where(predicate).ExecuteUpdateAsync(a => a.SetProperty(setProperyExpression, value));
         }
     }
 }
