@@ -37,7 +37,12 @@ namespace Bids.Service.API.Services.Participant
 
             if (auction.AimPrice.HasValue && newBid.Amount >= auction.AimPrice)
             {
-                // TODO: finish auction
+                auction.FinishTime = DateTime.UtcNow;
+                auction.Status = AuctionStatus.Finished;
+
+                auction.WinnerId = newBid.BidderId;
+
+                // TODO: send messages
             }
             else if (auction.FinishMethod!.Name == AuctionFinishMethods.DynamicFinishMethod &&
                 auction.FinishTimeIntervalInTicks.HasValue)
