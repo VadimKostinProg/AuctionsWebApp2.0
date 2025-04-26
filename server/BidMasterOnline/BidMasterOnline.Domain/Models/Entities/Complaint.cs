@@ -13,14 +13,18 @@ namespace BidMasterOnline.Domain.Models.Entities
 
         public long? AccusedCommentId { get; set; }
 
+        public long? AccusedUserFeedbackId { get; set; }
+
         public long? ModeratorId { get; set; }
 
-        [MaxLength(5000)]
+        [MaxLength(10000)]
         public required string ComplaintText { get; set; }
 
         public ComplaintType Type { get; set; }
 
         public ComplaintStatus Status { get; set; }
+
+        public string ModeratorConclusion { get; set; } = string.Empty;
 
         public User? Moderator { get; set; }
 

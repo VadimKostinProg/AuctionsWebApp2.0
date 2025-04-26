@@ -11,13 +11,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\BidMasterOnline.Core\BidMasterOnline.Core.csproj" />
     <ProjectReference Include="..\BidMasterOnline.Domain\BidMasterOnline.Domain.csproj" />
     <ProjectReference Include="..\BidMasterOnline.Infrastructure\BidMasterOnline.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="DTO\Moderator\" />
+    <Folder Include="ServiceContracts\Moderator\" />
+    <Folder Include="Services\" />
   </ItemGroup>
 
 </Project>

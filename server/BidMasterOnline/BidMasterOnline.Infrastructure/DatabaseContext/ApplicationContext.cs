@@ -15,7 +15,7 @@ namespace BidMasterOnline.Infrastructure.DatabaseContext
         public virtual DbSet<AuctionComment> Comments { get; set; }
         public virtual DbSet<Complaint> Complaints { get; set; }
         public virtual DbSet<Role> Roles { get; set; }
-        public virtual DbSet<TechnicalSupportRequest> TechnicalSupportRequests { get; set; }
+        public virtual DbSet<SupportTicket> TechnicalSupportRequests { get; set; }
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<WatchList> WatchLists { get; set; }
         public virtual DbSet<Payment> Payments { get; set; }
@@ -146,7 +146,7 @@ namespace BidMasterOnline.Infrastructure.DatabaseContext
                     .HasForeignKey(c => c.ModeratorId);
             });
 
-            modelBuilder.Entity<TechnicalSupportRequest>(options =>
+            modelBuilder.Entity<SupportTicket>(options =>
             {
                 options.HasOne(tsr => tsr.User)
                     .WithMany()
@@ -194,9 +194,9 @@ namespace BidMasterOnline.Infrastructure.DatabaseContext
                     .WithMany()
                     .HasForeignKey(ml => ml.ComplaintId);
 
-                options.HasOne<TechnicalSupportRequest>()
+                options.HasOne<SupportTicket>()
                     .WithMany()
-                    .HasForeignKey(ml => ml.TechnicalSupportRequestId);
+                    .HasForeignKey(ml => ml.SupportTicketId);
             });
 
             // Seed Data

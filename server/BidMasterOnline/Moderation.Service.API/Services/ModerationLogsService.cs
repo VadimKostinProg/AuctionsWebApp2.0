@@ -59,7 +59,7 @@ namespace Moderation.Service.API.Services
                     break;
                 case ModerationAction.PickingUpTechnicalSupportRequest:
                 case ModerationAction.CompletingTechnicalSupportRequest:
-                    log.TechnicalSupportRequestId = resourceId;
+                    log.SupportTicketId = resourceId;
                     break;
                 case ModerationAction.PickingUpComplaint:
                 case ModerationAction.CompletingComplaint:

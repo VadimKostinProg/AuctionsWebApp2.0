@@ -1,6 +1,6 @@
 ﻿namespace BidMasterOnline.Domain.Enums
 {
-    public enum TechnicalSupportRequestState
+    public enum SupportTicketStatus
     {
         Pending,
         Active,

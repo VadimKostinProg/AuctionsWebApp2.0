@@ -3,7 +3,8 @@
     //TODO: add more types maybe
     public enum ComplaintType
     {
-        ComplaintOnUserBehavior,
-        ComplaintOnAuctionContent
+        ComplaintOnAuctionContent,
+        ComplaintOnAuctionComment,
+        ComplaintOnUserFeedback
     }
 }
