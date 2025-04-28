@@ -15,7 +15,7 @@ namespace BidMasterOnline.Domain.Models.Entities
         [MaxLength(10000)]
         public required string Text { get; set; }
 
-        public SupportTicketStatus State { get; set; }
+        public SupportTicketStatus Status { get; set; }
 
         [MaxLength(10000)]
         public string? ModeratorComment { get; set; }

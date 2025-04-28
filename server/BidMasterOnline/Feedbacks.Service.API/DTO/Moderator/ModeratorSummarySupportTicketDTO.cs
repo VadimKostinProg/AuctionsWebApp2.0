@@ -12,7 +12,7 @@ namespace Feedbacks.Service.API.DTO.Moderator
 
         public required string Title { get; set; }
 
-        public SupportTicketStatus State { get; set; }
+        public SupportTicketStatus Status { get; set; }
 
         public DateTime CreatedAt { get; set; }
 

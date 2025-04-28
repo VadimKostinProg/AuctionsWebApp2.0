@@ -9,5 +9,9 @@
         public int Score { get; set; }
 
         public string? Comment { get; set; }
+
+        public User? FromUser { get; set; }
+
+        public User? ToUser { get; set; }
     }
 }

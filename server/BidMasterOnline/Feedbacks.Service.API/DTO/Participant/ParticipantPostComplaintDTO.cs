@@ -5,9 +5,7 @@ namespace Feedbacks.Service.API.DTO.Participant
 {
     public class ParticipantPostComplaintDTO
     {
-        public long AccusingUserId { get; set; }
-
-        public long? AccusedUserId { get; set; }
+        public long AccusedUserId { get; set; }
 
         public long? AccusedAuctionId { get; set; }
 

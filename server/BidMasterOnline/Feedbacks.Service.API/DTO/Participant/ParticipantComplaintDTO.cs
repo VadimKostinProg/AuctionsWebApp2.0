@@ -16,6 +16,6 @@ namespace Feedbacks.Service.API.DTO.Participant
 
         public ComplaintStatus Status { get; set; }
 
-        public string ModeratorConclusion { get; set; } = string.Empty;
+        public string? ModeratorConclusion { get; set; }
     }
 }

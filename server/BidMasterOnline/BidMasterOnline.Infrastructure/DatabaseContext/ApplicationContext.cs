@@ -33,11 +33,11 @@ namespace BidMasterOnline.Infrastructure.DatabaseContext
             modelBuilder.Entity<User>(options =>
             {
                 options.HasMany<UserFeedback>()
-                    .WithOne()
+                    .WithOne(uf => uf.FromUser)
                     .HasForeignKey(uf => uf.FromUserId);
 
                 options.HasMany<UserFeedback>()
-                    .WithOne()
+                    .WithOne(uf => uf.ToUser)
                     .HasForeignKey(uf => uf.ToUserId);
 
                 options.HasOne(x => x.Role)
@@ -140,6 +140,10 @@ namespace BidMasterOnline.Infrastructure.DatabaseContext
                 options.HasOne(c => c.AccusedComment)
                     .WithMany()
                     .HasForeignKey(c => c.AccusedCommentId);
+
+                options.HasOne(c => c.AccusedUserFeedback)
+                    .WithMany()
+                    .HasForeignKey(c => c.AccusedUserFeedbackId);
 
                 options.HasOne(c => c.Moderator)
                     .WithMany()

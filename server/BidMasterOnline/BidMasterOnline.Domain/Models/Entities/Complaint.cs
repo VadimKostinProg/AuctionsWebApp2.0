@@ -36,5 +36,7 @@ namespace BidMasterOnline.Domain.Models.Entities
         public Auction? AccusedAuction { get; set; }
 
         public AuctionComment? AccusedComment { get; set; }
+
+        public UserFeedback? AccusedUserFeedback { get; set; }
     }
 }

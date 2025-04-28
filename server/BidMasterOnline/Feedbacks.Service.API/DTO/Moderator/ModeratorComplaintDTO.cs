@@ -18,6 +18,8 @@ namespace Feedbacks.Service.API.DTO.Moderator
 
         public long? ModeratorId { get; set; }
 
+        public required string Title { get; set; }
+
         public required string ComplaintText { get; set; }
 
         public ComplaintType Type { get; set; }
