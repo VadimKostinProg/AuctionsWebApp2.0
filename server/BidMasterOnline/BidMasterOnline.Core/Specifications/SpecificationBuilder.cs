@@ -19,7 +19,8 @@ namespace BidMasterOnline.Core.Specifications
             return this;
         }
 
-        public SpecificationBuilder<T> OrderBy(Expression<Func<T, object>> sortBy, SortDirection sortOrder)
+        public SpecificationBuilder<T> OrderBy(Expression<Func<T, object>> sortBy, 
+            SortDirection sortOrder = SortDirection.ASC)
         {
             this._sortBy = sortBy;
             this._sortOrder = sortOrder;

@@ -1,5 +1,8 @@
-using BidMasterOnline.Infrastructure;
 using BidMasterOnline.Core;
+using BidMasterOnline.Infrastructure;
+using Feedbacks.Service.API.GrpcServices.Client;
+using Feedbacks.Service.API.ServiceContracts.Participant;
+using Feedbacks.Service.API.Services.Participant;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +17,12 @@ builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddInfrastructure(builder.Configuration)
     .AddCoreServices();
+
+builder.Services.AddScoped<ModerationClient>();
+builder.Services.AddScoped<IParticipantAuctionCommentsService, ParticipantAuctionCommentsService>();
+builder.Services.AddScoped<IParticipantComplaintsService, ParticipantComplaintsService>();
+builder.Services.AddScoped<IParticipantSupportTicketsService, ParticipantSupportTicketsService>();
+builder.Services.AddScoped<IParticipantUserFeedbacksService, ParticipantUserFeedbacksService>();
 
 var app = builder.Build();
 
