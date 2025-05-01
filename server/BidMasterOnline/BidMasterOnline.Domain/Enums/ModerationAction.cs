@@ -9,9 +9,6 @@
         CancelingAuction,
         RecoveringAuction,
         DeletingComment,
-        PickingUpTechnicalSupportRequest,
-        CompletingTechnicalSupportRequest,
-        PickingUpComplaint,
-        CompletingComplaint
+        DeletingUserFeedback
     }
 }

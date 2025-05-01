@@ -28,7 +28,7 @@ namespace Feedbacks.Service.API.Services.Participant
             ISpecification<AuctionComment> specification = new SpecificationBuilder<AuctionComment>()
                 .With(e => e.AuctionId == auctionId)
                 .WithPagination(pagination.PageSize, pagination.PageNumber)
-                .OrderBy(e => e.CreatedAt)
+                .OrderBy(e => e.CreatedAt, BidMasterOnline.Core.Enums.SortDirection.DESC)
                 .Build();
 
             ListModel<AuctionComment> entitiesList = await _repository.GetFilteredAndPaginated(specification);

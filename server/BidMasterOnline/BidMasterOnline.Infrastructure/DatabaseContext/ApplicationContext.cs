@@ -193,14 +193,6 @@ namespace BidMasterOnline.Infrastructure.DatabaseContext
                 options.HasOne<AuctionComment>()
                     .WithMany()
                     .HasForeignKey(ml => ml.AuctionCommentId);
-
-                options.HasOne<Complaint>()
-                    .WithMany()
-                    .HasForeignKey(ml => ml.ComplaintId);
-
-                options.HasOne<SupportTicket>()
-                    .WithMany()
-                    .HasForeignKey(ml => ml.SupportTicketId);
             });
 
             // Seed Data

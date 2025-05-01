@@ -4,6 +4,6 @@
     {
         Pending,
         Active,
-        Handled
+        Completed
     }
 }
