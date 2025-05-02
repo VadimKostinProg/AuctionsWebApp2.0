@@ -7,6 +7,7 @@ using BidMasterOnline.Domain.Models.Entities;
 using Feedbacks.Service.API.DTO.Participant;
 using Feedbacks.Service.API.Extensions;
 using Feedbacks.Service.API.ServiceContracts.Participant;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Feedbacks.Service.API.Services.Participant
 {
@@ -15,14 +16,17 @@ namespace Feedbacks.Service.API.Services.Participant
         private readonly IRepository _repository;
         private readonly IUserAccessor _userAccessor;
         private readonly ILogger<ParticipantUserFeedbacksService> _logger;
+        private readonly ITransactionsService _transactionsService;
 
-        public ParticipantUserFeedbacksService(IRepository repository, 
-            IUserAccessor userAccessor, 
-            ILogger<ParticipantUserFeedbacksService> logger)
+        public ParticipantUserFeedbacksService(IRepository repository,
+            IUserAccessor userAccessor,
+            ILogger<ParticipantUserFeedbacksService> logger,
+            ITransactionsService transactionsService)
         {
             _repository = repository;
             _userAccessor = userAccessor;
             _logger = logger;
+            _transactionsService = transactionsService;
         }
 
         public async Task<ServiceResult> DeleteUserFeedbackAsync(long userFeedbackId)
@@ -81,6 +85,8 @@ namespace Feedbacks.Service.API.Services.Participant
         {
             ServiceResult result = new();
 
+            IDbContextTransaction transaction = _transactionsService.BeginTransaction();
+
             try
             {
                 UserFeedback userFeedback = userFeedbackDTO.ToDomain();
@@ -88,17 +94,31 @@ namespace Feedbacks.Service.API.Services.Participant
                 await _repository.AddAsync(userFeedback);
                 await _repository.SaveChangesAsync();
 
-                // TODO: recalculate user average score
+                await RecalculateUserAverageScore(userFeedbackDTO.ToUserId);
+
+                await transaction.CommitAsync();
             }
             catch (Exception ex)
             {
+                await transaction.RollbackAsync();
+
                 _logger.LogError(ex, "An error occured during placing a user feedback.");
+
                 result.IsSuccessfull = false;
                 result.StatusCode = System.Net.HttpStatusCode.InternalServerError;
                 result.Errors.Add("An error occured during placing a user feedback.");
             }
 
             return result;
+        }
+
+        private async Task RecalculateUserAverageScore(long userId)
+        {
+            decimal avgScore = (decimal)_repository.GetFiltered<UserFeedback>(e => e.ToUserId == userId)
+                .Select(e => e.Score)
+                .Average();
+
+            await _repository.UpdateManyAsync<User>(e => e.Id == userId, e => e.AverageScore, avgScore);
         }
     }
 }
