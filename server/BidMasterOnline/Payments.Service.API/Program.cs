@@ -12,6 +12,16 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddHttpContextAccessor();
 
+builder.Services.AddAuthentication("Bearer")
+                .AddJwtBearer("Bearer", options =>
+                {
+                    options.Authority = builder.Configuration["IdentityServer:Authority"],
+                    options.TokenValidationParameters = new()
+                    {
+                        ValidateAudience = true,
+                    };
+                });
+
 builder.Services.AddInfrastructure(builder.Configuration)
     .AddCoreServices();
 
@@ -26,6 +36,9 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseRouting();
+
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

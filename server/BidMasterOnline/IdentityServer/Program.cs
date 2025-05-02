@@ -2,12 +2,7 @@ using IdentityServer;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddIdentityServer()
-    .AddInMemoryClients(Config.Clients)
-    .AddInMemoryApiResources(Config.ApiResources)
-    .AddInMemoryApiScopes(Config.ApiScopes)
-    .AddInMemoryIdentityResources(Config.IdentityResources)
-    .AddDeveloperSigningCredential();
+builder.Services.ConfigureIdentityServer(builder.Configuration);
 
 var app = builder.Build();
 
