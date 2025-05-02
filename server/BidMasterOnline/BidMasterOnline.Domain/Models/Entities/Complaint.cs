@@ -7,20 +7,25 @@ namespace BidMasterOnline.Domain.Models.Entities
     {
         public long AccusingUserId { get; set; }
 
-        public long? AccusedUserId { get; set; }
+        public long AccusedUserId { get; set; }
 
         public long? AccusedAuctionId { get; set; }
 
         public long? AccusedCommentId { get; set; }
 
+        public long? AccusedUserFeedbackId { get; set; }
+
         public long? ModeratorId { get; set; }
 
-        [MaxLength(5000)]
+        [MaxLength(10000)]
         public required string ComplaintText { get; set; }
 
         public ComplaintType Type { get; set; }
 
         public ComplaintStatus Status { get; set; }
+
+        [MaxLength(10000)]
+        public string? ModeratorConclusion { get; set; }
 
         public User? Moderator { get; set; }
 
@@ -31,5 +36,7 @@ namespace BidMasterOnline.Domain.Models.Entities
         public Auction? AccusedAuction { get; set; }
 
         public AuctionComment? AccusedComment { get; set; }
+
+        public UserFeedback? AccusedUserFeedback { get; set; }
     }
 }

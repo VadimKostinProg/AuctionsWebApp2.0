@@ -1,11 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace BidMasterOnline.Domain.Models.Entities
+namespace Feedbacks.Service.API.DTO.Participant
 {
-    public class AuctionComment : EntityBase
+    public class ParticipantPostCommentDTO
     {
-        public long UserId { get; set; }
-
         public long AuctionId { get; set; }
 
         [Range(1, 10)]
@@ -13,9 +11,5 @@ namespace BidMasterOnline.Domain.Models.Entities
 
         [MaxLength(5000)]
         public required string CommentText { get; set; }
-
-        public User? User { get; set; }
-
-        public Auction? Auction { get; set; }
     }
 }

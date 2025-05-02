@@ -15,7 +15,7 @@ namespace BidMasterOnline.Infrastructure.DatabaseContext
         public virtual DbSet<AuctionComment> Comments { get; set; }
         public virtual DbSet<Complaint> Complaints { get; set; }
         public virtual DbSet<Role> Roles { get; set; }
-        public virtual DbSet<TechnicalSupportRequest> TechnicalSupportRequests { get; set; }
+        public virtual DbSet<SupportTicket> TechnicalSupportRequests { get; set; }
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<WatchList> WatchLists { get; set; }
         public virtual DbSet<Payment> Payments { get; set; }
@@ -33,11 +33,11 @@ namespace BidMasterOnline.Infrastructure.DatabaseContext
             modelBuilder.Entity<User>(options =>
             {
                 options.HasMany<UserFeedback>()
-                    .WithOne()
+                    .WithOne(uf => uf.FromUser)
                     .HasForeignKey(uf => uf.FromUserId);
 
                 options.HasMany<UserFeedback>()
-                    .WithOne()
+                    .WithOne(uf => uf.ToUser)
                     .HasForeignKey(uf => uf.ToUserId);
 
                 options.HasOne(x => x.Role)
@@ -141,12 +141,16 @@ namespace BidMasterOnline.Infrastructure.DatabaseContext
                     .WithMany()
                     .HasForeignKey(c => c.AccusedCommentId);
 
+                options.HasOne(c => c.AccusedUserFeedback)
+                    .WithMany()
+                    .HasForeignKey(c => c.AccusedUserFeedbackId);
+
                 options.HasOne(c => c.Moderator)
                     .WithMany()
                     .HasForeignKey(c => c.ModeratorId);
             });
 
-            modelBuilder.Entity<TechnicalSupportRequest>(options =>
+            modelBuilder.Entity<SupportTicket>(options =>
             {
                 options.HasOne(tsr => tsr.User)
                     .WithMany()
@@ -189,14 +193,6 @@ namespace BidMasterOnline.Infrastructure.DatabaseContext
                 options.HasOne<AuctionComment>()
                     .WithMany()
                     .HasForeignKey(ml => ml.AuctionCommentId);
-
-                options.HasOne<Complaint>()
-                    .WithMany()
-                    .HasForeignKey(ml => ml.ComplaintId);
-
-                options.HasOne<TechnicalSupportRequest>()
-                    .WithMany()
-                    .HasForeignKey(ml => ml.TechnicalSupportRequestId);
             });
 
             // Seed Data

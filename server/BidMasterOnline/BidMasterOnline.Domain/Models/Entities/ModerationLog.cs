@@ -12,10 +12,6 @@ namespace BidMasterOnline.Domain.Models.Entities
 
         public long? AuctionCommentId { get; set; }
 
-        public long? ComplaintId { get; set; }
-
-        public long? TechnicalSupportRequestId { get; set; }
-
         public ModerationAction Action { get; set; }
     }
 }
