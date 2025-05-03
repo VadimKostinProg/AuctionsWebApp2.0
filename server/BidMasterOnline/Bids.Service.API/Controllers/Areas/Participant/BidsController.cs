@@ -17,17 +17,19 @@ namespace Bids.Service.API.Controllers.Areas.Participant
         }
 
         [HttpGet("bids")]
-        public async Task<IActionResult> GetUserBids()
+        public async Task<IActionResult> GetUserBids([FromQuery] PaginationRequestDTO pagination)
         {
-            ServiceResult<PaginatedList<UserBidDTO>> result = await _service.GetUserBidsAsync();
+            ServiceResult<PaginatedList<UserBidDTO>> result = await _service.GetUserBidsAsync(pagination);
 
             return FromResult(result);
         }
 
         [HttpGet("auctions/{auctionId}/bids")]
-        public async Task<IActionResult> GetAuctionBids([FromRoute] long auctionId)
+        public async Task<IActionResult> GetAuctionBids([FromRoute] long auctionId,
+            [FromQuery] PaginationRequestDTO pagination)
         {
-            ServiceResult<PaginatedList<AuctionBidDTO>> result = await _service.GetAuctionBidsAsync(auctionId);
+            ServiceResult<PaginatedList<AuctionBidDTO>> result = await _service.GetAuctionBidsAsync(auctionId,
+                pagination);
 
             return FromResult(result);
         }

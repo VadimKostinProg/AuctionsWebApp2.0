@@ -29,7 +29,7 @@ namespace Feedbacks.Service.API.Controllers.Areas.Participant
             return FromResult(result);
         }
 
-        [HttpPost]
+        [HttpPost("feedbacks")]
         public async Task<IActionResult> PostUserFeedback([FromBody] ParticipantPostUserFeedbackDTO userFeedbackDTO)
         {
             ServiceResult result = await _service.PostUserFeedbackAsync(userFeedbackDTO);
@@ -37,10 +37,10 @@ namespace Feedbacks.Service.API.Controllers.Areas.Participant
             return FromResult(result);
         }
 
-        [HttpDelete("feedbacks/{id}")]
-        public async Task<IActionResult> DeleteUserFeedback([FromRoute] long id)
+        [HttpDelete("feedbacks/{feedbackId}")]
+        public async Task<IActionResult> DeleteUserFeedback([FromRoute] long feedbackId)
         {
-            ServiceResult result = await _service.DeleteUserFeedbackAsync(id);
+            ServiceResult result = await _service.DeleteUserFeedbackAsync(feedbackId);
 
             return FromResult(result);
         }

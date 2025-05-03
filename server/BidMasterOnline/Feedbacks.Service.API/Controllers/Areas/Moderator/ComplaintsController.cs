@@ -28,10 +28,10 @@ namespace Feedbacks.Service.API.Controllers.Areas.Moderator
             return FromResult(result);
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetComplaintById([FromRoute] long id)
+        [HttpGet("{complaintId}")]
+        public async Task<IActionResult> GetComplaintById([FromRoute] long complaintId)
         {
-            ServiceResult<ModeratorComplaintDTO> result = await _service.GetComplaintByIdAsync(id);
+            ServiceResult<ModeratorComplaintDTO> result = await _service.GetComplaintByIdAsync(complaintId);
 
             return FromResult(result);
         }

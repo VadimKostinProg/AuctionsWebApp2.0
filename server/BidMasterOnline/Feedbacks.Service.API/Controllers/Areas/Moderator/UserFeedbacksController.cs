@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Feedbacks.Service.API.Controllers.Areas.Moderator
 {
-    [Route("api/moderator")]
+    [Route("api/moderator/users")]
     [ApiController]
     [Authorize(Roles = UserRoles.Moderator)]
     public class UserFeedbacksController : BaseController
@@ -29,10 +29,10 @@ namespace Feedbacks.Service.API.Controllers.Areas.Moderator
             return FromResult(result);
         }
 
-        [HttpDelete("feedbacks/{id}")]
-        public async Task<IActionResult> DeleteUserFeedback([FromRoute] long id)
+        [HttpDelete("feedbacks/{feedbackId}")]
+        public async Task<IActionResult> DeleteUserFeedback([FromRoute] long feedbackId)
         {
-            ServiceResult result = await _service.DeleteUserFeedbackAsync(id);
+            ServiceResult result = await _service.DeleteUserFeedbackAsync(feedbackId);
 
             return FromResult(result);
         }
