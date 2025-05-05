@@ -1,5 +1,6 @@
 using BidMasterOnline.Core;
 using BidMasterOnline.Infrastructure;
+using Bids.Service.API.GrpcServices.Client;
 using Bids.Service.API.ServiceContracts.Moderator;
 using Bids.Service.API.ServiceContracts.Participant;
 using Bids.Service.API.Services.Moderator;
@@ -21,7 +22,7 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddAuthentication("Bearer")
                 .AddJwtBearer("Bearer", options =>
                 {
-                    options.Authority = builder.Configuration["IdentityServer:Authority"],
+                    options.Authority = builder.Configuration["IdentityServer:Authority"];
                     options.TokenValidationParameters = new()
                     {
                         ValidateAudience = true,
@@ -34,6 +35,8 @@ builder.Services.AddInfrastructure(builder.Configuration)
 builder.Services.AddScoped<IBidsPlacingStrategyFactory, BidsPlacingStrategyFactory>();
 builder.Services.AddScoped<IParticipantBidsService, ParticipantBidsService>();
 builder.Services.AddScoped<IModeratorBidsService, ModeratorBidsService>();
+
+builder.Services.AddScoped<AuctionsGrpcClient>();
 
 var app = builder.Build();
 

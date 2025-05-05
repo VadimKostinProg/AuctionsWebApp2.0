@@ -1,3 +1,4 @@
+﻿using Auctions.Service.API.BackgroundJobs;
 using Auctions.Service.API.GrpcServices.Client;
 using Auctions.Service.API.ServiceContracts.Moderator;
 using Auctions.Service.API.ServiceContracts.Participant;
@@ -5,6 +6,7 @@ using Auctions.Service.API.Services.Moderator;
 using Auctions.Service.API.Services.Participant;
 using BidMasterOnline.Core;
 using BidMasterOnline.Infrastructure;
+using Quartz;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -35,10 +37,23 @@ builder.Services.AddInfrastructure(builder.Configuration)
 builder.Services.AddScoped<IModeratorAuctionRequestsService, ModeratorAuctionRequestsService>();
 
 builder.Services.AddScoped<IAuctionRequestsService, AuctionRequestsService>();
-builder.Services.AddScoped<IAuctionsService, AuctionsService>();
+builder.Services.AddScoped<IParticipantAuctionsService, ParticipantAuctionsService>();
 
 builder.Services.AddScoped<ModerationClient>();
 builder.Services.AddScoped<BidsClient>();
+
+builder.Services.AddQuartz(q =>
+{
+    JobKey jobKey = new("FinishingAuctionsBackgroundJob");
+
+    q.AddJob<FinishingAuctionsBackgroundJob>(opts => opts.WithIdentity(jobKey));
+
+    q.AddTrigger(opts => opts
+        .ForJob(jobKey)
+        .WithIdentity("MyJob-trigger")
+        .WithCronSchedule("0 * * ? * *")
+    );
+});
 
 var app = builder.Build();
 

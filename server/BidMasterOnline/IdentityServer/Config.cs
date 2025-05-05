@@ -1,28 +1,42 @@
-﻿using IdentityModel;
-using IdentityServer4.Models;
-using IdentityServer4.Test;
+﻿using Duende.IdentityModel;
+using Duende.IdentityServer.Models;
+using Duende.IdentityServer.Test;
 using System.Security.Claims;
 
 namespace IdentityServer
 {
     public static class Config
     {
-
-        public static IServiceCollection ConfigureIdentityServer(this IServiceCollection services, 
+        public static IServiceCollection ConfigureIdentityServer(this IServiceCollection services,
             IConfiguration configuration)
         {
             services.AddIdentityServer()
                 .AddInMemoryClients([
-                        new Client 
+                        new Client
                         {
-                            ClientId = "testParticipant",
-                            AllowedGrantTypes = GrantTypes.ClientCredentials,
+                            ClientId = "ParticipantUI",
+                            AllowedGrantTypes = GrantTypes.Code,
                             ClientSecrets = [new Secret("secret".Sha256())],
-                            AllowedScopes = ["participantScope"]
+                            AllowedScopes = ["participantScope"],
+                            RequirePkce = true,
+                            RedirectUris = { "http://localhost:4200/callback" },
+                            PostLogoutRedirectUris = { "http://localhost:4200/" },
+                            AllowedCorsOrigins = { "http://localhost:4200" },
+                        },
+                        new Client
+                        {
+                            ClientId = "ModeratorUI",
+                            AllowedGrantTypes = GrantTypes.Code,
+                            ClientSecrets = [new Secret("secret".Sha256())],
+                            AllowedScopes = ["moderatorScope"],
+                            RequirePkce = true,
+                            RedirectUris = { "http://localhost:4201/callback" },
+                            PostLogoutRedirectUris = { "http://localhost:4201/" },
+                            AllowedCorsOrigins = { "http://localhost:4201" },
                         }
                     ])
                 .AddInMemoryApiResources([
-                        new ApiResource() 
+                        new ApiResource()
                         {
                             Name = "Auctions.Service.API",
                             Scopes = ["participantScope", "moderatorScope"],
@@ -62,12 +76,12 @@ namespace IdentityServer
                         new IdentityResources.Profile()
                     ])
                 .AddTestUsers([
-                        new TestUser() 
+                        new TestUser()
                         {
                             SubjectId = "1",
                             Username = "admin",
                             Password = "admin",
-                            Claims = 
+                            Claims =
                             [
                                 new Claim(JwtClaimTypes.GivenName, "admin"),
                                 new Claim(JwtClaimTypes.Role, "Admin"),

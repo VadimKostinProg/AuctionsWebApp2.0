@@ -6,6 +6,7 @@ using BidMasterOnline.Domain.Models;
 using BidMasterOnline.Domain.Models.Entities;
 using Bids.Service.API.DTO.Participant;
 using Bids.Service.API.Extensions;
+using Bids.Service.API.GrpcServices.Client;
 using Bids.Service.API.ServiceContracts.Participant;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,16 +18,19 @@ namespace Bids.Service.API.Services.Participant
         private readonly IUserAccessor _userAccessor;
         private readonly IBidsPlacingStrategyFactory _bidsPlacingStrategyFactory;
         private readonly ILogger<ParticipantBidsService> _logger;
+        private readonly AuctionsGrpcClient _auctionsClient;
 
         public ParticipantBidsService(IRepository repository,
             IUserAccessor userAccessor,
             IBidsPlacingStrategyFactory bidsPlacingStrategyFactory,
-            ILogger<ParticipantBidsService> logger)
+            ILogger<ParticipantBidsService> logger,
+            AuctionsGrpcClient auctionsClient)
         {
             _repository = repository;
             _userAccessor = userAccessor;
             _logger = logger;
             _bidsPlacingStrategyFactory = bidsPlacingStrategyFactory;
+            _auctionsClient = auctionsClient;
         }
 
         public async Task<ServiceResult<PaginatedList<AuctionBidDTO>>> GetAuctionBidsAsync(long auctionId,
@@ -130,7 +134,16 @@ namespace Bids.Service.API.Services.Participant
 
                 IBidsPlacingStrategy strategy = _bidsPlacingStrategyFactory.GetStategyByAuctionType(auction.Type!);
 
-                strategy.PlaceNewBid(newBid, auction);
+                ServiceResult placingResult = strategy.PlaceNewBid(newBid, auction);
+
+                if (!placingResult.IsSuccessfull)
+                    return placingResult;
+
+                _repository.Update(newBid);
+                _repository.Update(auction);
+                await _repository.SaveChangesAsync();
+
+                await _auctionsClient.FinishAuctionAsync(auction.Id);
 
                 result.Message = "Your bid has been placed successfully!";
             }

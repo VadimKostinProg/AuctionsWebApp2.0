@@ -8,6 +8,7 @@ using BidMasterOnline.Domain.Models.Entities;
 using Feedbacks.Service.API.DTO.Moderator;
 using Feedbacks.Service.API.Extensions;
 using Feedbacks.Service.API.ServiceContracts.Moderator;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Feedbacks.Service.API.Services.Moderator
@@ -124,7 +125,17 @@ namespace Feedbacks.Service.API.Services.Moderator
         {
             ServiceResult<ModeratorComplaintDTO> result = new(); 
             
-            Complaint entity = await _repository.GetByIdAsync<Complaint>(complaintId);
+            Complaint entity = await _repository.GetByIdAsync<Complaint>(complaintId,
+                includeQuery: query => query.Include(e => e.AccusingUser)
+                                            .Include(e => e.AccusedUser)
+                                            .Include(e => e.AccusedAuction)
+                                            .Include(e => e.AccusedComment)
+                                                .ThenInclude(c => c.User)
+                                            .Include(e => e.AccusedUserFeedback)
+                                                .ThenInclude(f => f.FromUser)
+                                            .Include(e => e.AccusedUserFeedback)
+                                                .ThenInclude(f => f.ToUser)
+                                            .Include(e => e.Moderator)!);
 
             result.Data = entity.ToModeratorDTO();
 
@@ -148,7 +159,8 @@ namespace Feedbacks.Service.API.Services.Moderator
 
             specificationBuilder.WithPagination(specifications.PageSize, specifications.PageNumber);
 
-            ListModel<Complaint> entitiesList = await _repository.GetFilteredAndPaginated(specificationBuilder.Build());
+            ListModel<Complaint> entitiesList = await _repository.GetFilteredAndPaginated(
+                specificationBuilder.Build(), includeQuery: query => query.Include(e => e.Moderator)!);
 
             result.Data = new PaginatedList<ModeratorSummaryComplaintDTO>
             {
