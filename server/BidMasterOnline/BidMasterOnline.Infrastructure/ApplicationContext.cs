@@ -1,7 +1,8 @@
-﻿using BidMasterOnline.Domain.Models.Entities;
+﻿using BidMasterOnline.Core.Constants;
+using BidMasterOnline.Domain.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace BidMasterOnline.Infrastructure.DatabaseContext
+namespace BidMasterOnline.Infrastructure
 {
     public class ApplicationContext : DbContext
     {
@@ -22,7 +23,7 @@ namespace BidMasterOnline.Infrastructure.DatabaseContext
         public virtual DbSet<Delivery> Deliveries { get; set; }
         public virtual DbSet<ModerationLog> ModerationLogs { get; set; }
 
-        public ApplicationContext(DbContextOptions options) : base(options)
+        public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options)
         {
         }
 
@@ -34,7 +35,8 @@ namespace BidMasterOnline.Infrastructure.DatabaseContext
             {
                 options.HasMany<UserFeedback>()
                     .WithOne(uf => uf.FromUser)
-                    .HasForeignKey(uf => uf.FromUserId);
+                    .HasForeignKey(uf => uf.FromUserId)
+                    .OnDelete(DeleteBehavior.Restrict);
 
                 options.HasMany<UserFeedback>()
                     .WithOne(uf => uf.ToUser)
@@ -46,167 +48,220 @@ namespace BidMasterOnline.Infrastructure.DatabaseContext
 
                 options.HasMany<WatchList>()
                     .WithOne()
-                    .HasForeignKey(wl => wl.UserId);
+                    .HasForeignKey(wl => wl.UserId)
+                    .OnDelete(DeleteBehavior.Restrict);
 
                 options.HasMany<Bid>()
                     .WithOne(b => b.Bidder)
-                    .HasForeignKey(b => b.BidderId);
+                    .HasForeignKey(b => b.BidderId)
+                    .OnDelete(DeleteBehavior.Restrict);
 
                 options.HasMany<AuctionComment>()
                     .WithOne(c => c.User)
-                    .HasForeignKey(c => c.UserId);
+                    .HasForeignKey(c => c.UserId)
+                    .OnDelete(DeleteBehavior.Restrict);
             });
 
             modelBuilder.Entity<Auction>(options =>
             {
                 options.HasOne(a => a.Category)
                     .WithMany()
-                    .HasForeignKey(a => a.AuctionCategoryId);
+                    .HasForeignKey(a => a.AuctionCategoryId)
+                    .OnDelete(DeleteBehavior.Restrict);
 
                 options.HasOne(a => a.Type)
                     .WithMany()
-                    .HasForeignKey(a => a.AuctionTypeId);
+                    .HasForeignKey(a => a.AuctionTypeId)
+                    .OnDelete(DeleteBehavior.Restrict);
 
                 options.HasOne(a => a.FinishMethod)
                     .WithMany()
-                    .HasForeignKey(a => a.AuctionFinishMethodId);
+                    .HasForeignKey(a => a.AuctionFinishMethodId)
+                    .OnDelete(DeleteBehavior.Restrict);
 
                 options.HasOne(a => a.Auctionist)
                     .WithMany()
-                    .HasForeignKey(a => a.AuctionistId);
+                    .HasForeignKey(a => a.AuctionistId)
+                    .OnDelete(DeleteBehavior.Restrict);
 
                 options.HasOne(a => a.Winner)
                     .WithMany()
-                    .HasForeignKey(a => a.WinnerId);
+                    .HasForeignKey(a => a.WinnerId)
+                    .OnDelete(DeleteBehavior.Restrict);
 
                 options.HasMany(a => a.Bids)
                     .WithOne()
-                    .HasForeignKey(b => b.AuctionId);
+                    .HasForeignKey(b => b.AuctionId)
+                    .OnDelete(DeleteBehavior.Restrict);
 
                 options.HasMany(a => a.Images)
                     .WithOne()
-                    .HasForeignKey(i => i.AuctionId);
+                    .HasForeignKey(i => i.AuctionId)
+                    .OnDelete(DeleteBehavior.Restrict);
 
                 options.HasMany<WatchList>()
                     .WithOne(wl => wl.Auction)
-                    .HasForeignKey(wl => wl.AuctionId);
+                    .HasForeignKey(wl => wl.AuctionId)
+                    .OnDelete(DeleteBehavior.Restrict);
 
                 options.HasMany<Bid>()
                     .WithOne(b => b.Auction)
-                    .HasForeignKey(b => b.AuctionId);
+                    .HasForeignKey(b => b.AuctionId)
+                    .OnDelete(DeleteBehavior.Restrict);
 
                 options.HasMany<AuctionComment>()
                     .WithOne(c => c.Auction)
-                    .HasForeignKey(c => c.AuctionId);
+                    .HasForeignKey(c => c.AuctionId)
+                    .OnDelete(DeleteBehavior.Restrict);
             });
 
             modelBuilder.Entity<AuctionRequest>(options =>
             {
                 options.HasOne(ar => ar.Category)
                     .WithMany()
-                    .HasForeignKey(ar => ar.AuctionCategoryId);
+                    .HasForeignKey(ar => ar.AuctionCategoryId)
+                    .OnDelete(DeleteBehavior.Restrict);
 
                 options.HasOne(ar => ar.Type)
                     .WithMany()
-                    .HasForeignKey(ar => ar.AuctionTypeId);
+                    .HasForeignKey(ar => ar.AuctionTypeId)
+                    .OnDelete(DeleteBehavior.Restrict);
 
                 options.HasOne(ar => ar.FinishMethod)
                     .WithMany()
-                    .HasForeignKey(ar => ar.AuctionFinishMethodId);
+                    .HasForeignKey(ar => ar.AuctionFinishMethodId)
+                    .OnDelete(DeleteBehavior.Restrict);
 
                 options.HasOne(ar => ar.RequestedByUser)
                     .WithMany()
-                    .HasForeignKey(ar => ar.RequestedByUserId);
+                    .HasForeignKey(ar => ar.RequestedByUserId)
+                    .OnDelete(DeleteBehavior.Restrict);
 
                 options.HasMany(ar => ar.Images)
                     .WithOne()
-                    .HasForeignKey(i => i.AuctionRequestId);
+                    .HasForeignKey(i => i.AuctionRequestId)
+                    .OnDelete(DeleteBehavior.Restrict);
             });
 
             modelBuilder.Entity<Complaint>(options =>
             {
                 options.HasOne(c => c.AccusingUser)
                     .WithMany()
-                    .HasForeignKey(c => c.AccusingUserId);
+                    .HasForeignKey(c => c.AccusingUserId)
+                    .OnDelete(DeleteBehavior.Restrict);
 
                 options.HasOne(c => c.AccusedUser)
                     .WithMany()
-                    .HasForeignKey(c => c.AccusedUserId);
+                    .HasForeignKey(c => c.AccusedUserId)
+                    .OnDelete(DeleteBehavior.Restrict);
 
                 options.HasOne(c => c.AccusedAuction)
                     .WithMany()
-                    .HasForeignKey(c => c.AccusedAuctionId);
+                    .HasForeignKey(c => c.AccusedAuctionId)
+                    .OnDelete(DeleteBehavior.Restrict);
 
                 options.HasOne(c => c.AccusedComment)
                     .WithMany()
-                    .HasForeignKey(c => c.AccusedCommentId);
+                    .HasForeignKey(c => c.AccusedCommentId)
+                    .OnDelete(DeleteBehavior.Restrict);
 
                 options.HasOne(c => c.AccusedUserFeedback)
                     .WithMany()
-                    .HasForeignKey(c => c.AccusedUserFeedbackId);
+                    .HasForeignKey(c => c.AccusedUserFeedbackId)
+                    .OnDelete(DeleteBehavior.Restrict);
 
                 options.HasOne(c => c.Moderator)
                     .WithMany()
-                    .HasForeignKey(c => c.ModeratorId);
+                    .HasForeignKey(c => c.ModeratorId)
+                    .OnDelete(DeleteBehavior.Restrict);
             });
 
             modelBuilder.Entity<SupportTicket>(options =>
             {
                 options.HasOne(tsr => tsr.User)
                     .WithMany()
-                    .HasForeignKey(tsr => tsr.UserId);
+                    .HasForeignKey(tsr => tsr.UserId)
+                    .OnDelete(DeleteBehavior.Restrict);
 
                 options.HasOne(tsr => tsr.Moderator)
                     .WithMany()
-                    .HasForeignKey(tsr => tsr.ModeratorId);
+                    .HasForeignKey(tsr => tsr.ModeratorId)
+                    .OnDelete(DeleteBehavior.Restrict);
             });
 
             modelBuilder.Entity<Delivery>(options =>
             {
                 options.HasOne<Auction>()
                     .WithOne()
-                    .HasForeignKey<Delivery>(p => p.AuctionId);
+                    .HasForeignKey<Delivery>(p => p.AuctionId)
+                    .OnDelete(DeleteBehavior.Restrict);
 
                 options.HasOne<User>()
                     .WithOne()
-                    .HasForeignKey<Delivery>(p => p.SellerId);
+                    .HasForeignKey<Delivery>(p => p.SellerId)
+                    .OnDelete(DeleteBehavior.Restrict);
 
                 options.HasOne<User>()
                     .WithOne()
-                    .HasForeignKey<Delivery>(p => p.BuyerId);
+                    .HasForeignKey<Delivery>(p => p.BuyerId)
+                    .OnDelete(DeleteBehavior.Restrict);
             });
 
             modelBuilder.Entity<ModerationLog>(options =>
             {
                 options.HasOne<User>()
                     .WithMany()
-                    .HasForeignKey(ml => ml.UserId);
+                    .HasForeignKey(ml => ml.UserId)
+                    .OnDelete(DeleteBehavior.Restrict);
 
                 options.HasOne<Auction>()
                     .WithMany()
-                    .HasForeignKey(ml => ml.AuctionId);
+                    .HasForeignKey(ml => ml.AuctionId)
+                    .OnDelete(DeleteBehavior.Restrict);
 
                 options.HasOne<AuctionRequest>()
                     .WithMany()
-                    .HasForeignKey(ml => ml.AuctionRequestId);
+                    .HasForeignKey(ml => ml.AuctionRequestId)
+                    .OnDelete(DeleteBehavior.Restrict);
 
                 options.HasOne<AuctionComment>()
                     .WithMany()
-                    .HasForeignKey(ml => ml.AuctionCommentId);
+                    .HasForeignKey(ml => ml.AuctionCommentId)
+                    .OnDelete(DeleteBehavior.Restrict);
             });
 
             // Seed Data
-            // TODO: add roles, move names to consts or enums, add descriptions where required
+            // TODO: move names to consts or enums, add descriptions where required
+            modelBuilder.Entity<Role>().HasData([
+                    new Role
+                    {
+                        Id = 1,
+                        Name = UserRoles.Admin
+                    },
+                    new Role
+                    {
+                        Id = 2,
+                        Name = UserRoles.Moderator
+                    },
+                    new Role
+                    {
+                        Id = 3,
+                        Name = UserRoles.Participant
+                    }
+                ]);
+
             modelBuilder.Entity<AuctionFinishMethod>().HasData(new List<AuctionFinishMethod>
             {
                 new AuctionFinishMethod
                 {
+                    Id = 1,
                     Name = "Static finish method",
                     Description = "Auction finishes in the defined statis time.",
                     CreatedBy = "system"
                 },
                 new AuctionFinishMethod
                 {
+                    Id = 2,
                     Name = "Dynamic finish method",
                     Description = "Auction finish time increases on the defined interval after every new bid.",
                     CreatedBy = "system"
@@ -217,12 +272,14 @@ namespace BidMasterOnline.Infrastructure.DatabaseContext
             {
                 new AuctionType
                 {
+                    Id = 1,
                     Name = "English",
                     Description = "",
                     CreatedBy = "system"
                 },
                 new AuctionType
                 {
+                    Id = 2,
                     Name = "Golland",
                     Description = "",
                     CreatedBy = "system"

@@ -15,7 +15,7 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddAuthentication("Bearer")
                 .AddJwtBearer("Bearer", options =>
                 {
-                    options.Authority = builder.Configuration["IdentityServer:Authority"],
+                    options.Authority = builder.Configuration["IdentityServer:Authority"];
                     options.TokenValidationParameters = new()
                     {
                         ValidateAudience = true,

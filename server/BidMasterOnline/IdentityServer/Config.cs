@@ -1,14 +1,14 @@
 ﻿using Duende.IdentityModel;
 using Duende.IdentityServer.Models;
 using Duende.IdentityServer.Test;
+using IdentityServer.Services;
 using System.Security.Claims;
 
 namespace IdentityServer
 {
     public static class Config
     {
-        public static IServiceCollection ConfigureIdentityServer(this IServiceCollection services,
-            IConfiguration configuration)
+        public static IServiceCollection ConfigureIdentityServer(this IServiceCollection services)
         {
             services.AddIdentityServer()
                 .AddInMemoryClients([
@@ -33,6 +33,15 @@ namespace IdentityServer
                             RedirectUris = { "http://localhost:4201/callback" },
                             PostLogoutRedirectUris = { "http://localhost:4201/" },
                             AllowedCorsOrigins = { "http://localhost:4201" },
+                        },
+                        new Client
+                        {
+                            ClientId = "Postman",
+                            AllowedGrantTypes = GrantTypes.Code,
+                            ClientSecrets = [new Secret("postman_secret".Sha256())],
+                            AllowedScopes = ["openid", "profile", "participantScope", "moderatorScope"],
+                            RequirePkce = true,
+                            RedirectUris = { "https://oauth.pstmn.io/v1/callback" }
                         }
                     ])
                 .AddInMemoryApiResources([
@@ -75,41 +84,7 @@ namespace IdentityServer
                         new IdentityResources.OpenId(),
                         new IdentityResources.Profile()
                     ])
-                .AddTestUsers([
-                        new TestUser()
-                        {
-                            SubjectId = "1",
-                            Username = "admin",
-                            Password = "admin",
-                            Claims =
-                            [
-                                new Claim(JwtClaimTypes.GivenName, "admin"),
-                                new Claim(JwtClaimTypes.Role, "Admin"),
-                            ]
-                        },
-                        new TestUser()
-                        {
-                            SubjectId = "2",
-                            Username = "testModerator",
-                            Password = "moderator",
-                            Claims =
-                            [
-                                new Claim(JwtClaimTypes.GivenName, "testModerator"),
-                                new Claim(JwtClaimTypes.Role, "Moderator"),
-                            ]
-                        },
-                        new TestUser()
-                        {
-                            SubjectId = "3",
-                            Username = "testParticipant",
-                            Password = "participant",
-                            Claims =
-                            [
-                                new Claim(JwtClaimTypes.GivenName, "testParticipant"),
-                                new Claim(JwtClaimTypes.Role, "Participant"),
-                            ]
-                        }
-                    ])
+                .AddProfileService<UserProfileService>()
                 .AddDeveloperSigningCredential();
 
             return services;

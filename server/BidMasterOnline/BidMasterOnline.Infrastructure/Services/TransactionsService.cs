@@ -1,5 +1,4 @@
 ﻿using BidMasterOnline.Core.ServiceContracts;
-using BidMasterOnline.Infrastructure.DatabaseContext;
 using Microsoft.EntityFrameworkCore.Storage;
 
 namespace BidMasterOnline.Infrastructure.Services

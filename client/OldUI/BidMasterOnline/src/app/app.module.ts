@@ -16,7 +16,6 @@ import { JwtModule } from '@auth0/angular-jwt';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TechnicalSupportModule } from './technical-support/technical-support.module';
 import { CustomerModule } from './customer/customer.module';
-import { AuctionsPaymentDeliveryOptionsService } from './services/auction-payment-delivery-options.service';
 
 @NgModule({
   declarations: [

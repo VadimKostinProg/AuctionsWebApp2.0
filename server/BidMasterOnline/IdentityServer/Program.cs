@@ -1,10 +1,19 @@
+using BidMasterOnline.Core;
+using BidMasterOnline.Infrastructure;
 using IdentityServer;
+using IdentityServer.Services;
+using IdentityServer.Services.Contracts;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllersWithViews();
+builder.Services.AddRazorPages();
 
-builder.Services.ConfigureIdentityServer(builder.Configuration);
+builder.Services.ConfigureIdentityServer();
+
+builder.Services.AddCoreServices()
+    .AddInfrastructure(builder.Configuration);
+
+builder.Services.AddScoped<IPasswordValidationService, PasswordValidationService>();
 
 var app = builder.Build();
 
@@ -15,9 +24,10 @@ app.UseIdentityServer();
 
 app.UseAuthorization();
 
-app.UseEndpoints(endpoints =>
+app.UseEndpoints(cfg =>
 {
-    endpoints.MapDefaultControllerRoute();
+    cfg.MapRazorPages();
+    cfg.MapControllers();
 });
 
 app.Run();
