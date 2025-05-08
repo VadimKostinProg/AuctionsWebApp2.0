@@ -15,26 +15,40 @@
                 <input type="hidden" asp-for="Input.ReturnUrl" />
 
                 <div class="form-group">
-                    <label asp-for="Input.Username"></label>
+                    <label asp-for="Input.Username">Username:</label>
                     <input class="form-control" placeholder="Username" asp-for="Input.Username" autofocus>
                 </div>
                 <div class="form-group">
-                    <label asp-for="Input.Password"></label>
-                    <input type="password" class="form-control" placeholder="Password" asp-for="Input.Password" autocomplete="off">
-                </div>
-                <div class="form-group">
-                    <label asp-for="Input.Name"></label>
+                    <label asp-for="Input.Name">Full name:</label>
                     <input type="text" class="form-control" placeholder="Name" asp-for="Input.Name">
                 </div>
                 <div class="form-group">
-                    <label asp-for="Input.Email"></label>
+                    <label asp-for="Input.Email">Email:</label>
                     <input type="email" class="form-control" placeholder="Email" asp-for="Input.Email" >
+                </div>
+                <div class="form-group">
+                    <label asp-for="Input.DateOfBirth">Date of birth:</label>
+                    <input type="date" class="form-control" placeholder="Date of birth" asp-for="Input.DateOfBirth">
+                </div>
+                <div class="form-group">
+                    <label asp-for="Input.Password">Password:</label>
+                    <input type="password" class="form-control" placeholder="Password" asp-for="Input.Password" autocomplete="off">
+                </div>
+                <div class="form-group">
+                    <label asp-for="Input.RepeatPassword">Repeat password:</label>
+                    <input type="password" class="form-control" placeholder="Repeat password" asp-for="Input.RepeatPassword" autocomplete="off">
+                </div>
+
+                <div class="mt-3">
+                    <p>
+                        Already have an account?
+                        <a asp-page="/Account/Login/Index" asp-route-returnUrl="@Model.Input.ReturnUrl">Login</a>
+                    </p>
                 </div>
 
                 <button class="btn btn-primary" name="Input.Button" value="create">Create</button>
                 <button class="btn btn-secondary" name="Input.Button" value="cancel">Cancel</button>
             </form>
         </div>
-        
     </div>
 </div>

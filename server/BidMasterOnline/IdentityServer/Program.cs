@@ -14,6 +14,7 @@ builder.Services.AddCoreServices()
     .AddInfrastructure(builder.Configuration);
 
 builder.Services.AddScoped<IPasswordValidationService, PasswordValidationService>();
+builder.Services.AddScoped<IUserManager, UserManager>();
 
 var app = builder.Build();
 
@@ -27,7 +28,6 @@ app.UseAuthorization();
 app.UseEndpoints(cfg =>
 {
     cfg.MapRazorPages();
-    cfg.MapControllers();
 });
 
 app.Run();

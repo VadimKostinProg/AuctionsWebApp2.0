@@ -1,10 +1,13 @@
 // Copyright (c) Duende Software. All rights reserved.
 // See LICENSE in the project root for license information.
 
+using BidMasterOnline.Core.Constants;
+using BidMasterOnline.Domain.Models.Entities;
 using Duende.IdentityServer;
 using Duende.IdentityServer.Models;
 using Duende.IdentityServer.Services;
-using Duende.IdentityServer.Test;
+using IdentityServer.Models;
+using IdentityServer.Services.Contracts;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -16,20 +19,16 @@ namespace IdentityServerHost.Pages.Create;
 [AllowAnonymous]
 public class Index : PageModel
 {
-    private readonly TestUserStore _users;
     private readonly IIdentityServerInteractionService _interaction;
+    private readonly IUserManager _userManager;
 
     [BindProperty]
     public InputModel Input { get; set; } = default!;
 
-    public Index(
-        IIdentityServerInteractionService interaction,
-        TestUserStore? users = null)
+    public Index(IIdentityServerInteractionService interaction, IUserManager userManager)
     {
-        // this is where you would plug in your own custom identity management library (e.g. ASP.NET Identity)
-        _users = users ?? throw new InvalidOperationException("Please call 'AddTestUsers(TestUsers.Users)' on the IIdentityServerBuilder in Startup or remove the TestUserStore from the AccountController.");
-            
         _interaction = interaction;
+        _userManager = userManager;
     }
 
     public IActionResult OnGet(string? returnUrl)
@@ -37,11 +36,11 @@ public class Index : PageModel
         Input = new InputModel { ReturnUrl = returnUrl };
         return Page();
     }
-        
+
     public async Task<IActionResult> OnPost()
     {
         // check if we are in the context of an authorization request
-        var context = await _interaction.GetAuthorizationContextAsync(Input.ReturnUrl);
+        AuthorizationRequest? context = await _interaction.GetAuthorizationContextAsync(Input.ReturnUrl);
 
         // the user clicked the "cancel" button
         if (Input.Button != "create")
@@ -70,17 +69,36 @@ public class Index : PageModel
             }
         }
 
-        if (_users.FindByUsername(Input.Username) != null)
+        if (Input.Password != Input.RepeatPassword)
         {
-            ModelState.AddModelError("Input.Username", "Invalid username");
+            ModelState.AddModelError("Input.RepeatPassword", "Passwords do not match");
+        }
+
+        if (await _userManager.ExistsWithUsernameAsync(Input.Username!))
+        {
+            ModelState.AddModelError("Input.Username", "User with this username already exists");
+        }
+
+        if (await _userManager.ExistsWithEmailAsync(Input.Email!))
+        {
+            ModelState.AddModelError("Input.Username", "User with this email already exists");
         }
 
         if (ModelState.IsValid)
         {
-            var user = _users.CreateUser(Input.Username, Input.Password, Input.Name, Input.Email);
+            CreateUserModel userModel = new()
+            {
+                Username = Input.Username!,
+                FullName = Input.Name!,
+                Email = Input.Email!,
+                DateOfBirth = Input.DateOfBirth!.Value,
+                Password = Input.Password!
+            };
+
+            User user = await _userManager.CreateUserAsync(userModel, UserRoles.Participant);
 
             // issue authentication cookie with subject ID and username
-            var isuser = new IdentityServerUser(user.SubjectId)
+            IdentityServerUser isuser = new(user.Id.ToString())
             {
                 DisplayName = user.Username
             };

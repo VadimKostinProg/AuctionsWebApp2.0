@@ -24,7 +24,8 @@ namespace IdentityServer.Services
         {
             long userId = long.Parse(context.Subject.GetSubjectId());
 
-            User? user = await _repository.GetByIdAsync<User>(userId, disableTracking: true);
+            User? user = await _repository.GetFirstOrDefaultAsync<User>(e => e.Id == userId,
+                includeQuery: query => query.Include(e => e.Role)!);
 
             if (user != null)
             {

@@ -95,6 +95,6 @@ public class Index : PageModel
             }
         }
 
-        return RedirectToPage("/Account/Logout/LoggedOut", new { logoutId = LogoutId });
+        return RedirectToPage("/Account/Login/Index");
     }
 }

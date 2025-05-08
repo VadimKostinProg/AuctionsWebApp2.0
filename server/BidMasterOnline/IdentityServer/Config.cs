@@ -16,10 +16,10 @@ namespace IdentityServer
                         {
                             ClientId = "ParticipantUI",
                             AllowedGrantTypes = GrantTypes.Code,
-                            ClientSecrets = [new Secret("secret".Sha256())],
-                            AllowedScopes = ["participantScope"],
                             RequirePkce = true,
-                            RedirectUris = { "http://localhost:4200/callback" },
+                            RequireClientSecret = false,
+                            AllowedScopes = ["openid", "profile", "participantScope"],
+                            RedirectUris = { "http://localhost:4200/auth/callback" },
                             PostLogoutRedirectUris = { "http://localhost:4200/" },
                             AllowedCorsOrigins = { "http://localhost:4200" },
                         },
@@ -27,10 +27,10 @@ namespace IdentityServer
                         {
                             ClientId = "ModeratorUI",
                             AllowedGrantTypes = GrantTypes.Code,
-                            ClientSecrets = [new Secret("secret".Sha256())],
-                            AllowedScopes = ["moderatorScope"],
                             RequirePkce = true,
-                            RedirectUris = { "http://localhost:4201/callback" },
+                            RequireClientSecret = false,
+                            AllowedScopes = ["openid", "profile", "moderatorScope"],
+                            RedirectUris = { "http://localhost:4201/auth/callback" },
                             PostLogoutRedirectUris = { "http://localhost:4201/" },
                             AllowedCorsOrigins = { "http://localhost:4201" },
                         },
@@ -38,9 +38,9 @@ namespace IdentityServer
                         {
                             ClientId = "Postman",
                             AllowedGrantTypes = GrantTypes.Code,
-                            ClientSecrets = [new Secret("postman_secret".Sha256())],
-                            AllowedScopes = ["openid", "profile", "participantScope", "moderatorScope"],
                             RequirePkce = true,
+                            RequireClientSecret = false,
+                            AllowedScopes = ["openid", "profile", "participantScope", "moderatorScope"],
                             RedirectUris = { "https://oauth.pstmn.io/v1/callback" }
                         }
                     ])
