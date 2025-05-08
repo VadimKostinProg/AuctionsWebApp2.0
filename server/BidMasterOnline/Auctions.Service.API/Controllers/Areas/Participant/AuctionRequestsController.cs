@@ -36,7 +36,7 @@ public class AuctionRequestsController : BaseController
     }
 
     [HttpPost]
-    public async Task<IActionResult> PostAuctionRequest([FromBody] PostAuctionRequestDTO requestDTO)
+    public async Task<IActionResult> PostAuctionRequest([FromForm] PostAuctionRequestDTO requestDTO)
     {
         ServiceResult result = await _service.PostAuctionRequestAsync(requestDTO);
 

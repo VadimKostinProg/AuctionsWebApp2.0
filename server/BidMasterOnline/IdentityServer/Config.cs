@@ -8,7 +8,7 @@ namespace IdentityServer
 {
     public static class Config
     {
-        public static IServiceCollection ConfigureIdentityServer(this IServiceCollection services)
+        public static IServiceCollection ConfigureIdentityServer(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddIdentityServer()
                 .AddInMemoryClients([
@@ -42,6 +42,17 @@ namespace IdentityServer
                             RequireClientSecret = false,
                             AllowedScopes = ["openid", "profile", "participantScope", "moderatorScope"],
                             RedirectUris = { "https://oauth.pstmn.io/v1/callback" }
+                        },
+                        new Client
+                        {
+                            ClientId = "auctions-service-api-swagger",
+                            ClientName = "Auctions API - Swagger",
+                            AllowedGrantTypes = GrantTypes.Code,
+                            RequirePkce = true,
+                            RequireClientSecret = false,
+                            RedirectUris = [$"{configuration["APIResources:AuctionsServiceAPI"]}/swagger/oauth2-redirect.html"],
+                            AllowedCorsOrigins = [configuration["APIResources:AuctionsServiceAPI"]!],
+                            AllowedScopes = ["openid", "profile", "participantScope", "moderatorScope"]
                         }
                     ])
                 .AddInMemoryApiResources([

@@ -9,6 +9,7 @@ using BidMasterOnline.Core.Specifications;
 using BidMasterOnline.Domain.Models;
 using BidMasterOnline.Domain.Models.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Auctions.Service.API.Services.Participant
 {
@@ -16,12 +17,18 @@ namespace Auctions.Service.API.Services.Participant
     {
         private readonly IRepository _repository;
         private readonly IUserAccessor _userAccessor;
+        private readonly ITransactionsService _transactionsService;
+        private readonly ILogger<ParticipantAuctionsService> _logger;
 
         public ParticipantAuctionsService(IRepository repository,
-            IUserAccessor userAccessor)
+            IUserAccessor userAccessor,
+            ITransactionsService transactionsService,
+            ILogger<ParticipantAuctionsService> logger)
         {
             _repository = repository;
             _userAccessor = userAccessor;
+            _transactionsService = transactionsService;
+            _logger = logger;
         }
 
         public async Task<ServiceResult<PaginatedList<AuctionSummaryDTO>>> GetAuctionsListAsync(AuctionSpecificationsDTO specifications)
@@ -102,9 +109,48 @@ namespace Auctions.Service.API.Services.Participant
             return result;
         }
 
-        public Task<bool> FinishAuctionAsync(long id)
+        public async Task<bool> FinishAuctionAsync(long id)
         {
-            throw new NotImplementedException();
+            Auction auction = await _repository.GetByIdAsync<Auction>(id,
+                includeQuery: query => query.Include(e => e.Bids)!);
+
+            Bid? winningBid = auction.Bids!.OrderByDescending(b => b.CreatedAt)
+                .FirstOrDefault();
+
+            IDbContextTransaction transaction = _transactionsService.BeginTransaction();
+
+            try
+            {
+                auction.Status = BidMasterOnline.Domain.Enums.AuctionStatus.Finished;
+
+                if (winningBid != null)
+                {
+                    auction.WinnerId = winningBid.BidderId;
+                    auction.FinishPrice = winningBid.Amount;
+
+                    // TODO: send notification to auctionist
+                    // TODO: send notification to winner
+                }
+                else
+                {
+                    // TODO: send notification (no winner) wrap to try catch
+                }
+
+                _repository.Update(auction);
+                await _repository.SaveChangesAsync();
+
+                await transaction.CommitAsync();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+
+                _logger.LogError(ex, "An error occured while finishing auction.");
+
+                return false;
+            }
         }
 
         private ISpecification<Auction> GetSpecification(AuctionSpecificationsDTO specifications)

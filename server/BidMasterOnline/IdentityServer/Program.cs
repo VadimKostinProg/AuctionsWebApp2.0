@@ -8,7 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddRazorPages();
 
-builder.Services.ConfigureIdentityServer();
+builder.Services.ConfigureIdentityServer(builder.Configuration);
 
 builder.Services.AddCoreServices()
     .AddInfrastructure(builder.Configuration);

@@ -2,6 +2,7 @@
 using BidMasterOnline.Core.ServiceContracts;
 using BidMasterOnline.Domain.Models.Entities;
 using Microsoft.AspNetCore.Http;
+using System.Security.Claims;
 
 namespace BidMasterOnline.Core.Services
 {
@@ -56,7 +57,7 @@ namespace BidMasterOnline.Core.Services
         private void InitUserId()
         {
             // TODO: add custom exception
-            string userId = _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type == "sub")?.Value
+            string userId = _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value
                 ?? throw new ArgumentNullException();
 
             _userId = long.Parse(userId);

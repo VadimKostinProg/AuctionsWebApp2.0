@@ -13,7 +13,7 @@ namespace Auctions.Service.API.DTO
         public decimal? MinCurrentBid { get; set; }
         public decimal? MaxCurrentBid { get; set; }
         public AuctionStatus? Status { get; set; }
-        public int PageSize { get; set; }
-        public int PageNumber { get; set; }
+        public int PageSize { get; set; } = 10;
+        public int PageNumber { get; set; } = 1;
     }
 }

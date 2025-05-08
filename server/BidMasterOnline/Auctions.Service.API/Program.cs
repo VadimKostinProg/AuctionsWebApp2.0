@@ -1,4 +1,5 @@
 ﻿using Auctions.Service.API.BackgroundJobs;
+using Auctions.Service.API.Filters;
 using Auctions.Service.API.GrpcServices.Client;
 using Auctions.Service.API.ServiceContracts.Moderator;
 using Auctions.Service.API.ServiceContracts.Participant;
@@ -6,6 +7,7 @@ using Auctions.Service.API.Services.Moderator;
 using Auctions.Service.API.Services.Participant;
 using BidMasterOnline.Core;
 using BidMasterOnline.Infrastructure;
+using Microsoft.OpenApi.Models;
 using Quartz;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,9 +15,34 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new() { Title = "Auctions.Service.API", Version = "v1" });
+
+    c.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
+    {
+        Type = SecuritySchemeType.OAuth2,
+        Flows = new OpenApiOAuthFlows
+        {
+            AuthorizationCode = new OpenApiOAuthFlow
+            {
+                AuthorizationUrl = new Uri($"{builder.Configuration["IdentityServer:Authority"]}/connect/authorize"),
+                TokenUrl = new Uri($"{builder.Configuration["IdentityServer:Authority"]}/connect/token"),
+                Scopes = new Dictionary<string, string>
+                {
+                    {"openid", "openid"},
+                    {"profile", "profile"},
+                    {"participantScope", "participantScope"},
+                    {"moderatorScope", "moderatorScope"}
+                }
+            }
+        }
+    });
+
+    c.OperationFilter<AuthorizeCheckOperationFilter>();
+});
 
 builder.Services.AddGrpc();
 
@@ -28,6 +55,7 @@ builder.Services.AddAuthentication("Bearer")
                     options.TokenValidationParameters = new()
                     {
                         ValidateAudience = true,
+                        ValidAudience = builder.Configuration["IdentityServer:Audience"]
                     };
                 });
 
@@ -61,7 +89,14 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", "API V1");
+
+        options.OAuthClientId("auctions-service-api-swagger");
+        options.OAuthAppName("Auctions API - Swagger");
+        options.OAuthUsePkce();
+    });
 }
 
 app.UseHttpsRedirection();

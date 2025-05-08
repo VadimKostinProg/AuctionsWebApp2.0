@@ -20,7 +20,7 @@ namespace Auctions.Service.API.BackgroundJobs
         public async Task Execute(IJobExecutionContext context)
         {
             List<long> finishedAuctionIds = await _repository
-                .GetFiltered<Auction>(e => e.FinishTime >= DateTime.UtcNow)
+                .GetFiltered<Auction>(e => e.Status == BidMasterOnline.Domain.Enums.AuctionStatus.Active && e.FinishTime >= DateTime.UtcNow)
                 .Select(e => e.Id)
                 .ToListAsync();
 
