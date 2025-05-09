@@ -13,22 +13,28 @@ namespace IdentityServer.Pages.Admin.StaffList
     {
         private readonly IUserManager _userManager;
 
-        private readonly int _pageSize = 15;
+        private readonly int _pageSize = 5;
 
         public List<User> Moderators { get; set; } = [];
-        public string Search { get; set; }
+        public bool IncludeDeleted { get; set; } = false;
+        public string Search { get; set; } = string.Empty;
         public string SortColumn { get; set; } = "Username";
         public string SortDirection { get; set; } = "asc";
         public int PageNumber { get; set; } = 1;
-        public int TotalPages { get; set; }
+        public int TotalPages { get; set; } = 0;
 
         public IndexModel(IUserManager userManager)
         {
             _userManager = userManager;
         }
 
-        public async Task OnGetAsync(string? search, string? sortColumn, string? sortDirection, int? pageNumber)
+        public async Task OnGetAsync(string? search,
+            string? sortColumn,
+            string? sortDirection,
+            int? pageNumber,
+            bool? includeDeleted)
         {
+            IncludeDeleted = includeDeleted ?? false;
             Search = search ?? "";
             SortColumn = sortColumn ?? "Username";
             SortDirection = sortDirection ?? "asc";
@@ -36,6 +42,7 @@ namespace IdentityServer.Pages.Admin.StaffList
 
             StaffListSpecifications specifications = new()
             {
+                IncludeDeleted = this.IncludeDeleted,
                 Search = this.Search,
                 SortColumn = this.SortColumn,
                 SortDirection = this.SortDirection,
@@ -48,12 +55,6 @@ namespace IdentityServer.Pages.Admin.StaffList
             Moderators = moderatorsList.Items;
             this.PageNumber = moderatorsList.Pagination.CurrentPage;
             this.TotalPages = moderatorsList.Pagination.TotalPages;
-        }
-        public async Task<IActionResult> OnPostDeleteAsync(long id)
-        {
-            await _userManager.DeleteUserAsync(id);
-
-            return RedirectToPage();
         }
 
         public string GetSortDirection(string column)

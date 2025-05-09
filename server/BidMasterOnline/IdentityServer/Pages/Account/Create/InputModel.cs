@@ -14,6 +14,7 @@ public class InputModel
     public string? Password { get; set; }
 
     [Required]
+    [Compare("NewPassword", ErrorMessage = "Passwords do not match.")]
     public string? RepeatPassword { get; set; }
 
     [Required]

@@ -69,11 +69,6 @@ public class Index : PageModel
             }
         }
 
-        if (Input.Password != Input.RepeatPassword)
-        {
-            ModelState.AddModelError("Input.RepeatPassword", "Passwords do not match");
-        }
-
         if (await _userManager.ExistsWithUsernameAsync(Input.Username!))
         {
             ModelState.AddModelError("Input.Username", "User with this username already exists");

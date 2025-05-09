@@ -1,0 +1,32 @@
+﻿@page
+@model IdentityServer.Pages.Account.ForceChangePassword.IndexModel
+@{
+}
+
+<div class="login-page">
+    <div class="lead">
+        <h1>Change password</h1>
+    </div>
+
+    <partial name="_ValidationSummary" />
+
+    <div class="row">
+
+        <div class="col-sm-6">
+            <form method="post">
+                <input type="hidden" asp-for="Input.ReturnUrl" />
+
+                <div class="form-group">
+                    <label asp-for="Input.NewPassword">New password:</label>
+                    <input type="password" class="form-control" placeholder="Password" asp-for="Input.NewPassword" autocomplete="off">
+                </div>
+                <div class="form-group">
+                    <label asp-for="Input.RepeatNewPassword">Repeat password:</label>
+                    <input type="password" class="form-control" placeholder="Repeat password" asp-for="Input.RepeatNewPassword" autocomplete="off">
+                </div>
+
+                <button type="submit" class="btn btn-primary" value="create">Submit</button>
+            </form>
+        </div>
+    </div>
+</div>

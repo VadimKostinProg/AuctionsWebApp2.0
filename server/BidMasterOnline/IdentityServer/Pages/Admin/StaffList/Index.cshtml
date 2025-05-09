@@ -7,36 +7,78 @@
 
 <h1>Staff List</h1>
 
-<form method="get" class="mb-3">
+<form method="get" class="mb-3 d-flex gap-2">
     <input type="text" name="search" value="@Model.Search" class="form-control" placeholder="Search by username or email..." />
+    <button type="submit" class="btn btn-primary">Search</button>
 </form>
+
+<div class="d-flex justify-content-between">
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox" id="includeDeleted"
+        @(Model.IncludeDeleted ? "checked" : "")
+               onchange="onIncludeDeletedChange()" />
+        <label class="form-check-label" for="includeDeleted">
+            Include deleted
+        </label>
+    </div>
+    <a asp-page="./CreateModerator" class="btn btn-primary mb-2">Create new</a>
+</div>
 
 <table class="table table-striped">
     <thead>
         <tr>
             <th>
-                <a asp-page="./StaffList" asp-route-search="@Model.Search" asp-route-sortColumn="Username" asp-route-sortDirection="@Model.GetSortDirection("Username")">
+                <a asp-page="./Index"
+                   asp-route-search="@Model.Search"
+                   asp-route-sortColumn="Username"
+                   asp-route-sortDirection="@Model.GetSortDirection("Username")"
+                   asp-route-includeDeleted="@Model.IncludeDeleted">
                     Username @(Model.GetSortIcon("Username"))
                 </a>
             </th>
             <th>
-                <a asp-page="./StaffList" asp-route-search="@Model.Search" asp-route-sortColumn="Email" asp-route-sortDirection="@Model.GetSortDirection("Email")">
+                <a asp-page="./Index"
+                   asp-route-search="@Model.Search"
+                   asp-route-sortColumn="Email"
+                   asp-route-sortDirection="@Model.GetSortDirection("Email")"
+                   asp-route-includeDeleted="@Model.IncludeDeleted">
                     Email @(Model.GetSortIcon("Email"))
                 </a>
             </th>
             <th>
-                <a asp-page="./StaffList" asp-route-search="@Model.Search" asp-route-sortColumn="FullName" asp-route-sortDirection="@Model.GetSortDirection("FullName")">
+                <a asp-page="./Index"
+                   asp-route-search="@Model.Search"
+                   asp-route-sortColumn="FullName"
+                   asp-route-sortDirection="@Model.GetSortDirection("FullName")"
+                   asp-route-includeDeleted="@Model.IncludeDeleted">
                     Full Name @(Model.GetSortIcon("FullName"))
                 </a>
             </th>
             <th>
-                <a asp-page="./StaffList" asp-route-search="@Model.Search" asp-route-sortColumn="DateOfBirth" asp-route-sortDirection="@Model.GetSortDirection("DateOfBirth")">
+                <a asp-page="./Index"
+                   asp-route-search="@Model.Search"
+                   asp-route-sortColumn="DateOfBirth"
+                   asp-route-sortDirection="@Model.GetSortDirection("DateOfBirth")"
+                   asp-route-includeDeleted="@Model.IncludeDeleted">
                     Date of Birth @(Model.GetSortIcon("DateOfBirth"))
                 </a>
             </th>
             <th>
-                <a asp-page="./StaffList" asp-route-search="@Model.Search" asp-route-sortColumn="CreatedAt" asp-route-sortDirection="@Model.GetSortDirection("CreatedAt")">
+                <a asp-page="./Index"
+                   asp-route-search="@Model.Search"
+                   asp-route-sortColumn="CreatedAt"
+                   asp-route-sortDirection="@Model.GetSortDirection("CreatedAt")"
+                   asp-route-includeDeleted="@Model.IncludeDeleted">
                     Joined on @(Model.GetSortIcon("CreatedAt"))
+                </a>
+            </th>
+            <th>
+                <a asp-page="./Index"
+                   asp-route-search="@Model.Search"
+                   asp-route-sortColumn="Deleted"
+                   asp-route-sortDirection="@Model.GetSortDirection("Deleted")"
+                   asp-route-includeDeleted="@Model.IncludeDeleted">
+                    Status @(Model.GetSortIcon("Deleted"))
                 </a>
             </th>
             <th>Actions</th>
@@ -52,9 +94,20 @@
                 <td>@moderator.DateOfBirth</td>
                 <td>@moderator.CreatedAt</td>
                 <td>
-                    <form method="post" asp-page-handler="Delete" asp-route-id="@moderator.Id">
-                        <button class="btn btn-danger btn-sm" type="submit">Delete</button>
-                    </form>
+                    @if (moderator.Deleted)
+                    {
+                        <p>Deleted</p>
+                    }
+                    else
+                    {
+                        <p>Active</p>
+                    }
+                </td>
+                <td>
+                    @if (!moderator.Deleted)
+                    {
+                        <a asp-page="./DeleteModerator" asp-route-id="@moderator.Id" class="btn btn-danger btn-sm">Delete</a>
+                    }
                 </td>
             </tr>
         }
@@ -67,14 +120,35 @@
         {
             <li class="page-item @(i == Model.PageNumber ? "active" : "")">
                 <a class="page-link"
-                   asp-page="./StaffList"
+                   asp-page="./Index"
                    asp-route-pageNumber="@i"
                    asp-route-search="@Model.Search"
                    asp-route-sortColumn="@Model.SortColumn"
-                   asp-route-sortDirection="@Model.SortDirection">
+                   asp-route-sortDirection="@Model.SortDirection"
+                   asp-route-includeDeleted="@Model.IncludeDeleted">
                     @i
                 </a>
             </li>
         }
     </ul>
 </nav>
+
+@section Scripts {
+    <script>
+        function onIncludeDeletedChange() {
+            const url = new URL(window.location.href);
+
+            const checkbox = document.getElementById('includeDeleted');
+
+            url.searchParams.set('pageNumber', '1');
+
+            if (checkbox.checked) {
+                url.searchParams.set('includeDeleted', 'true');
+            } else {
+                url.searchParams.delete('includeDeleted');
+            }
+
+            window.location.href = url.toString();
+        }
+    </script>
+}

@@ -28,6 +28,9 @@ namespace IdentityServer.Services
 
             specificationBuilder.With(e => e.RoleId == moderatorRoleId);
 
+            if (!specifications.IncludeDeleted)
+                specificationBuilder.With(e => !e.Deleted);
+
             if (!string.IsNullOrEmpty(specifications.Search))
                 specificationBuilder.With(e => e.Username.Contains(specifications.Search) ||
                                                e.FullName.Contains(specifications.Search) ||
@@ -41,7 +44,8 @@ namespace IdentityServer.Services
                             "FullName" => e => e.FullName,
                             "Email" => e => e.Email,
                             "DateOfBirth" => e => e.DateOfBirth,
-                            _ => e => e.CreatedAt,
+                            "CreatedAt" => e => e.CreatedAt,
+                            _ => e => e.Deleted
                         },
                         sortOrder: specifications.SortDirection switch
                         {
@@ -82,6 +86,7 @@ namespace IdentityServer.Services
                 DateOfBirth = userModel.DateOfBirth,
                 PasswordHashed = passwordHashed,
                 PasswordSalt = passwordSalt,
+                ForceChangePassword = role == UserRoles.Moderator,
                 RoleId = roleId
             };
 
@@ -95,7 +100,7 @@ namespace IdentityServer.Services
             => _repository.AnyAsync<User>(e => e.Username == username);
 
         public Task<bool> ExistsWithEmailAsync(string email)
-            => _repository.AnyAsync<User>(e => e.Email == email);
+            => _repository.AnyAsync<User>(e => e.Email == email && !e.Deleted);
 
         public Task<User> GetByIdAsync(long id)
             => _repository.GetByIdAsync<User>(id);
@@ -109,6 +114,41 @@ namespace IdentityServer.Services
             _repository.Update(user);
             await _repository.SaveChangesAsync();
         }
+
+        public async Task<ServiceResult<User>> ChangePasswordAsync(long userId, string newPassword, bool forceChange = false)
+        {
+            ServiceResult<User> result = new();
+
+            User user = await _repository.GetByIdAsync<User>(userId);
+
+            if (forceChange && CheckIfPasswordIsTheSame(user, newPassword))
+            {
+                result.IsSuccessfull = false;
+                result.StatusCode = System.Net.HttpStatusCode.BadRequest;
+                result.Errors.Add("Password must not be the same as previous.");
+            }
+
+            string passwordSalt = CryptographyHelper.GenerateSalt(size: 128);
+            string passwordHashed = CryptographyHelper.Hash(newPassword, passwordSalt);
+
+            user.PasswordSalt = passwordSalt;
+            user.PasswordHashed = passwordHashed;
+
+            if (forceChange)
+            {
+                user.ForceChangePassword = false;
+            }
+
+            _repository.Update(user);
+            await _repository.SaveChangesAsync();
+
+            result.Data = user;
+
+            return result;
+        }
+
+        private bool CheckIfPasswordIsTheSame(User user, string newPassword)
+            => user.PasswordHashed == CryptographyHelper.Hash(newPassword, user.PasswordSalt);
 
         private async Task<long> GetRoleIdByName(string role)
             => (await _repository.GetFirstOrDefaultAsync<Role>(e => e.Name == role))!.Id;

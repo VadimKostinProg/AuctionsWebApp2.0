@@ -123,6 +123,14 @@ public class Index : PageModel
 
                 await HttpContext.SignInAsync(isuser, props);
 
+                if (user.ForceChangePassword)
+                {
+                    return RedirectToPage("/Account/ForceChangePassword/Index", new
+                    {
+                        returnUrl = Input.ReturnUrl,
+                    });
+                }
+
                 if (context != null)
                 {
                     // This "can't happen", because if the ReturnUrl was null, then the context would be null

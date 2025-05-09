@@ -34,6 +34,8 @@ namespace BidMasterOnline.Domain.Models.Entities
 
         public string? ImagePublicId { get; set; }
 
+        public bool ForceChangePassword { get; set; } = false;
+
         public Role? Role { get; set; }
     }
 }

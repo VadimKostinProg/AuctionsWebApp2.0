@@ -2,6 +2,7 @@
 {
     public class StaffListSpecifications
     {
+        public bool IncludeDeleted { get; set; } = false;
         public string Search { get; set; }
         public string SortColumn { get; set; } = "Username";
         public string SortDirection { get; set; } = "asc";
