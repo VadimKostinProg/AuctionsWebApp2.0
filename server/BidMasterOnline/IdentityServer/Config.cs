@@ -1,8 +1,6 @@
-﻿using Duende.IdentityModel;
-using Duende.IdentityServer.Models;
-using Duende.IdentityServer.Test;
+﻿using Duende.IdentityServer.Models;
+using Duende.IdentityServer.Services;
 using IdentityServer.Services;
-using System.Security.Claims;
 
 namespace IdentityServer
 {
@@ -52,6 +50,39 @@ namespace IdentityServer
                             RequireClientSecret = false,
                             RedirectUris = [$"{configuration["APIResources:AuctionsServiceAPI"]}/swagger/oauth2-redirect.html"],
                             AllowedCorsOrigins = [configuration["APIResources:AuctionsServiceAPI"]!],
+                            AllowedScopes = ["openid", "profile", "participantScope", "moderatorScope"]
+                        },
+                        new Client
+                        {
+                            ClientId = "bids-service-api-swagger",
+                            ClientName = "Bids API - Swagger",
+                            AllowedGrantTypes = GrantTypes.Code,
+                            RequirePkce = true,
+                            RequireClientSecret = false,
+                            RedirectUris = [$"{configuration["APIResources:BidsServiceAPI"]}/swagger/oauth2-redirect.html"],
+                            AllowedCorsOrigins = [configuration["APIResources:BidsServiceAPI"]!],
+                            AllowedScopes = ["openid", "profile", "participantScope", "moderatorScope"]
+                        },
+                        new Client
+                        {
+                            ClientId = "feedbacks-service-api-swagger",
+                            ClientName = "Feedbacks API - Swagger",
+                            AllowedGrantTypes = GrantTypes.Code,
+                            RequirePkce = true,
+                            RequireClientSecret = false,
+                            RedirectUris = [$"{configuration["APIResources:FeedbacksServiceAPI"]}/swagger/oauth2-redirect.html"],
+                            AllowedCorsOrigins = [configuration["APIResources:FeedbacksServiceAPI"]!],
+                            AllowedScopes = ["openid", "profile", "participantScope", "moderatorScope"]
+                        },
+                        new Client
+                        {
+                            ClientId = "moderation-service-api-swagger",
+                            ClientName = "Moderation API - Swagger",
+                            AllowedGrantTypes = GrantTypes.Code,
+                            RequirePkce = true,
+                            RequireClientSecret = false,
+                            RedirectUris = [$"{configuration["APIResources:ModerationServiceAPI"]}/swagger/oauth2-redirect.html"],
+                            AllowedCorsOrigins = [configuration["APIResources:ModerationServiceAPI"]!],
                             AllowedScopes = ["openid", "profile", "participantScope", "moderatorScope"]
                         }
                     ])

@@ -4,8 +4,6 @@ using Duende.IdentityModel;
 using Duende.IdentityServer.Extensions;
 using Duende.IdentityServer.Models;
 using Duende.IdentityServer.Services;
-using Duende.IdentityServer.Validation;
-using IdentityServer.Helpers;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 

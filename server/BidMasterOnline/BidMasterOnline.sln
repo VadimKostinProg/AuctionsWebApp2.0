@@ -29,7 +29,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityServer", "IdentityS
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiGateway", "ApiGateway\ApiGateway.csproj", "{9A2326F7-E885-4E24-AF1D-932E502379FC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BidMasterOnline.Database", "BidMasterOnline.Database\BidMasterOnline.Database.csproj", "{BEDBA6B4-DD0C-4B98-8E91-215D15B6BD15}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BidMasterOnline.Database", "BidMasterOnline.Database\BidMasterOnline.Database.csproj", "{BEDBA6B4-DD0C-4B98-8E91-215D15B6BD15}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

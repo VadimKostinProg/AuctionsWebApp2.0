@@ -3,6 +3,7 @@
 
 using BidMasterOnline.Core.RepositoryContracts;
 using BidMasterOnline.Domain.Models.Entities;
+using Duende.IdentityModel;
 using Duende.IdentityServer;
 using Duende.IdentityServer.Events;
 using Duende.IdentityServer.Models;
@@ -14,6 +15,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Security.Claims;
 
 namespace IdentityServerHost.Pages.Login;
 
@@ -49,7 +51,7 @@ public class Index : PageModel
     public async Task<IActionResult> OnGet(string? returnUrl)
     {
         await BuildModelAsync(returnUrl);
-            
+
         if (View.IsExternalLoginOnly)
         {
             return RedirectToPage("/ExternalLogin/Challenge", new { scheme = View.ExternalLoginScheme, returnUrl });
@@ -57,7 +59,7 @@ public class Index : PageModel
 
         return Page();
     }
-        
+
     public async Task<IActionResult> OnPost()
     {
         // check if we are in the context of an authorization request
@@ -113,9 +115,10 @@ public class Index : PageModel
                 };
 
                 // issue authentication cookie with subject ID and username
-                IdentityServerUser isuser = new (user.Id.ToString())
+                IdentityServerUser isuser = new(user.Id.ToString())
                 {
-                    DisplayName = user.Username
+                    DisplayName = user.Username,
+                    AdditionalClaims = [new Claim(JwtClaimTypes.Role, user.Role!.Name)]
                 };
 
                 await HttpContext.SignInAsync(isuser, props);
@@ -153,7 +156,7 @@ public class Index : PageModel
             }
 
             const string error = "invalid credentials";
-            await _events.RaiseAsync(new UserLoginFailureEvent(Input.Username, error, clientId:context?.Client.ClientId));
+            await _events.RaiseAsync(new UserLoginFailureEvent(Input.Username, error, clientId: context?.Client.ClientId));
             Telemetry.Metrics.UserLoginFailure(context?.Client.ClientId, IdentityServerConstants.LocalIdentityProvider, error);
             ModelState.AddModelError(string.Empty, LoginOptions.InvalidCredentialsErrorMessage);
         }
@@ -169,7 +172,7 @@ public class Index : PageModel
         {
             ReturnUrl = returnUrl
         };
-            
+
         var context = await _interaction.GetAuthorizationContextAsync(returnUrl);
         if (context?.IdP != null && await _schemeProvider.GetSchemeAsync(context.IdP) != null)
         {
@@ -185,7 +188,7 @@ public class Index : PageModel
 
             if (!local)
             {
-                View.ExternalProviders = new[] { new ViewModel.ExternalProvider ( authenticationScheme: context.IdP ) };
+                View.ExternalProviders = new[] { new ViewModel.ExternalProvider(authenticationScheme: context.IdP) };
             }
 
             return;

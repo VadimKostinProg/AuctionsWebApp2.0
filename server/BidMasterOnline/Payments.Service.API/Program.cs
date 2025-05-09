@@ -19,6 +19,7 @@ builder.Services.AddAuthentication("Bearer")
                     options.TokenValidationParameters = new()
                     {
                         ValidateAudience = true,
+                        ValidAudience = builder.Configuration["IdentityServer:Audience"]
                     };
                 });
 

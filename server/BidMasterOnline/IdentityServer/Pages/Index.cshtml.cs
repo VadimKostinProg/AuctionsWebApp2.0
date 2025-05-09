@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace IdentityServerHost.Pages.Home;
 
-[AllowAnonymous]
+[Authorize]
 public class Index : PageModel
 {
     public Index(IdentityServerLicense? license = null)
