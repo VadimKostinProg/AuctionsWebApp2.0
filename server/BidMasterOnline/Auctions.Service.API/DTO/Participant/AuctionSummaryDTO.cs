@@ -8,6 +8,8 @@ namespace Auctions.Service.API.DTO.Participant
 
         public required string LotTitle { get; set; }
 
+        public required string Category { get; set; }
+
         public DateTime StartTime { get; set; }
 
         public DateTime FinishTime { get; set; }
@@ -18,6 +20,6 @@ namespace Auctions.Service.API.DTO.Participant
 
         public UserSummaryDTO? Auctionist { get; set; }
 
-        public List<AuctionImageDTO> Images { get; set; } = [];
+        public List<string> ImageUrls { get; set; } = [];
     }
 }

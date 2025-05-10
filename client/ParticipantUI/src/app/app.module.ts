@@ -2,7 +2,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 import { OAuthModule, OAuthService } from 'angular-oauth2-oidc';
-import { authConfig } from '../auth.config';
 import { RouterModule, RouterOutlet, Routes } from '@angular/router';
 import { AuthModule } from './auth/auth.module';
 import { AuthGuard } from './auth.guard';

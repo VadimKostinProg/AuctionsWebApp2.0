@@ -1,5 +1,0 @@
-
-<h1>Welcome to Participant UI!</h1>
-<button (click)="login()" *ngIf="!isAuthenticated()">Login</button>
-<button (click)="logout()" *ngIf="isAuthenticated()">Logout</button>
-<pre *ngIf="isAuthenticated()">{{ getIdentityClaims() | json }}</pre>

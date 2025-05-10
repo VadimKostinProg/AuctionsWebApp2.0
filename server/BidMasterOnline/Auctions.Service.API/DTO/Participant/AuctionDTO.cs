@@ -5,8 +5,6 @@ namespace Auctions.Service.API.DTO.Participant
 {
     public class AuctionDTO : AuctionSummaryDTO
     {
-        public required string Category { get; set; }
-
         public required string Type { get; set; }
 
         public required string FinishMethod { get; set; }

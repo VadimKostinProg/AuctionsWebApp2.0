@@ -39,7 +39,8 @@ namespace Auctions.Service.API.Services.Participant
             ISpecification<Auction> specification = GetSpecification(specifications);
 
             ListModel<Auction> auctionsList = await _repository.GetFilteredAndPaginated(specification,
-                includeQuery: query => query.Include(e => e.Auctionist)
+                includeQuery: query => query.Include(e => e.Category)
+                                            .Include(e => e.Auctionist)
                                             .Include(e => e.Images)!);
 
             result.Data = auctionsList.ToPaginatedList(e => e.ToParticipantSummaryDTO());

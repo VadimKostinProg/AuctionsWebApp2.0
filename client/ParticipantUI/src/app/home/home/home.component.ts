@@ -1,28 +1,22 @@
-import { Component } from '@angular/core';
-import { OAuthService } from 'angular-oauth2-oidc';
-import { AuthService } from '../../services/auth.service';
+import { Component, OnInit } from '@angular/core';
+import { AuctionsService } from '../../services/auctions.Service';
+import { AuctionBasic } from '../../models/auctions/AuctionBasic';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   standalone: false
 })
-export class HomeComponent {
-  constructor(private authService: AuthService) { }
+export class HomeComponent implements OnInit {
+  popularAuctions: AuctionBasic[] | undefined;
 
-  login(): void {
-    this.authService.login();
-  }
+  constructor(private auctionsService: AuctionsService) { }
 
-  logout(): void {
-    this.authService.logout();
-  }
-
-  isAuthenticated(): boolean {
-    return this.authService.isLoggedIn;
-  }
-
-  getIdentityClaims(): any {
-    return this.authService.identityClaims;
+  ngOnInit(): void {
+    this.auctionsService.getPopularAuctions().subscribe(
+      (result) => {
+        this.popularAuctions = result;
+      }
+    );
   }
 }

@@ -63,6 +63,7 @@ namespace Auctions.Service.API.Extensions
             {
                 Id = entity.Id,
                 LotTitle = entity.LotTitle,
+                Category = entity.Category!.Name,
                 StartTime = entity.StartTime,
                 FinishTime = entity.FinishTime,
                 CurrentPrice = entity.CurrentPrice,
@@ -75,7 +76,7 @@ namespace Auctions.Service.API.Extensions
                         Username = entity.Auctionist.Username,
                         Email = entity.Auctionist.Email
                     },
-                Images = entity.Images?.Select(entity => entity.ToParticipantDTO()).ToList() ?? []
+                ImageUrls = entity.Images?.Select(entity => entity.Url).ToList() ?? []
             };
         }
 
@@ -118,7 +119,7 @@ namespace Auctions.Service.API.Extensions
                         Username = entity.Winner.Username,
                         Email = entity.Winner.Email
                     },
-                Images = entity.Images?.Select(entity => entity.ToParticipantDTO()).ToList() ?? []
+                ImageUrls = entity.Images?.Select(entity => entity.Url).ToList() ?? []
             };
         }
 

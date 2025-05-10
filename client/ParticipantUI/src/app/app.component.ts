@@ -1,31 +1,21 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { AuthService } from './services/auth.service';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   standalone: false
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
   title = 'ParticipantUI';
 
-  constructor(private authService: AuthService,
-    private router: Router) { }
+  constructor(private authService: AuthService) { }
 
-  ngOnInit() {
-    if (this.authService.isLoggedIn) {
-      return;
-    }
+  login() {
+    this.authService.login();
+  }
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const hasCode = urlParams.has('code');
-
-    if (hasCode) {
-      return;
-    }
-    else {
-      this.authService.login();
-    }
+  logout() {
+    this.authService.logout();
   }
 }
