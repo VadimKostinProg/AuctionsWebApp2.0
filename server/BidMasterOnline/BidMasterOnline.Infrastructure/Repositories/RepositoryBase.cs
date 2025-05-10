@@ -34,20 +34,14 @@ namespace BidMasterOnline.Infrastructure.Repositories
         public virtual Task<int> CountAsync<T>(Expression<Func<T, bool>> predicate) where T : EntityBase
             => context.Set<T>().CountAsync(predicate);
 
-        public virtual async Task DeleteByIdAsync<T>(long id) where T : EntityBase
-        {
-            await context.Set<T>().Where(x => x.Id == id).ExecuteDeleteAsync();
-        }
-
         public void Delete<T>(T entity) where T : EntityBase
         {
             context.Set<T>().Remove(entity);
         }
 
-        public virtual void DeleteMany<T>(IEnumerable<T> entities) where T : EntityBase
-        {
-            context.Set<T>().RemoveRange(entities);
-        }
+        public virtual Task<int> DeleteManyAsync<T>(Expression<Func<T, bool>> predicate)
+            where T : EntityBase
+            => context.Set<T>().Where(predicate).ExecuteDeleteAsync();
 
         public virtual async Task<T?> GetFirstOrDefaultAsync<T>(Expression<Func<T, bool>> expression, 
             bool disableTracking = false,
@@ -189,8 +183,6 @@ namespace BidMasterOnline.Infrastructure.Repositories
         public Task<int> UpdateManyAsync<T>(Expression<Func<T, bool>> predicate, 
             Func<T, object> setProperyExpression, 
             object value) where T : EntityBase
-        {
-            return context.Set<T>().Where(predicate).ExecuteUpdateAsync(a => a.SetProperty(setProperyExpression, value));
-        }
+            => context.Set<T>().Where(predicate).ExecuteUpdateAsync(a => a.SetProperty(setProperyExpression, value));
     }
 }

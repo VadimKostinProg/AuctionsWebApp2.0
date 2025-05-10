@@ -63,9 +63,16 @@ builder.Services.AddInfrastructure(builder.Configuration)
     .AddCoreServices();
 
 builder.Services.AddScoped<IModeratorAuctionRequestsService, ModeratorAuctionRequestsService>();
+builder.Services.AddScoped<IModeratorAuctionsService, ModeratorAuctionsService>();
+builder.Services.AddScoped<IModeratorAuctionCategoriesService, ModeratorAuctionCategoriesService>();
+builder.Services.AddScoped<IModeratorAuctionTypesService, ModeratorAuctionTypesService>();
+builder.Services.AddScoped<IModeratorAuctionFinishMethodsService, ModeratorAuctionFinishMethodsService>();
 
 builder.Services.AddScoped<IAuctionRequestsService, AuctionRequestsService>();
 builder.Services.AddScoped<IParticipantAuctionsService, ParticipantAuctionsService>();
+builder.Services.AddScoped<IParticipantAuctionCategoriesService, ParticipantAuctionCategoriesService>();
+builder.Services.AddScoped<IParticipantAuctionTypesService, ParticipantAuctionTypesService>();
+builder.Services.AddScoped<IParticipantAuctionFinishMethodsService, ParticipantAuctionFinishMethodsService>();
 
 builder.Services.AddScoped<ModerationClient>();
 builder.Services.AddScoped<BidsClient>();

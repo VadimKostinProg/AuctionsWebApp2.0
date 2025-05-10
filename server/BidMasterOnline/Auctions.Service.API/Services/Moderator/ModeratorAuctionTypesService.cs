@@ -1,0 +1,74 @@
+﻿using Auctions.Service.API.DTO.Moderator;
+using Auctions.Service.API.Extensions;
+using Auctions.Service.API.ServiceContracts.Moderator;
+using BidMasterOnline.Core.DTO;
+using BidMasterOnline.Core.Extensions;
+using BidMasterOnline.Core.RepositoryContracts;
+using BidMasterOnline.Core.Specifications;
+using BidMasterOnline.Domain.Models;
+using BidMasterOnline.Domain.Models.Entities;
+
+namespace Auctions.Service.API.Services.Moderator
+{
+    public class ModeratorAuctionTypesService : IModeratorAuctionTypesService
+    {
+        private readonly IRepository _repository;
+        private readonly ILogger<ModeratorAuctionTypesService> _logger;
+
+        public ModeratorAuctionTypesService(IRepository repository, 
+            ILogger<ModeratorAuctionTypesService> logger)
+        {
+            _repository = repository;
+            _logger = logger;
+        }
+
+        public async Task<ServiceResult<PaginatedList<ModeratorAuctionTypeDTO>>> GetAuctionTypesAsync(
+            ModeratorSpecificationsDTO specifications)
+        {
+            ServiceResult<PaginatedList<ModeratorAuctionTypeDTO>> result = new();
+
+            SpecificationBuilder<AuctionType> specificationBuilder = new();
+
+            if (!string.IsNullOrEmpty(specifications.Search))
+                specificationBuilder.With(e => e.Name.Contains(specifications.Search) ||
+                                               e.Description.Contains(specifications.Search));
+
+            if (!specifications.IncludeDeleted)
+                specificationBuilder.With(e => !e.Deleted);
+
+            specificationBuilder.WithPagination(specifications.PageSize, specifications.PageNumber);
+
+            ListModel<AuctionType> entitiesList = await _repository.GetFilteredAndPaginated(
+                specificationBuilder.Build());
+
+            result.Data = entitiesList.ToPaginatedList(e => e.ToModeratorDTO());
+
+            return result;
+        }
+
+        public async Task<ServiceResult> UpdateAuctionTypeAsync(long id, ModeratorUpdateAuctionTypeDTO auctionTypeDTO)
+        {
+            ServiceResult result = new();
+
+            try
+            {
+                AuctionType entity = await _repository.GetByIdAsync<AuctionType>(id);
+
+                entity.Description = auctionTypeDTO.Description;
+
+                _repository.Update(entity);
+                await _repository.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occured during updating auction type.");
+
+                result.IsSuccessfull = false;
+                result.StatusCode = System.Net.HttpStatusCode.InternalServerError;
+                result.Errors.Add("An error occured during updating auction type.");
+            }
+
+            return result;
+        }
+    }
+}

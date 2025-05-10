@@ -130,6 +130,30 @@ namespace Auctions.Service.API.Extensions
                 Url = entity.Url,
             };
         }
+
+        public static DTO.Participant.AuctionCategoryDTO ToParticipantDTO(this AuctionCategory entity)
+            => new()
+            {
+                Id = entity.Id,
+                Name = entity.Name,
+                Description = entity.Description
+            };
+
+        public static DTO.Participant.AuctionTypeDTO ToParticipantDTO(this AuctionType entity)
+            => new()
+            {
+                Id = entity.Id,
+                Name = entity.Name,
+                Description = entity.Description
+            };
+
+        public static DTO.Participant.AuctionFinishMethodDTO ToParticipantDTO(this AuctionFinishMethod entity)
+            => new()
+            {
+                Id = entity.Id,
+                Name = entity.Name,
+                Description = entity.Description
+            };
         #endregion
 
         #region Moderator
@@ -265,6 +289,42 @@ namespace Auctions.Service.API.Extensions
                 ModifiedBy = entity.ModifiedBy
             };
         }
+        
+        public static DTO.Moderator.ModeratorAuctionCategoryDTO ToModeratorDTO(this AuctionCategory entity)
+            => new()
+            {
+                Id = entity.Id,
+                Name = entity.Name,
+                Description = entity.Description,
+                CreatedAt = entity.CreatedAt,
+                CreatedBy = entity.CreatedBy,
+                ModifiedAt = entity.ModifiedAt,
+                ModifiedBy = entity.ModifiedBy
+            };
+
+        public static DTO.Moderator.ModeratorAuctionTypeDTO ToModeratorDTO(this AuctionType entity)
+            => new()
+            {
+                Id = entity.Id,
+                Name = entity.Name,
+                Description = entity.Description,
+                CreatedAt = entity.CreatedAt,
+                CreatedBy = entity.CreatedBy,
+                ModifiedAt = entity.ModifiedAt,
+                ModifiedBy = entity.ModifiedBy
+            };
+
+        public static DTO.Moderator.ModeratorAuctionFinishMethodDTO ToModeratorDTO(this AuctionFinishMethod entity)
+            => new()
+            {
+                Id = entity.Id,
+                Name = entity.Name,
+                Description = entity.Description,
+                CreatedAt = entity.CreatedAt,
+                CreatedBy = entity.CreatedBy,
+                ModifiedAt = entity.ModifiedAt,
+                ModifiedBy = entity.ModifiedBy
+            };
         #endregion
     }
 }
