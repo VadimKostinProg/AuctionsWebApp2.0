@@ -4,6 +4,7 @@ using Auctions.Service.API.Extensions;
 using Auctions.Service.API.GrpcServices.Client;
 using Auctions.Service.API.ServiceContracts.Moderator;
 using BidMasterOnline.Core.DTO;
+using BidMasterOnline.Core.Extensions;
 using BidMasterOnline.Core.RepositoryContracts;
 using BidMasterOnline.Core.ServiceContracts;
 using BidMasterOnline.Core.Specifications;
@@ -161,17 +162,7 @@ namespace Auctions.Service.API.Services.Moderator
             ListModel<AuctionRequest> auctionRequestsList = await _repository.GetFilteredAndPaginated(specification,
                 includeQuery: query => query.Include(e => e.Images)!);
 
-            result.Data = new PaginatedList<AuctionRequestSummaryDTO>
-            {
-                Items = auctionRequestsList.Items.Select(e => e.ToModeratorSummaryDTO()).ToList(),
-                Pagination = new()
-                {
-                    TotalCount = auctionRequestsList.TotalCount,
-                    TotalPages = auctionRequestsList.TotalPages,
-                    CurrentPage = auctionRequestsList.CurrentPage,
-                    PageSize = auctionRequestsList.PageSize
-                }
-            };
+            result.Data = auctionRequestsList.ToPaginatedList(e => e.ToModeratorSummaryDTO());
 
             return result;
         }

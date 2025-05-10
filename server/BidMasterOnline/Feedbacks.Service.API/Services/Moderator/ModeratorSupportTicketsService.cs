@@ -1,4 +1,5 @@
 ﻿using BidMasterOnline.Core.DTO;
+using BidMasterOnline.Core.Extensions;
 using BidMasterOnline.Core.RepositoryContracts;
 using BidMasterOnline.Core.ServiceContracts;
 using BidMasterOnline.Core.Specifications;
@@ -156,17 +157,7 @@ namespace Feedbacks.Service.API.Services.Moderator
                     includeQuery: query => query.Include(e => e.User)
                                                 .Include(e => e.Moderator)!);
 
-            result.Data = new PaginatedList<ModeratorSummarySupportTicketDTO>
-            {
-                Items = entitiesList.Items.Select(e => e.ToModeratorSummaryDTO()).ToList(),
-                Pagination = new Pagination
-                {
-                    TotalCount = entitiesList.TotalCount,
-                    TotalPages = entitiesList.TotalPages,
-                    PageSize = entitiesList.PageSize,
-                    CurrentPage = entitiesList.CurrentPage
-                }
-            };
+            result.Data = entitiesList.ToPaginatedList(e => e.ToModeratorSummaryDTO());
 
             return result;
         }

@@ -1,4 +1,5 @@
 ﻿using BidMasterOnline.Core.DTO;
+using BidMasterOnline.Core.Extensions;
 using BidMasterOnline.Core.RepositoryContracts;
 using BidMasterOnline.Core.ServiceContracts;
 using BidMasterOnline.Core.Specifications;
@@ -40,17 +41,7 @@ namespace Feedbacks.Service.API.Services.Participant
             ListModel<AuctionComment> entitiesList = await _repository.GetFilteredAndPaginated(specification,
                 includeQuery: query => query.Include(e => e.User)!);
 
-            result.Data = new PaginatedList<ParticipantAuctionCommentDTO>
-            {
-                Items = entitiesList.Items.Select(e => e.ToParticipantDTO()).ToList(),
-                Pagination = new()
-                {
-                    PageSize = entitiesList.PageSize,
-                    CurrentPage = entitiesList.CurrentPage,
-                    TotalPages = entitiesList.TotalPages,
-                    TotalCount = entitiesList.TotalCount                    
-                }
-            };
+            result.Data = entitiesList.ToPaginatedList(e => e.ToParticipantDTO());
 
             return result;
         }

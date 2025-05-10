@@ -1,6 +1,7 @@
 ﻿using BidMasterOnline.Core.Constants;
 using BidMasterOnline.Core.DTO;
 using BidMasterOnline.Core.Enums;
+using BidMasterOnline.Core.Extensions;
 using BidMasterOnline.Core.RepositoryContracts;
 using BidMasterOnline.Core.Specifications;
 using BidMasterOnline.Domain.Models;
@@ -58,17 +59,7 @@ namespace IdentityServer.Services
 
             ListModel<User> usersList = await _repository.GetFilteredAndPaginated(specificationBuilder.Build());
 
-            return new PaginatedList<User>
-            {
-                Items = usersList.Items,
-                Pagination = new Pagination
-                {
-                    CurrentPage = usersList.CurrentPage,
-                    PageSize = usersList.PageSize,
-                    TotalCount = usersList.TotalCount,
-                    TotalPages = usersList.TotalPages,
-                }
-            };
+            return usersList.ToPaginatedList();
         }
 
         public async Task<User> CreateUserAsync(CreateUserModel userModel, string role)

@@ -1,4 +1,5 @@
 ﻿using BidMasterOnline.Core.DTO;
+using BidMasterOnline.Core.Extensions;
 using BidMasterOnline.Core.RepositoryContracts;
 using BidMasterOnline.Core.ServiceContracts;
 using BidMasterOnline.Core.Specifications;
@@ -162,17 +163,7 @@ namespace Feedbacks.Service.API.Services.Moderator
             ListModel<Complaint> entitiesList = await _repository.GetFilteredAndPaginated(
                 specificationBuilder.Build(), includeQuery: query => query.Include(e => e.Moderator)!);
 
-            result.Data = new PaginatedList<ModeratorSummaryComplaintDTO>
-            {
-                Items = entitiesList.Items.Select(e => e.ToModeratorSummaryDTO()).ToList(),
-                Pagination = new Pagination
-                {
-                    TotalCount = entitiesList.TotalCount,
-                    TotalPages = entitiesList.TotalPages,
-                    PageSize = entitiesList.PageSize,
-                    CurrentPage = entitiesList.CurrentPage
-                }
-            };
+            result.Data = entitiesList.ToPaginatedList(e => e.ToModeratorSummaryDTO());
 
             return result;
         }

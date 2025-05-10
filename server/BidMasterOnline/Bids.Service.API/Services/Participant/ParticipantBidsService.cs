@@ -1,4 +1,5 @@
 ﻿using BidMasterOnline.Core.DTO;
+using BidMasterOnline.Core.Extensions;
 using BidMasterOnline.Core.RepositoryContracts;
 using BidMasterOnline.Core.ServiceContracts;
 using BidMasterOnline.Core.Specifications;
@@ -47,17 +48,7 @@ namespace Bids.Service.API.Services.Participant
 
                 ListModel<Bid> bidsList = await _repository.GetFilteredAndPaginated(specification);
 
-                result.Data = new PaginatedList<AuctionBidDTO>
-                {
-                    Items = bidsList.Items.Select(e => e.ToParticipantAuctionBidDTO()).ToList(),
-                    Pagination = new Pagination
-                    {
-                        TotalCount = bidsList.TotalCount,
-                        TotalPages = bidsList.TotalPages,
-                        CurrentPage = bidsList.CurrentPage,
-                        PageSize = bidsList.PageSize
-                    }
-                };
+                result.Data = bidsList.ToPaginatedList(e => e.ToParticipantAuctionBidDTO());
             }
             catch (Exception ex)
             {
@@ -86,17 +77,7 @@ namespace Bids.Service.API.Services.Participant
 
                 ListModel<Bid> bidsList = await _repository.GetFilteredAndPaginated(specification);
 
-                result.Data = new PaginatedList<UserBidDTO>
-                {
-                    Items = bidsList.Items.Select(e => e.ToParticipantUserBidDTO()).ToList(),
-                    Pagination = new Pagination
-                    {
-                        TotalCount = bidsList.TotalCount,
-                        TotalPages = bidsList.TotalPages,
-                        CurrentPage = bidsList.CurrentPage,
-                        PageSize = bidsList.PageSize
-                    }
-                };
+                result.Data = bidsList.ToPaginatedList(e => e.ToParticipantUserBidDTO());
             }
             catch (Exception ex)
             {

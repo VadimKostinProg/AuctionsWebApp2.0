@@ -3,6 +3,7 @@ using Auctions.Service.API.Extensions;
 using Auctions.Service.API.ServiceContracts.Participant;
 using BidMasterOnline.Core.DTO;
 using BidMasterOnline.Core.Enums;
+using BidMasterOnline.Core.Extensions;
 using BidMasterOnline.Core.RepositoryContracts;
 using BidMasterOnline.Core.ServiceContracts;
 using BidMasterOnline.Core.Specifications;
@@ -48,18 +49,7 @@ namespace Auctions.Service.API.Services.Participant
             ListModel<AuctionRequest> auctionRequestsList = await _repository.GetFilteredAndPaginated(specification,
                 includeQuery: query => query.Include(e => e.Images)!);
 
-
-            result.Data = new PaginatedList<AuctionRequestSummaryDTO>
-            {
-                Items = auctionRequestsList.Items.Select(e => e.ToParticipantSummaryDTO()).ToList(),
-                Pagination = new()
-                {
-                    TotalCount = auctionRequestsList.TotalCount,
-                    TotalPages = auctionRequestsList.TotalPages,
-                    CurrentPage = auctionRequestsList.CurrentPage,
-                    PageSize = auctionRequestsList.PageSize
-                }
-            };
+            result.Data = auctionRequestsList.ToPaginatedList(e => e.ToParticipantSummaryDTO());
 
             return result;
         }
