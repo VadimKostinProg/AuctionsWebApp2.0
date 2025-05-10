@@ -1,5 +1,6 @@
 ﻿using Duende.IdentityServer.Models;
 using Duende.IdentityServer.Services;
+using IdentityServer.Constants;
 using IdentityServer.Services;
 
 namespace IdentityServer
@@ -12,7 +13,7 @@ namespace IdentityServer
                 .AddInMemoryClients([
                         new Client
                         {
-                            ClientId = "ParticipantUI",
+                            ClientId = IdentityServerClients.ParticipantUI,
                             AllowedGrantTypes = GrantTypes.Code,
                             RequirePkce = true,
                             RequireClientSecret = false,
@@ -23,7 +24,7 @@ namespace IdentityServer
                         },
                         new Client
                         {
-                            ClientId = "ModeratorUI",
+                            ClientId = IdentityServerClients.ModeratorUI,
                             AllowedGrantTypes = GrantTypes.Code,
                             RequirePkce = true,
                             RequireClientSecret = false,

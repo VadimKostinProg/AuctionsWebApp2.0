@@ -4,6 +4,6 @@ namespace IdentityServer.Services.Contracts
 {
     public interface IPasswordValidationService
     {
-        Task<User?> ValidateAsync(string username, string password);
+        Task<User?> ValidateAsync(string username, string password, string? clientId = null);
     }
 }

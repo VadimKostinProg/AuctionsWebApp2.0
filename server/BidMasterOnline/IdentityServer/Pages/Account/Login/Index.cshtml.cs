@@ -10,6 +10,7 @@ using Duende.IdentityServer.Models;
 using Duende.IdentityServer.Services;
 using Duende.IdentityServer.Stores;
 using Duende.IdentityServer.Test;
+using IdentityServer.Constants;
 using IdentityServer.Services.Contracts;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -98,7 +99,8 @@ public class Index : PageModel
         if (ModelState.IsValid)
         {
             // validate username/password
-            User? user = await _validationService.ValidateAsync(Input.Username!, Input.Password!);
+            User? user = await _validationService.ValidateAsync(Input.Username!, Input.Password!,
+                context?.Client?.ClientId);
 
             if (user != null)
             {
@@ -222,7 +224,8 @@ public class Index : PageModel
         providers.AddRange(dynamicSchemes);
 
 
-        var allowLocal = true;
+        bool allowLocal = true;
+        bool allowRegistration = true;
         var client = context?.Client;
         if (client != null)
         {
@@ -231,11 +234,14 @@ public class Index : PageModel
             {
                 providers = providers.Where(provider => client.IdentityProviderRestrictions.Contains(provider.AuthenticationScheme)).ToList();
             }
+
+            allowRegistration = client.ClientId == IdentityServerClients.ParticipantUI;
         }
 
         View = new ViewModel
         {
             AllowRememberLogin = LoginOptions.AllowRememberLogin,
+            AllowRegistration = allowRegistration,
             EnableLocalLogin = allowLocal && LoginOptions.AllowLocalLogin,
             ExternalProviders = providers.ToArray()
         };
