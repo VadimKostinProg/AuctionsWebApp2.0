@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Auctions.Service.API.Controllers.Areas.Moderator;
 
-[Route("api/moderator/auctions/requests")]
+[Route("api/moderator/auction-requests")]
 [Authorize(Roles = UserRoles.Moderator)]
 public class AuctionRequestsController : BaseController
 {
@@ -35,7 +35,7 @@ public class AuctionRequestsController : BaseController
         return FromResult(result);
     }
 
-    [HttpPost("requests/approve")]
+    [HttpPut("approve")]
     public async Task<IActionResult> ApproveAuctionRequest([FromBody] ApproveAuctionRequestDTO requestDTO)
     {
         ServiceResult result = await _service.ApproveAuctionRequestAsync(requestDTO);
@@ -43,7 +43,7 @@ public class AuctionRequestsController : BaseController
         return FromResult(result);
     }
 
-    [HttpPost("requests/decline")]
+    [HttpPut("decline")]
     public async Task<IActionResult> DeclineAuctionRequest([FromBody] DeclineAuctionRequestDTO requestDTO)
     {
         ServiceResult result = await _service.DeclineAuctionRequestAsync(requestDTO);

@@ -25,6 +25,8 @@ namespace Auctions.Service.API.DTO.Participant
 
         public string? CancellationReason { get; set; }
 
+        public decimal? FinishPrice { get; set; }
+
         public UserSummaryDTO? Winner { get; set; }
     }
 }

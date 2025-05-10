@@ -57,14 +57,6 @@ namespace Moderation.Service.API.Services
                 case ModerationAction.DeletingComment:
                     log.AuctionCommentId = resourceId;
                     break;
-                case ModerationAction.PickingUpTechnicalSupportRequest:
-                case ModerationAction.CompletingTechnicalSupportRequest:
-                    log.SupportTicketId = resourceId;
-                    break;
-                case ModerationAction.PickingUpComplaint:
-                case ModerationAction.CompletingComplaint:
-                    log.ComplaintId = resourceId;
-                    break;
             }
         }
     }

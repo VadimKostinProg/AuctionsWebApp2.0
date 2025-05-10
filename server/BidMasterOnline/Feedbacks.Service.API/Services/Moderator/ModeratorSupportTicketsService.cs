@@ -8,6 +8,7 @@ using BidMasterOnline.Domain.Models.Entities;
 using Feedbacks.Service.API.DTO.Moderator;
 using Feedbacks.Service.API.Extensions;
 using Feedbacks.Service.API.ServiceContracts.Moderator;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Feedbacks.Service.API.Services.Moderator
@@ -126,7 +127,9 @@ namespace Feedbacks.Service.API.Services.Moderator
         {
             ServiceResult<ModeratorSupportTicketDTO> result = new();
 
-            SupportTicket entity = await _repository.GetByIdAsync<SupportTicket>(supportTicketId);
+            SupportTicket entity = await _repository.GetByIdAsync<SupportTicket>(supportTicketId,
+                includeQuery: query => query.Include(e => e.User)
+                                            .Include(e => e.Moderator)!);
 
             result.Data = entity.ToModeratorDTO();
 
@@ -149,7 +152,9 @@ namespace Feedbacks.Service.API.Services.Moderator
             specificationBuilder.WithPagination(specifications.PageSize, specifications.PageNumber);
 
             ListModel<SupportTicket> entitiesList = await _repository
-                .GetFilteredAndPaginated(specificationBuilder.Build());
+                .GetFilteredAndPaginated(specificationBuilder.Build(),
+                    includeQuery: query => query.Include(e => e.User)
+                                                .Include(e => e.Moderator)!);
 
             result.Data = new PaginatedList<ModeratorSummarySupportTicketDTO>
             {

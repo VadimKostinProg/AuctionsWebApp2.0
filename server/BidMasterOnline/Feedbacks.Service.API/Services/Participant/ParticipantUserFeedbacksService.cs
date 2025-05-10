@@ -7,6 +7,7 @@ using BidMasterOnline.Domain.Models.Entities;
 using Feedbacks.Service.API.DTO.Participant;
 using Feedbacks.Service.API.Extensions;
 using Feedbacks.Service.API.ServiceContracts.Participant;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Feedbacks.Service.API.Services.Participant
@@ -64,7 +65,8 @@ namespace Feedbacks.Service.API.Services.Participant
                 .OrderBy(e => e.CreatedAt)
                 .Build();
 
-            ListModel<UserFeedback> entitiesList = await _repository.GetFilteredAndPaginated(specification);
+            ListModel<UserFeedback> entitiesList = await _repository.GetFilteredAndPaginated(specification,
+                includeQuery: query => query.Include(e => e.FromUser)!);
 
             result.Data = new PaginatedList<ParticipantUserFeedbackDTO>
             {

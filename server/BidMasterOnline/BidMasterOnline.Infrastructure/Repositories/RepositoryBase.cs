@@ -1,5 +1,4 @@
-﻿using BidMasterOnline.Infrastructure.DatabaseContext;
-using BidMasterOnline.Core.RepositoryContracts;
+﻿using BidMasterOnline.Core.RepositoryContracts;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 using BidMasterOnline.Domain.Models;

@@ -1,0 +1,48 @@
+﻿@page
+@model IdentityServer.Pages.Admin.CreateModeratorModel
+@{
+}
+@{
+    ViewData["Title"] = "Create Moderator";
+}
+
+<h2>Create New Moderator</h2>
+
+<form method="post">
+    <div class="form-group">
+        <label asp-for="Moderator.Username">Username:</label>
+        <input asp-for="Moderator.Username" class="form-control" />
+        <span asp-validation-for="Moderator.Username" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Moderator.Email">Email:</label>
+        <input asp-for="Moderator.Email" class="form-control" />
+        <span asp-validation-for="Moderator.Email" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Moderator.FullName">Full name:</label>
+        <input asp-for="Moderator.FullName" class="form-control" />
+        <span asp-validation-for="Moderator.FullName" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Moderator.DateOfBirth">Date of birth:</label>
+        <input asp-for="Moderator.DateOfBirth" type="date" class="form-control" />
+        <span asp-validation-for="Moderator.DateOfBirth" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Moderator.Password">Password:</label>
+        <input asp-for="Moderator.Password" type="password" class="form-control" />
+        <span asp-validation-for="Moderator.Password" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Create</button>
+    <a asp-page="./Index" class="btn btn-secondary">Cancel</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationSummary" />
+}

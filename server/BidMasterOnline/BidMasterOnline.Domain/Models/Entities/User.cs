@@ -1,6 +1,5 @@
 ﻿using BidMasterOnline.Domain.Enums;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BidMasterOnline.Domain.Models.Entities
 {
@@ -34,6 +33,8 @@ namespace BidMasterOnline.Domain.Models.Entities
         public string? ImageUrl { get; set; }
 
         public string? ImagePublicId { get; set; }
+
+        public bool ForceChangePassword { get; set; } = false;
 
         public Role? Role { get; set; }
     }

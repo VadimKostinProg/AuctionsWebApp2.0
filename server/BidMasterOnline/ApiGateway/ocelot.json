@@ -1,0 +1,659 @@
+{
+  "Routes": [
+    // Participant routes
+
+    // Auctions.Service.API
+    {
+      "DownstreamPathTemplate": "api/participant/auctions",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7157
+        }
+      ],
+      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamPathTemplate": "api/participant/auctions",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": [ "openid", "profile", "participantScope" ]
+      }
+    },
+    {
+      "DownstreamPathTemplate": "api/participant/auctions/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7157
+        }
+      ],
+      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamPathTemplate": "api/participant/auctions/{id}",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": [ "openid", "profile", "participantScope" ]
+      }
+    },
+    {
+      "DownstreamPathTemplate": "api/participant/auctions/{id}/cancel",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7157
+        }
+      ],
+      "UpstreamHttpMethod": [ "PUT" ],
+      "UpstreamPathTemplate": "api/participant/auctions/{id}/cancel",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": [ "openid", "profile", "participantScope" ]
+      }
+    },
+    {
+      "DownstreamPathTemplate": "api/participant/auction-requests",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7157
+        }
+      ],
+      "UpstreamHttpMethod": [ "GET", "POST" ],
+      "UpstreamPathTemplate": "api/participant/auction-requests",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": [ "openid", "profile", "participantScope" ]
+      }
+    },
+    {
+      "DownstreamPathTemplate": "api/participant/auction-requests/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7157
+        }
+      ],
+      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamPathTemplate": "api/participant/auction-requests/{id}",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": [ "openid", "profile", "participantScope" ]
+      }
+    },
+    {
+      "DownstreamPathTemplate": "api/participant/auction-requests/{id}/cancell",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7157
+        }
+      ],
+      "UpstreamHttpMethod": [ "PUT" ],
+      "UpstreamPathTemplate": "api/participant/auction-requests/{id}/cancell",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": [ "openid", "profile", "participantScope" ]
+      }
+    },
+
+    // Bids.Service.API
+    {
+      "DownstreamPathTemplate": "api/participant/bids",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7024
+        }
+      ],
+      "UpstreamHttpMethod": [ "GET", "POST" ],
+      "UpstreamPathTemplate": "api/participant/bids",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": [ "openid", "profile", "participantScope" ]
+      }
+    },
+    {
+      "DownstreamPathTemplate": "api/participant/auctions/{auctionId}/bids",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7024
+        }
+      ],
+      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamPathTemplate": "api/participant/auctions/{auctionId}/bids",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": [ "openid", "profile", "participantScope" ]
+      }
+    },
+
+    // Feedbacks.Service.API
+    {
+      "DownstreamPathTemplate": "api/participant/auctions/{auctionId}/comments",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7291
+        }
+      ],
+      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamPathTemplate": "api/participant/auctions/{auctionId}/comments",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": [ "openid", "profile", "participantScope" ]
+      }
+    },
+    {
+      "DownstreamPathTemplate": "api/participant/auctions/comments",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7291
+        }
+      ],
+      "UpstreamHttpMethod": [ "POST" ],
+      "UpstreamPathTemplate": "api/participant/auctions/comments",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": [ "openid", "profile", "participantScope" ]
+      }
+    },
+    {
+      "DownstreamPathTemplate": "api/participant/auctions/comments/{commentId}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7291
+        }
+      ],
+      "UpstreamHttpMethod": [ "DELETE" ],
+      "UpstreamPathTemplate": "api/participant/auctions/comments/{commentId}",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": [ "openid", "profile", "participantScope" ]
+      }
+    },
+    {
+      "DownstreamPathTemplate": "api/participant/complaints",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7291
+        }
+      ],
+      "UpstreamHttpMethod": [ "GET", "POST" ],
+      "UpstreamPathTemplate": "api/participant/complaints",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": [ "openid", "profile", "participantScope" ]
+      }
+    },
+    {
+      "DownstreamPathTemplate": "api/participant/complaints/{complaintId}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7291
+        }
+      ],
+      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamPathTemplate": "api/participant/complaints/{complaintId}",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": [ "openid", "profile", "participantScope" ]
+      }
+    },
+    {
+      "DownstreamPathTemplate": "api/participant/support-tickets",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7291
+        }
+      ],
+      "UpstreamHttpMethod": [ "GET", "POST" ],
+      "UpstreamPathTemplate": "api/participant/support-tickets",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": [ "openid", "profile", "participantScope" ]
+      }
+    },
+    {
+      "DownstreamPathTemplate": "api/participant/support-tickets/{ticketId}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7291
+        }
+      ],
+      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamPathTemplate": "api/participant/support-tickets/{ticketId}",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": [ "openid", "profile", "participantScope" ]
+      }
+    },
+    {
+      "DownstreamPathTemplate": "api/participant/users/{userId}/feedbacks",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7291
+        }
+      ],
+      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamPathTemplate": "api/participant/users/{userId}/feedbacks",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": [ "openid", "profile", "participantScope" ]
+      }
+    },
+    {
+      "DownstreamPathTemplate": "api/participant/users/feedbacks",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7291
+        }
+      ],
+      "UpstreamHttpMethod": [ "POST" ],
+      "UpstreamPathTemplate": "api/participant/users/feedbacks",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": [ "openid", "profile", "participantScope" ]
+      }
+    },
+    {
+      "DownstreamPathTemplate": "api/participant/users/feedbacks/{feedbackId}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7291
+        }
+      ],
+      "UpstreamHttpMethod": [ "DELETE" ],
+      "UpstreamPathTemplate": "api/participant/users/feedbacks/{feedbackId}",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": [ "openid", "profile", "participantScope" ]
+      }
+    },
+
+    // Moderator routes
+
+    // Auctions.Service.API
+    {
+      "DownstreamPathTemplate": "api/moderator/auctions",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7157
+        }
+      ],
+      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamPathTemplate": "api/moderator/auctions",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": [ "openid", "profile", "moderatorScope" ]
+      }
+    },
+    {
+      "DownstreamPathTemplate": "api/moderator/auctions/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7157
+        }
+      ],
+      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamPathTemplate": "api/moderator/auctions/{id}",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": [ "openid", "profile", "moderatorScope" ]
+      }
+    },
+    {
+      "DownstreamPathTemplate": "api/moderator/auctions/cancell",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7157
+        }
+      ],
+      "UpstreamHttpMethod": [ "PUT" ],
+      "UpstreamPathTemplate": "api/moderator/auctions/cancell",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": [ "openid", "profile", "moderatorScope" ]
+      }
+    },
+    {
+      "DownstreamPathTemplate": "api/moderator/auctions/recover",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7157
+        }
+      ],
+      "UpstreamHttpMethod": [ "PUT" ],
+      "UpstreamPathTemplate": "api/moderator/auctions/recover",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": [ "openid", "profile", "moderatorScope" ]
+      }
+    },
+    {
+      "DownstreamPathTemplate": "api/moderator/auction-requests",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7157
+        }
+      ],
+      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamPathTemplate": "api/moderator/auction-requests",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": [ "openid", "profile", "moderatorScope" ]
+      }
+    },
+    {
+      "DownstreamPathTemplate": "api/moderator/auction-requests/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7157
+        }
+      ],
+      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamPathTemplate": "api/moderator/auction-requests/{id}",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": [ "openid", "profile", "moderatorScope" ]
+      }
+    },
+    {
+      "DownstreamPathTemplate": "api/moderator/auction-requests/approve",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7157
+        }
+      ],
+      "UpstreamHttpMethod": [ "PUT" ],
+      "UpstreamPathTemplate": "api/moderator/auction-requests/approve",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": [ "openid", "profile", "moderatorScope" ]
+      }
+    },
+    {
+      "DownstreamPathTemplate": "api/moderator/auction-requests/decline",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7157
+        }
+      ],
+      "UpstreamHttpMethod": [ "PUT" ],
+      "UpstreamPathTemplate": "api/moderator/auction-requests/decline",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": [ "openid", "profile", "moderatorScope" ]
+      }
+    },
+
+    // Bids.Service.API
+    {
+      "DownstreamPathTemplate": "api/moderator/users/{userId}/bids",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7024
+        }
+      ],
+      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamPathTemplate": "api/moderator/users/{userId}/bids",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": [ "openid", "profile", "moderatorScope" ]
+      }
+    },
+    {
+      "DownstreamPathTemplate": "api/moderator/auctions/{auctionId}/bids",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7024
+        }
+      ],
+      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamPathTemplate": "api/moderator/auctions/{auctionId}/bids",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": [ "openid", "profile", "moderatorScope" ]
+      }
+    },
+
+    // Feedbacks.Service.API
+    {
+      "DownstreamPathTemplate": "api/moderator/auctions/{auctionId}/comments",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7291
+        }
+      ],
+      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamPathTemplate": "api/moderator/auctions/{auctionId}/comments",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": [ "openid", "profile", "moderatorScope" ]
+      }
+    },
+    {
+      "DownstreamPathTemplate": "api/moderator/auctions/comments/{commentId}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7291
+        }
+      ],
+      "UpstreamHttpMethod": [ "DELETE" ],
+      "UpstreamPathTemplate": "api/moderator/auctions/comments/{commentId}",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": [ "openid", "profile", "moderatorScope" ]
+      }
+    },
+    {
+      "DownstreamPathTemplate": "api/moderator/complaints",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7291
+        }
+      ],
+      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamPathTemplate": "api/moderator/complaints",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": [ "openid", "profile", "moderatorScope" ]
+      }
+    },
+    {
+      "DownstreamPathTemplate": "api/moderator/complaints/{complaintId}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7291
+        }
+      ],
+      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamPathTemplate": "api/moderator/complaints/{complaintId}",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": [ "openid", "profile", "moderatorScope" ]
+      }
+    },
+    {
+      "DownstreamPathTemplate": "api/moderator/complaints/assign",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7291
+        }
+      ],
+      "UpstreamHttpMethod": [ "PUT" ],
+      "UpstreamPathTemplate": "api/moderator/complaints/assign",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": [ "openid", "profile", "moderatorScope" ]
+      }
+    },
+    {
+      "DownstreamPathTemplate": "api/moderator/complaints/complete",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7291
+        }
+      ],
+      "UpstreamHttpMethod": [ "PUT" ],
+      "UpstreamPathTemplate": "api/moderator/complaints/complete",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": [ "openid", "profile", "moderatorScope" ]
+      }
+    },
+    {
+      "DownstreamPathTemplate": "api/moderator/support-tickets",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7291
+        }
+      ],
+      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamPathTemplate": "api/moderator/support-tickets",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": [ "openid", "profile", "moderatorScope" ]
+      }
+    },
+    {
+      "DownstreamPathTemplate": "api/moderator/support-tickets/{ticketId}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7291
+        }
+      ],
+      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamPathTemplate": "api/moderator/support-tickets/{ticketId}",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": [ "openid", "profile", "moderatorScope" ]
+      }
+    },
+    {
+      "DownstreamPathTemplate": "api/moderator/support-tickets/assign",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7291
+        }
+      ],
+      "UpstreamHttpMethod": [ "PUT" ],
+      "UpstreamPathTemplate": "api/moderator/support-tickets/assign",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": [ "openid", "profile", "moderatorScope" ]
+      }
+    },
+    {
+      "DownstreamPathTemplate": "api/moderator/support-tickets/complete",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7291
+        }
+      ],
+      "UpstreamHttpMethod": [ "PUT" ],
+      "UpstreamPathTemplate": "api/moderator/support-tickets/complete",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": [ "openid", "profile", "moderatorScope" ]
+      }
+    },
+    {
+      "DownstreamPathTemplate": "api/moderator/users/{userId}/feedbacks",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7291
+        }
+      ],
+      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamPathTemplate": "api/moderator/users/{userId}/feedbacks",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": [ "openid", "profile", "moderatorScope" ]
+      }
+    },
+    {
+      "DownstreamPathTemplate": "api/moderator/users/feedbacks/{feedbackId}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7291
+        }
+      ],
+      "UpstreamHttpMethod": [ "DELETE" ],
+      "UpstreamPathTemplate": "api/moderator/users/feedbacks/{feedbackId}",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": [ "openid", "profile", "moderatorScope" ]
+      }
+    }
+  ]
+}

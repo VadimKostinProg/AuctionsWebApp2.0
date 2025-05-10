@@ -48,7 +48,7 @@ namespace BidMasterOnline.Core.Specifications
         private Expression<Func<T, bool>> GetPredicate()
         {
             if (!this._filters.Any())
-                return null;
+                return x => true;
 
             Expression<Func<T, bool>> combinedExpression = this._filters.First();
 

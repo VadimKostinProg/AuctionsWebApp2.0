@@ -9,6 +9,7 @@ using Feedbacks.Service.API.DTO.Moderator;
 using Feedbacks.Service.API.Extensions;
 using Feedbacks.Service.API.GrpcServices.Client;
 using Feedbacks.Service.API.ServiceContracts.Moderator;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Feedbacks.Service.API.Services.Moderator
@@ -86,7 +87,9 @@ namespace Feedbacks.Service.API.Services.Moderator
                 .OrderBy(e => e.CreatedAt, BidMasterOnline.Core.Enums.SortDirection.DESC)
                 .Build();
 
-            ListModel<UserFeedback> entitiesList = await _repository.GetFilteredAndPaginated(specifications);
+            ListModel<UserFeedback> entitiesList = await _repository.GetFilteredAndPaginated(specifications,
+                includeQuery: query => query.Include(e => e.FromUser)
+                                            .Include(e => e.ToUser)!);
 
             result.Data = new PaginatedList<ModeratorUserFeedbackDTO>
             {

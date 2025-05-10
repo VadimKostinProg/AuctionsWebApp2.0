@@ -168,9 +168,9 @@ namespace Feedbacks.Service.API.Extensions
                 AccusedUserFeedbackId = entity.AccusedUserFeedbackId,
                 AccusingUserName = entity.AccusingUser!.Username,
                 AccusedUsername = entity.AccusedUser!.Username,
-                AccusedAuctionName = entity.AccusedAuction!.LotTitle,
-                AccusedComment = entity.AccusedComment!.ToModeratorDTO(),
-                AccusedUserFeedback = entity.AccusedUserFeedback!.ToModeratorDTO(),
+                AccusedAuctionName = entity.AccusedAuction?.LotTitle,
+                AccusedComment = entity.AccusedComment?.ToModeratorDTO(),
+                AccusedUserFeedback = entity.AccusedUserFeedback?.ToModeratorDTO(),
                 Title = entity.Type switch
                 {
                     ComplaintType.ComplaintOnAuctionContent => $"#{entity.Id} Complaint on auciton content",

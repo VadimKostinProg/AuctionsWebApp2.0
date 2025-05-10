@@ -1,6 +1,5 @@
 ﻿using BidMasterOnline.Core.RepositoryContracts;
 using BidMasterOnline.Core.ServiceContracts;
-using BidMasterOnline.Infrastructure.DatabaseContext;
 using BidMasterOnline.Infrastructure.Repositories;
 using BidMasterOnline.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;

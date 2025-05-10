@@ -43,6 +43,8 @@ namespace BidMasterOnline.Domain.Models.Entities
 
         public string? CancellationReason { get; set; }
 
+        public decimal? FinishPrice { get; set; }
+
         public User? Auctionist { get; set; }
 
         public User? Winner { get; set; }
