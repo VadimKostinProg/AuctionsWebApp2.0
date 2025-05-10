@@ -18,6 +18,8 @@ builder.Services.AddAuthentication("Bearer")
 
 var app = builder.Build();
 
+app.UseRouting();
+
 app.UseEndpoints(options => options.MapControllers());
 
 await app.UseOcelot();

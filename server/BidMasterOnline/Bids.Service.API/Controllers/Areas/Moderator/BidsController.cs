@@ -1,12 +1,15 @@
-﻿using BidMasterOnline.Core.DTO;
+﻿using BidMasterOnline.Core.Constants;
+using BidMasterOnline.Core.DTO;
 using Bids.Service.API.DTO.Moderator;
 using Bids.Service.API.ServiceContracts.Moderator;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Bids.Service.API.Controllers.Areas.Moderator
 {
     [Route("api/moderator")]
     [ApiController]
+    [Authorize(Roles = UserRoles.Moderator)]
     public class BidsController : BaseController
     {
         private readonly IModeratorBidsService _service;

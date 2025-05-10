@@ -1,12 +1,15 @@
-﻿using BidMasterOnline.Core.DTO;
+﻿using BidMasterOnline.Core.Constants;
+using BidMasterOnline.Core.DTO;
 using Bids.Service.API.DTO.Participant;
 using Bids.Service.API.ServiceContracts.Participant;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Bids.Service.API.Controllers.Areas.Participant
 {
     [Route("api/participant")]
     [ApiController]
+    [Authorize(Roles = UserRoles.Participant)]
     public class BidsController : BaseController
     {
         private readonly IParticipantBidsService _service;
