@@ -58,7 +58,7 @@ namespace Feedbacks.Service.API.Services.Moderator
                 _repository.Update(entity);
                 await _repository.SaveChangesAsync();
 
-                await _moderationClient.LogModerationAction(ModerationAction.DeletingComment, commentId);
+                await _moderationClient.LogModerationAction(ModerationAction.DeletingAuctionComment, commentId);
 
                 await transaction.CommitAsync();
             }

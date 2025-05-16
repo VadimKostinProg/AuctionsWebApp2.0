@@ -11,7 +11,7 @@ export class DataTableOptionsModel {
   public allowEdit!: boolean;
   public editFormOptions?: FormOptionsModel | null;
   public allowDelete!: boolean;
-  public optionalAction!: OptionalActionModel;
+  public optionalAction?: OptionalActionModel | null;
   public emptyListDisplayLabel!: string;
   public columnSettings!: TableColumnSettingsModel[];
 }

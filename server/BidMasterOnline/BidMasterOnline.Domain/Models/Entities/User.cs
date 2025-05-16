@@ -26,7 +26,7 @@ namespace BidMasterOnline.Domain.Models.Entities
 
         public DateTime? UnblockDateTime { get; set; }
 
-        public double AverageScore { get; set; }
+        public double? AverageScore { get; set; }
 
         public UserStatus Status { get; set; }
 
@@ -35,6 +35,10 @@ namespace BidMasterOnline.Domain.Models.Entities
         public string? ImagePublicId { get; set; }
 
         public bool ForceChangePassword { get; set; } = false;
+
+        public string? PaymentMethodId { get; set; }
+
+        public bool IsPaymentMethodAttached { get; set; }
 
         public Role? Role { get; set; }
     }

@@ -1,4 +1,5 @@
-﻿using BidMasterOnline.Domain.Models.Entities;
+﻿using BidMasterOnline.Core.Extensions;
+using BidMasterOnline.Domain.Models.Entities;
 
 namespace Bids.Service.API.Extensions
 {
@@ -8,11 +9,10 @@ namespace Bids.Service.API.Extensions
         public static DTO.Participant.AuctionBidDTO ToParticipantAuctionBidDTO(this Bid entity)
             => new()
             {
-                BidderId = entity.BidderId,
                 AuctionId = entity.AuctionId,
                 Amount = entity.Amount,
                 Time = entity.CreatedAt,
-                BidderUsername = entity.Bidder?.Username ?? string.Empty,
+                Bidder = entity.Bidder!.ToSummaryDTO()
             };
 
         public static DTO.Participant.UserBidDTO ToParticipantUserBidDTO(this Bid entity)
@@ -22,8 +22,7 @@ namespace Bids.Service.API.Extensions
                 AuctionId = entity.AuctionId,
                 Amount = entity.Amount,
                 Time = entity.CreatedAt,
-                AuctionName = entity.Auction?.LotTitle ?? string.Empty,
-                Deleted = entity.Deleted
+                AuctionName = entity.Auction!.LotTitle
             };
 
 

@@ -1,0 +1,308 @@
+<div *ngIf="auctionDetails"
+     class="container-fluid">
+  <div class="row mt-2">
+    <div class="col-4">
+      <div id="carouselExample"
+           class="carousel slide">
+        <div class="carousel-inner">
+          <div *ngFor="let imageUrl of auctionDetails.imageUrls"
+               class="carousel-item active">
+            <img [src]="imageUrl"
+                 class="d-block w-100">
+          </div>
+        </div>
+        <div *ngIf="auctionDetails.imageUrls.length > 1">
+          <button class="carousel-control-prev"
+                  type="button"
+                  data-bs-target="#carouselExample"
+                  data-bs-slide="prev">
+            <span class="carousel-control-prev-icon"
+                  aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+          </button>
+          <button class="carousel-control-next"
+                  type="button"
+                  data-bs-target="#carouselExample"
+                  data-bs-slide="next">
+            <span class="carousel-control-next-icon"
+                  aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="col-8">
+      <div class="d-flex justify-content-between">
+        <div>
+          <div class="auction-info-container">
+            <h3> {{ auctionDetails.lotTitle }}</h3>
+            <div *ngIf="auctionDetails.status != 'Canceled'"
+                 class="mt-3">
+              <app-score *ngIf="user && user.role == 'Customer'"
+                         [auctionId]="auctionDetails.id"
+                         (onScoreSet)="reloadAuctionDetails(auctionDetails.id)"></app-score>
+
+              <div *ngIf="auctionDetails.averageScore"
+                   class="flex">
+                {{ auctionDetails.averageScore }}
+                <i class="fa-solid fa-star fa-xl mr-3"
+                   [ngStyle]="{ 'color': '#b6d714' }" />
+              </div>
+              <span *ngIf="auctionDetails.score > 0"
+                    class="h5">
+                <b class="auction-details-property">Score:</b>
+                {{ auctionDetails.score }}
+              </span>
+            </div>
+            <span class="h5 mt-1">
+              <b class="auction-details-property">Category:</b>
+              {{ auctionDetails.category }}
+            </span>
+            <span class="h5">
+              <b class="auction-details-property">Auctionist:</b>
+              <a routerLink="/profile"
+                 [queryParams]="{ userId: auctionDetails.auctionistId }">
+                {{ auctionDetails.auctionist }}
+              </a>
+            </span>
+            <span *ngIf="auctionDetails.status != 'Canceled'"
+                  class="h5">
+              <b class="auction-details-property">Current bid:</b>
+              {{ auctionDetails.currentBid }}$ / {{ auctionDetails.startPrice }}$
+            </span>
+            <span *ngIf="auctionDetails.status != 'Canceled'"
+                  class="h5">
+              <b class="auction-details-property">Start time:</b>
+              {{ auctionDetails.startDateAndTime }}
+            </span>
+            <span *ngIf="auctionDetails.status != 'Canceled'"
+                  class="h5">
+              <b class="auction-details-property">Finish time:</b>
+              {{ auctionDetails.finishDateAndTime }}
+            </span>
+            <span *ngIf="auctionDetails.status != 'Canceled'"
+                  class="h5">
+              <b class="auction-details-property">Finish type:</b>
+              {{ auctionDetails.finishTypeDescription }}
+            </span>
+            <span class="h5">
+              <b class="auction-details-property">Status:</b>
+              {{ auctionDetails.status }}
+            </span>
+            <span *ngIf="auctionDetails.status == 'Finished' && auctionDetails.winner != null"
+                  class="h5">
+              <b class="auction-details-property">Winner:</b>
+              <a routerLink="/profile"
+                 [queryParams]="{ userId: auctionDetails.winnerId }">
+                {{ auctionDetails.winner }}
+              </a>
+            </span>
+          </div>
+          <button *ngIf="auctionDetails.status == 'Active'"
+                  class="btn default-btn-background"
+                  (click)="openSetBidOrSignInModal(setBidModal, signInModal)"
+                  [disabled]="userCannotPlaceBid">
+            Place a bid
+          </button>
+        </div>
+
+        <ng-template #auctionActionsPopContent>
+          <div class="actions-container">
+            <button *ngIf="user.role == 'Customer' && auctionDetails.auctionistId != user.userId"
+                    class="btn"
+                    (click)="open(complaintOnAuctionModal)">
+              Complain
+            </button>
+            <button *ngIf="auctionDetails.status != 'Canceled' && (auctionDetails.auctionistId == user.userId || user.role == 'TechnicalSupportSpecialist')"
+                    class="btn"
+                    [disabled]="auctionDetails.status == 'Finished'"
+                    (click)="open(cancelAuctionModal)">
+              Cancel
+            </button>
+            <button *ngIf="auctionDetails.status == 'Canceled' && user.role == 'TechnicalSupportSpecialist'"
+                    class="btn"
+                    (click)="open(recoverModal)">
+              Recover
+            </button>
+            <button *ngIf="auctionDetails.status == 'Finished' && user.role == 'TechnicalSupportSpecialist'"
+                    class="btn"
+                    (click)="open(cancelLastBidModal)">
+              Cancel last bid
+            </button>
+            <a *ngIf="auctionDetails.status == 'Finished' && user.role == 'TechnicalSupportSpecialist'"
+               class="btn"
+               routerLink="/payment-delivery-options"
+               [queryParams]="{ auctionId: auctionDetails.id}">
+              Payment/delivery options
+            </a>
+          </div>
+        </ng-template>
+
+        <button *ngIf="auctionActionsAreAvailable"
+                type="button"
+                class="btn actions-button"
+                placement="bottom"
+                [ngbPopover]="auctionActionsPopContent">
+          <i class="fa-solid fa-ellipsis"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="row mt-3">
+    <h3>Lot description</h3>
+    <span>{{ auctionDetails.lotDescription }}</span>
+  </div>
+  <div *ngIf="auctionDetails.status != 'Canceled'"
+       class="row mt-3">
+    <data-table #bidsDataTable
+                [apiUrl]="getAuctionBidsApiUrl()"
+                [options]="bidsDataTableOptions">
+    </data-table>
+  </div>
+  <div *ngIf="auctionDetails.status != 'Canceled'"
+       class="row mt-3">
+    <comments [auctionId]="auctionDetails.id"></comments>
+  </div>
+</div>
+
+<ng-template #setBidModal
+             let-modal>
+  <div class="modal-body">
+    <form *ngIf="setBidForm"
+          [formGroup]="setBidForm">
+      <div class="form-field flex mb-2">
+        <div>
+          <label for="amount"
+                 class="form-label pt">Amount:</label>
+        </div>
+
+        <div class="flex-1">
+          <input type="number"
+                 id="amount"
+                 [min]="auctionDetails.currentBid"
+                 [max]="maxBidAmount"
+                 class="form-control"
+                 formControlName="amount" />
+        </div>
+
+        <div *ngIf="!amount?.valid && (amount?.dirty || amount?.touched)">
+          <div *ngIf="amount?.errors?.['required']">
+            <span class="text-danger">Amount is required.</span>
+          </div>
+
+          <div *ngIf="amount?.errors?.['min']">
+            <span class="text-danger">Cannot set bid amount less than current bid.</span>
+          </div>
+
+          <div *ngIf="amount?.errors?.['max']">
+            <span class="text-danger">Cannot set bid amount more than {{ maxBidAmount }}.</span>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer d-flex justify-content-between">
+    <button type="button"
+            class="btn btn-outline"
+            aria-label="Close"
+            (click)="modal.close()">Cancel</button>
+    <button type="button"
+            class="btn default-btn-background"
+            (click)="setBid(modal)">Submit</button>
+  </div>
+</ng-template>
+
+<ng-template #signInModal
+             let-modal>
+  <div class="modal-body">
+    <span>To place a bid at the auctions you must have an account.</span>
+  </div>
+  <div class="modal-footer d-flex justify-content-between">
+    <button type="button"
+            class="btn btn-outline"
+            aria-label="Close"
+            (click)="modal.close()">Cancel</button>
+    <a class="btn default-btn-background"
+       routerLink="/sign-in"
+       (click)="modal.close()">Sign In</a>
+  </div>
+</ng-template>
+
+<ng-template #complaintOnAuctionModal
+             let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title"
+        id="modal-basic-title">
+      Complaint on the auction
+    </h4>
+    <button type="button"
+            class="btn-close"
+            aria-label="Close"
+            (click)="modal.close()"></button>
+  </div>
+  <div class="modal-body">
+    <form *ngIf="complaintOnAuctionForm"
+          [formGroup]="complaintOnAuctionForm">
+      <div class="form-field flex mb-2">
+        <div>
+          <label for="complaintText"
+                 class="form-label pt">Complaint text:</label>
+        </div>
+
+        <div class="flex-1">
+          <textarea id="complaintText"
+                    class="form-control"
+                    formControlName="complaintText"></textarea>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button"
+            class="btn default-btn-background"
+            (click)="complaintOnAuction(modal)">Submit</button>
+  </div>
+</ng-template>
+
+<ng-template #cancelAuctionModal
+             let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title"
+        id="modal-basic-title">
+      Cancel auction
+    </h4>
+    <button type="button"
+            class="btn-close"
+            aria-label="Close"
+            (click)="modal.close()"></button>
+  </div>
+  <div class="modal-body">
+    <form *ngIf="cancelationForm"
+          [formGroup]="cancelationForm">
+      <input type="text"
+             id="auctionId"
+             class="form-control"
+             formControlName="auctionId"
+             hidden />
+
+      <div class="form-field flex mb-2">
+        <div>
+          <label for="cancelationReason"
+                 class="form-label pt">Cancelation reason:</label>
+        </div>
+
+        <div class="flex-1">
+          <textarea type="text"
+                    id="cancelationReason"
+                    class="form-control"
+                    formControlName="cancelationReason"></textarea>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button"
+            class="btn btn-outline-dark"
+            (click)="cancelAuction(modal)">Submit</button>
+  </div>
+</ng-template>

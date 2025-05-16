@@ -54,8 +54,11 @@ namespace Moderation.Service.API.Services
                 case ModerationAction.RecoveringAuction:
                     log.AuctionId = resourceId;
                     break;
-                case ModerationAction.DeletingComment:
+                case ModerationAction.DeletingAuctionComment:
                     log.AuctionCommentId = resourceId;
+                    break;
+                case ModerationAction.DeletingUserFeedback:
+                    log.UserFeedbackId = resourceId;
                     break;
             }
         }

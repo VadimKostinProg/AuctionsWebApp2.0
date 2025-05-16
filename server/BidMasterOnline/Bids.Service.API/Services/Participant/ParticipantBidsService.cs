@@ -46,7 +46,8 @@ namespace Bids.Service.API.Services.Participant
                     .OrderBy(e => e.CreatedAt, BidMasterOnline.Core.Enums.SortDirection.DESC)
                     .Build();
 
-                ListModel<Bid> bidsList = await _repository.GetFilteredAndPaginated(specification);
+                ListModel<Bid> bidsList = await _repository.GetFilteredAndPaginated(specification,
+                    includeQuery: query => query.Include(e => e.Bidder)!);
 
                 result.Data = bidsList.ToPaginatedList(e => e.ToParticipantAuctionBidDTO());
             }
@@ -75,7 +76,8 @@ namespace Bids.Service.API.Services.Participant
                     .OrderBy(e => e.CreatedAt, BidMasterOnline.Core.Enums.SortDirection.DESC)
                     .Build();
 
-                ListModel<Bid> bidsList = await _repository.GetFilteredAndPaginated(specification);
+                ListModel<Bid> bidsList = await _repository.GetFilteredAndPaginated(specification,
+                    includeQuery: query => query.Include(e => e.Auction)!);
 
                 result.Data = bidsList.ToPaginatedList(e => e.ToParticipantUserBidDTO());
             }

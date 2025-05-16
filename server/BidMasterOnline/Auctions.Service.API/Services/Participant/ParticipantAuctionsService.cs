@@ -74,13 +74,14 @@ namespace Auctions.Service.API.Services.Participant
             return result;
         }
 
-        public virtual async Task<ServiceResult> CancelAuctionAsync(long id)
+        public virtual async Task<ServiceResult> CancelAuctionAsync(CancelAuctionDTO request)
         {
             ServiceResult result = new();
 
             long userId = _userAccessor.UserId;
 
-            Auction? auction = await _repository.GetFirstOrDefaultAsync<Auction>(x => x.Id == id && x.AuctionistId == userId);
+            Auction? auction = await _repository
+                .GetFirstOrDefaultAsync<Auction>(x => x.Id == request.AuctionId && x.AuctionistId == userId);
 
             if (auction == null)
             {
@@ -92,6 +93,7 @@ namespace Auctions.Service.API.Services.Participant
             }
 
             auction.Status = BidMasterOnline.Domain.Enums.AuctionStatus.CancelledByAuctionist;
+            auction.CancellationReason = request.CancellationReason;
             _repository.Update(auction);
 
             await _repository.SaveChangesAsync();

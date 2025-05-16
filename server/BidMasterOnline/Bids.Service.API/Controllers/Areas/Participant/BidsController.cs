@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Bids.Service.API.Controllers.Areas.Participant
 {
-    [Route("api/participant")]
+    [Route("api/participant/auctions")]
     [ApiController]
     [Authorize(Roles = UserRoles.Participant)]
     public class BidsController : BaseController
@@ -27,7 +27,7 @@ namespace Bids.Service.API.Controllers.Areas.Participant
             return FromResult(result);
         }
 
-        [HttpGet("auctions/{auctionId}/bids")]
+        [HttpGet("{auctionId}/bids")]
         public async Task<IActionResult> GetAuctionBids([FromRoute] long auctionId,
             [FromQuery] PaginationRequestDTO pagination)
         {

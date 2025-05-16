@@ -7,11 +7,13 @@ import { RouterModule } from "@angular/router";
 import { NgSelectModule } from "@ng-select/ng-select";
 import { FontAwesomeModule } from "@fortawesome/angular-fontawesome";
 import { NgModule } from "@angular/core";
+import { ScoreComponent } from "./score/score.component";
 
 @NgModule({
   declarations: [
     SearchBarComponent,
     DataTableComponent,
+    ScoreComponent
   ],
   imports: [
     CommonModule,
@@ -25,6 +27,7 @@ import { NgModule } from "@angular/core";
   exports: [
     SearchBarComponent,
     DataTableComponent,
+    ScoreComponent
   ]
 })
 export class SharedModule { }

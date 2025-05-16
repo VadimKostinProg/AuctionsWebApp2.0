@@ -9,5 +9,7 @@ namespace Feedbacks.Service.API.ServiceContracts.Participant
 
         Task<ServiceResult<PaginatedList<ParticipantAuctionCommentDTO>>> GetAuctionCommentsAsync(long auctionId, 
             PaginationRequestDTO pagination);
+
+        Task<ServiceResult> DeleteCommentAsync(long commentId);
     }
 }

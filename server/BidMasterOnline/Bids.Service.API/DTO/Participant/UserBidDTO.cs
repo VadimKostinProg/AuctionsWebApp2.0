@@ -10,8 +10,6 @@
 
         public DateTime Time { get; set; }
 
-        public bool Deleted { get; set; }
-
         public string AuctionName { get; set; } = string.Empty;
     }
 }

@@ -29,7 +29,7 @@ namespace Feedbacks.Service.API.Controllers.Areas.Participant
         }
 
         [HttpGet("{complaintId}")]
-        public async Task<IActionResult> GetUserComplaints([FromRoute] long complaintId)
+        public async Task<IActionResult> GetComplaintById([FromRoute] long complaintId)
         {
             ServiceResult<ParticipantComplaintDTO> result =
                 await _service.GetComplaintByIdAsync(complaintId);

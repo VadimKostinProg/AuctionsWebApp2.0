@@ -1,0 +1,10 @@
+.auction-card {
+  width: 300px;
+  margin: 2vh;
+  box-sizing: border-box;
+
+  .current-bid {
+      color: red;
+      font-size: 28px;
+  }
+}

@@ -10,7 +10,7 @@ namespace Auctions.Service.API.ServiceContracts.Participant
 
         Task<ServiceResult<AuctionDTO>> GetAuctionByIdAsync(long id);
 
-        Task<ServiceResult> CancelAuctionAsync(long id);
+        Task<ServiceResult> CancelAuctionAsync(CancelAuctionDTO request);
 
         Task<bool> FinishAuctionAsync(long id);
     }

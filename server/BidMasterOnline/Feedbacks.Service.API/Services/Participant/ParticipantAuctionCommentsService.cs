@@ -18,14 +18,59 @@ namespace Feedbacks.Service.API.Services.Participant
         private readonly IRepository _repository;
         private readonly ILogger<ParticipantAuctionCommentsService> _logger;
         private readonly ITransactionsService _transactionsService;
+        private readonly IUserAccessor _userAccessor;
 
         public ParticipantAuctionCommentsService(IRepository repository,
             ILogger<ParticipantAuctionCommentsService> logger,
-            ITransactionsService transactionsService)
+            ITransactionsService transactionsService,
+            IUserAccessor userAccessor)
         {
             _repository = repository;
             _logger = logger;
             _transactionsService = transactionsService;
+            _userAccessor = userAccessor;
+        }
+
+        public async Task<ServiceResult> DeleteCommentAsync(long commentId)
+        {
+            ServiceResult result = new();
+
+            try
+            {
+                AuctionComment? comment = await _repository.GetFirstOrDefaultAsync<AuctionComment>(e => e.Id == commentId);
+
+                if (comment == null)
+                {
+                    result.IsSuccessfull = false;
+                    result.StatusCode = System.Net.HttpStatusCode.NotFound;
+                    result.Errors.Add("Comment not found.");
+
+                    return result;
+                }
+
+                if (comment.UserId != _userAccessor.UserId)
+                {
+                    result.IsSuccessfull = false;
+                    result.StatusCode = System.Net.HttpStatusCode.Unauthorized;
+                    result.Errors.Add("Comment not delete comment of another user.");
+
+                    return result;
+                }
+
+                comment.Deleted = true;
+
+                _repository.Update(comment);
+                await _repository.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occured during deleting the comment.");
+                result.IsSuccessfull = false;
+                result.StatusCode = System.Net.HttpStatusCode.InternalServerError;
+                result.Errors.Add("An error occured during deleting the comment.");
+            }
+
+            return result;
         }
 
         public async Task<ServiceResult<PaginatedList<ParticipantAuctionCommentDTO>>> GetAuctionCommentsAsync(long auctionId, PaginationRequestDTO pagination)
@@ -55,6 +100,8 @@ namespace Feedbacks.Service.API.Services.Participant
             try
             {
                 AuctionComment entity = comment.ToDomain();
+
+                entity.UserId = _userAccessor.UserId;
 
                 await _repository.AddAsync(entity);
                 await _repository.SaveChangesAsync();

@@ -14,9 +14,11 @@ namespace Auctions.Service.API.DTO.Participant
 
         public DateTime FinishTime { get; set; }
 
+        public decimal StartPrice { get; set; }
+
         public decimal CurrentPrice { get; set; }
 
-        public double AverageScore { get; set; }
+        public double? AverageScore { get; set; }
 
         public UserSummaryDTO? Auctionist { get; set; }
 

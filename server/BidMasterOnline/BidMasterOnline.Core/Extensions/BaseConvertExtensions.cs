@@ -1,5 +1,6 @@
 ﻿using BidMasterOnline.Core.DTO;
 using BidMasterOnline.Domain.Models;
+using BidMasterOnline.Domain.Models.Entities;
 
 namespace BidMasterOnline.Core.Extensions
 {
@@ -31,5 +32,13 @@ namespace BidMasterOnline.Core.Extensions
                        TotalPages = domainList.TotalPages,
                    }
                };
+
+        public static UserSummaryDTO ToSummaryDTO(this User entity)
+            => new()
+            {
+                Id = entity.Id,
+                Email = entity.Email,
+                Username = entity.Username
+            };
     }
 }

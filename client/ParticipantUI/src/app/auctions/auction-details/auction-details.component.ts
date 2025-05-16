@@ -1,0 +1,225 @@
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { QueryParamsService } from '../../services/query-params.service';
+import { UserBasic } from '../../models/users/userBasic';
+import { Auction } from '../../models/auctions/Auction';
+import { AuctionsService } from '../../services/auctions.Service';
+import { AuthService } from '../../services/auth.service';
+import { BidsService } from '../../services/bids.service';
+import { AuctionStatusEnum } from '../../models/auctions/auctionStatusEnum';
+import { PostBid } from '../../models/bids/postBid';
+import { PostComplaint } from '../../models/complaints/postComplaint';
+import { ComplaintsService } from '../../services/complaints.service';
+import { DataTableComponent } from '../../shared/data-table/data-table.component';
+import { DataTableOptionsModel } from '../../models/shared/dataTableOptionsModel';
+import { ComplaintTypeEnum } from '../../models/complaints/complaintTypeEnum';
+import { CancelAuction } from '../../models/auctions/CancelAuction';
+
+@Component({
+  selector: 'app-auction-details',
+  templateUrl: './auction-details.component.html'
+})
+export class AuctionDetailsComponent implements OnInit {
+
+  @ViewChild(DataTableComponent)
+  bidsDataTable!: DataTableComponent;
+
+  auctionDetails: Auction | undefined;
+
+  bidsDataTableOptions: DataTableOptionsModel | undefined;
+
+  setBidForm!: FormGroup;
+
+  cancelationForm!: FormGroup;
+
+  complaintOnAuctionForm!: FormGroup;
+
+  maxBidAmount: number = 10e7;
+
+  user: UserBasic | undefined;
+
+  constructor(private readonly queryParamsService: QueryParamsService,
+    private readonly toastrService: ToastrService,
+    private readonly auctionsService: AuctionsService,
+    private readonly authService: AuthService,
+    private readonly modalService: NgbModal,
+    private readonly complaintsService: ComplaintsService,
+    private readonly bidsService: BidsService) {
+
+  }
+
+  async ngOnInit() {
+    const auctionId = await this.queryParamsService.getQueryParam('auctionId');
+
+    if (auctionId == null) {
+      this.toastrService.error('Invalid query params.', 'Error');
+
+      return;
+    }
+
+    this.user = this.authService.user;
+
+    this.bidsDataTableOptions = this.bidsService.getAuctionBidsDataTableOptions();
+
+    this.reloadAuctionDetails(auctionId);
+
+    this.reloadCancelationForm();
+
+    this.reloadComplaintForm();
+  }
+
+  get amount() {
+    return this.setBidForm.get('amount');
+  }
+
+  reloadAuctionDetails(auctionId: number) {
+    this.auctionsService.getAuctionDetailsById(auctionId).subscribe({
+      next: (response) => {
+        this.auctionDetails = response.data!;
+
+        this.reloadSetBidForm();
+      },
+      error: (error) => {
+        this.toastrService.error(error.error, 'Error');
+      }
+    });
+  }
+
+  reloadSetBidForm() {
+    this.setBidForm = new FormGroup({
+      amount: new FormControl(this.auctionDetails!.currentPrice + this.auctionDetails!.bidAmountInterval,
+        [Validators.required, Validators.min(this.auctionDetails!.currentPrice + this.auctionDetails!.bidAmountInterval),
+        Validators.max(10e7)])
+    });
+  }
+
+  reloadCancelationForm() {
+    this.cancelationForm = new FormGroup({
+      auctionId: new FormControl(),
+      cancelationReason: new FormControl(null, [Validators.required])
+    });
+  }
+
+  reloadComplaintForm() {
+    this.complaintOnAuctionForm = new FormGroup({
+      complaintText: new FormControl(null, [Validators.required])
+    });
+  }
+
+  get userCannotPlaceBid() {
+    return this.user && this.auctionDetails &&
+      (this.auctionDetails.status === AuctionStatusEnum.CancelledByModerator ||
+        this.auctionDetails.status === AuctionStatusEnum.CancelledByAuctionist ||
+        this.user.id === this.auctionDetails.auctionist.id);
+  }
+
+  get auctionActionsAreAvailable() {
+    return this.user && this.auctionDetails?.status !== AuctionStatusEnum.CancelledByModerator;
+  }
+
+  open(content: TemplateRef<any>) {
+    this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' })
+  }
+
+  openSetBidOrSignInModal(setBidModal: TemplateRef<any>, signInModal: TemplateRef<any>) {
+    if (this.user == null) {
+      this.open(signInModal);
+
+      return;
+    }
+
+    this.open(setBidModal);
+  }
+
+  setBid(modal: any) {
+    if (!this.setBidForm.valid) {
+      return;
+    }
+
+    modal.close();
+
+    var amount = this.setBidForm.value.amount;
+
+    this.reloadSetBidForm();
+
+    const bid = {
+      auctionId: this.auctionDetails!.id,
+      amount: amount
+    } as PostBid;
+
+    this.bidsService.postBid(bid).subscribe({
+      next: (response) => {
+        this.toastrService.success(response.message!, 'Success');
+
+        this.reloadAuctionDetails(this.auctionDetails!.id);
+
+        this.bidsDataTable.reloadDatatable();
+      },
+      error: (error) => {
+        this.toastrService.error(error.error, 'Error');
+      }
+    });
+  }
+
+  complaintOnAuction(modal: any) {
+    if (!this.complaintOnAuctionForm.valid) {
+      return;
+    }
+
+    modal.close();
+
+    var complaintText = this.complaintOnAuctionForm.value.complaintText;
+
+    this.reloadComplaintForm();
+
+    const complaint = {
+      accusedUserId: this.auctionDetails!.auctionist.id,
+      auctionId: this.auctionDetails!.id,
+      type: ComplaintTypeEnum.ComplaintOnAuctionContent,
+      complaintText: complaintText
+    } as PostComplaint;
+
+    this.complaintsService.postComplaint(complaint).subscribe({
+      next: (response) => {
+        this.toastrService.success(response.message!, 'Success');
+      },
+      error: (error) => {
+        this.toastrService.error(error.error, 'Error');
+      }
+    });
+  }
+
+  cancelAuction(modal: any) {
+    if (!this.cancelationForm.valid) {
+      return;
+    }
+
+    modal.close();
+
+    var cancelationReason = this.cancelationForm.value.cancelationReason;
+
+    this.reloadCancelationForm();
+
+    const model = {
+      auctionId: this.auctionDetails!.id,
+      cancelationReason: cancelationReason
+    } as CancelAuction;
+
+    this.auctionsService.cancelAuction(model).subscribe({
+      next: (response) => {
+        this.toastrService.success(response.message!, 'Success');
+
+        this.reloadAuctionDetails(this.auctionDetails!.id);
+      },
+      error: (error) => {
+        this.toastrService.error(error.error, 'Error');
+      }
+    });
+  }
+
+  getAuctionBidsApiUrl() {
+    return this.bidsService.getAuctionBidsApiUrl(this.auctionDetails!.id);
+  }
+}

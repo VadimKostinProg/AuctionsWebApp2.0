@@ -40,8 +40,7 @@ namespace Feedbacks.Service.API.Controllers.Areas.Participant
         [HttpDelete("comments/{commentId}")]
         public async Task<IActionResult> DeleteComment([FromRoute] long commentId)
         {
-            // TODO: implement comment deleting
-            ServiceResult result = new();
+            ServiceResult result = await _service.DeleteCommentAsync(commentId);
 
             return FromResult(result);
         }

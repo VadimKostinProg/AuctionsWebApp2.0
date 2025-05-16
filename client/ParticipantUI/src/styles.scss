@@ -1,1 +1,43 @@
-/* You can add global styles to this file, and also import other style files */
+header {
+  display: flex;
+  align-items: center;
+  min-height: 7vh;
+}
+
+main {
+  min-height: 82vh;
+  margin-bottom: 4vh;
+}
+
+footer {
+  display: flex;
+  align-items: center;
+  height: 7vh;
+  width: 100%;
+}
+
+a {
+  text-decoration: none;
+}
+
+.default-background {
+  background-color: orange;
+  color: white;
+}
+.default-btn-background {
+  @extend .default-background;
+  border: 0;
+}
+
+.default-btn-background:hover {
+  background-color: darkorange;
+  color: white;
+}
+
+.default-btn-background:focus {
+  background-color: darkorange;
+}
+
+.default-span-background {
+  @extend .default-background;
+}

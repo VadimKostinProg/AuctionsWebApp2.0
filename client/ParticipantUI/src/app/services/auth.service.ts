@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { OAuthService } from 'angular-oauth2-oidc';
 import { authConfig } from '../../auth.config';
+import { UserBasic } from '../models/users/userBasic';
 
 @Injectable({
   providedIn: 'root'
@@ -34,5 +35,15 @@ export class AuthService {
 
   get isLoggedIn(): boolean {
     return this.oauthService.hasValidAccessToken();
+  }
+
+  get user(): UserBasic {
+    const claims = this.identityClaims;
+
+    return {
+      id: claims['sub'],
+      username: claims[''],
+      email: claims['email']
+    }
   }
 }

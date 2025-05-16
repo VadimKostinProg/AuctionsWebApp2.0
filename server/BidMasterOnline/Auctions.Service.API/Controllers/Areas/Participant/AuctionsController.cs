@@ -36,10 +36,10 @@ public class AuctionsController : BaseController
         return FromResult(result);
     }
 
-    [HttpPut("{id}/cancel")]
-    public async Task<IActionResult> CancelAuction([FromRoute] long id)
+    [HttpPut("cancel")]
+    public async Task<IActionResult> CancelAuction([FromBody] CancelAuctionDTO request)
     {
-        ServiceResult result = await _service.CancelAuctionAsync(id);
+        ServiceResult result = await _service.CancelAuctionAsync(request);
 
         return FromResult(result);
     }

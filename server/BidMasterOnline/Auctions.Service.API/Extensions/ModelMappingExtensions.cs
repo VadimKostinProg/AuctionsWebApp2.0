@@ -1,4 +1,5 @@
 ﻿using BidMasterOnline.Core.DTO;
+using BidMasterOnline.Core.Extensions;
 using BidMasterOnline.Domain.Models.Entities;
 
 namespace Auctions.Service.API.Extensions
@@ -66,6 +67,7 @@ namespace Auctions.Service.API.Extensions
                 Category = entity.Category!.Name,
                 StartTime = entity.StartTime,
                 FinishTime = entity.FinishTime,
+                StartPrice = entity.StartPrice,
                 CurrentPrice = entity.CurrentPrice,
                 AverageScore = entity.AverageScore,
                 Auctionist = entity.Auctionist == null
@@ -90,9 +92,6 @@ namespace Auctions.Service.API.Extensions
                 Category = entity.Category?.Name ?? string.Empty,
                 Type = entity.Type?.Name ?? string.Empty,
                 FinishMethod = entity.FinishMethod?.Name ?? string.Empty,
-                FinishTimeInterval = entity.FinishTimeIntervalInTicks == null
-                    ? null
-                    : TimeSpan.FromTicks(entity.FinishTimeIntervalInTicks.Value),
                 BidAmountInterval = entity.BidAmountInterval,
                 Status = entity.Status,
                 StartTime = entity.StartTime,
@@ -101,24 +100,13 @@ namespace Auctions.Service.API.Extensions
                 StartPrice = entity.StartPrice,
                 CurrentPrice = entity.CurrentPrice,
                 AverageScore = entity.AverageScore,
-                CancellationReason = entity.CancellationReason,
                 FinishPrice = entity.FinishPrice,
                 Auctionist = entity.Auctionist == null
                     ? null
-                    : new BidMasterOnline.Core.DTO.UserSummaryDTO
-                    {
-                        Id = entity.Auctionist.Id,
-                        Username = entity.Auctionist.Username,
-                        Email = entity.Auctionist.Email
-                    },
+                    : entity.Auctionist.ToSummaryDTO(),
                 Winner = entity.Winner == null
                     ? null
-                    : new BidMasterOnline.Core.DTO.UserSummaryDTO
-                    {
-                        Id = entity.Winner.Id,
-                        Username = entity.Winner.Username,
-                        Email = entity.Winner.Email
-                    },
+                    : entity.Winner.ToSummaryDTO(),
                 ImageUrls = entity.Images?.Select(entity => entity.Url).ToList() ?? []
             };
         }
