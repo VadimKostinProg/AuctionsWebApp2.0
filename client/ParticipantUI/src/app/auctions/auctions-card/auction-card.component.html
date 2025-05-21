@@ -1,4 +1,5 @@
-<div class="card auction-card">
+<div *ngIf="auction"
+     class="card auction-card">
   <img [src]="auction.imageUrls[0]"
        class="card-img-top">
   <div class="card-body">
@@ -8,16 +9,16 @@
       {{ auction.averageScore }} <i class="fa-solid fa-star"></i>
     </p>
     <p class="card-text">
-      {{ auctions.category }}
+      {{ auction.category }}
     </p>
     <p class="card-text">
       <span class="current-bid">${{ auction.currentPrice }}</span>/${{ auction.startPrice }}
     </p>
     <p class="card-text">
-      Finishes at {{ auctions.finishTime }}
+      Finishes at {{ auction.finishTime }}
     </p>
-    <button class="btn default-btn-background w-100"
-            routerLink="/auction-details"
-            [queryParams]="{ 'auctionId': auction.id }">Details</button>
+    <a class="btn default-btn-background w-100"
+       routerLink="/auction-details"
+       [queryParams]="{ 'auctionId': auction.id }">Details</a>
   </div>
 </div>

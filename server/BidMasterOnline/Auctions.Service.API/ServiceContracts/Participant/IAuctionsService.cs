@@ -4,7 +4,7 @@ using BidMasterOnline.Core.DTO;
 
 namespace Auctions.Service.API.ServiceContracts.Participant
 {
-    public interface IParticipantAuctionsService
+    public interface IAuctionsService
     {
         Task<ServiceResult<PaginatedList<AuctionSummaryDTO>>> GetAuctionsListAsync(AuctionSpecificationsDTO specifications);
 

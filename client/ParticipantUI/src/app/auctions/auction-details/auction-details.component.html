@@ -1,4 +1,4 @@
-<div *ngIf="auctionDetails"
+<div *ngIf="auctionDetails && user"
      class="container-fluid">
   <div class="row mt-2">
     <div class="col-4">
@@ -36,22 +36,14 @@
         <div>
           <div class="auction-info-container">
             <h3> {{ auctionDetails.lotTitle }}</h3>
-            <div *ngIf="auctionDetails.status != 'Canceled'"
+            <div *ngIf="auctionDetails.status !== AuctionStatusEnum.CancelledByAuctionist || auctionDetails.status !== AuctionStatusEnum.CancelledByAuctionist"
                  class="mt-3">
-              <app-score *ngIf="user && user.role == 'Customer'"
-                         [auctionId]="auctionDetails.id"
-                         (onScoreSet)="reloadAuctionDetails(auctionDetails.id)"></app-score>
-
-              <div *ngIf="auctionDetails.averageScore"
-                   class="flex">
-                {{ auctionDetails.averageScore }}
-                <i class="fa-solid fa-star fa-xl mr-3"
-                   [ngStyle]="{ 'color': '#b6d714' }" />
-              </div>
-              <span *ngIf="auctionDetails.score > 0"
+              <span *ngIf="auctionDetails.averageScore"
                     class="h5">
                 <b class="auction-details-property">Score:</b>
-                {{ auctionDetails.score }}
+                {{ auctionDetails.averageScore }}
+                <i class="fa-solid fa-star fa-xl mr-3"
+                   [ngStyle]="{ 'color': '#b6d714' }"></i>
               </span>
             </div>
             <span class="h5 mt-1">
@@ -61,46 +53,46 @@
             <span class="h5">
               <b class="auction-details-property">Auctionist:</b>
               <a routerLink="/profile"
-                 [queryParams]="{ userId: auctionDetails.auctionistId }">
+                 [queryParams]="{ userId: auctionDetails.auctionist.userId }">
                 {{ auctionDetails.auctionist }}
               </a>
             </span>
-            <span *ngIf="auctionDetails.status != 'Canceled'"
+            <span *ngIf="auctionDetails.status !== AuctionStatusEnum.CancelledByAuctionist || auctionDetails.status !== AuctionStatusEnum.CancelledByAuctionist"
                   class="h5">
               <b class="auction-details-property">Current bid:</b>
-              {{ auctionDetails.currentBid }}$ / {{ auctionDetails.startPrice }}$
+              {{ auctionDetails.currentPrice }}$ / {{ auctionDetails.startPrice }}$
             </span>
-            <span *ngIf="auctionDetails.status != 'Canceled'"
+            <span *ngIf="auctionDetails.status !== AuctionStatusEnum.CancelledByAuctionist || auctionDetails.status !== AuctionStatusEnum.CancelledByAuctionist"
                   class="h5">
               <b class="auction-details-property">Start time:</b>
-              {{ auctionDetails.startDateAndTime }}
+              {{ auctionDetails.startTime }}
             </span>
-            <span *ngIf="auctionDetails.status != 'Canceled'"
+            <span *ngIf="auctionDetails.status !== AuctionStatusEnum.CancelledByAuctionist && auctionDetails.status !== AuctionStatusEnum.CancelledByModerator"
                   class="h5">
               <b class="auction-details-property">Finish time:</b>
-              {{ auctionDetails.finishDateAndTime }}
+              {{ auctionDetails.finishTime }}
             </span>
-            <span *ngIf="auctionDetails.status != 'Canceled'"
+            <span *ngIf="auctionDetails.status !== AuctionStatusEnum.CancelledByAuctionist && auctionDetails.status !== AuctionStatusEnum.CancelledByModerator"
                   class="h5">
               <b class="auction-details-property">Finish type:</b>
-              {{ auctionDetails.finishTypeDescription }}
+              {{ auctionDetails.finishMethod }}
             </span>
             <span class="h5">
               <b class="auction-details-property">Status:</b>
               {{ auctionDetails.status }}
             </span>
-            <span *ngIf="auctionDetails.status == 'Finished' && auctionDetails.winner != null"
+            <span *ngIf="auctionDetails.status === AuctionStatusEnum.Finished && auctionDetails.winner"
                   class="h5">
               <b class="auction-details-property">Winner:</b>
               <a routerLink="/profile"
-                 [queryParams]="{ userId: auctionDetails.winnerId }">
+                 [queryParams]="{ userId: auctionDetails.winner.userId }">
                 {{ auctionDetails.winner }}
               </a>
             </span>
           </div>
-          <button *ngIf="auctionDetails.status == 'Active'"
+          <button *ngIf="auctionDetails.status === AuctionStatusEnum.Active"
                   class="btn default-btn-background"
-                  (click)="openSetBidOrSignInModal(setBidModal, signInModal)"
+                  (click)="open(setBidModal)"
                   [disabled]="userCannotPlaceBid">
             Place a bid
           </button>
@@ -108,33 +100,17 @@
 
         <ng-template #auctionActionsPopContent>
           <div class="actions-container">
-            <button *ngIf="user.role == 'Customer' && auctionDetails.auctionistId != user.userId"
+            <button *ngIf="auctionDetails.auctionist.userId !== user.userId"
                     class="btn"
                     (click)="open(complaintOnAuctionModal)">
               Complain
             </button>
-            <button *ngIf="auctionDetails.status != 'Canceled' && (auctionDetails.auctionistId == user.userId || user.role == 'TechnicalSupportSpecialist')"
+            <button *ngIf="auctionDetails.status !== AuctionStatusEnum.CancelledByAuctionist && auctionDetails.status !== AuctionStatusEnum.CancelledByModerator && auctionDetails.auctionist.userId === user.userId"
                     class="btn"
-                    [disabled]="auctionDetails.status == 'Finished'"
+                    [disabled]="auctionDetails.status === AuctionStatusEnum.Finished"
                     (click)="open(cancelAuctionModal)">
               Cancel
             </button>
-            <button *ngIf="auctionDetails.status == 'Canceled' && user.role == 'TechnicalSupportSpecialist'"
-                    class="btn"
-                    (click)="open(recoverModal)">
-              Recover
-            </button>
-            <button *ngIf="auctionDetails.status == 'Finished' && user.role == 'TechnicalSupportSpecialist'"
-                    class="btn"
-                    (click)="open(cancelLastBidModal)">
-              Cancel last bid
-            </button>
-            <a *ngIf="auctionDetails.status == 'Finished' && user.role == 'TechnicalSupportSpecialist'"
-               class="btn"
-               routerLink="/payment-delivery-options"
-               [queryParams]="{ auctionId: auctionDetails.id}">
-              Payment/delivery options
-            </a>
           </div>
         </ng-template>
 
@@ -152,14 +128,15 @@
     <h3>Lot description</h3>
     <span>{{ auctionDetails.lotDescription }}</span>
   </div>
-  <div *ngIf="auctionDetails.status != 'Canceled'"
+  <div *ngIf="auctionDetails.status !== AuctionStatusEnum.CancelledByAuctionist || auctionDetails.status !== AuctionStatusEnum.CancelledByAuctionist"
        class="row mt-3">
     <data-table #bidsDataTable
+                *ngIf="bidsDataTableOptions"
                 [apiUrl]="getAuctionBidsApiUrl()"
                 [options]="bidsDataTableOptions">
     </data-table>
   </div>
-  <div *ngIf="auctionDetails.status != 'Canceled'"
+  <div *ngIf="auctionDetails.status !== AuctionStatusEnum.CancelledByAuctionist || auctionDetails.status !== AuctionStatusEnum.CancelledByAuctionist"
        class="row mt-3">
     <comments [auctionId]="auctionDetails.id"></comments>
   </div>
@@ -167,7 +144,8 @@
 
 <ng-template #setBidModal
              let-modal>
-  <div class="modal-body">
+  <div *ngIf="auctionDetails"
+       class="modal-body">
     <form *ngIf="setBidForm"
           [formGroup]="setBidForm">
       <div class="form-field flex mb-2">
@@ -179,7 +157,7 @@
         <div class="flex-1">
           <input type="number"
                  id="amount"
-                 [min]="auctionDetails.currentBid"
+                 [min]="auctionDetails.currentPrice + auctionDetails.bidAmountInterval"
                  [max]="maxBidAmount"
                  class="form-control"
                  formControlName="amount" />
@@ -209,22 +187,6 @@
     <button type="button"
             class="btn default-btn-background"
             (click)="setBid(modal)">Submit</button>
-  </div>
-</ng-template>
-
-<ng-template #signInModal
-             let-modal>
-  <div class="modal-body">
-    <span>To place a bid at the auctions you must have an account.</span>
-  </div>
-  <div class="modal-footer d-flex justify-content-between">
-    <button type="button"
-            class="btn btn-outline"
-            aria-label="Close"
-            (click)="modal.close()">Cancel</button>
-    <a class="btn default-btn-background"
-       routerLink="/sign-in"
-       (click)="modal.close()">Sign In</a>
   </div>
 </ng-template>
 

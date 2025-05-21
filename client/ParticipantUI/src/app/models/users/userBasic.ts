@@ -1,5 +1,5 @@
 export class UserBasic {
-  public id!: number;
+  public userId!: number;
   public username!: string;
   public email!: string;
 }

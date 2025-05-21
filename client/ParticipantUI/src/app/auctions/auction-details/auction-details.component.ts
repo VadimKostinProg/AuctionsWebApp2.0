@@ -19,7 +19,8 @@ import { CancelAuction } from '../../models/auctions/CancelAuction';
 
 @Component({
   selector: 'app-auction-details',
-  templateUrl: './auction-details.component.html'
+  templateUrl: './auction-details.component.html',
+  standalone: false
 })
 export class AuctionDetailsComponent implements OnInit {
 
@@ -39,6 +40,8 @@ export class AuctionDetailsComponent implements OnInit {
   maxBidAmount: number = 10e7;
 
   user: UserBasic | undefined;
+
+  AuctionStatusEnum = AuctionStatusEnum;
 
   constructor(private readonly queryParamsService: QueryParamsService,
     private readonly toastrService: ToastrService,
@@ -112,7 +115,7 @@ export class AuctionDetailsComponent implements OnInit {
     return this.user && this.auctionDetails &&
       (this.auctionDetails.status === AuctionStatusEnum.CancelledByModerator ||
         this.auctionDetails.status === AuctionStatusEnum.CancelledByAuctionist ||
-        this.user.id === this.auctionDetails.auctionist.id);
+        this.user.userId === this.auctionDetails.auctionist.userId);
   }
 
   get auctionActionsAreAvailable() {
@@ -121,16 +124,6 @@ export class AuctionDetailsComponent implements OnInit {
 
   open(content: TemplateRef<any>) {
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' })
-  }
-
-  openSetBidOrSignInModal(setBidModal: TemplateRef<any>, signInModal: TemplateRef<any>) {
-    if (this.user == null) {
-      this.open(signInModal);
-
-      return;
-    }
-
-    this.open(setBidModal);
   }
 
   setBid(modal: any) {
@@ -175,7 +168,7 @@ export class AuctionDetailsComponent implements OnInit {
     this.reloadComplaintForm();
 
     const complaint = {
-      accusedUserId: this.auctionDetails!.auctionist.id,
+      accusedUserId: this.auctionDetails!.auctionist.userId,
       auctionId: this.auctionDetails!.id,
       type: ComplaintTypeEnum.ComplaintOnAuctionContent,
       complaintText: complaintText

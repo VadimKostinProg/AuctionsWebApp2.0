@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuctionsService } from '../../services/auctions.Service';
 import { AuctionBasic } from '../../models/auctions/AuctionBasic';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -9,14 +10,28 @@ import { AuctionBasic } from '../../models/auctions/AuctionBasic';
 })
 export class HomeComponent implements OnInit {
   popularAuctions: AuctionBasic[] | undefined;
+  finishingAuctions: AuctionBasic[] | undefined;
 
   constructor(private auctionsService: AuctionsService) { }
 
   ngOnInit(): void {
-    this.auctionsService.getPopularAuctions().subscribe(
-      (result) => {
-        this.popularAuctions = result;
-      }
-    );
+    this.fetchPopularAndFinishingAuctions();
+  }
+
+  fetchPopularAndFinishingAuctions() {
+    forkJoin([
+      this.auctionsService.getPopularAuctions(),
+      this.auctionsService.getFinishingAuctions(),
+    ])
+      .subscribe(
+        ([popularResult, finishingResult]) => {
+          this.popularAuctions = popularResult.data?.items;
+          this.finishingAuctions = finishingResult.data?.items;
+        }
+      );
+  }
+
+  onSearchPressed() {
+
   }
 }

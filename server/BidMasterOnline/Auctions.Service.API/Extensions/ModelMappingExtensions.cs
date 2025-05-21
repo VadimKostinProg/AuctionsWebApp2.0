@@ -279,7 +279,7 @@ namespace Auctions.Service.API.Extensions
             };
         }
         
-        public static DTO.Moderator.ModeratorAuctionCategoryDTO ToModeratorDTO(this AuctionCategory entity)
+        public static DTO.Moderator.AuctionCategoryDTO ToModeratorDTO(this AuctionCategory entity)
             => new()
             {
                 Id = entity.Id,
@@ -291,7 +291,7 @@ namespace Auctions.Service.API.Extensions
                 ModifiedBy = entity.ModifiedBy
             };
 
-        public static DTO.Moderator.ModeratorAuctionTypeDTO ToModeratorDTO(this AuctionType entity)
+        public static DTO.Moderator.AuctionTypeDTO ToModeratorDTO(this AuctionType entity)
             => new()
             {
                 Id = entity.Id,
@@ -303,7 +303,7 @@ namespace Auctions.Service.API.Extensions
                 ModifiedBy = entity.ModifiedBy
             };
 
-        public static DTO.Moderator.ModeratorAuctionFinishMethodDTO ToModeratorDTO(this AuctionFinishMethod entity)
+        public static DTO.Moderator.AuctionFinishMethodDTO ToModeratorDTO(this AuctionFinishMethod entity)
             => new()
             {
                 Id = entity.Id,

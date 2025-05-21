@@ -3,7 +3,7 @@ using BidMasterOnline.Core.DTO;
 
 namespace Auctions.Service.API.ServiceContracts.Participant
 {
-    public interface IParticipantAuctionFinishMethodsService
+    public interface IAuctionFinishMethodsService
     {
         Task<ServiceResult<List<AuctionFinishMethodDTO>>> GetAuctionFinishMethodsAsync();
     }

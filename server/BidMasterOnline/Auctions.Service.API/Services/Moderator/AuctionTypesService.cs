@@ -1,5 +1,4 @@
 ﻿using Auctions.Service.API.DTO.Moderator;
-using Auctions.Service.API.DTO.Participant;
 using Auctions.Service.API.Extensions;
 using Auctions.Service.API.ServiceContracts.Moderator;
 using BidMasterOnline.Core.DTO;
@@ -11,23 +10,24 @@ using BidMasterOnline.Domain.Models.Entities;
 
 namespace Auctions.Service.API.Services.Moderator
 {
-    public class ModeratorAuctionFinishMethodsService : IModeratorAuctionFinishMethodsService
+    public class AuctionTypesService : IAuctionTypesService
     {
         private readonly IRepository _repository;
-        private readonly ILogger<ModeratorAuctionFinishMethodsService> _logger;
+        private readonly ILogger<AuctionTypesService> _logger;
 
-        public ModeratorAuctionFinishMethodsService(IRepository repository, 
-            ILogger<ModeratorAuctionFinishMethodsService> logger)
+        public AuctionTypesService(IRepository repository, 
+            ILogger<AuctionTypesService> logger)
         {
             _repository = repository;
             _logger = logger;
         }
 
-        public async Task<ServiceResult<PaginatedList<ModeratorAuctionFinishMethodDTO>>> GetAuctionFinishMethodsAsync(ModeratorSpecificationsDTO specifications)
+        public async Task<ServiceResult<PaginatedList<AuctionTypeDTO>>> GetAuctionTypesAsync(
+            SpecificationsDTO specifications)
         {
-            ServiceResult<PaginatedList<ModeratorAuctionFinishMethodDTO>> result = new();
+            ServiceResult<PaginatedList<AuctionTypeDTO>> result = new();
 
-            SpecificationBuilder<AuctionFinishMethod> specificationBuilder = new();
+            SpecificationBuilder<AuctionType> specificationBuilder = new();
 
             if (!string.IsNullOrEmpty(specifications.Search))
                 specificationBuilder.With(e => e.Name.Contains(specifications.Search) ||
@@ -38,7 +38,7 @@ namespace Auctions.Service.API.Services.Moderator
 
             specificationBuilder.WithPagination(specifications.PageSize, specifications.PageNumber);
 
-            ListModel<AuctionFinishMethod> entitiesList = await _repository.GetFilteredAndPaginated(
+            ListModel<AuctionType> entitiesList = await _repository.GetFilteredAndPaginated(
                 specificationBuilder.Build());
 
             result.Data = entitiesList.ToPaginatedList(e => e.ToModeratorDTO());
@@ -46,26 +46,26 @@ namespace Auctions.Service.API.Services.Moderator
             return result;
         }
 
-        public async Task<ServiceResult> UpdateAuctionFinishMethodAsync(long id, ModeratorUpdateAuctionFinishMethodDTO auctionFinishMethodDTO)
+        public async Task<ServiceResult> UpdateAuctionTypeAsync(long id, UpdateAuctionTypeDTO auctionTypeDTO)
         {
             ServiceResult result = new();
 
             try
             {
-                AuctionFinishMethod entity = await _repository.GetByIdAsync<AuctionFinishMethod>(id);
+                AuctionType entity = await _repository.GetByIdAsync<AuctionType>(id);
 
-                entity.Description = auctionFinishMethodDTO.Description;
+                entity.Description = auctionTypeDTO.Description;
 
                 _repository.Update(entity);
                 await _repository.SaveChangesAsync();
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occured during updating auction finish method.");
+                _logger.LogError(ex, "An error occured during updating auction type.");
 
                 result.IsSuccessfull = false;
                 result.StatusCode = System.Net.HttpStatusCode.InternalServerError;
-                result.Errors.Add("An error occured during updating auction finish method.");
+                result.Errors.Add("An error occured during updating auction type.");
             }
 
             return result;

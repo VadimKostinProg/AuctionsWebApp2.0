@@ -11,17 +11,17 @@ namespace Auctions.Service.API.Controllers.Areas.Moderator
     [Authorize(Roles = UserRoles.Moderator)]
     public class AuctionFinishMethodsController : BaseController
     {
-        private readonly IModeratorAuctionFinishMethodsService _service;
+        private readonly IAuctionFinishMethodsService _service;
 
-        public AuctionFinishMethodsController(IModeratorAuctionFinishMethodsService service)
+        public AuctionFinishMethodsController(IAuctionFinishMethodsService service)
         {
             _service = service;
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetFinishMethods([FromQuery] ModeratorSpecificationsDTO specifications)
+        public async Task<IActionResult> GetFinishMethods([FromQuery] SpecificationsDTO specifications)
         {
-            ServiceResult<PaginatedList<ModeratorAuctionFinishMethodDTO>> result = await _service
+            ServiceResult<PaginatedList<AuctionFinishMethodDTO>> result = await _service
                 .GetAuctionFinishMethodsAsync(specifications);
 
             return FromResult(result);
@@ -29,7 +29,7 @@ namespace Auctions.Service.API.Controllers.Areas.Moderator
 
         [HttpPut("{id}")]
         public async Task<IActionResult> CreateFinishMethod([FromRoute] long id,
-            [FromBody] ModeratorUpdateAuctionFinishMethodDTO finishMethodDTO)
+            [FromBody] UpdateAuctionFinishMethodDTO finishMethodDTO)
         {
             ServiceResult result = await _service.UpdateAuctionFinishMethodAsync(id, finishMethodDTO);
 

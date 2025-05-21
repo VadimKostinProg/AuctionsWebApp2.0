@@ -3,8 +3,8 @@ using BidMasterOnline.Core.DTO;
 
 namespace Auctions.Service.API.ServiceContracts.Participant
 {
-    public interface IParticipantAuctionTypesService
+    public interface IAuctionCategoriesService
     {
-        Task<ServiceResult<List<AuctionTypeDTO>>> GetAuctionTypesAsync();
+        Task<ServiceResult<List<AuctionCategoryDTO>>> GetAuctionCategoriesAsync();
     }
 }

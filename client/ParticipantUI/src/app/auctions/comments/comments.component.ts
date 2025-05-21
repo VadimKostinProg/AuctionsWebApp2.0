@@ -15,7 +15,8 @@ import { ComplaintTypeEnum } from '../../models/complaints/complaintTypeEnum';
 
 @Component({
   selector: 'comments',
-  templateUrl: './comments.component.html'
+  templateUrl: './comments.component.html',
+  standalone: false
 })
 export class CommentsComponent implements OnInit {
   @Input() auctionId!: number;
@@ -39,6 +40,10 @@ export class CommentsComponent implements OnInit {
     private readonly complaintsService: ComplaintsService,
     private readonly queryParamsService: CommentsQueryParamsService) {
 
+  }
+
+  get userStatus() {
+    return this.authService.userStatus;
   }
 
   async ngOnInit(): Promise<void> {

@@ -1,4 +1,5 @@
-﻿using BidMasterOnline.Domain.Enums;
+﻿using BidMasterOnline.Core.Enums;
+using BidMasterOnline.Domain.Enums;
 
 namespace Auctions.Service.API.DTO
 {
@@ -13,6 +14,8 @@ namespace Auctions.Service.API.DTO
         public decimal? MinCurrentBid { get; set; }
         public decimal? MaxCurrentBid { get; set; }
         public AuctionStatus? Status { get; set; }
+        public string? SortBy { get; set; }
+        public SortDirection SortDirection { get; set; } = SortDirection.ASC;
         public int PageSize { get; set; } = 10;
         public int PageNumber { get; set; } = 1;
     }

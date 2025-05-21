@@ -14,17 +14,17 @@ using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Auctions.Service.API.Services.Participant
 {
-    public class ParticipantAuctionsService : IParticipantAuctionsService
+    public class AuctionsService : IAuctionsService
     {
         private readonly IRepository _repository;
         private readonly IUserAccessor _userAccessor;
         private readonly ITransactionsService _transactionsService;
-        private readonly ILogger<ParticipantAuctionsService> _logger;
+        private readonly ILogger<AuctionsService> _logger;
 
-        public ParticipantAuctionsService(IRepository repository,
+        public AuctionsService(IRepository repository,
             IUserAccessor userAccessor,
             ITransactionsService transactionsService,
-            ILogger<ParticipantAuctionsService> logger)
+            ILogger<AuctionsService> logger)
         {
             _repository = repository;
             _userAccessor = userAccessor;
@@ -41,7 +41,8 @@ namespace Auctions.Service.API.Services.Participant
             ListModel<Auction> auctionsList = await _repository.GetFilteredAndPaginated(specification,
                 includeQuery: query => query.Include(e => e.Category)
                                             .Include(e => e.Auctionist)
-                                            .Include(e => e.Images)!);
+                                            .Include(e => e.Images)
+                                            .Include(e => e.Bids)!);
 
             result.Data = auctionsList.ToPaginatedList(e => e.ToParticipantSummaryDTO());
 
@@ -174,18 +175,18 @@ namespace Auctions.Service.API.Services.Participant
 
             // TODO: implement sorting
 
-            //if (!string.IsNullOrEmpty(specifications.SortField))
-            //{
-            //    switch (specifications.SortField)
-            //    {
-            //        case "popularity":
-            //            builder.OrderBy(x => x.Bids.Count(), specifications.SortDirection ?? Enums.SortDirection.DESC);
-            //            break;
-            //        case "dateAndTime":
-            //            builder.OrderBy(x => x.FinishDateTime, specifications.SortDirection ?? Enums.SortDirection.ASC);
-            //            break;
-            //    }
-            //}
+            if (!string.IsNullOrEmpty(specifications.SortBy))
+            {
+                switch (specifications.SortBy)
+                {
+                    case "popularity":
+                        builder.OrderBy(x => x.Bids!.Count(), specifications.SortDirection);
+                        break;
+                    case "finishTime":
+                        builder.OrderBy(x => x.FinishTime, specifications.SortDirection);
+                        break;
+                }
+            }
 
             builder.WithPagination(specifications.PageSize, specifications.PageNumber);
 

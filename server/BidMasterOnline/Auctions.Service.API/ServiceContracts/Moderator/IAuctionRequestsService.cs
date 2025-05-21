@@ -4,7 +4,7 @@ using BidMasterOnline.Core.DTO;
 
 namespace Auctions.Service.API.ServiceContracts.Moderator
 {
-    public interface IModeratorAuctionRequestsService
+    public interface IAuctionRequestsService
     {
         Task<ServiceResult<PaginatedList<AuctionRequestSummaryDTO>>> GetAllAuctionRequestAsync(AuctionRequestSpecificationsDTO specifications); 
         Task<ServiceResult<AuctionRequestDTO>> GetAuctionRequestById(long id);

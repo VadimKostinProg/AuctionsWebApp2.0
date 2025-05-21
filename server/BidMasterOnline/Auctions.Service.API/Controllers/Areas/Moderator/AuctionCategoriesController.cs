@@ -11,24 +11,24 @@ namespace Auctions.Service.API.Controllers.Areas.Moderator
     [Authorize(Roles = UserRoles.Moderator)]
     public class AuctionCategoriesController : BaseController
     {
-        private readonly IModeratorAuctionCategoriesService _service;
+        private readonly IAuctionCategoriesService _service;
 
-        public AuctionCategoriesController(IModeratorAuctionCategoriesService service)
+        public AuctionCategoriesController(IAuctionCategoriesService service)
         {
             _service = service;
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetCategories([FromQuery] ModeratorSpecificationsDTO specifications)
+        public async Task<IActionResult> GetCategories([FromQuery] SpecificationsDTO specifications)
         {
-            ServiceResult<PaginatedList<ModeratorAuctionCategoryDTO>> result = await _service
+            ServiceResult<PaginatedList<AuctionCategoryDTO>> result = await _service
                 .GetAuctionCategoriesAsync(specifications);
 
             return FromResult(result);
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateCategory([FromBody] ModeratorUpsertAuctionCategoryDTO categoryDTO)
+        public async Task<IActionResult> CreateCategory([FromBody] UpsertAuctionCategoryDTO categoryDTO)
         {
             ServiceResult result = await _service.CreateAuctionCategoryAsync(categoryDTO);
 
@@ -37,7 +37,7 @@ namespace Auctions.Service.API.Controllers.Areas.Moderator
 
         [HttpPut("{id}")]
         public async Task<IActionResult> CreateCategory([FromRoute] long id, 
-            [FromBody] ModeratorUpsertAuctionCategoryDTO categoryDTO)
+            [FromBody] UpsertAuctionCategoryDTO categoryDTO)
         {
             ServiceResult result = await _service.UpdateAuctionCategoryAsync(id, categoryDTO);
 

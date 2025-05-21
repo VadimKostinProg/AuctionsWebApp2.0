@@ -11,19 +11,19 @@ using BidMasterOnline.Domain.Models.Entities;
 
 namespace Auctions.Service.API.Services.Moderator
 {
-    public class ModeratorAuctionCategoriesService : IModeratorAuctionCategoriesService
+    public class AuctionCategoriesService : IAuctionCategoriesService
     {
         private readonly IRepository _repository;
-        private readonly ILogger<ModeratorAuctionCategoriesService> _logger;
+        private readonly ILogger<AuctionCategoriesService> _logger;
 
-        public ModeratorAuctionCategoriesService(IRepository repository, 
-            ILogger<ModeratorAuctionCategoriesService> logger)
+        public AuctionCategoriesService(IRepository repository, 
+            ILogger<AuctionCategoriesService> logger)
         {
             _repository = repository;
             _logger = logger;
         }
 
-        public async Task<ServiceResult> CreateAuctionCategoryAsync(ModeratorUpsertAuctionCategoryDTO auctionCategoryDTO)
+        public async Task<ServiceResult> CreateAuctionCategoryAsync(UpsertAuctionCategoryDTO auctionCategoryDTO)
         {
             ServiceResult result = new();
 
@@ -71,9 +71,9 @@ namespace Auctions.Service.API.Services.Moderator
             return result;
         }
 
-        public async Task<ServiceResult<PaginatedList<ModeratorAuctionCategoryDTO>>> GetAuctionCategoriesAsync(ModeratorSpecificationsDTO specifications)
+        public async Task<ServiceResult<PaginatedList<DTO.Moderator.AuctionCategoryDTO>>> GetAuctionCategoriesAsync(SpecificationsDTO specifications)
         {
-            ServiceResult<PaginatedList<ModeratorAuctionCategoryDTO>> result = new();
+            ServiceResult<PaginatedList<DTO.Moderator.AuctionCategoryDTO>> result = new();
 
             SpecificationBuilder<AuctionCategory> specificationBuilder = new();
 
@@ -94,7 +94,7 @@ namespace Auctions.Service.API.Services.Moderator
             return result;
         }
 
-        public async Task<ServiceResult> UpdateAuctionCategoryAsync(long id, ModeratorUpsertAuctionCategoryDTO auctionCategoryDTO)
+        public async Task<ServiceResult> UpdateAuctionCategoryAsync(long id, UpsertAuctionCategoryDTO auctionCategoryDTO)
         {
             ServiceResult result = new();
 

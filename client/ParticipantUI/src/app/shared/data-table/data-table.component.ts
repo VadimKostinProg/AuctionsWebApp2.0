@@ -13,6 +13,7 @@ import { QueryParamsService } from '../../services/query-params.service';
 
 @Component({
   selector: 'data-table',
+  standalone: false,
   templateUrl: './data-table.component.html'
 })
 export class DataTableComponent implements OnInit {
@@ -203,9 +204,9 @@ export class DataTableComponent implements OnInit {
     modal.close();
 
     var actionResult = {
-      actionName: this.options.optionalAction.actionName,
-      object: this.options.optionalAction.form != null ?
-        this.options.optionalAction.form.value
+      actionName: this.options.optionalAction!.actionName,
+      object: this.options.optionalAction!.form != null ?
+        this.options.optionalAction!.form.value
         : this.choosenItem['id']
     } as OptionalActionResultModel;
 

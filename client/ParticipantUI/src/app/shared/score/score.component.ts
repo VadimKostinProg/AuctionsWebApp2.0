@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'app-score',
+  standalone: false,
   templateUrl: './score.component.html'
 })
 export class ScoreComponent {

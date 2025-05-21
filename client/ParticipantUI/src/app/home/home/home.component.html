@@ -1,0 +1,20 @@
+<search-bar [placeholder]="'Search auctions...'"
+            (onSubmit)="onSearchPressed()"></search-bar>
+
+<div *ngIf="popularAuctions && popularAuctions.length > 0">
+  <h4 class="mt-3">Popular</h4>
+
+  <div class="auctions-cards-container-scroll">
+    <auction-card *ngFor="let auction of popularAuctions"
+                  [auction]="auction"></auction-card>
+  </div>
+</div>
+
+<div *ngIf="finishingAuctions && finishingAuctions.length > 0">
+  <h4 class="mt-3">Finishing soon</h4>
+
+  <div class="auctions-cards-container-scroll">
+    <auction-card *ngFor="let auction of finishingAuctions"
+                  [auction]="auction"></auction-card>
+  </div>
+</div>

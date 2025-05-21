@@ -8,20 +8,20 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Auctions.Service.API.Services.Participant
 {
-    public class ParticipantAuctionCategoriesService : IParticipantAuctionCategoriesService
+    public class AuctionTypesService : IAuctionTypesService
     {
         private readonly IRepository _repository;
 
-        public ParticipantAuctionCategoriesService(IRepository repository)
+        public AuctionTypesService(IRepository repository)
         {
             _repository = repository;
         }
 
-        public async Task<ServiceResult<List<AuctionCategoryDTO>>> GetAuctionCategoriesAsync()
+        public async Task<ServiceResult<List<AuctionTypeDTO>>> GetAuctionTypesAsync()
         {
-            ServiceResult<List<AuctionCategoryDTO>> result = new();
+            ServiceResult<List<AuctionTypeDTO>> result = new();
 
-            List<AuctionCategory> entities = await _repository.GetFiltered<AuctionCategory>(e => !e.Deleted)
+            List<AuctionType> entities = await _repository.GetFiltered<AuctionType>(e => !e.Deleted)
                 .OrderBy(e => e.Name)
                 .ToListAsync();
 

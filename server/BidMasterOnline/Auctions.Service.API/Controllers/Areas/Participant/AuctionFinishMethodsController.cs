@@ -11,9 +11,9 @@ namespace Auctions.Service.API.Controllers.Areas.Participant
     [Authorize(Roles = UserRoles.Participant)]
     public class AuctionFinishMethodsController : BaseController
     {
-        private readonly IParticipantAuctionFinishMethodsService _service;
+        private readonly IAuctionFinishMethodsService _service;
 
-        public AuctionFinishMethodsController(IParticipantAuctionFinishMethodsService service)
+        public AuctionFinishMethodsController(IAuctionFinishMethodsService service)
         {
             _service = service;
         }

@@ -37,11 +37,15 @@ export class AuthService {
     return this.oauthService.hasValidAccessToken();
   }
 
+  get userStatus(): string {
+    return this.identityClaims['status'];
+  }
+
   get user(): UserBasic {
     const claims = this.identityClaims;
 
     return {
-      id: claims['sub'],
+      userId: claims['sub'],
       username: claims[''],
       email: claims['email']
     }

@@ -2,7 +2,7 @@
 
 namespace Auctions.Service.API.DTO.Moderator
 {
-    public class ModeratorAuctionTypeDTO : BaseDTO
+    public class AuctionFinishMethodDTO : BaseDTO
     {
         public required string Name { get; set; }
         public required string Description { get; set; }

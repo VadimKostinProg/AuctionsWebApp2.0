@@ -9,9 +9,9 @@ namespace Auctions.Service.API.BackgroundJobs
     public class FinishingAuctionsBackgroundJob : IJob
     {
         private readonly IRepository _repository;
-        private readonly IParticipantAuctionsService _service;
+        private readonly IAuctionsService _service;
 
-        public FinishingAuctionsBackgroundJob(IRepository repository, IParticipantAuctionsService service)
+        public FinishingAuctionsBackgroundJob(IRepository repository, IAuctionsService service)
         {
             _repository = repository;
             _service = service;

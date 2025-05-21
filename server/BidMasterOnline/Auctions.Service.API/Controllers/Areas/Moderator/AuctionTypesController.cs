@@ -11,17 +11,17 @@ namespace Auctions.Service.API.Controllers.Areas.Moderator
     [Authorize(Roles = UserRoles.Moderator)]
     public class AuctionTypesController : BaseController
     {
-        private readonly IModeratorAuctionTypesService _service;
+        private readonly IAuctionTypesService _service;
 
-        public AuctionTypesController(IModeratorAuctionTypesService service)
+        public AuctionTypesController(IAuctionTypesService service)
         {
             _service = service;
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetTypes([FromQuery] ModeratorSpecificationsDTO specifications)
+        public async Task<IActionResult> GetTypes([FromQuery] SpecificationsDTO specifications)
         {
-            ServiceResult<PaginatedList<ModeratorAuctionTypeDTO>> result = await _service
+            ServiceResult<PaginatedList<AuctionTypeDTO>> result = await _service
                 .GetAuctionTypesAsync(specifications);
 
             return FromResult(result);
@@ -29,7 +29,7 @@ namespace Auctions.Service.API.Controllers.Areas.Moderator
 
         [HttpPut("{id}")]
         public async Task<IActionResult> CreateType([FromRoute] long id,
-            [FromBody] ModeratorUpdateAuctionTypeDTO typeDTO)
+            [FromBody] UpdateAuctionTypeDTO typeDTO)
         {
             ServiceResult result = await _service.UpdateAuctionTypeAsync(id, typeDTO);
 

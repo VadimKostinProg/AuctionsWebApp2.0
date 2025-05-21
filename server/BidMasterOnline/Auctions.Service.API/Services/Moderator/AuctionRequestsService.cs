@@ -17,16 +17,16 @@ using System.Net;
 
 namespace Auctions.Service.API.Services.Moderator
 {
-    public class ModeratorAuctionRequestsService : IModeratorAuctionRequestsService
+    public class AuctionRequestsService : IAuctionRequestsService
     {
         private readonly IRepository _repository;
         private readonly ITransactionsService _transactionsService;
-        private readonly ILogger<ModeratorAuctionRequestsService> _logger;
+        private readonly ILogger<AuctionRequestsService> _logger;
         private readonly ModerationClient _moderationClient;
 
-        public ModeratorAuctionRequestsService(IRepository repository,
+        public AuctionRequestsService(IRepository repository,
             ITransactionsService transactionsService,
-            ILogger<ModeratorAuctionRequestsService> logger,
+            ILogger<AuctionRequestsService> logger,
             ModerationClient moderationClient)
         {
             _repository = repository;

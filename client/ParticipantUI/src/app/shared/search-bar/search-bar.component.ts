@@ -3,6 +3,7 @@ import { QueryParamsService } from '../../services/query-params.service';
 
 @Component({
   selector: 'search-bar',
+  standalone: false,
   templateUrl: './search-bar.component.html'
 })
 export class SearchBarComponent implements OnInit {

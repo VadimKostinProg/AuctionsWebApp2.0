@@ -14,7 +14,8 @@ export class AuthGuard implements CanActivate {
       return true;
     }
 
-    this.oauthService.initCodeFlow(state.url);
+    this.router.navigate(['/auth/sign-in']);
+
     return false;
   }
 }

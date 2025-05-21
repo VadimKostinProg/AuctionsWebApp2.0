@@ -12,10 +12,11 @@
               aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <div class="collapse navbar-collapse header-container"
+      <div *ngIf="isLoggedIn"
+           class="collapse navbar-collapse header-container"
            id="navbarText">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li *ngIf="authService.isLoggedIn"
+          <li *ngIf="isLoggedIn"
               class="nav-item dropdown"
               ngbDropdown>
             <a class="nav-link dropdown-toggle"
@@ -56,14 +57,9 @@
 </header>
 
 <main>
-  <div *ngIf="authService.isLoggedIn; else intro"
-       class="container-fluid w-75 mt-3">
+  <div class="container-fluid w-75 mt-3">
     <router-outlet></router-outlet>
   </div>
-
-  <ng-template #intro>
-    <button (click)="login">Login</button>
-  </ng-template>
 </main>
 
 <footer class="border-top footer">

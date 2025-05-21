@@ -1,3 +1,11 @@
+@import 'bootstrap/scss/bootstrap';
+@import "font-awesome/css/font-awesome.css";
+@import 'ngx-toastr/toastr';
+@import 'bootstrap/scss/functions';
+@import 'bootstrap/scss/variables';
+@import 'bootstrap/scss/mixins';
+@import 'ngx-toastr/toastr-bs5-alert';
+
 header {
   display: flex;
   align-items: center;
@@ -40,4 +48,8 @@ a {
 
 .default-span-background {
   @extend .default-background;
+}
+.auctions-cards-container-scroll {
+  display: flex;
+  overflow: auto;
 }

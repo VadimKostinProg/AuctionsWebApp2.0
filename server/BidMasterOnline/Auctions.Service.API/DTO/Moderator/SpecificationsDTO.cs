@@ -1,6 +1,6 @@
 ﻿namespace Auctions.Service.API.DTO.Moderator
 {
-    public class ModeratorSpecificationsDTO
+    public class SpecificationsDTO
     {
         public string? Search { get; set; }
 

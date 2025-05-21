@@ -10,7 +10,7 @@
               (click)="open(createModal)">Create</button>
     </div>
 
-    <div *ngIf="tableData.list.length > 0; else emptyList"
+    <div *ngIf="tableData.items.length > 0; else emptyList"
          class="mt-3">
       <div class="row table-container">
         <table class="table table-sm">
@@ -20,7 +20,7 @@
             <th *ngFor="let column of options.columnSettings; let i = index">
               <div>
                 <div *ngIf="column.isOrderable">
-                  <button (click)="onSortingChanged(column.dataPropName)"
+                  <button (click)="onSortingChanged(column.dataPropName!)"
                           class="orderable-title"> {{ column.title }} </button>
 
                   <i *ngIf="column.dataPropName != sorting.sortField"
@@ -42,7 +42,7 @@
             <th *ngIf="options.allowEdit || options.allowDelete || options.optionalAction"></th>
           </tr>
 
-          <tr *ngFor="let row of tableData.list; let i = index">
+          <tr *ngFor="let row of tableData.items; let i = index">
             <td *ngIf="options.showIndexColumn">
               <div>
                 {{ i + 1 }}
@@ -53,15 +53,15 @@
               <a *ngIf="column.isLink"
                  [routerLink]="column.pageLink"
                  [queryParams]="getQueryParams(column, row)">
-                {{ row[column.dataPropName] }}
+                {{ row[column.dataPropName!] }}
               </a>
               <span *ngIf="column.isBoolean">
-                <i *ngIf="row[column.dataPropName]"
+                <i *ngIf="column.dataPropName && row[column.dataPropName]"
                    class="fa-regular fa-circle-check fa-xl m-3"
                    style="color: #94ef0b;"></i>
               </span>
               <span *ngIf="!column.isBoolean && !column.isLink">
-                {{ row[column.dataPropName] }}
+                {{ row[column.dataPropName!] }}
               </span>
             </td>
 
@@ -131,7 +131,7 @@
               </a>
             </li>
             <li class="page-item"
-                [ngClass]="(this.pagination.pageNumber == tableData.totalPages)? 'disabled' : ''">
+                [ngClass]="(this.pagination.pageNumber == tableData.pagination!.totalPages)? 'disabled' : ''">
               <a class="page-link"
                  href="#"
                  aria-label="Next"
@@ -248,7 +248,7 @@
                  formControlName="id"
                  hidden />
 
-          <div *ngFor="let prop of options.createFormOptions.properties"
+          <div *ngFor="let prop of options.createFormOptions!.properties"
                class="form-field flex mb-2">
             <div>
               <label [for]="prop.propName"
@@ -325,23 +325,23 @@
       <div class="modal-header">
         <h4 class="modal-title"
             id="modal-basic-title">
-          {{ options.optionalAction.actionName + ' ' + options.resourceName }}
+          {{ options.optionalAction!.actionName + ' ' + options.resourceName }}
         </h4>
         <button type="button"
                 class="btn-close"
                 aria-label="Close"
                 (click)="modal.close()"></button>
       </div>
-      <div *ngIf="options.optionalAction.form"
+      <div *ngIf="options.optionalAction?.form"
            class="modal-body">
-        <form [formGroup]="options.optionalAction.form">
+        <form [formGroup]="options.optionalAction!.form">
           <input type="text"
                  id="id"
                  class="form-control"
                  formControlName="id"
                  hidden />
 
-          <div *ngFor="let prop of options.optionalAction.properties"
+          <div *ngFor="let prop of options.optionalAction!.properties"
                class="form-field flex mb-2">
             <div>
               <label [for]="prop.propName"
@@ -385,9 +385,9 @@
           </div>
         </form>
       </div>
-      <div *ngIf="options.optionalAction.message"
+      <div *ngIf="options.optionalAction?.message"
            class="modal-body">
-        <span>{{ options.optionalAction.message }}</span>
+        <span>{{ options.optionalAction!.message }}</span>
       </div>
       <div class="modal-footer">
         <button type="button"
