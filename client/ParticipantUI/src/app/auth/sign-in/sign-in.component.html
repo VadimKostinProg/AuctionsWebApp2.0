@@ -1,6 +1,15 @@
-<div class="d-flex">
+<div class="d-flex flex-column align-items-center justify-content-center vh-100">
+  <img src="assets/logo.png"
+       [ngStyle]="{'width': '20vw', 'max-width': '300px'}"
+       class="mb-3" />
+  <div class="text-center mb-3"
+       style="width: 22vw; min-width: 220px;">
+    <span style="font-size: 1.1em; text-align: justify; display: block;">Welcome to <strong
+              style="font-size: 1.2em;">BidMasterOnline</strong>, your premier web system for seamlessly organizing and
+      participating in online auctions.</span>
+  </div>
   <button type="button"
-          class="btn btn-primary"
+          class="btn default-btn-background"
+          style="font-size: 1.2em; width: 180px; padding: 10px 20px;"
           (click)="login()">Login</button>
-  <img src="../assets/logo.png" />
 </div>

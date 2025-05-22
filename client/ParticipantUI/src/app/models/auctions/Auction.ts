@@ -12,3 +12,13 @@ export class Auction extends AuctionBasic {
   public finishPrice?: number | null;
   public winner?: UserBasic | null;
 }
+
+abstract class AuctionResource {
+  public id!: number;
+  public name!: string;
+  public description!: string;
+}
+
+export class AuctionCategory extends AuctionResource { }
+export class AuctionType extends AuctionResource { }
+export class AuctionFinishMethod extends AuctionResource { }

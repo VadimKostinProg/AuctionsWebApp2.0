@@ -1,0 +1,344 @@
+<ngx-spinner bdColor="rgba(0,0,0,0.8)"
+             size="medium"
+             color="#fff"
+             type="line-scale-pulse-out"
+             [fullScreen]="true">
+  <p style="color: white"> Publishing your auction... </p>
+</ngx-spinner>
+
+<div class="margin-auto">
+  <div class="custom-form-container">
+    <form *ngIf="createAuctionRequestForm"
+          [formGroup]="createAuctionRequestForm"
+          (ngSubmit)="onSubmit()"
+          enctype="multipart/form-data">
+      <h2>New auction request</h2>
+
+      <div class="form-field flex mb-2">
+        <div>
+          <label for="image"
+                 class="form-label pt">Images:</label>
+        </div>
+
+        <div class="flex-1">
+          <input type="file"
+                 id="image"
+                 class="form-control"
+                 accept=".png, .jpg, .jpeg"
+                 multiple="true"
+                 (change)="onImagesChange($event)" />
+        </div>
+      </div>
+
+      <div class="form-field flex mb-2">
+        <div>
+          <label for="lotTitle"
+                 class="form-label pt">Lot title:</label>
+        </div>
+
+        <div class="flex-1">
+          <input type="text"
+                 id="lotTitle"
+                 class="form-control"
+                 formControlName="lotTitle" />
+        </div>
+
+        <div *ngIf="!lotTitle?.valid && (lotTitle?.dirty || lotTitle?.touched)">
+          <span class="text-danger">Lot Title is required.</span>
+        </div>
+      </div>
+
+      <div class="form-field flex mb-2">
+        <div>
+          <label for="categoryId"
+                 class="form-label pt">Auction category:</label>
+        </div>
+
+        <div class="flex-1">
+          <select id="categoryId"
+                  class="form-control"
+                  formControlName="categoryId">
+            <option *ngFor="let category of categories"
+                    [value]="category.id">
+              {{ category.name }}
+
+              <p>{{ category.description }}</p>
+            </option>
+          </select>
+        </div>
+
+        <div *ngIf="!categoryId?.valid && (categoryId?.dirty || categoryId?.touched)">
+          <span class="text-danger">Auction category is required.</span>
+        </div>
+      </div>
+
+      <div class="form-field flex mb-2">
+        <div>
+          <label for="typeId"
+                 class="form-label pt">Auction type:</label>
+        </div>
+
+        <div class="flex-1">
+          <select id="typeId"
+                  class="form-control"
+                  formControlName="typeId">
+            <option *ngFor="let type of auctionTypes"
+                    [value]="type.id">
+              {{ type.name }}
+
+              <p>{{ type.description }}</p>
+            </option>
+          </select>
+        </div>
+
+        <div *ngIf="!typeId?.valid && (typeId?.dirty || typeId?.touched)">
+          <span class="text-danger">Auction type is required.</span>
+        </div>
+      </div>
+
+      <div class="form-field flex mb-2">
+        <div>
+          <label for="finishMethodId"
+                 class="form-label pt">Auction finish method:</label>
+        </div>
+
+        <div class="flex-1">
+          <select id="finishMethodId"
+                  class="form-control"
+                  formControlName="finishMethodId"
+                  (change)="onFinishMethodChange($event)">
+            <option *ngFor="
+                  let
+                  finishMethod
+                  of
+                  finishMethods"
+                    [value]="finishMethod.id">
+              {{ finishMethod.name }}
+
+              <p>{{ finishMethod.description }}</p>
+            </option>
+          </select>
+        </div>
+
+        <div *ngIf="!finishMethodId?.valid && (finishMethodId?.dirty || finishMethodId?.touched)">
+          <span class="text-danger">Auction finish method is required.</span>
+        </div>
+      </div>
+
+      <div class="form-field flex mb-2">
+        <div>
+          <label for="lotDescription"
+                 class="form-label pt">Lot description:</label>
+        </div>
+
+        <div class="flex-1">
+          <textarea id="lotDescription"
+                    class="form-control"
+                    formControlName="lotDescription"></textarea>
+        </div>
+
+        <div *ngIf="!lotDescription?.valid && (lotDescription?.dirty || lotDescription?.touched)">
+          <span class="text-danger">Lot description is required.</span>
+        </div>
+      </div>
+
+      <div class="form-field flex mb-2">
+        <div>
+          <label for="auctionTimeDays"
+                 class="form-label pt">Auction time(days:hours):</label>
+        </div>
+
+        <div class="flex-1 input-group">
+          <input type="number"
+                 id="auctionTimeDays"
+                 class="form-control"
+                 min="0"
+                 max="7"
+                 formControlName="auctionTimeDays" />
+          <button class="btn btn-outline-secondary default-btn-background"
+                  disabled>
+            <b>:</b>
+          </button>
+          <input type="number"
+                 id="auctionTimeHours"
+                 min="0"
+                 max="23"
+                 class="form-control"
+                 formControlName="auctionTimeHours" />
+        </div>
+
+        <div
+             *ngIf="!auctionTimeDays?.valid && (auctionTimeDays?.dirty || auctionTimeDays?.touched) || !auctionTimeHours?.valid && (auctionTimeHours?.dirty || auctionTimeHours?.touched)">
+          <div *ngIf="auctionTimeDays?.errors?.['required'] || auctionTimeHours?.errors?.['required']">
+            <span class="text-danger">Auction time is required.</span>
+          </div>
+
+          <div *ngIf="auctionTimeDays?.errors?.['min']">
+            <span class="text-danger">Incorrect number of days.</span>
+          </div>
+
+          <div *ngIf="auctionTimeDays?.errors?.['max']">
+            <span class="text-danger">Auction time days must be less than 7.</span>
+          </div>
+
+          <div *ngIf="auctionTimeHours?.errors?.['min'] || auctionTimeHours?.errors?.['max']">
+            <span class="text-danger">Incorrect number of hours.</span>
+          </div>
+        </div>
+
+        <div *ngIf="auctionTimeError">
+          <span class="text-danger">{{ auctionTimeError }}</span>
+        </div>
+      </div>
+
+      <div *ngIf="showFinishTimeInterval"
+           class="form-field flex mb-2">
+        <div>
+          <label for="finishTimeIntervalHours"
+                 class="form-label pt">Finish time internal(hours:minutes):</label>
+        </div>
+
+        <div class="flex-1 input-group">
+          <input type="number"
+                 id="finishTimeIntervalHours"
+                 class="form-control"
+                 min="0"
+                 max="5"
+                 formControlName="finishTimeIntervalHours" />
+          <button class="btn btn-outline-secondary default-btn-background"
+                  disabled>
+            <b>:</b>
+          </button>
+          <input type="number"
+                 id="finishTimeIntervalMinutes"
+                 min="0"
+                 max="59"
+                 class="form-control"
+                 formControlName="finishTimeIntervalMinutes" />
+        </div>
+
+        <div
+             *ngIf="!finishTimeIntervalHours?.valid && (finishTimeIntervalHours?.dirty || finishTimeIntervalHours?.touched) || !finishTimeIntervalMinutes?.valid && (finishTimeIntervalMinutes?.dirty || finishTimeIntervalMinutes?.touched)">
+          <div *ngIf="finishTimeIntervalHours?.errors?.['min'] || finishTimeIntervalMinutes?.errors?.['min']">
+            <span class="text-danger">Incorrect number of finish interval time.</span>
+          </div>
+          <div *ngIf="finishTimeIntervalHours?.errors?.['max']">
+            <span class="text-danger">Finish time inteval must be less or equal to 5 hours.</span>
+          </div>
+
+          <div *ngIf="finishTimeIntervalMinutes?.errors?.['max']">
+            <span class="text-danger">Cannot set more than 59 minutes.</span>
+          </div>
+        </div>
+
+        <div *ngIf="finishTimeIntervalError">
+          <span class="text-danger">{{ finishTimeIntervalError }}</span>
+        </div>
+      </div>
+
+      <div class="form-field flex mb-2">
+        <div>
+          <label for="startPrice"
+                 class="form-label pt">Start price:</label>
+        </div>
+
+        <div class="flex-1">
+          <input type="number"
+                 min="100"
+                 max="10e9"
+                 id="startPrice"
+                 class="form-control"
+                 formControlName="startPrice" />
+        </div>
+
+        <div *ngIf="!startPrice?.valid && (startPrice?.dirty || startPrice?.touched)">
+          <div *ngIf="startPrice?.errors?.['required']">
+            <span class="text-danger">Start price is required.</span>
+          </div>
+
+          <div *ngIf="startPrice?.errors?.['min']">
+            <span class="text-danger">Start price must be at least $100.</span>
+          </div>
+
+          <div *ngIf="startPrice?.errors?.['max']">
+            <span class="text-danger">Start price must be less than $1,000,000,000.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-field flex mb-2">
+        <div>
+          <label for="bidAmountInterval"
+                 class="form-label pt">Bid step:</label>
+        </div>
+
+        <div class="flex-1">
+          <input type="number"
+                 min="0"
+                 max="10e5"
+                 id="bidAmountInterval"
+                 class="form-control"
+                 formControlName="bidAmountInterval" />
+        </div>
+
+        <div *ngIf="!bidAmountInterval?.valid && (bidAmountInterval?.dirty || bidAmountInterval?.touched)">
+          <div *ngIf="bidAmountInterval?.errors?.['required']">
+            <span class="text-danger">Bid step is required.</span>
+          </div>
+
+          <div *ngIf="bidAmountInterval?.errors?.['min']">
+            <span class="text-danger">Bid step must be at least $0.01.</span>
+          </div>
+
+          <div *ngIf="bidAmountInterval?.errors?.['max']">
+            <span class="text-danger">Bid step must be less than $100,000.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-field flex mb-2">
+        <div>
+          <label for="requestStartTimeFlag"
+                 class="form-label pt">Set start time:</label>
+        </div>
+
+        <div class="flex-1">
+          <input type="checkbox"
+                 id="requestStartTimeFlag"
+                 class="form-control"
+                 formControlName="requestStartTimeFlag"
+                 (change)="onSetStartTimeFlagChange()" />
+        </div>
+      </div>
+
+      <div *ngIf="showRequestedStartTime"
+           class="form-field flex mb-2">
+        <div>
+          <label for="requestedStartTime"
+                 class="form-label pt">Start time:</label>
+        </div>
+
+        <input type="datetime"
+               id="requestedStartTime"
+               class="form-control"
+               formControlName="requestedStartTime" />
+
+        <div *ngIf="requestedStartTimeError">
+          <span class="text-danger">{{ requestedStartTimeError }}</span>
+        </div>
+      </div>
+
+      <div *ngIf="error"
+           class="text-danger">
+        {{ error }}
+      </div>
+
+      <div class="form-field mt-3">
+        <button type="submit"
+                class="btn default-btn-background w-100 mb-2">
+          Submit
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

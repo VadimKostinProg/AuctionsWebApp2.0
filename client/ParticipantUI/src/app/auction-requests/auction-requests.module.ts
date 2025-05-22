@@ -1,26 +1,23 @@
 import { CommonModule } from "@angular/common";
-import { AuctionDetailsComponent } from "./auction-details/auction-details.component";
-import { AuctionCardComponent } from "./auctions-card/auction-card.component";
-import { CommentsComponent } from "./comments/comments.component";
 import { SharedModule } from "../shared/shared.module";
 import { NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { RouterModule, Routes } from "@angular/router";
+import { NewAuctionRequestComponent } from "./new-auction-request/new-auction-request.component";
 import { ToastrModule } from "ngx-toastr";
+import { NgxSpinnerModule } from "ngx-spinner";
 
 const routes: Routes = [
   {
-    path: 'details',
-    component: AuctionDetailsComponent
+    path: 'new',
+    component: NewAuctionRequestComponent
   }
 ];
 
 @NgModule({
   declarations: [
-    AuctionDetailsComponent,
-    AuctionCardComponent,
-    CommentsComponent
+    NewAuctionRequestComponent,
   ],
   imports: [
     CommonModule,
@@ -31,11 +28,10 @@ const routes: Routes = [
     NgbModule,
     RouterModule,
     ToastrModule.forRoot(),
+    NgxSpinnerModule.forRoot(),
   ],
   exports: [
-    AuctionDetailsComponent,
-    AuctionCardComponent,
-    CommentsComponent
+    NewAuctionRequestComponent
   ]
 })
-export class AuctionsModule { }
+export class AuctionRequestsModule { }

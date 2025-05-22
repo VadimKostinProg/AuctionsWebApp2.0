@@ -6,7 +6,18 @@ import { SharedModule } from '../shared/shared.module';
 import { AuctionsModule } from '../auctions/auctions.module';
 
 const routes: Routes = [
-  { path: '', component: HomeComponent },
+  {
+    path: '',
+    component: HomeComponent
+  },
+  {
+    path: 'auctions',
+    loadChildren: () => import('../auctions/auctions.module').then(m => m.AuctionsModule)
+  },
+  {
+    path: 'auction-requests',
+    loadChildren: () => import('../auction-requests/auction-requests.module').then(m => m.AuctionRequestsModule)
+  },
 ];
 
 @NgModule({
@@ -17,8 +28,8 @@ const routes: Routes = [
     CommonModule,
     RouterModule.forChild(routes),
     SharedModule,
-    AuctionsModule,
     RouterModule,
+    AuctionsModule
   ],
   exports: [
     HomeComponent

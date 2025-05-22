@@ -9,18 +9,10 @@ builder.Configuration
 
 builder.Services.AddOcelot(builder.Configuration);
 
-builder.Services.AddAuthentication("Bearer")
-    .AddJwtBearer("Bearer", options =>
-    {
-        options.Authority = builder.Configuration["IdentityServer:Authority"];
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateAudience = true,
-            ValidAudience = builder.Configuration["IdentityServer:Audience"]
-        };
-    });
-
 var app = builder.Build();
+
+//app.UseAuthentication();
+//app.UseAuthorization();
 
 await app.UseOcelot();
 

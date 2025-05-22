@@ -6,6 +6,8 @@ import { AuthModule } from './auth/auth.module';
 import { AuthGuard } from './auth.guard';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { AppComponent } from './app.component';
+import { provideAnimations } from '@angular/platform-browser/animations';
+import { provideToastr } from 'ngx-toastr';
 
 const routes: Routes = [
   {
@@ -35,7 +37,9 @@ const routes: Routes = [
   ],
   providers: [
     AuthGuard,
-    provideHttpClient(withInterceptorsFromDi())
+    provideHttpClient(withInterceptorsFromDi()),
+    provideAnimations(),
+    provideToastr(),
   ],
   bootstrap: [AppComponent]
 })
