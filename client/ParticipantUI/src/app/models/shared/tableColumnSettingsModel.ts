@@ -4,7 +4,7 @@ export class TableColumnSettingsModel {
   public isOrderable: boolean = false;
   public isLink: boolean = false;
   public pageLink?: string | null;
-  public linkQueryParam?: string | null;
-  public linkQueryDataPropName?: string | null;
+  public linkRouteParamName?: string | null;
   public isBoolean: boolean = false;
+  public transformAction?: (prop: any) => any | null;
 }

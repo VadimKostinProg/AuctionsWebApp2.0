@@ -43,7 +43,8 @@ namespace Auctions.Service.API.Services.Moderator
 
             try
             {
-                AuctionRequest auctionRequest = await _repository.GetByIdAsync<AuctionRequest>(requestDTO.AuctionRequestId);
+                AuctionRequest auctionRequest = await _repository.GetByIdAsync<AuctionRequest>(requestDTO.AuctionRequestId,
+                    includeQuery: query => query.Include(e => e.Images)!);
 
                 if (auctionRequest.Status != AuctionRequestStatus.Pending)
                 {
@@ -71,11 +72,18 @@ namespace Auctions.Service.API.Services.Moderator
                     CurrentPrice = auctionRequest.StartPrice,
                     FinishTimeIntervalInTicks = auctionRequest.FinishTimeIntervalInTicks,
                     BidAmountInterval = auctionRequest.BidAmountInterval,
+                    AimPrice = auctionRequest.AimPrice,
                     StartTime = auctionStartTime,
                     FinishTime = auctionStartTime.AddTicks(auctionRequest.RequestedAuctionTimeInTicks),
                     Status = auctionRequest.RequestedStartTime == null
                         ? AuctionStatus.Active
                         : AuctionStatus.Pending,
+                    Images = auctionRequest.Images?.Select(image => new AuctionImage
+                    {
+                        PublicId = image.PublicId,
+                        Url = image.Url
+                    })
+                    .ToList()
                 };
 
                 await _repository.AddAsync(newAuction);
@@ -86,11 +94,13 @@ namespace Auctions.Service.API.Services.Moderator
                 // TODO: notify auctionist
 
                 await transaction.CommitAsync();
+
+                result.Message = "Auction request has been approved successfully.";
             }
             catch (Exception ex)
             {
                 await transaction.RollbackAsync();
-                _logger.LogError(ex, "An error occured during declining auction request.");
+                _logger.LogError(ex, "An error occured during approving auction request.");
 
                 result.IsSuccessfull = false;
                 result.StatusCode = HttpStatusCode.InternalServerError;

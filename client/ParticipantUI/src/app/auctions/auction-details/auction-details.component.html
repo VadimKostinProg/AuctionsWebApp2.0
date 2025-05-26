@@ -32,7 +32,7 @@
       </div>
     </div>
     <div class="col-8">
-      <div class="d-flex justify-content-between">
+      <div class="d-flex justify-content-between align-items-start">
         <div>
           <div class="auction-info-container">
             <h3> {{ auctionDetails.lotTitle }}</h3>
@@ -54,7 +54,7 @@
               <b class="auction-details-property">Auctionist:</b>
               <a routerLink="/profile"
                  [queryParams]="{ userId: auctionDetails.auctionist.userId }">
-                {{ auctionDetails.auctionist }}
+                {{ auctionDetails.auctionist.username }}
               </a>
             </span>
             <span *ngIf="auctionDetails.status !== AuctionStatusEnum.CancelledByAuctionist || auctionDetails.status !== AuctionStatusEnum.CancelledByAuctionist"
@@ -65,12 +65,12 @@
             <span *ngIf="auctionDetails.status !== AuctionStatusEnum.CancelledByAuctionist || auctionDetails.status !== AuctionStatusEnum.CancelledByAuctionist"
                   class="h5">
               <b class="auction-details-property">Start time:</b>
-              {{ auctionDetails.startTime }}
+              {{ auctionDetails.startTime | date: 'MM-dd-yyyy hh:mm' }}
             </span>
             <span *ngIf="auctionDetails.status !== AuctionStatusEnum.CancelledByAuctionist && auctionDetails.status !== AuctionStatusEnum.CancelledByModerator"
                   class="h5">
               <b class="auction-details-property">Finish time:</b>
-              {{ auctionDetails.finishTime }}
+              {{ auctionDetails.finishTime | date: 'MM-dd-yyyy hh:mm' }}
             </span>
             <span *ngIf="auctionDetails.status !== AuctionStatusEnum.CancelledByAuctionist && auctionDetails.status !== AuctionStatusEnum.CancelledByModerator"
                   class="h5">
@@ -79,7 +79,7 @@
             </span>
             <span class="h5">
               <b class="auction-details-property">Status:</b>
-              {{ auctionDetails.status }}
+              {{ auctionStatus }}
             </span>
             <span *ngIf="auctionDetails.status === AuctionStatusEnum.Finished && auctionDetails.winner"
                   class="h5">
@@ -91,7 +91,7 @@
             </span>
           </div>
           <button *ngIf="auctionDetails.status === AuctionStatusEnum.Active"
-                  class="btn default-btn-background"
+                  class="btn default-btn-background bid-button"
                   (click)="open(setBidModal)"
                   [disabled]="userCannotPlaceBid">
             Place a bid
@@ -100,12 +100,12 @@
 
         <ng-template #auctionActionsPopContent>
           <div class="actions-container">
-            <button *ngIf="auctionDetails.auctionist.userId !== user.userId"
+            <button *ngIf="auctionDetails.auctionist.userId != user.userId"
                     class="btn"
                     (click)="open(complaintOnAuctionModal)">
               Complain
             </button>
-            <button *ngIf="auctionDetails.status !== AuctionStatusEnum.CancelledByAuctionist && auctionDetails.status !== AuctionStatusEnum.CancelledByModerator && auctionDetails.auctionist.userId === user.userId"
+            <button *ngIf="auctionDetails.status !== AuctionStatusEnum.CancelledByAuctionist && auctionDetails.status !== AuctionStatusEnum.CancelledByModerator && auctionDetails.auctionist.userId == user.userId"
                     class="btn"
                     [disabled]="auctionDetails.status === AuctionStatusEnum.Finished"
                     (click)="open(cancelAuctionModal)">
@@ -138,7 +138,7 @@
   </div>
   <div *ngIf="auctionDetails.status !== AuctionStatusEnum.CancelledByAuctionist || auctionDetails.status !== AuctionStatusEnum.CancelledByAuctionist"
        class="row mt-3">
-    <comments [auctionId]="auctionDetails.id"></comments>
+    <comments [auction]="auctionDetails"></comments>
   </div>
 </div>
 

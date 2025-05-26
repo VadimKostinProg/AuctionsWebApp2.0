@@ -9,5 +9,6 @@ export class PostAuctionRequest {
   requestedStartTime?: Date | null;
   finishTimeInterval?: string | null;
   bidAmountInterval!: number;
+  aimPrice?: number | null;
   images!: File[];
 }

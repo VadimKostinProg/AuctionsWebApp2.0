@@ -3,6 +3,7 @@ import { Injectable } from "@angular/core";
 import { environment } from "../../environments/environment";
 import { Observable } from "rxjs";
 import { AuctionCategory, AuctionType, AuctionFinishMethod } from "../models/auctions/Auction";
+import { ServiceResult } from "../models/shared/serviceResult";
 
 @Injectable({
   providedIn: 'root'
@@ -12,15 +13,15 @@ export class AuctionResourcesService {
 
   constructor(private readonly httpClient: HttpClient) { }
 
-  getAuctionCategories(): Observable<AuctionCategory[]> {
-    return this.httpClient.get<AuctionCategory[]>(`${this.baseUrl}/auction-categories`);
+  getAuctionCategories(): Observable<ServiceResult<AuctionCategory[]>> {
+    return this.httpClient.get<ServiceResult<AuctionCategory[]>>(`${this.baseUrl}/auction-categories`);
   }
 
-  getAuctionTypes(): Observable<AuctionCategory[]> {
-    return this.httpClient.get<AuctionType[]>(`${this.baseUrl}/auction-types`);
+  getAuctionTypes(): Observable<ServiceResult<AuctionType[]>> {
+    return this.httpClient.get<ServiceResult<AuctionType[]>>(`${this.baseUrl}/auction-types`);
   }
 
-  getAuctionFinishMethods(): Observable<AuctionCategory[]> {
-    return this.httpClient.get<AuctionFinishMethod[]>(`${this.baseUrl}/auction-finish-methods`);
+  getAuctionFinishMethods(): Observable<ServiceResult<AuctionFinishMethod[]>> {
+    return this.httpClient.get<ServiceResult<AuctionFinishMethod[]>>(`${this.baseUrl}/auction-finish-methods`);
   }
 }

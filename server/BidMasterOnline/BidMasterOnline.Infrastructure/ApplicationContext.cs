@@ -1,11 +1,15 @@
 ﻿using BidMasterOnline.Core.Constants;
+using BidMasterOnline.Core.ServiceContracts;
 using BidMasterOnline.Domain.Models.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace BidMasterOnline.Infrastructure
 {
     public class ApplicationContext : DbContext
     {
+        private readonly IUserAccessor _userAccessor;
+
         public virtual DbSet<Auction> Auctions { get; set; }
         public virtual DbSet<AuctionRequest> AuctionRequests { get; set; }
         public virtual DbSet<AuctionCategory> Categories { get; set; }
@@ -23,8 +27,10 @@ namespace BidMasterOnline.Infrastructure
         public virtual DbSet<Delivery> Deliveries { get; set; }
         public virtual DbSet<ModerationLog> ModerationLogs { get; set; }
 
-        public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options)
+        public ApplicationContext(DbContextOptions<ApplicationContext> options,
+            IUserAccessor userAccessor) : base(options)
         {
+            _userAccessor = userAccessor;
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -90,7 +96,7 @@ namespace BidMasterOnline.Infrastructure
                     .OnDelete(DeleteBehavior.Restrict);
 
                 options.HasMany(a => a.Bids)
-                    .WithOne()
+                    .WithOne(b => b.Auction)
                     .HasForeignKey(b => b.AuctionId)
                     .OnDelete(DeleteBehavior.Restrict);
 
@@ -102,11 +108,6 @@ namespace BidMasterOnline.Infrastructure
                 options.HasMany<WatchList>()
                     .WithOne(wl => wl.Auction)
                     .HasForeignKey(wl => wl.AuctionId)
-                    .OnDelete(DeleteBehavior.Restrict);
-
-                options.HasMany<Bid>()
-                    .WithOne(b => b.Auction)
-                    .HasForeignKey(b => b.AuctionId)
                     .OnDelete(DeleteBehavior.Restrict);
 
                 options.HasMany<AuctionComment>()
@@ -211,6 +212,11 @@ namespace BidMasterOnline.Infrastructure
             {
                 options.HasOne<User>()
                     .WithMany()
+                    .HasForeignKey(ml => ml.ModeratorId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                options.HasOne<User>()
+                    .WithMany()
                     .HasForeignKey(ml => ml.UserId)
                     .OnDelete(DeleteBehavior.Restrict);
 
@@ -273,18 +279,52 @@ namespace BidMasterOnline.Infrastructure
                 new AuctionType
                 {
                     Id = 1,
-                    Name = "English",
+                    Name = "English Auction",
                     Description = "",
                     CreatedBy = "system"
                 },
                 new AuctionType
                 {
                     Id = 2,
-                    Name = "Golland",
+                    Name = "Dutch Auction",
                     Description = "",
                     CreatedBy = "system"
                 }
             });
+        }
+
+        public override int SaveChanges()
+        {
+            ApplyAuditInfo();
+            return base.SaveChanges();
+        }
+
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            ApplyAuditInfo();
+            return base.SaveChangesAsync(cancellationToken);
+        }
+
+        private void ApplyAuditInfo()
+        {
+            IEnumerable<EntityEntry<EntityBase>> entries = ChangeTracker.Entries<EntityBase>();
+
+            DateTime currentTime = DateTime.UtcNow;
+            string currentUsername = _userAccessor.TryGetUserName() ?? "system";
+
+            foreach (EntityBase addedEntity in entries.Where(e => e.State == EntityState.Added)
+                                                      .Select(e => e.Entity))
+            {
+                addedEntity.CreatedAt = currentTime;
+                addedEntity.CreatedBy = currentUsername;
+            }
+
+            foreach (EntityBase modifiedEntity in entries.Where(e => e.State == EntityState.Modified)
+                                                         .Select(e => e.Entity))
+            {
+                modifiedEntity.ModifiedAt = currentTime;
+                modifiedEntity.ModifiedBy = currentUsername;
+            }
         }
     }
 }

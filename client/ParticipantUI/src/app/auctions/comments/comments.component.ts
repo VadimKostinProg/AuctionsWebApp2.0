@@ -12,6 +12,7 @@ import { PostComment } from '../../models/auctions/PostComment';
 import { PostComplaint } from '../../models/complaints/postComplaint';
 import { ComplaintsService } from '../../services/complaints.service';
 import { ComplaintTypeEnum } from '../../models/complaints/complaintTypeEnum';
+import { Auction } from '../../models/auctions/Auction';
 
 @Component({
   selector: 'comments',
@@ -19,7 +20,7 @@ import { ComplaintTypeEnum } from '../../models/complaints/complaintTypeEnum';
   standalone: false
 })
 export class CommentsComponent implements OnInit {
-  @Input() auctionId!: number;
+  @Input() auction: Auction | undefined;
 
   currentUser!: UserBasic;
 
@@ -46,10 +47,23 @@ export class CommentsComponent implements OnInit {
     return this.authService.userStatus;
   }
 
+  get userId() {
+    return this.authService.user.userId;
+  }
+
   async ngOnInit(): Promise<void> {
     this.currentUser = this.authService.user;
 
     this.pagination = await this.queryParamsService.getPaginationParams();
+
+    if (!this.pagination.pageNumber || !this.pagination.pageSize) {
+      this.pagination = {
+        pageNumber: 1,
+        pageSize: 15
+      }
+
+      await this.queryParamsService.setPaginationParams(this.pagination);
+    }
 
     this.reloadComments();
 
@@ -59,17 +73,24 @@ export class CommentsComponent implements OnInit {
   }
 
   reloadComments() {
-    this.commentsService.getCommentsForAuction(this.auctionId, this.pagination!.pageNumber!, this.pagination!.pageSize!).subscribe({
-      next: (response) => {
-        if (response.isSuccessfull)
-          this.comments = response.data!.items;
-        else
-          this.toastrService.error(response.errors[0], 'Error');
-      },
-      error: (error) => {
-        this.toastrService.error(error.error, 'Error');
-      }
-    });
+    if (this.auction)
+      this.commentsService.getCommentsForAuction(this.auction.id, this.pagination!.pageNumber!, this.pagination!.pageSize!).subscribe({
+        next: (response) => {
+          if (response.isSuccessfull)
+            this.comments = response.data!.items;
+          else
+            this.toastrService.error(response.errors[0], 'Error');
+        },
+        error: (error) => {
+          this.toastrService.error(error.error, 'Error');
+        }
+      });
+  }
+
+  onScoreUpdated(newScore: number) {
+    if (this.commentForm) {
+      this.commentForm.patchValue({ score: newScore });
+    }
   }
 
   reloadCommentForm() {
@@ -117,15 +138,20 @@ export class CommentsComponent implements OnInit {
 
     const comment = {
       score: score,
-      auctionId: this.auctionId,
+      auctionId: this.auction!.id,
       commentText: commentText
     } as PostComment;
 
     this.commentsService.postNewComment(comment).subscribe({
       next: (response) => {
-        this.toastrService.success(response.message!, 'Success');
+        if (response.isSuccessfull) {
+          this.toastrService.success(response.message!, 'Success');
 
-        this.reloadComments();
+          this.reloadComments();
+        }
+        else {
+          this.toastrService.error(response.errors[0], 'Error');
+        }
       },
       error: (error) => {
         this.toastrService.error(error.error, 'Error');
@@ -168,9 +194,10 @@ export class CommentsComponent implements OnInit {
 
     this.complaintsService.postComplaint(complaint).subscribe({
       next: (response) => {
-        this.toastrService.success(response.message!, 'Success');
-
-        this.reloadComments();
+        if (response.isSuccessfull)
+          this.toastrService.success(response.message!, 'Success');
+        else
+          this.toastrService.error(response.errors[0], 'Error');
       },
       error: (error) => {
         this.toastrService.error(error.error, 'Error');

@@ -2,12 +2,16 @@
 {
     public interface IUserAccessor
     {
-        public long UserId { get; }
+        long UserId { get; }
 
-        public string UserName { get; }
+        string UserName { get; }
 
-        public string Email { get; }
+        string Email { get; }
 
-        public string Role { get; }
+        string Role { get; }
+
+        long? TryGetUserId();
+
+        string? TryGetUserName();
     }
 }

@@ -14,6 +14,28 @@ export class AuctionRequestsService {
   constructor(private readonly httpClient: HttpClient) { }
 
   postAuctionRequest(auctionRequest: PostAuctionRequest): Observable<ServiceMessage> {
-    return this.httpClient.post<ServiceMessage>(this.baseUrl, auctionRequest);
+    const form = new FormData();
+
+    for (const image of auctionRequest.images)
+      form.append('images', image);
+
+    form.append('auctionCategoryId', auctionRequest.auctionCategoryId.toString());
+    form.append('auctionTypeId', auctionRequest.auctionTypeId.toString());
+    form.append('auctionFinishMethodId', auctionRequest.auctionFinishMethodId.toString());
+    form.append('lotTitle', auctionRequest.lotTitle);
+    form.append('lotDescription', auctionRequest.lotDescription);
+    form.append('requestedAuctionTime', auctionRequest.requestedAuctionTime);
+    form.append('startPrice', auctionRequest.startPrice.toString());
+    form.append('bidAmountInterval', auctionRequest.bidAmountInterval.toString());
+
+    if (auctionRequest.requestedStartTime) {
+      form.append('requestedStartTime', auctionRequest.requestedStartTime.toUTCString());
+    }
+
+    if (auctionRequest.finishTimeInterval) {
+      form.append('finishTimeInterval', auctionRequest.finishTimeInterval);
+    }
+
+    return this.httpClient.post<ServiceMessage>(this.baseUrl, form);
   }
 }

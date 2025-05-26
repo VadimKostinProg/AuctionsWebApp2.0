@@ -44,6 +44,7 @@ namespace Bids.Service.API.Services.Participant
                 ISpecification<Bid> specification = new SpecificationBuilder<Bid>()
                     .With(e => e.AuctionId == auctionId && !e.Deleted)
                     .OrderBy(e => e.CreatedAt, BidMasterOnline.Core.Enums.SortDirection.DESC)
+                    .WithPagination(pagination.PageSize, pagination.PageNumber)
                     .Build();
 
                 ListModel<Bid> bidsList = await _repository.GetFilteredAndPaginated(specification,
@@ -114,6 +115,7 @@ namespace Bids.Service.API.Services.Participant
                 }
 
                 Bid newBid = bidDTO.ToDomain();
+                newBid.BidderId = _userAccessor.UserId;
 
                 IBidsPlacingStrategy strategy = _bidsPlacingStrategyFactory.GetStategyByAuctionType(auction.Type!);
 
@@ -122,11 +124,14 @@ namespace Bids.Service.API.Services.Participant
                 if (!placingResult.IsSuccessfull)
                     return placingResult;
 
-                _repository.Update(newBid);
+                await _repository.AddAsync(newBid);
                 _repository.Update(auction);
                 await _repository.SaveChangesAsync();
 
-                await _auctionsClient.FinishAuctionAsync(auction.Id);
+                if (auction.Status == BidMasterOnline.Domain.Enums.AuctionStatus.Finished)
+                {
+                    await _auctionsClient.FinishAuctionAsync(auction.Id);
+                }
 
                 result.Message = "Your bid has been placed successfully!";
             }

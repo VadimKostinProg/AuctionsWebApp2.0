@@ -17,12 +17,13 @@ namespace Moderation.Service.API.Services
             _logger = logger;
         }
 
-        public async Task<bool> LogModerationAction(ModerationAction action, long resourceId)
+        public async Task<bool> LogModerationAction(ModerationAction action, long resourceId, long moderatorId)
         {
             try
             {
                 ModerationLog log = new();
                 log.Action = action;
+                log.ModeratorId = moderatorId;
 
                 SetResourceId(log, resourceId);
 

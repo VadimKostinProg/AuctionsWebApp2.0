@@ -1,6 +1,4 @@
-﻿using BidMasterOnline.Domain.Enums;
-
-namespace Feedbacks.Service.API.DTO.Participant
+﻿namespace Feedbacks.Service.API.DTO.Participant
 {
     public class ParticipantComplaintDTO : ParticipantSummaryComplaintDTO
     {
@@ -13,8 +11,6 @@ namespace Feedbacks.Service.API.DTO.Participant
         public long? AccusedUserFeedbackId { get; set; }
 
         public required string ComplaintText { get; set; }
-
-        public ComplaintStatus Status { get; set; }
 
         public string? ModeratorConclusion { get; set; }
     }

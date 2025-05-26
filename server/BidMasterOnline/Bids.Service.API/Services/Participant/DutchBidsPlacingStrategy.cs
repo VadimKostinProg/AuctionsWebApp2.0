@@ -20,6 +20,14 @@ namespace Bids.Service.API.Services.Participant
                 return result;
             }
 
+            if (auction.Bids!.Any() && auction.Bids!.OrderByDescending(x => x.CreatedAt).First().BidderId == newBid.BidderId)
+            {
+                result.IsSuccessfull = false;
+                result.Errors.Add($"Could not place two bids one after another.");
+
+                return result;
+            }
+
             decimal maxAmount = auction.Bids!.Any()
                 ? auction.Bids!.Where(e => !e.Deleted).Min(e => e.Amount) - auction.BidAmountInterval
                 : auction.StartPrice - auction.BidAmountInterval;

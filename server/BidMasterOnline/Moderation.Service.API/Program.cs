@@ -2,6 +2,7 @@ using BidMasterOnline.Core;
 using BidMasterOnline.Infrastructure;
 using Microsoft.OpenApi.Models;
 using Moderation.Service.API.Filters;
+using Moderation.Service.API.GrpcServices.Server;
 using Moderation.Service.API.ServiceContracts;
 using Moderation.Service.API.Services;
 
@@ -96,5 +97,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapGrpcService<GrpcModerationLoggerService>();
 
 app.Run();

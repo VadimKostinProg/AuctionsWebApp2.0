@@ -1,5 +1,8 @@
+import { ComplaintStatusEnum } from "./complaintStatusEnum";
+
 export class ComplaintBasic {
   public id!: number;
-  public complaintText!: string;
+  public title!: string;
   public createdAt!: Date;
+  public status!: ComplaintStatusEnum;
 }

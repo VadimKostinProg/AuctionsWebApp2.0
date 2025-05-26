@@ -74,10 +74,13 @@ namespace Feedbacks.Service.API.Services.Participant
             try
             {
                 Complaint complaint = complaintDTO.ToDomain();
+                complaint.AccusingUserId = _userAccessor.UserId;
                 complaint.Status = BidMasterOnline.Domain.Enums.ComplaintStatus.Pending;
 
                 await _repository.AddAsync(complaint);
                 await _repository.SaveChangesAsync();
+
+                result.Message = "Your complaint has been successfully submitted.";
             }
             catch (Exception ex)
             {

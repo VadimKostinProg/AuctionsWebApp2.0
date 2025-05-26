@@ -2,7 +2,7 @@
 {
     public static class AuctionTypes
     {
-        public const string EnglishAuction = "English Auciton";
-        public const string DuchAuction = "Dutch Auciton";
+        public const string EnglishAuction = "English Auction";
+        public const string DuchAuction = "Dutch Auction";
     }
 }

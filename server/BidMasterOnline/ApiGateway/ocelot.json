@@ -19,7 +19,7 @@
       "UpstreamPathTemplate": "/api/participant/auctions?{everything}"
     },
     {
-      "DownstreamPathTemplate": "/api/participant/auctions/{id}",
+      "DownstreamPathTemplate": "/api/participant/auctions/{id}/",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -28,7 +28,7 @@
         }
       ],
       "UpstreamHttpMethod": [ "OPTIONS", "GET" ],
-      "UpstreamPathTemplate": "/api/participant/auctions/{id}"
+      "UpstreamPathTemplate": "/api/participant/auctions/{id}/"
     },
     {
       "DownstreamPathTemplate": "/api/participant/auctions/{id}/cancel",
@@ -43,7 +43,7 @@
       "UpstreamPathTemplate": "/api/participant/auctions/{id}/cancel"
     },
     {
-      "DownstreamPathTemplate": "/api/participant/auction-requests",
+      "DownstreamPathTemplate": "/api/participant/auction-requests?{everything}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -52,10 +52,10 @@
         }
       ],
       "UpstreamHttpMethod": [ "OPTIONS", "GET", "POST" ],
-      "UpstreamPathTemplate": "/api/participant/auction-requests"
+      "UpstreamPathTemplate": "/api/participant/auction-requests?{everything}"
     },
     {
-      "DownstreamPathTemplate": "/api/participant/auction-requests/{id}",
+      "DownstreamPathTemplate": "/api/participant/auction-requests/{id}/",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -64,7 +64,7 @@
         }
       ],
       "UpstreamHttpMethod": [ "OPTIONS", "GET" ],
-      "UpstreamPathTemplate": "/api/participant/auction-requests/{id}"
+      "UpstreamPathTemplate": "/api/participant/auction-requests/{id}/"
     },
     {
       "DownstreamPathTemplate": "/api/participant/auction-requests/{id}/cancell",
@@ -117,7 +117,7 @@
 
     // Bids.Service.API
     {
-      "DownstreamPathTemplate": "/api/participant/bids",
+      "DownstreamPathTemplate": "/api/participant/auctions/bids?{everything}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -126,10 +126,10 @@
         }
       ],
       "UpstreamHttpMethod": [ "OPTIONS", "GET", "POST" ],
-      "UpstreamPathTemplate": "/api/participant/bids"
+      "UpstreamPathTemplate": "/api/participant/auctions/bids?{everything}"
     },
     {
-      "DownstreamPathTemplate": "/api/participant/auctions/{auctionId}/bids",
+      "DownstreamPathTemplate": "/api/participant/auctions/{auctionId}/bids?{everything}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -138,12 +138,12 @@
         }
       ],
       "UpstreamHttpMethod": [ "OPTIONS", "GET" ],
-      "UpstreamPathTemplate": "/api/participant/auctions/{auctionId}/bids"
+      "UpstreamPathTemplate": "/api/participant/auctions/{auctionId}/bids?{everything}"
     },
 
     // Feedbacks.Service.API
     {
-      "DownstreamPathTemplate": "/api/participant/auctions/{auctionId}/comments",
+      "DownstreamPathTemplate": "/api/participant/auctions/{auctionId}/comments?{everything}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -152,7 +152,7 @@
         }
       ],
       "UpstreamHttpMethod": [ "OPTIONS", "GET" ],
-      "UpstreamPathTemplate": "/api/participant/auctions/{auctionId}/comments"
+      "UpstreamPathTemplate": "/api/participant/auctions/{auctionId}/comments?{everything}"
     },
     {
       "DownstreamPathTemplate": "/api/participant/auctions/comments",
@@ -179,7 +179,7 @@
       "UpstreamPathTemplate": "/api/participant/auctions/comments/{commentId}"
     },
     {
-      "DownstreamPathTemplate": "/api/participant/complaints",
+      "DownstreamPathTemplate": "/api/participant/complaints?{everything}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -188,7 +188,7 @@
         }
       ],
       "UpstreamHttpMethod": [ "OPTIONS", "GET", "POST" ],
-      "UpstreamPathTemplate": "/api/participant/complaints"
+      "UpstreamPathTemplate": "/api/participant/complaints?{everything}"
     },
     {
       "DownstreamPathTemplate": "/api/participant/complaints/{complaintId}",
@@ -203,7 +203,7 @@
       "UpstreamPathTemplate": "/api/participant/complaints/{complaintId}"
     },
     {
-      "DownstreamPathTemplate": "/api/participant/support-tickets",
+      "DownstreamPathTemplate": "/api/participant/support-tickets?{everything}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -212,7 +212,7 @@
         }
       ],
       "UpstreamHttpMethod": [ "OPTIONS", "GET", "POST" ],
-      "UpstreamPathTemplate": "/api/participant/support-tickets"
+      "UpstreamPathTemplate": "/api/participant/support-tickets?{everything}"
     },
     {
       "DownstreamPathTemplate": "/api/participant/support-tickets/{ticketId}",
@@ -227,7 +227,7 @@
       "UpstreamPathTemplate": "/api/participant/support-tickets/{ticketId}"
     },
     {
-      "DownstreamPathTemplate": "/api/participant/users/{userId}/feedbacks",
+      "DownstreamPathTemplate": "/api/participant/users/{userId}/feedbacks?{everything}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -236,7 +236,7 @@
         }
       ],
       "UpstreamHttpMethod": [ "OPTIONS", "GET" ],
-      "UpstreamPathTemplate": "/api/participant/users/{userId}/feedbacks"
+      "UpstreamPathTemplate": "/api/participant/users/{userId}/feedbacks?{everything}"
     },
     {
       "DownstreamPathTemplate": "/api/participant/users/feedbacks",
@@ -267,7 +267,7 @@
 
     // Auctions.Service.API
     {
-      "DownstreamPathTemplate": "/api/moderator/auctions",
+      "DownstreamPathTemplate": "/api/moderator/auctions?{everything}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -276,10 +276,10 @@
         }
       ],
       "UpstreamHttpMethod": [ "OPTIONS", "GET" ],
-      "UpstreamPathTemplate": "/api/moderator/auctions"
+      "UpstreamPathTemplate": "/api/moderator/auctions?{everything}"
     },
     {
-      "DownstreamPathTemplate": "/api/moderator/auctions/{id}",
+      "DownstreamPathTemplate": "/api/moderator/auctions/{id}/",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -288,7 +288,7 @@
         }
       ],
       "UpstreamHttpMethod": [ "OPTIONS", "GET" ],
-      "UpstreamPathTemplate": "/api/moderator/auctions/{id}"
+      "UpstreamPathTemplate": "/api/moderator/auctions/{id}/"
     },
     {
       "DownstreamPathTemplate": "/api/moderator/auctions/cancell",
@@ -315,7 +315,7 @@
       "UpstreamPathTemplate": "/api/moderator/auctions/recover"
     },
     {
-      "DownstreamPathTemplate": "/api/moderator/auction-requests",
+      "DownstreamPathTemplate": "/api/moderator/auction-requests?{everything}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -324,10 +324,10 @@
         }
       ],
       "UpstreamHttpMethod": [ "OPTIONS", "GET" ],
-      "UpstreamPathTemplate": "/api/moderator/auction-requests"
+      "UpstreamPathTemplate": "/api/moderator/auction-requests?{everything}"
     },
     {
-      "DownstreamPathTemplate": "/api/moderator/auction-requests/{id}",
+      "DownstreamPathTemplate": "/api/moderator/auction-requests/{id}/",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -336,7 +336,7 @@
         }
       ],
       "UpstreamHttpMethod": [ "OPTIONS", "GET" ],
-      "UpstreamPathTemplate": "/api/moderator/auction-requests/{id}"
+      "UpstreamPathTemplate": "/api/moderator/auction-requests/{id}/"
     },
     {
       "DownstreamPathTemplate": "/api/moderator/auction-requests/approve",
@@ -365,7 +365,7 @@
 
     // Bids.Service.API
     {
-      "DownstreamPathTemplate": "/api/moderator/users/{userId}/bids",
+      "DownstreamPathTemplate": "/api/moderator/users/{userId}/bids?{everything}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -374,10 +374,10 @@
         }
       ],
       "UpstreamHttpMethod": [ "OPTIONS", "GET" ],
-      "UpstreamPathTemplate": "/api/moderator/users/{userId}/bids"
+      "UpstreamPathTemplate": "/api/moderator/users/{userId}/bids?{everything}"
     },
     {
-      "DownstreamPathTemplate": "/api/moderator/auctions/{auctionId}/bids",
+      "DownstreamPathTemplate": "/api/moderator/auctions/{auctionId}/bids?{everything}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -386,12 +386,12 @@
         }
       ],
       "UpstreamHttpMethod": [ "OPTIONS", "GET" ],
-      "UpstreamPathTemplate": "/api/moderator/auctions/{auctionId}/bids"
+      "UpstreamPathTemplate": "/api/moderator/auctions/{auctionId}/bids?{everything}"
     },
 
     // Feedbacks.Service.API
     {
-      "DownstreamPathTemplate": "/api/moderator/auctions/{auctionId}/comments",
+      "DownstreamPathTemplate": "/api/moderator/auctions/{auctionId}/comments?{everything}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -400,7 +400,7 @@
         }
       ],
       "UpstreamHttpMethod": [ "OPTIONS", "GET" ],
-      "UpstreamPathTemplate": "/api/moderator/auctions/{auctionId}/comments"
+      "UpstreamPathTemplate": "/api/moderator/auctions/{auctionId}/comments?{everything}"
     },
     {
       "DownstreamPathTemplate": "/api/moderator/auctions/comments/{commentId}",
@@ -415,7 +415,7 @@
       "UpstreamPathTemplate": "/api/moderator/auctions/comments/{commentId}"
     },
     {
-      "DownstreamPathTemplate": "/api/moderator/complaints",
+      "DownstreamPathTemplate": "/api/moderator/complaints?{everything}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -424,7 +424,7 @@
         }
       ],
       "UpstreamHttpMethod": [ "OPTIONS", "GET" ],
-      "UpstreamPathTemplate": "/api/moderator/complaints"
+      "UpstreamPathTemplate": "/api/moderator/complaints?{everything}"
     },
     {
       "DownstreamPathTemplate": "/api/moderator/complaints/{complaintId}",
@@ -463,7 +463,7 @@
       "UpstreamPathTemplate": "/api/moderator/complaints/complete"
     },
     {
-      "DownstreamPathTemplate": "/api/moderator/support-tickets",
+      "DownstreamPathTemplate": "/api/moderator/support-tickets?{everything}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -472,7 +472,7 @@
         }
       ],
       "UpstreamHttpMethod": [ "OPTIONS", "GET" ],
-      "UpstreamPathTemplate": "/api/moderator/support-tickets"
+      "UpstreamPathTemplate": "/api/moderator/support-tickets?{everything}"
     },
     {
       "DownstreamPathTemplate": "/api/moderator/support-tickets/{ticketId}",
@@ -511,7 +511,7 @@
       "UpstreamPathTemplate": "/api/moderator/support-tickets/complete"
     },
     {
-      "DownstreamPathTemplate": "/api/moderator/users/{userId}/feedbacks",
+      "DownstreamPathTemplate": "/api/moderator/users/{userId}/feedbacks?{everything}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -520,7 +520,7 @@
         }
       ],
       "UpstreamHttpMethod": [ "OPTIONS", "GET" ],
-      "UpstreamPathTemplate": "/api/moderator/users/{userId}/feedbacks"
+      "UpstreamPathTemplate": "/api/moderator/users/{userId}/feedbacks?{everything}"
     },
     {
       "DownstreamPathTemplate": "/api/moderator/users/feedbacks/{feedbackId}",

@@ -3,6 +3,7 @@ using Auctions.Service.API.DTO.Participant;
 using Auctions.Service.API.Extensions;
 using Auctions.Service.API.ServiceContracts.Participant;
 using BidMasterOnline.Core.DTO;
+using BidMasterOnline.Core.Enums;
 using BidMasterOnline.Core.Extensions;
 using BidMasterOnline.Core.RepositoryContracts;
 using BidMasterOnline.Core.ServiceContracts;
@@ -180,10 +181,10 @@ namespace Auctions.Service.API.Services.Participant
                 switch (specifications.SortBy)
                 {
                     case "popularity":
-                        builder.OrderBy(x => x.Bids!.Count(), specifications.SortDirection);
+                        builder.OrderBy(x => x.Bids!.Count(), SortDirection.DESC);
                         break;
                     case "finishTime":
-                        builder.OrderBy(x => x.FinishTime, specifications.SortDirection);
+                        builder.OrderBy(x => x.FinishTime, SortDirection.DESC);
                         break;
                 }
             }

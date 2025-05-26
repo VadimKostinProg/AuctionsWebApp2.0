@@ -44,8 +44,9 @@ namespace IdentityServer.Services
             {
                 new Claim(JwtClaimTypes.Subject, user.Id.ToString()),
                 new Claim(JwtClaimTypes.Name, user.FullName ?? string.Empty),
+                new Claim(JwtClaimTypes.PreferredUserName, user.Username ?? string.Empty),
                 new Claim(JwtClaimTypes.Email, user.Email ?? string.Empty),
-                new Claim(JwtClaimTypes.Role, user.Role?.Name ?? "User")
+                new Claim(JwtClaimTypes.Role, user.Role!.Name)
             };
         }
     }

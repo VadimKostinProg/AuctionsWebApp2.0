@@ -1,6 +1,6 @@
-<ng-container>
+<ng-container *ngIf="!readonly; else readonlyScore">
   <div class="d-flex score-bar-container"
-       (mouseout)="activeList = []">
+       (mouseout)="onMouseLeave()">
     <i *ngFor="let score of allScores"
        class="fa-solid fa-star fa-xl mr-3"
        [ngStyle]="{ 'color': activeList.includes(score) ? '#b6d714' : '#8c8c8c' }"
@@ -8,3 +8,11 @@
        (click)="setScore(score)"></i>
   </div>
 </ng-container>
+
+<ng-template #readonlyScore>
+  <div class="d-flex score-bar-container mt-3 mb-3">
+    <i *ngFor="let score of allScores"
+       class="fa-solid fa-star fa-xl mr-3"
+       [ngStyle]="{ 'color': activeList.includes(score) ? '#b6d714' : '#8c8c8c' }"></i>
+  </div>
+</ng-template>

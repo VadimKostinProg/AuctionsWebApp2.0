@@ -1,5 +1,4 @@
 import { ComplaintBasic } from "./complaintBasic";
-import { ComplaintStatusEnum } from "./complaintStatusEnum";
 import { ComplaintTypeEnum } from "./complaintTypeEnum";
 
 export class Complaint extends ComplaintBasic {
@@ -7,7 +6,7 @@ export class Complaint extends ComplaintBasic {
   public accusedAuctionId?: number | null;
   public accusedCommentId?: number | null;
   public accusedUserFeedbackId?: number | null;
+  public complaintText!: string;
   public type!: ComplaintTypeEnum;
-  public status!: ComplaintStatusEnum;
   public moderatorConclusion?: string | null;
 }

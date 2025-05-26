@@ -10,6 +10,7 @@ import { SortDirectionEnum } from '../../models/shared/sortDirectionEnum';
 import { SortingModel } from '../../models/shared/sortingModel';
 import { TableColumnSettingsModel } from '../../models/shared/tableColumnSettingsModel';
 import { QueryParamsService } from '../../services/query-params.service';
+import { ServiceResult } from '../../models/shared/serviceResult';
 
 @Component({
   selector: 'data-table',
@@ -76,9 +77,9 @@ export class DataTableComponent implements OnInit {
     const specifications = await this.queryParamsService.getAllQueryParams();
     const params = new HttpParams({ fromObject: specifications });
 
-    this.httpClient.get(this.apiUrl, { params }).subscribe(
-      async (data: any) => {
-        this.tableData = data;
+    this.httpClient.get<ServiceResult<PaginatedList<any>>>(this.apiUrl, { params }).subscribe({
+      next: async (result: ServiceResult<PaginatedList<any>>) => {
+        this.tableData = result.data!;
 
         this.pagesList = [];
 
@@ -92,7 +93,7 @@ export class DataTableComponent implements OnInit {
           await this.queryParamsService.setPaginationParams(this.pagination);
         }
       }
-    );
+    });
   }
 
   open(content: TemplateRef<any>) {
@@ -127,12 +128,21 @@ export class DataTableComponent implements OnInit {
     this.modalService.open(modal, { ariaLabelledBy: 'modal-basic-title' });
   }
 
-  getQueryParams(column: TableColumnSettingsModel, row: any) {
-    const object = {
-      [column.linkQueryParam!]: row[column.linkQueryDataPropName!]
-    };
+  getPropValue(row: any, column: TableColumnSettingsModel) {
+    const value = row[column.dataPropName!];
 
-    return object;
+    if (!column.transformAction) {
+      return value;
+    }
+
+    return column.transformAction(value);
+  }
+
+  getNavigationLink(row: any, column: TableColumnSettingsModel) {
+    const routeParam = row[column.linkRouteParamName!];
+    const url = column.pageLink!.replace('$routeParam$', routeParam);
+
+    return url;
   }
 
   isTextType = (inputType: FormInputTypeEnum): boolean => inputType == FormInputTypeEnum.Text;

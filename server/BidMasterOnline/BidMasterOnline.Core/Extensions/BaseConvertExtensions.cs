@@ -36,7 +36,7 @@ namespace BidMasterOnline.Core.Extensions
         public static UserSummaryDTO ToSummaryDTO(this User entity)
             => new()
             {
-                Id = entity.Id,
+                UserId = entity.Id,
                 Email = entity.Email,
                 Username = entity.Username
             };

@@ -20,7 +20,8 @@ namespace Auctions.Service.API.Extensions
                 RequestedStartTime = request.RequestedStartTime,
                 FinishTimeIntervalInTicks = request.FinishTimeInterval?.Ticks,
                 StartPrice = request.StartPrice,
-                BidAmountInterval = request.BidAmountInterval
+                BidAmountInterval = request.BidAmountInterval,
+                AimPrice = request.AimPrice,
             };
         }
 
@@ -74,7 +75,7 @@ namespace Auctions.Service.API.Extensions
                     ? null
                     : new BidMasterOnline.Core.DTO.UserSummaryDTO
                     {
-                        Id = entity.Auctionist.Id,
+                        UserId = entity.Auctionist.Id,
                         Username = entity.Auctionist.Username,
                         Email = entity.Auctionist.Email
                     },
@@ -154,6 +155,7 @@ namespace Auctions.Service.API.Extensions
                 LotTitle = entity.LotTitle,
                 RequestedAuctionTime = TimeSpan.FromTicks(entity.RequestedAuctionTimeInTicks),
                 Status = entity.Status,
+                StartPrice = entity.StartPrice,
                 CreatedAt = entity.CreatedAt,
                 CreatedBy = entity.CreatedBy,
                 ModifiedAt = entity.ModifiedAt,
@@ -178,15 +180,17 @@ namespace Auctions.Service.API.Extensions
                     : TimeSpan.FromTicks(entity.FinishTimeIntervalInTicks.Value),
                 BidAmountInterval = entity.BidAmountInterval,
                 Status = entity.Status,
+                StartPrice = entity.StartPrice,
                 RequestedByUser = entity.RequestedByUser == null
                     ? null
                     : new UserSummaryDTO()
                     {
-                        Id = entity.RequestedByUser.Id,
+                        UserId = entity.RequestedByUser.Id,
                         Username = entity.RequestedByUser.Username,
                         Email = entity.RequestedByUser.Email,
                     },
                 ReasonDeclined = entity.ReasonDeclined,
+                Images = entity.Images?.Select(i => i.ToModeratorDTO()).ToList() ?? [],
                 CreatedAt = entity.CreatedAt,
                 CreatedBy = entity.CreatedBy,
                 ModifiedAt = entity.ModifiedAt,
@@ -208,7 +212,7 @@ namespace Auctions.Service.API.Extensions
                     ? null
                     : new BidMasterOnline.Core.DTO.UserSummaryDTO
                     {
-                        Id = entity.Auctionist.Id,
+                        UserId = entity.Auctionist.Id,
                         Username = entity.Auctionist.Username,
                         Email = entity.Auctionist.Email
                     },
@@ -245,7 +249,7 @@ namespace Auctions.Service.API.Extensions
                     ? null
                     : new BidMasterOnline.Core.DTO.UserSummaryDTO
                     {
-                        Id = entity.Auctionist.Id,
+                        UserId = entity.Auctionist.Id,
                         Username = entity.Auctionist.Username,
                         Email = entity.Auctionist.Email
                     },
@@ -253,7 +257,7 @@ namespace Auctions.Service.API.Extensions
                     ? null
                     : new BidMasterOnline.Core.DTO.UserSummaryDTO
                     {
-                        Id = entity.Winner.Id,
+                        UserId = entity.Winner.Id,
                         Username = entity.Winner.Username,
                         Email = entity.Winner.Email
                     },

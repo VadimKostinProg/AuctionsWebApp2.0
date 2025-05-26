@@ -159,12 +159,12 @@ namespace BidMasterOnline.Infrastructure.Repositories
                 query.AsNoTracking();
             }
 
+            query = query.ApplySpecifications(specification);
+
             if (includeQuery != null)
             {
                 query = includeQuery(query);
             }
-
-            query = query.ApplySpecifications(specification);
 
             int totalCount = await this.CountAsync(specification.Predicate);
             int totalPages = (int)Math.Ceiling((double)totalCount / specification.PageSize);

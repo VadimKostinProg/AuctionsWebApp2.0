@@ -11,8 +11,9 @@ namespace Bids.Service.API.Extensions
             {
                 AuctionId = entity.AuctionId,
                 Amount = entity.Amount,
-                Time = entity.CreatedAt,
-                Bidder = entity.Bidder!.ToSummaryDTO()
+                Time = entity.CreatedAt.ToString("MM-dd-yyyy HH:mm"),
+                BidderUsername = entity.Bidder!.Username,
+                BidderId = entity.BidderId,
             };
 
         public static DTO.Participant.UserBidDTO ToParticipantUserBidDTO(this Bid entity)

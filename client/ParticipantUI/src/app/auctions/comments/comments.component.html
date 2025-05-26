@@ -1,10 +1,11 @@
-<ng-container>
+<ng-container *ngIf="auction">
   <div class=" d-flex justify-content-between">
     <h3>Comments</h3>
 
+    <!--todo: add validation to prevent adding more then one comment-->
     <button class="add-comment-button"
             (click)="open(commentModal)"
-            [disabled]="userStatus === 'Blocked'">
+            [disabled]="auction.auctionist.userId == userId">
       <i class="fa-solid fa-circle-plus fa-2xl"></i>
     </button>
   </div>
@@ -12,7 +13,7 @@
   <div *ngIf="comments"
        class="mt-3">
     <div *ngFor="let comment of comments"
-         class="mt-1 d-flex justify-content-between">
+         class="mt-4 d-flex justify-content-between">
       <div class="comment">
         <a class="h5"
            routerLink="/profile"
@@ -20,18 +21,21 @@
           {{comment.username}}
         </a>
         <br>
-        <span>{{comment.createdAt}}</span>
-        <p>{{comment.createdAt}}</p>
+        <span>{{comment.createdAt | date: 'MM-dd-yyyy HH:mm'}}</span>
+        <app-score [readonly]="true"
+                   [selectedScore]="comment.score"
+                   class="mt-3"></app-score>
+        <p class="h5">{{comment.commentText}}</p>
       </div>
 
       <ng-template #actionsPopContent>
         <div class="actions-container">
-          <button *ngIf="comment.userId !== currentUser.userId"
+          <button *ngIf="comment.userId != currentUser.userId"
                   class="btn"
                   (click)="openActionModal(complaintOnCommentModal, comment)">
             Complain
           </button>
-          <button *ngIf="comment.userId === currentUser.userId"
+          <button *ngIf="comment.userId == currentUser.userId"
                   class="btn"
                   (click)="openActionModal(deleteCommentModal, comment)">
             Delete
@@ -65,10 +69,15 @@
     <form *ngIf="commentForm"
           [formGroup]="commentForm">
       <div class="form-field flex mb-2">
-        <div>
-          <label for="amount"
-                 class="form-label pt">Comment text:</label>
-        </div>
+        <label for="amount"
+               class="form-label pt mb-3">Score:</label>
+
+        <app-score (onScoreSet)="onScoreUpdated($event)"></app-score>
+        <input hidden
+               formControlName="score" />
+
+        <label for="amount"
+               class="form-label pt mt-4">Comment text:</label>
 
         <div class="flex-1">
           <textarea id="commentText"

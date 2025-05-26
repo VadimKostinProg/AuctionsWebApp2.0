@@ -130,7 +130,10 @@ namespace Feedbacks.Service.API.Services.Participant
                 .Select(comment => comment.Score)
                 .Average();
 
-            await _repository.UpdateManyAsync<Auction>(a => a.Id == auctionId, a => a.AverageScore, avgScore);
+            Auction auction = await _repository.GetByIdAsync<Auction>(auctionId);
+            auction.AverageScore = (double)avgScore;
+            _repository.Update(auction);
+            await _repository.SaveChangesAsync();
         }
     }
 }

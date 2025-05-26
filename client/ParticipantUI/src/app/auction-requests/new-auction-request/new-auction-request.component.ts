@@ -27,6 +27,7 @@ export class NewAuctionRequestComponent {
 
   showFinishTimeInterval: boolean = false;
   showRequestedStartTime: boolean = false;
+  showAimPrice: boolean = false;
 
   auctionTimeError: string | null = null;
 
@@ -51,7 +52,7 @@ export class NewAuctionRequestComponent {
       finishMethodId: new FormControl<number | null>(null, [Validators.required]),
       lotTitle: new FormControl<string | null>(null, [Validators.required]),
       lotDescription: new FormControl<string | null>(null, [Validators.required]),
-      auctionTimeDays: new FormControl<number | null>(0, [Validators.required, Validators.min(0), Validators.max(7)]),
+      auctionTimeDays: new FormControl<number | null>(0, [Validators.required, Validators.min(0), Validators.max(99)]),
       auctionTimeHours: new FormControl<number | null>(1, [Validators.required, Validators.min(0), Validators.max(23)]),
       startPrice: new FormControl<number | null>(null, [Validators.required, Validators.min(100), Validators.max(10e9)]),
       requestStartTimeFlag: new FormControl<boolean>(false),
@@ -59,6 +60,8 @@ export class NewAuctionRequestComponent {
       finishTimeIntervalHours: new FormControl<number | null>(null, [Validators.min(0), Validators.max(5)]),
       finishTimeIntervalMinutes: new FormControl<number | null>(null, [Validators.min(0), Validators.max(59)]),
       bidAmountInterval: new FormControl<number | null>(null, [Validators.required, Validators.min(0.01), Validators.max(10e5)]),
+      setAimPriceFlag: new FormControl<boolean>(false),
+      aimPrice: new FormControl<number | null>(null, [Validators.min(100), Validators.max(10e9)])
     });
 
     this.fetchAuctionRecources();
@@ -71,9 +74,26 @@ export class NewAuctionRequestComponent {
       this.auctionResourcesService.getAuctionFinishMethods()
     ])
       .subscribe(([categoriesResult, typesResult, finishMethodsResult]) => {
-        this.categories = categoriesResult;
-        this.auctionTypes = typesResult;
-        this.finishMethods = finishMethodsResult;
+        if (categoriesResult.isSuccessfull)
+          this.categories = categoriesResult.data!;
+        else {
+          this.toastrService.error(categoriesResult.errors[0], 'Error');
+          return;
+        }
+
+        if (typesResult.isSuccessfull)
+          this.auctionTypes = typesResult.data!;
+        else {
+          this.toastrService.error(typesResult.errors[0], 'Error');
+          return;
+        }
+
+        if (finishMethodsResult.isSuccessfull)
+          this.finishMethods = finishMethodsResult.data!;
+        else {
+          this.toastrService.error(finishMethodsResult.errors[0], 'Error');
+          return;
+        }
 
         this.auctionResourcesInitialized = true;
       })
@@ -131,12 +151,24 @@ export class NewAuctionRequestComponent {
     return this.createAuctionRequestForm!.get('bidAmountInterval');
   }
 
-  onFinishMethodChange(finishType: any) {
-    this.showFinishTimeInterval = this.isDynamicFinishMethod(finishType.target.value);
+  get setAimPriceFlag() {
+    return this.createAuctionRequestForm!.get('setAimPriceFlag');
+  }
+
+  get aimPrice() {
+    return this.createAuctionRequestForm!.get('aimPrice');
+  }
+
+  onFinishMethodChange(finishMethod: AuctionFinishMethod) {
+    this.showFinishTimeInterval = finishMethod.name === 'Dynamic finish method';
   }
 
   onSetStartTimeFlagChange() {
     this.showRequestedStartTime = this.requestStartTimeFlag?.value ?? false;
+  }
+
+  onSetAimPriceFlagChange() {
+    this.showAimPrice = this.setAimPriceFlag?.value ?? false;
   }
 
   onImagesChange(files: any) {
@@ -159,7 +191,8 @@ export class NewAuctionRequestComponent {
       lotDescription: formValue.lotDescription,
       requestedAuctionTime: `${formValue.auctionTimeDays}.${formValue.auctionTimeHours}:0:0`,
       startPrice: formValue.startPrice,
-      bidAmountInterval: formValue.bidAmountInterval
+      bidAmountInterval: formValue.bidAmountInterval,
+      aimPrice: formValue.aimPrice
     } as PostAuctionRequest;
 
     if (this.isDynamicFinishMethod(formValue.finishMethodId)) {
@@ -176,14 +209,17 @@ export class NewAuctionRequestComponent {
       next: (response) => {
         this.spinnerService.hide();
 
-        this.toastrService.success(response.message!, 'Success');
+        if (response.isSuccessfull) {
+          this.toastrService.success(response.message!, 'Success');
 
-        this.router.navigate(['/']);
+          this.router.navigate(['/']);
+        }
+        else {
+          this.toastrService.error(response.errors[0], 'Error');
+        }
       },
       error: (error) => {
         this.spinnerService.hide();
-
-        this.error = error.error;
       }
     });
   }
@@ -234,8 +270,10 @@ export class NewAuctionRequestComponent {
       return false;
     }
 
+    this.finishTimeIntervalError = null;
+
     if (!this.requestedStartTime || new Date(this.requestedStartTime.value) > currentTimePlusOneMongth) {
-      this.finishTimeIntervalError = 'You are not allowed to request auction more than in 1 mongth.';
+      this.requestedStartTimeError = 'You are not allowed to request auction more than in 1 mongth.';
 
       return false;
     }

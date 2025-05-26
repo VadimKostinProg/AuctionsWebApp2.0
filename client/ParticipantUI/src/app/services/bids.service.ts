@@ -35,7 +35,7 @@ export class BidsService {
   }
 
   postBid(bid: PostBid): Observable<ServiceMessage> {
-    return this.httpClient.post<ServiceMessage>(`${this.baseUrl}/bids`, this.postBid);
+    return this.httpClient.post<ServiceMessage>(`${this.baseUrl}/bids`, bid);
   }
 
   getAuctionBidsApiUrl(auctionId: number) {
@@ -44,6 +44,7 @@ export class BidsService {
 
   getAuctionBidsDataTableOptions(): DataTableOptionsModel {
     return {
+      id: 'bids',
       title: 'Bids',
       resourceName: 'bid',
       showIndexColumn: false,
@@ -61,12 +62,11 @@ export class BidsService {
           isOrderable: false,
           isLink: true,
           pageLink: '/profile',
-          linkQueryParam: 'userId',
-          linkQueryDataPropName: 'bidderId'
+          linkRouteParamName: 'bidderId'
         },
         {
           title: 'Date and time',
-          dataPropName: 'dateAndTime',
+          dataPropName: 'time',
           isOrderable: false
         },
         {

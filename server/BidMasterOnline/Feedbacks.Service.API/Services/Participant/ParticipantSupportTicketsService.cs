@@ -74,10 +74,13 @@ namespace Feedbacks.Service.API.Services.Participant
             try
             {
                 SupportTicket ticket = ticketDTO.ToDomain();
+                ticket.UserId = _userAccessor.UserId;
                 ticket.Status = BidMasterOnline.Domain.Enums.SupportTicketStatus.Pending;
 
                 await _repository.AddAsync(ticket);
                 await _repository.SaveChangesAsync();
+
+                result.Message = "Your support ticket has been successfully submitted.";
             }
             catch (Exception ex)
             {

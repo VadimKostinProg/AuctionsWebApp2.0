@@ -1,0 +1,42 @@
+<div class="margin-auto">
+  <div class="d-flex justify-content-center">
+    <div *ngIf="supportTicket"
+         class="support-ticket-details">
+      <div class="m-4 p-4 rounded shadow">
+        <h3 class="p-0 mb-3 text-center">Support Ticket #{{ supportTicket.id }}</h3>
+        <div class="d-flex flex-column">
+          <div class="info-row">
+            <span class="info-label">Date and time:</span>
+            <span class="info-value">{{ supportTicket.createdAt | date: 'MM-dd-yyyy HH:mm' }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Status:</span>
+            <span class="info-value"
+                  [ngClass]="{
+                    'status-pending': supportTicket.status === 0,
+                    'status-active': supportTicket.status === 1,
+                    'status-completed': supportTicket.status === 2
+                  }">
+              {{ supportTicket.status === 0 ? 'Pending' :
+              supportTicket.status === 1 ? 'Active' :
+              supportTicket.status === 2 ? 'Completed' : 'Unknown' }}
+            </span>
+          </div>
+          <div class="info-row mt-3">
+            <span class="info-label"><b class="details-property">Title:</b></span>
+            <span class="info-value">{{ supportTicket.title }}</span>
+          </div>
+          <div class="info-row mt-2">
+            <span class="info-label"><b class="details-property">Text:</b></span>
+            <span class="info-value">{{ supportTicket.text }}</span>
+          </div>
+          <div *ngIf="supportTicket.moderatorComment"
+               class="mt-3">
+            <h5 class="mt-2"><b class="details-property">Moderator Comment:</b></h5>
+            <span>{{ supportTicket.moderatorComment }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

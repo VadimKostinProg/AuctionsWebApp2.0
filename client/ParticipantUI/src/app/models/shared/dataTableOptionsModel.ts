@@ -3,6 +3,7 @@ import { OptionalActionModel } from "./optionalActionModel";
 import { TableColumnSettingsModel } from "./tableColumnSettingsModel";
 
 export class DataTableOptionsModel {
+  public id!: string;   // to differentiate query params on the same page
   public title!: string;
   public resourceName!: string;
   public showIndexColumn!: boolean;

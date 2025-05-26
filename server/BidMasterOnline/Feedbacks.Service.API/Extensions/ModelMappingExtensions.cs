@@ -24,13 +24,14 @@ namespace Feedbacks.Service.API.Extensions
                 Id = entity.Id,
                 Title = entity.Type switch
                 {
-                    ComplaintType.ComplaintOnAuctionContent => $"#{entity.Id} Complaint on auciton content",
-                    ComplaintType.ComplaintOnUserBehaviour => $"#{entity.Id} Complaint on user behaviour",
-                    ComplaintType.ComplaintOnAuctionComment => $"#{entity.Id} Complaint on auction comment",
-                    ComplaintType.ComplaintOnUserFeedback => $"#{entity.Id} Complaint on user feedback",
+                    ComplaintType.ComplaintOnAuctionContent => $"Complaint on auciton content",
+                    ComplaintType.ComplaintOnUserBehaviour => $"Complaint on user behaviour",
+                    ComplaintType.ComplaintOnAuctionComment => $"Complaint on auction comment",
+                    ComplaintType.ComplaintOnUserFeedback => $"Complaint on user feedback",
                     _ => string.Empty
                 },
-                CreatedAt = entity.CreatedAt
+                CreatedAt = entity.CreatedAt,
+                Status = entity.Status
             };
 
         public static DTO.Participant.ParticipantComplaintDTO ToParticipantDTO(this Complaint entity)
@@ -43,10 +44,10 @@ namespace Feedbacks.Service.API.Extensions
                 AccusedUserFeedbackId = entity.AccusedUserFeedbackId,
                 Title = entity.Type switch
                 {
-                    ComplaintType.ComplaintOnAuctionContent => $"#{entity.Id} Complaint on auciton content",
-                    ComplaintType.ComplaintOnUserBehaviour => $"#{entity.Id} Complaint on user behaviour",
-                    ComplaintType.ComplaintOnAuctionComment => $"#{entity.Id} Complaint on auction comment",
-                    ComplaintType.ComplaintOnUserFeedback => $"#{entity.Id} Complaint on user feedback",
+                    ComplaintType.ComplaintOnAuctionContent => $"Complaint on auciton content",
+                    ComplaintType.ComplaintOnUserBehaviour => $"Complaint on user behaviour",
+                    ComplaintType.ComplaintOnAuctionComment => $"Complaint on auction comment",
+                    ComplaintType.ComplaintOnUserFeedback => $"Complaint on user feedback",
                     _ => string.Empty
                 },
                 ComplaintText = entity.ComplaintText,
@@ -60,7 +61,8 @@ namespace Feedbacks.Service.API.Extensions
             {
                 Id = entity.Id,
                 Title = entity.Title,
-                CreatedAt = entity.CreatedAt
+                CreatedAt = entity.CreatedAt,
+                Status = entity.Status
             };
 
         public static DTO.Participant.ParticipantSupportTicketDTO ToParticipantDTO(this SupportTicket entity)
@@ -144,10 +146,10 @@ namespace Feedbacks.Service.API.Extensions
                 AccusingUserId = entity.AccusingUserId,
                 Title = entity.Type switch
                 {
-                    ComplaintType.ComplaintOnAuctionContent => $"#{entity.Id} Complaint on auciton content",
-                    ComplaintType.ComplaintOnUserBehaviour => $"#{entity.Id} Complaint on user behaviour",
-                    ComplaintType.ComplaintOnAuctionComment => $"#{entity.Id} Complaint on auction comment",
-                    ComplaintType.ComplaintOnUserFeedback => $"#{entity.Id} Complaint on user feedback",
+                    ComplaintType.ComplaintOnAuctionContent => $"Complaint on auciton content",
+                    ComplaintType.ComplaintOnUserBehaviour => $"Complaint on user behaviour",
+                    ComplaintType.ComplaintOnAuctionComment => $"Complaint on auction comment",
+                    ComplaintType.ComplaintOnUserFeedback => $"Complaint on user feedback",
                     _ => string.Empty
                 },
                 Type = entity.Type,
@@ -173,10 +175,10 @@ namespace Feedbacks.Service.API.Extensions
                 AccusedUserFeedback = entity.AccusedUserFeedback?.ToModeratorDTO(),
                 Title = entity.Type switch
                 {
-                    ComplaintType.ComplaintOnAuctionContent => $"#{entity.Id} Complaint on auciton content",
-                    ComplaintType.ComplaintOnUserBehaviour => $"#{entity.Id} Complaint on user behaviour",
-                    ComplaintType.ComplaintOnAuctionComment => $"#{entity.Id} Complaint on auction comment",
-                    ComplaintType.ComplaintOnUserFeedback => $"#{entity.Id} Complaint on user feedback",
+                    ComplaintType.ComplaintOnAuctionContent => $"Complaint on auciton content",
+                    ComplaintType.ComplaintOnUserBehaviour => $"Complaint on user behaviour",
+                    ComplaintType.ComplaintOnAuctionComment => $"Complaint on auction comment",
+                    ComplaintType.ComplaintOnUserFeedback => $"Complaint on user feedback",
                     _ => string.Empty
                 },
                 ComplaintText = entity.ComplaintText,

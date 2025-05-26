@@ -18,6 +18,14 @@ const routes: Routes = [
     path: 'auction-requests',
     loadChildren: () => import('../auction-requests/auction-requests.module').then(m => m.AuctionRequestsModule)
   },
+  {
+    path: 'complaints',
+    loadChildren: () => import('../complaints/complaints.module').then(m => m.ComplaintsModule)
+  },
+  {
+    path: 'technical-support',
+    loadChildren: () => import('../technical-support/technical-support.module').then(m => m.TechnicalSupportModule)
+  },
 ];
 
 @NgModule({

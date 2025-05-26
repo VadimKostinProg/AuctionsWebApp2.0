@@ -11,7 +11,7 @@ import { ToastrModule } from "ngx-toastr";
 
 const routes: Routes = [
   {
-    path: 'details',
+    path: ':auctionId/details',
     component: AuctionDetailsComponent
   }
 ];

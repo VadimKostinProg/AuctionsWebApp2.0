@@ -23,16 +23,19 @@ namespace Auctions.Service.API.Services.Participant
         private readonly IUserAccessor _userAccessor;
         private readonly IImagesService _imagesService;
         private readonly ITransactionsService _transactionsService;
+        private readonly ILogger<AuctionRequestsService> _logger;
 
         public AuctionRequestsService(IRepository repository,
             IUserAccessor userAccessor,
             IImagesService imagesService,
-            ITransactionsService transactionsService)
+            ITransactionsService transactionsService,
+            ILogger<AuctionRequestsService> logger)
         {
             _repository = repository;
             _userAccessor = userAccessor;
             _imagesService = imagesService;
             _transactionsService = transactionsService;
+            _logger = logger;
         }
 
         public async Task<ServiceResult<PaginatedList<AuctionRequestSummaryDTO>>> GetUserAuctionRequestsAsync(PaginationRequestDTO pagination)
@@ -119,10 +122,12 @@ namespace Auctions.Service.API.Services.Participant
 
                 result.Message = "Your auction request has been submitted!";
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 // TODO: handle image deleting
                 await transaction.RollbackAsync();
+
+                _logger.LogError(ex, "Something went wrong during processing your request.");
 
                 result.StatusCode = HttpStatusCode.BadRequest;
                 result.IsSuccessfull = false;

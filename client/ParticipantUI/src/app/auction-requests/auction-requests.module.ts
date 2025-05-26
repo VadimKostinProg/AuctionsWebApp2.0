@@ -7,6 +7,7 @@ import { RouterModule, Routes } from "@angular/router";
 import { NewAuctionRequestComponent } from "./new-auction-request/new-auction-request.component";
 import { ToastrModule } from "ngx-toastr";
 import { NgxSpinnerModule } from "ngx-spinner";
+import { NgSelectModule } from "@ng-select/ng-select";
 
 const routes: Routes = [
   {
@@ -26,6 +27,7 @@ const routes: Routes = [
     ReactiveFormsModule,
     RouterModule.forChild(routes),
     NgbModule,
+    NgSelectModule,
     RouterModule,
     ToastrModule.forRoot(),
     NgxSpinnerModule.forRoot(),

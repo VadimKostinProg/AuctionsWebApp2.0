@@ -16,6 +16,7 @@ import { DataTableComponent } from '../../shared/data-table/data-table.component
 import { DataTableOptionsModel } from '../../models/shared/dataTableOptionsModel';
 import { ComplaintTypeEnum } from '../../models/complaints/complaintTypeEnum';
 import { CancelAuction } from '../../models/auctions/CancelAuction';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-auction-details',
@@ -43,38 +44,55 @@ export class AuctionDetailsComponent implements OnInit {
 
   AuctionStatusEnum = AuctionStatusEnum;
 
-  constructor(private readonly queryParamsService: QueryParamsService,
-    private readonly toastrService: ToastrService,
+  constructor(private readonly toastrService: ToastrService,
     private readonly auctionsService: AuctionsService,
     private readonly authService: AuthService,
     private readonly modalService: NgbModal,
     private readonly complaintsService: ComplaintsService,
-    private readonly bidsService: BidsService) {
+    private readonly bidsService: BidsService,
+    private readonly route: ActivatedRoute) {
 
   }
 
   async ngOnInit() {
-    const auctionId = await this.queryParamsService.getQueryParam('auctionId');
-
-    if (auctionId == null) {
-      this.toastrService.error('Invalid query params.', 'Error');
-
-      return;
-    }
-
     this.user = this.authService.user;
 
-    this.bidsDataTableOptions = this.bidsService.getAuctionBidsDataTableOptions();
+    this.route.paramMap.subscribe(params => {
+      const auctionId = params.get('auctionId');
 
-    this.reloadAuctionDetails(auctionId);
+      if (auctionId == null) {
+        this.toastrService.error('Invalid route params.', 'Error');
 
-    this.reloadCancelationForm();
+        return;
+      }
 
-    this.reloadComplaintForm();
+      this.bidsDataTableOptions = this.bidsService.getAuctionBidsDataTableOptions();
+
+      this.reloadAuctionDetails(parseInt(auctionId));
+
+      this.reloadCancelationForm();
+
+      this.reloadComplaintForm();
+    });
   }
 
   get amount() {
     return this.setBidForm.get('amount');
+  }
+
+  get auctionStatus() {
+    if (!this.auctionDetails) {
+      return null;
+    }
+
+    switch (this.auctionDetails.status) {
+      case AuctionStatusEnum.Active:
+        return 'Active';
+      case AuctionStatusEnum.Finished:
+        return 'Finished';
+      default:
+        return 'Canceled';
+    }
   }
 
   reloadAuctionDetails(auctionId: number) {
@@ -115,7 +133,7 @@ export class AuctionDetailsComponent implements OnInit {
     return this.user && this.auctionDetails &&
       (this.auctionDetails.status === AuctionStatusEnum.CancelledByModerator ||
         this.auctionDetails.status === AuctionStatusEnum.CancelledByAuctionist ||
-        this.user.userId === this.auctionDetails.auctionist.userId);
+        this.user.userId == this.auctionDetails.auctionist.userId);
   }
 
   get auctionActionsAreAvailable() {
@@ -144,11 +162,16 @@ export class AuctionDetailsComponent implements OnInit {
 
     this.bidsService.postBid(bid).subscribe({
       next: (response) => {
-        this.toastrService.success(response.message!, 'Success');
+        if (response.isSuccessfull) {
+          this.toastrService.success(response.message!, 'Success');
 
-        this.reloadAuctionDetails(this.auctionDetails!.id);
+          this.reloadAuctionDetails(this.auctionDetails!.id);
 
-        this.bidsDataTable.reloadDatatable();
+          this.bidsDataTable.reloadDatatable();
+        }
+        else {
+          this.toastrService.error(response.errors[0], 'Error');
+        }
       },
       error: (error) => {
         this.toastrService.error(error.error, 'Error');
@@ -169,14 +192,17 @@ export class AuctionDetailsComponent implements OnInit {
 
     const complaint = {
       accusedUserId: this.auctionDetails!.auctionist.userId,
-      auctionId: this.auctionDetails!.id,
+      accusedAuctionId: this.auctionDetails!.id,
       type: ComplaintTypeEnum.ComplaintOnAuctionContent,
       complaintText: complaintText
     } as PostComplaint;
 
     this.complaintsService.postComplaint(complaint).subscribe({
       next: (response) => {
-        this.toastrService.success(response.message!, 'Success');
+        if (response.isSuccessfull)
+          this.toastrService.success(response.message!, 'Success');
+        else
+          this.toastrService.error(response.errors[0], 'Error');
       },
       error: (error) => {
         this.toastrService.error(error.error, 'Error');

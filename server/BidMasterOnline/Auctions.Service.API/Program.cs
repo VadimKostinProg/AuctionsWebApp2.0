@@ -1,6 +1,7 @@
 ﻿using Auctions.Service.API.BackgroundJobs;
 using Auctions.Service.API.Filters;
 using Auctions.Service.API.GrpcServices.Client;
+using Auctions.Service.API.GrpcServices.Server;
 using BidMasterOnline.Core;
 using BidMasterOnline.Infrastructure;
 using Microsoft.OpenApi.Models;
@@ -125,5 +126,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapGrpcService<AuctionsGrpcService>();
 
 app.Run();

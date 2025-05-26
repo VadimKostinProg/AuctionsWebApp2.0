@@ -8,8 +8,10 @@ namespace Bids.Service.API.DTO.Participant
 
         public decimal Amount { get; set; }
 
-        public DateTime Time { get; set; }
+        public required string Time { get; set; }
 
-        public required UserSummaryDTO Bidder { get; set; }
+        public required string BidderUsername { get; set; }
+
+        public long BidderId { get; set; }
     }
 }
