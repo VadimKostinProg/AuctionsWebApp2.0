@@ -40,6 +40,12 @@ namespace BidMasterOnline.Domain.Models.Entities
 
         public bool IsPaymentMethodAttached { get; set; }
 
+        public int TotalAuctions { get; set; }
+
+        public int CompletedAuctions { get; set; }
+
+        public int TotalWins { get; set; }
+
         public Role? Role { get; set; }
     }
 }

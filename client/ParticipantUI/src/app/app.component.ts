@@ -18,6 +18,10 @@ export class AppComponent {
     return this.authService.isLoggedIn;
   }
 
+  get userId() {
+    return this.authService.user.userId;
+  }
+
   logout() {
     this.authService.logout();
   }

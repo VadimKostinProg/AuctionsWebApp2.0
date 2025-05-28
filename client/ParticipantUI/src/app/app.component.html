@@ -45,8 +45,8 @@
           </li>
         </ul>
         <span class="navbar-text">
-          <a routerLink="/profile"
-             style="font-size: 1.5em; margin-right: 15px;">
+          <a style="font-size: 1.5em; margin-right: 15px;"
+             [routerLink]="['/users', userId]">
             <i class="fa-solid fa-user"></i>
           </a>
           <a class="logout-btn"

@@ -57,6 +57,11 @@ namespace Auctions.Service.API.Services.Moderator
                 }
 
                 auctionRequest.Status = AuctionRequestStatus.Approved;
+                _repository.Update(auctionRequest);
+
+                User auctionist = await _repository.GetByIdAsync<User>(auctionRequest.RequestedByUserId);
+                auctionist.TotalAuctions++;
+                _repository.Update(auctionist);
 
                 DateTime auctionStartTime = auctionRequest.RequestedStartTime ?? DateTime.UtcNow;
 

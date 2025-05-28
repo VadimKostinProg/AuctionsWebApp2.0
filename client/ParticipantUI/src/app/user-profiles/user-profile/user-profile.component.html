@@ -1,0 +1,191 @@
+<ng-container *ngIf="userProfileInfo"
+              class="container-fluid">
+  <div class="row">
+    <div class="col-3">
+      <img *ngIf="userProfileInfo.imageUrl; else defaultImage"
+           [src]="userProfileInfo.imageUrl"
+           class="account-image">
+
+      <ng-template #defaultImage>
+        <img src="assets/default-user-image.png"
+             class="account-image">
+      </ng-template>
+    </div>
+    <div class="col-9">
+      <div class="d-flex justify-content-between align-items-start">
+        <div class="row">
+          <h3>{{ userProfileInfo.username }}</h3>
+          <div class="col-6  d-flex flex-column justify-content-between">
+            <span><b>Full name:</b> {{ userProfileInfo.fullName }}</span>
+            <span><b>Email:</b> {{ userProfileInfo.email }}</span>
+            <span><b>Date of birth:</b> {{ userProfileInfo.dateOfBirth }}</span>
+            <span><b>Status:</b> {{ userProfileInfo.status }}</span>
+          </div>
+          <div class="col-6  d-flex flex-column justify-content-between">
+            <span><b>Total auctions:</b> {{ userProfileInfo.totalAuctions }}</span>
+            <span><b>Completed auctions:</b> {{ userProfileInfo.completedAuctions }}</span>
+            <span><b>Total wins:</b> {{ userProfileInfo.totalWins }}</span>
+          </div>
+        </div>
+
+        <ng-template #profileActionsPopContent>
+          <div class="actions-container">
+            <button *ngIf="!isOwnProfile"
+                    class="btn"
+                    (click)="open(complaintOnUserModal)">
+              Complain
+            </button>
+            <button *ngIf="isOwnProfile"
+                    class="btn"
+                    (click)="open(changePasswordModal)">
+              Change password
+            </button>
+            <button *ngIf="isOwnProfile"
+                    class="btn"
+                    (click)="open(deleteProfileModal)">
+              Delete account
+            </button>
+            <a *ngIf="isOwnProfile"
+               class="btn"
+               [routerLink]="['/users', userId, 'auctions-history']">
+              Auctions history
+            </a>
+            <a *ngIf="isOwnProfile"
+               class="btn"
+               [routerLink]="['/users', userId, 'bids-history']">
+              Bids history
+            </a>
+          </div>
+        </ng-template>
+
+        <button type="button"
+                class="btn actions-button"
+                placement="bottom"
+                [ngbPopover]="profileActionsPopContent">
+          <i class="fa-solid fa-ellipsis"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <app-user-feedbacks [userId]="userId!"></app-user-feedbacks>
+
+</ng-container>
+
+<ng-template #complaintOnUserModal
+             let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title"
+        id="modal-basic-title">
+      Complaint on the user
+    </h4>
+    <button type="button"
+            class="btn-close"
+            aria-label="Close"
+            (click)="modal.close()"></button>
+  </div>
+  <div class="modal-body">
+    <form *ngIf="complaintOnUserForm"
+          [formGroup]="complaintOnUserForm">
+      <div class="form-field flex mb-2">
+        <div>
+          <label for="complaintText"
+                 class="form-label pt">Complaint text:</label>
+        </div>
+
+        <div class="flex-1">
+          <textarea id="complaintText"
+                    class="form-control"
+                    formControlName="complaintText"></textarea>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button"
+            class="btn default-btn-background"
+            (click)="complainOnUser(modal)">Submit</button>
+  </div>
+</ng-template>
+
+<ng-template #changePasswordModal
+             let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title"
+        id="modal-basic-title">Change password</h4>
+    <button type="button"
+            class="btn-close"
+            aria-label="Close"
+            (click)="modal.close()"></button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="changePasswordForm">
+      <div class="form-field flex mb-2">
+        <div>
+          <label for="currentPassword"
+                 class="form-label pt">Current password:</label>
+        </div>
+
+        <div class="flex-1">
+          <input type="password"
+                 id="currentPassword"
+                 class="form-control"
+                 formControlName="currentPassword" />
+        </div>
+      </div>
+
+      <div class="form-field flex mb-2">
+        <div>
+          <label for="newPassword"
+                 class="form-label pt">New password:</label>
+        </div>
+
+        <div class="flex-1">
+          <input type="password"
+                 id="newPassword"
+                 class="form-control"
+                 formControlName="newPassword" />
+        </div>
+      </div>
+
+      <div class="form-field flex mb-2">
+        <div>
+          <label for="repeatNewPassword"
+                 class="form-label pt">Confirmed new password:</label>
+        </div>
+
+        <div class="flex-1">
+          <input type="password"
+                 id="repeatNewPassword"
+                 class="form-control"
+                 formControlName="repeatNewPassword" />
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button"
+            class="btn btn-outline-dark"
+            (click)="resetPassword(modal)">Submit</button>
+  </div>
+</ng-template>
+
+<ng-template #deleteProfileModal
+             let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title"
+        id="modal-basic-title">Delete profile</h4>
+    <button type="button"
+            class="btn-close"
+            aria-label="Close"
+            (click)="modal.close()"></button>
+  </div>
+  <div class="modal-body">
+    <span>Are you shure you want to delete your profile?</span>
+  </div>
+  <div class="modal-footer">
+    <button type="button"
+            class="btn btn-outline-dark"
+            (click)="deleteProfile(modal)">Delete</button>
+  </div>
+</ng-template>

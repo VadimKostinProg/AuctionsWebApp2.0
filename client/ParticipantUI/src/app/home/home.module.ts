@@ -19,6 +19,10 @@ const routes: Routes = [
     loadChildren: () => import('../auction-requests/auction-requests.module').then(m => m.AuctionRequestsModule)
   },
   {
+    path: 'users',
+    loadChildren: () => import('../user-profiles/user-profiles.module').then(m => m.UserProfilesModule)
+  },
+  {
     path: 'complaints',
     loadChildren: () => import('../complaints/complaints.module').then(m => m.ComplaintsModule)
   },

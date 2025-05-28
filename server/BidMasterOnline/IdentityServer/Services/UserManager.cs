@@ -2,11 +2,12 @@
 using BidMasterOnline.Core.DTO;
 using BidMasterOnline.Core.Enums;
 using BidMasterOnline.Core.Extensions;
+using BidMasterOnline.Core.Helpers;
 using BidMasterOnline.Core.RepositoryContracts;
 using BidMasterOnline.Core.Specifications;
+using BidMasterOnline.Domain.Enums;
 using BidMasterOnline.Domain.Models;
 using BidMasterOnline.Domain.Models.Entities;
-using IdentityServer.Helpers;
 using IdentityServer.Models;
 using IdentityServer.Services.Contracts;
 
@@ -30,7 +31,7 @@ namespace IdentityServer.Services
             specificationBuilder.With(e => e.RoleId == moderatorRoleId);
 
             if (!specifications.IncludeDeleted)
-                specificationBuilder.With(e => !e.Deleted);
+                specificationBuilder.With(e => e.Status == UserStatus.Active);
 
             if (!string.IsNullOrEmpty(specifications.Search))
                 specificationBuilder.With(e => e.Username.Contains(specifications.Search) ||
@@ -100,7 +101,7 @@ namespace IdentityServer.Services
         {
             User user = await _repository.GetByIdAsync<User>(id);
 
-            user.Deleted = true;
+            user.Status = UserStatus.Deleted;
 
             _repository.Update(user);
             await _repository.SaveChangesAsync();

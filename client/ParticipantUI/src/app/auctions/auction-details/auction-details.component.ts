@@ -179,7 +179,7 @@ export class AuctionDetailsComponent implements OnInit {
     });
   }
 
-  complaintOnAuction(modal: any) {
+  complainOnAuction(modal: any) {
     if (!this.complaintOnAuctionForm.valid) {
       return;
     }

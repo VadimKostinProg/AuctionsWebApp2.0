@@ -52,8 +52,7 @@
             </span>
             <span class="h5">
               <b class="auction-details-property">Auctionist:</b>
-              <a routerLink="/profile"
-                 [queryParams]="{ userId: auctionDetails.auctionist.userId }">
+              <a [routerLink]="['/users', auctionDetails.auctionist.userId]">
                 {{ auctionDetails.auctionist.username }}
               </a>
             </span>
@@ -222,7 +221,7 @@
   <div class="modal-footer">
     <button type="button"
             class="btn default-btn-background"
-            (click)="complaintOnAuction(modal)">Submit</button>
+            (click)="complainOnAuction(modal)">Submit</button>
   </div>
 </ng-template>
 

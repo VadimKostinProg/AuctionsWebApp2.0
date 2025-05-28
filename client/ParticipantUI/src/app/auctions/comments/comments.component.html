@@ -16,8 +16,7 @@
          class="mt-4 d-flex justify-content-between">
       <div class="comment">
         <a class="h5"
-           routerLink="/profile"
-           [queryParams]="{ 'userId': comment.userId }">
+           [routerLink]="['/users', comment.userId]">
           {{comment.username}}
         </a>
         <br>

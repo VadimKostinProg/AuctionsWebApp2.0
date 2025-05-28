@@ -31,6 +31,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiGateway", "ApiGateway\Ap
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BidMasterOnline.Database", "BidMasterOnline.Database\BidMasterOnline.Database.csproj", "{BEDBA6B4-DD0C-4B98-8E91-215D15B6BD15}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Users.Service.API", "Users.Service.API\Users.Service.API.csproj", "{923919E9-6D87-42B8-AE6A-0A6D44702CCC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -85,6 +87,10 @@ Global
 		{BEDBA6B4-DD0C-4B98-8E91-215D15B6BD15}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BEDBA6B4-DD0C-4B98-8E91-215D15B6BD15}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BEDBA6B4-DD0C-4B98-8E91-215D15B6BD15}.Release|Any CPU.Build.0 = Release|Any CPU
+		{923919E9-6D87-42B8-AE6A-0A6D44702CCC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{923919E9-6D87-42B8-AE6A-0A6D44702CCC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{923919E9-6D87-42B8-AE6A-0A6D44702CCC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{923919E9-6D87-42B8-AE6A-0A6D44702CCC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -102,6 +108,7 @@ Global
 		{ADB0A907-3CC4-428B-ADA3-6EDFC5080D3C} = {1C9A433D-A758-4C8A-98B5-A138003B0018}
 		{9A2326F7-E885-4E24-AF1D-932E502379FC} = {1C9A433D-A758-4C8A-98B5-A138003B0018}
 		{BEDBA6B4-DD0C-4B98-8E91-215D15B6BD15} = {2C1E7034-F98E-45F8-90CF-DD8D2AC10D83}
+		{923919E9-6D87-42B8-AE6A-0A6D44702CCC} = {1C9A433D-A758-4C8A-98B5-A138003B0018}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7498CC55-5399-4A39-A0FF-DBAD2F8F6CC0}

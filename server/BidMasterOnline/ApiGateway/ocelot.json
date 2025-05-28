@@ -263,6 +263,45 @@
       "UpstreamPathTemplate": "/api/participant/users/feedbacks/{feedbackId}"
     },
 
+    // Users.Service.API
+
+    {
+      "DownstreamPathTemplate": "/api/participant/users/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7220
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "GET" ],
+      "UpstreamPathTemplate": "/api/participant/users/{id}"
+    },
+    {
+      "DownstreamPathTemplate": "/api/participant/users/password",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7220
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "PUT" ],
+      "UpstreamPathTemplate": "/api/participant/users/password"
+    },
+    {
+      "DownstreamPathTemplate": "/api/participant/users",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7220
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "DELETE" ],
+      "UpstreamPathTemplate": "/api/participant/users"
+    },
+
     // Moderator routes
 
     // Auctions.Service.API

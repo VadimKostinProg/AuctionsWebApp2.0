@@ -124,6 +124,15 @@ namespace Auctions.Service.API.Services.Participant
                     auction.WinnerId = winningBid.BidderId;
                     auction.FinishPrice = winningBid.Amount;
 
+                    User auctionist = await _repository.GetByIdAsync<User>(auction.AuctionistId);
+                    User winner = await _repository.GetByIdAsync<User>(winningBid.BidderId);
+
+                    auctionist.CompletedAuctions++;
+                    winner.TotalWins++;
+
+                    _repository.Update(auctionist);
+                    _repository.Update(winner);
+
                     // TODO: send notification to auctionist
                     // TODO: send notification to winner
                 }

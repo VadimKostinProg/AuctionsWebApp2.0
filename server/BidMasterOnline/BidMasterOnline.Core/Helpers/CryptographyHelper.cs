@@ -1,7 +1,7 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
 
-namespace IdentityServer.Helpers
+namespace BidMasterOnline.Core.Helpers
 {
     public static class CryptographyHelper
     {
