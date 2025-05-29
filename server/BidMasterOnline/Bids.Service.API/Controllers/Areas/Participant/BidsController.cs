@@ -19,7 +19,7 @@ namespace Bids.Service.API.Controllers.Areas.Participant
             _service = service;
         }
 
-        [HttpGet("bids")]
+        [HttpGet("bids/own")]
         public async Task<IActionResult> GetUserBids([FromQuery] PaginationRequestDTO pagination)
         {
             ServiceResult<PaginatedList<UserBidDTO>> result = await _service.GetUserBidsAsync(pagination);

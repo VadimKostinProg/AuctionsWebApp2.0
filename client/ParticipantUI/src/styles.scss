@@ -80,6 +80,10 @@ a {
   border: 0;
 }
 
+.add-user-feedback-button {
+  @extend .add-comment-button;
+}
+
 .add-comment-button:hover {
   color: rgb(106, 106, 106);
 }

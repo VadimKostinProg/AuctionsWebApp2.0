@@ -12,9 +12,9 @@ namespace Feedbacks.Service.API.Controllers.Areas.Participant
     [Authorize(Roles = UserRoles.Participant)]
     public class CommentsController : BaseController
     {
-        private readonly IParticipantAuctionCommentsService _service;
+        private readonly IAuctionCommentsService _service;
 
-        public CommentsController(IParticipantAuctionCommentsService participantAuctionCommentsService)
+        public CommentsController(IAuctionCommentsService participantAuctionCommentsService)
         {
             _service = participantAuctionCommentsService;
         }
@@ -23,14 +23,14 @@ namespace Feedbacks.Service.API.Controllers.Areas.Participant
         public async Task<IActionResult> GetAuctionComments([FromRoute] long auctionId, 
             [FromQuery] PaginationRequestDTO pagination)
         {
-            ServiceResult<PaginatedList<ParticipantAuctionCommentDTO>> result = 
+            ServiceResult<PaginatedList<AuctionCommentDTO>> result = 
                 await _service.GetAuctionCommentsAsync(auctionId, pagination);
 
             return FromResult(result);
         }
 
         [HttpPost("comments")]
-        public async Task<IActionResult> PostAuctionComment([FromBody] ParticipantPostCommentDTO commentDTO)
+        public async Task<IActionResult> PostAuctionComment([FromBody] PostCommentDTO commentDTO)
         {
             ServiceResult result = await _service.PostAuctionCommentAsync(commentDTO);
 

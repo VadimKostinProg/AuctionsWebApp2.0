@@ -15,11 +15,11 @@ const routes: Routes = [
     component: TechnicalSupportComponent
   },
   {
-    path: '/support-tickets',
+    path: 'support-tickets',
     component: SupportTicketsHistoryComponent
   },
   {
-    path: '/support-tickets/:supportTicketId',
+    path: 'support-tickets/:supportTicketId',
     component: SupportTicketDetailsComponent
   },
 ];

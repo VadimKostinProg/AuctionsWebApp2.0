@@ -6,13 +6,13 @@ import { CommentsService } from '../../services/comments.service';
 import { PaginationModel } from '../../models/shared/paginationModel';
 import { CommentsQueryParamsService } from '../../services/comments-query-params.service';
 import { AuctionComment } from '../../models/auctions/AuctionComment';
-import { UserBasic } from '../../models/users/userBasic';
 import { AuthService } from '../../services/auth.service';
 import { PostComment } from '../../models/auctions/PostComment';
 import { PostComplaint } from '../../models/complaints/postComplaint';
 import { ComplaintsService } from '../../services/complaints.service';
 import { ComplaintTypeEnum } from '../../models/complaints/complaintTypeEnum';
 import { Auction } from '../../models/auctions/Auction';
+import { UserStatusEnum } from '../../models/user-profiles/userStatusEnum';
 
 @Component({
   selector: 'comments',
@@ -21,8 +21,6 @@ import { Auction } from '../../models/auctions/Auction';
 })
 export class CommentsComponent implements OnInit {
   @Input() auction: Auction | undefined;
-
-  currentUser!: UserBasic;
 
   commentForm!: FormGroup;
 
@@ -33,6 +31,8 @@ export class CommentsComponent implements OnInit {
   choosenComment?: AuctionComment | null;
 
   pagination: PaginationModel | undefined;
+
+  UserStatusEnum = UserStatusEnum;
 
   constructor(private readonly authService: AuthService,
     private readonly commentsService: CommentsService,
@@ -52,8 +52,6 @@ export class CommentsComponent implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
-    this.currentUser = this.authService.user;
-
     this.pagination = await this.queryParamsService.getPaginationParams();
 
     if (!this.pagination.pageNumber || !this.pagination.pageSize) {

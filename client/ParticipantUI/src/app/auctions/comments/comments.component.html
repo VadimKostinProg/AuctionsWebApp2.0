@@ -2,9 +2,8 @@
   <div class=" d-flex justify-content-between">
     <h3>Comments</h3>
 
-    <!--todo: add validation to prevent adding more then one comment-->
     <button class="add-comment-button"
-            (click)="open(commentModal)"
+            (click)="userStatus === UserStatusEnum.Active ? open(commentModal) : open(userBlockedModal)"
             [disabled]="auction.auctionist.userId == userId">
       <i class="fa-solid fa-circle-plus fa-2xl"></i>
     </button>
@@ -13,7 +12,7 @@
   <div *ngIf="comments"
        class="mt-3">
     <div *ngFor="let comment of comments"
-         class="mt-4 d-flex justify-content-between">
+         class="mt-4 d-flex justify-content-between align-items-start">
       <div class="comment">
         <a class="h5"
            [routerLink]="['/users', comment.userId]">
@@ -29,12 +28,12 @@
 
       <ng-template #actionsPopContent>
         <div class="actions-container">
-          <button *ngIf="comment.userId != currentUser.userId"
+          <button *ngIf="comment.userId != userId"
                   class="btn"
                   (click)="openActionModal(complaintOnCommentModal, comment)">
             Complain
           </button>
-          <button *ngIf="comment.userId == currentUser.userId"
+          <button *ngIf="comment.userId == userId"
                   class="btn"
                   (click)="openActionModal(deleteCommentModal, comment)">
             Delete
@@ -68,14 +67,14 @@
     <form *ngIf="commentForm"
           [formGroup]="commentForm">
       <div class="form-field flex mb-2">
-        <label for="amount"
+        <label for="score"
                class="form-label pt mb-3">Score:</label>
 
         <app-score (onScoreSet)="onScoreUpdated($event)"></app-score>
         <input hidden
                formControlName="score" />
 
-        <label for="amount"
+        <label for="commentText"
                class="form-label pt mt-4">Comment text:</label>
 
         <div class="flex-1">
@@ -96,7 +95,7 @@
     <button type="button"
             class="btn btn-outline"
             aria-label="Close"
-            (click)="modal.close()">Cancel</button>
+            (click)="modal.close(); reloadCommentForm()">Cancel</button>
     <button type="button"
             class="btn default-btn-background"
             (click)="leaveComment(modal)">Submit</button>
@@ -168,9 +167,31 @@
     <button type="button"
             class="btn btn-outline"
             aria-label="Close"
-            (click)="modal.close()">Cancel</button>
+            (click)="modal.close(); reloadComplaintForm()">Cancel</button>
     <button type="button"
             class="btn default-btn-background"
             (click)="complainOnComment(modal)">Submit</button>
+  </div>
+</ng-template>
+
+<ng-template #userBlockedModal
+             let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title"
+        id="modal-basic-title">
+      Cannot leave an auction comment
+    </h4>
+    <button type="button"
+            class="btn-close"
+            aria-label="Close"
+            (click)="modal.close()"></button>
+  </div>
+  <div class="modal-body">
+    <span>Your account has been blocked! So, you are not able to leave auction comments for now.</span>
+  </div>
+  <div class="modal-footer">
+    <button type="button"
+            class="btn btn-outline-dark"
+            (click)="modal.close()">Ok</button>
   </div>
 </ng-template>

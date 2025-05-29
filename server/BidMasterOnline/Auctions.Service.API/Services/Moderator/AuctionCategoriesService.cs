@@ -37,6 +37,8 @@ namespace Auctions.Service.API.Services.Moderator
                     
                 await _repository.AddAsync(entity);
                 await _repository.SaveChangesAsync();
+
+                result.Message = "Category has been created successfully.";
             }
             catch (Exception ex)
             {
@@ -56,8 +58,14 @@ namespace Auctions.Service.API.Services.Moderator
 
             try
             {
-                await _repository.UpdateManyAsync<AuctionCategory>(e => e.Id == id,
-                    e => e.Deleted, true);
+                AuctionCategory category = await _repository.GetByIdAsync<AuctionCategory>(id);
+
+                category.Deleted = true;
+
+                _repository.Update(category);
+                await _repository.SaveChangesAsync();
+
+                result.Message = "Category has been deleted successfully.";
             }
             catch (Exception ex)
             {
@@ -107,6 +115,8 @@ namespace Auctions.Service.API.Services.Moderator
 
                 _repository.Update(entity);
                 await _repository.SaveChangesAsync();
+
+                result.Message = "Category has been updated successfully.";
             }
             catch (Exception ex)
             {

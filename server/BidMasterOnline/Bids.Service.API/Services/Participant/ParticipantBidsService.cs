@@ -18,19 +18,22 @@ namespace Bids.Service.API.Services.Participant
         private readonly IRepository _repository;
         private readonly IUserAccessor _userAccessor;
         private readonly IBidsPlacingStrategyFactory _bidsPlacingStrategyFactory;
+        private readonly IUserStatusValidationService _userStatusValidationService;
         private readonly ILogger<ParticipantBidsService> _logger;
         private readonly AuctionsGrpcClient _auctionsClient;
 
         public ParticipantBidsService(IRepository repository,
             IUserAccessor userAccessor,
             IBidsPlacingStrategyFactory bidsPlacingStrategyFactory,
+            IUserStatusValidationService userStatusValidationService,
             ILogger<ParticipantBidsService> logger,
             AuctionsGrpcClient auctionsClient)
         {
             _repository = repository;
             _userAccessor = userAccessor;
-            _logger = logger;
             _bidsPlacingStrategyFactory = bidsPlacingStrategyFactory;
+            _userStatusValidationService = userStatusValidationService;
+            _logger = logger;
             _auctionsClient = auctionsClient;
         }
 
@@ -75,6 +78,7 @@ namespace Bids.Service.API.Services.Participant
                 ISpecification<Bid> specification = new SpecificationBuilder<Bid>()
                     .With(e => e.BidderId == userId)
                     .OrderBy(e => e.CreatedAt, BidMasterOnline.Core.Enums.SortDirection.DESC)
+                    .WithPagination(pagination.PageSize, pagination.PageNumber)
                     .Build();
 
                 ListModel<Bid> bidsList = await _repository.GetFilteredAndPaginated(specification,
@@ -97,6 +101,15 @@ namespace Bids.Service.API.Services.Participant
         public async Task<ServiceResult> PostBidOnAuctionAsync(PostBidDTO bidDTO)
         {
             ServiceResult result = new();
+
+            if (!await _userStatusValidationService.IsActiveAsync())
+            {
+                result.IsSuccessfull = false;
+                result.StatusCode = System.Net.HttpStatusCode.Forbidden;
+                result.Errors.Add("You have no rights to place bids on auctions for now.");
+
+                return result;
+            }
 
             try
             {

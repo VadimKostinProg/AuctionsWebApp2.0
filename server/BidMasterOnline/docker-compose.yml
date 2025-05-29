@@ -1,18 +1,57 @@
 version: '3.4'
 
 services:
-  bidmasteronline.api:
-    image: ${DOCKER_REGISTRY-}bidmasteronlineapi
+  auctions.service.api:
+    image: ${DOCKER_REGISTRY-}auctionsserviceapi
     build:
       context: .
-      dockerfile: BidMasterOnline.API/Dockerfile
+      dockerfile: Auctions.Service.API/Dockerfile
 
-  auctionsdb:
-    image: mcr.microsoft.com/mssql/server:2017-latest
-
-  client:
-    image: ${DOCKER_REGISTRY-}client
+  apigateway:
+    image: ${DOCKER_REGISTRY-}apigateway
     build:
-      context: ../../client/BidMasterOnline
-      dockerfile: Dockerfile
-      
+      context: .
+      dockerfile: ApiGateway/Dockerfile
+
+
+  bids.service.api:
+    image: ${DOCKER_REGISTRY-}bidsserviceapi
+    build:
+      context: .
+      dockerfile: Bids.Service.API/Dockerfile
+
+
+  feedbacks.service.api:
+    image: ${DOCKER_REGISTRY-}feedbacksserviceapi
+    build:
+      context: .
+      dockerfile: Feedbacks.Service.API/Dockerfile
+
+
+  identityserver:
+    image: ${DOCKER_REGISTRY-}identityserver
+    build:
+      context: .
+      dockerfile: IdentityServer/Dockerfile
+
+
+  moderation.service.api:
+    image: ${DOCKER_REGISTRY-}moderationserviceapi
+    build:
+      context: .
+      dockerfile: Moderation.Service.API/Dockerfile
+
+
+  payments.service.api:
+    image: ${DOCKER_REGISTRY-}paymentsserviceapi
+    build:
+      context: .
+      dockerfile: Payments.Service.API/Dockerfile
+
+
+  users.service.api:
+    image: ${DOCKER_REGISTRY-}usersserviceapi
+    build:
+      context: .
+      dockerfile: Users.Service.API/Dockerfile
+

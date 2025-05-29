@@ -12,17 +12,17 @@ namespace Feedbacks.Service.API.Controllers.Areas.Moderator
     [Authorize(Roles = UserRoles.Moderator)]
     public class SupportTicketsController : BaseController
     {
-        private readonly IModeratorSupportTicketsService _service;
+        private readonly ISupportTicketsService _service;
 
-        public SupportTicketsController(IModeratorSupportTicketsService service)
+        public SupportTicketsController(ISupportTicketsService service)
         {
             _service = service;
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetSupportTickets([FromQuery] ModeratorSupportTicketsSpecificationsDTO specifications)
+        public async Task<IActionResult> GetSupportTickets([FromQuery] SupportTicketsSpecificationsDTO specifications)
         {
-            ServiceResult<PaginatedList<ModeratorSummarySupportTicketDTO>> result =
+            ServiceResult<PaginatedList<SummarySupportTicketDTO>> result =
                 await _service.GetSupportTicketsAsync(specifications);
 
             return FromResult(result);
@@ -31,13 +31,13 @@ namespace Feedbacks.Service.API.Controllers.Areas.Moderator
         [HttpGet("{ticketId}")]
         public async Task<IActionResult> GetSupportTicketById([FromRoute] long ticketId)
         {
-            ServiceResult<ModeratorSupportTicketDTO> result = await _service.GetSupportTicketByIdAsync(ticketId);
+            ServiceResult<SupportTicketDTO> result = await _service.GetSupportTicketByIdAsync(ticketId);
 
             return FromResult(result);
         }
 
         [HttpPut("assing")]
-        public async Task<IActionResult> AssingSupportTicket([FromBody] ModeratorAssignSupportTicketDTO requestDTO)
+        public async Task<IActionResult> AssingSupportTicket([FromBody] AssignSupportTicketDTO requestDTO)
         {
             ServiceResult result = await _service.AssignSupportTicketAsync(requestDTO);
 
@@ -45,7 +45,7 @@ namespace Feedbacks.Service.API.Controllers.Areas.Moderator
         }
 
         [HttpPut("complete")]
-        public async Task<IActionResult> CompleteSupportTicket([FromBody] ModeratorCompleteSupportTicketDTO requestDTO)
+        public async Task<IActionResult> CompleteSupportTicket([FromBody] CompleteSupportTicketDTO requestDTO)
         {
             ServiceResult result = await _service.CompleteSupportTicketAsync(requestDTO);
 

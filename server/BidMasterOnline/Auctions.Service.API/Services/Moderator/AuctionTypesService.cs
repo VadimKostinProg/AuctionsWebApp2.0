@@ -58,6 +58,8 @@ namespace Auctions.Service.API.Services.Moderator
 
                 _repository.Update(entity);
                 await _repository.SaveChangesAsync();
+
+                result.Message = "Auction type has been updated successfully.";
             }
             catch (Exception ex)
             {

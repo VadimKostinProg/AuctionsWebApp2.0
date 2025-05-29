@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { AfterViewInit, Component, OnInit, TemplateRef, ViewChild } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
 import { ToastrService } from "ngx-toastr";
@@ -8,13 +8,18 @@ import { AuctionCategory, AuctionType, AuctionFinishMethod } from "../../models/
 import { forkJoin } from "rxjs";
 import { PostAuctionRequest } from "../../models/auction-requests/postAuctionRequest";
 import { NgxSpinnerService } from "ngx-spinner";
+import { AuthService } from "../../services/auth.service";
+import { UserStatusEnum } from "../../models/user-profiles/userStatusEnum";
+import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
   selector: 'app-new-auction-request',
   standalone: false,
   templateUrl: './new-auction-request.component.html'
 })
-export class NewAuctionRequestComponent {
+export class NewAuctionRequestComponent implements OnInit, AfterViewInit {
+  @ViewChild('userBlockedModal') userBlockedModal: TemplateRef<any> | undefined;
+
   createAuctionRequestForm: FormGroup | undefined;
 
   images: File[] = [];
@@ -41,7 +46,9 @@ export class NewAuctionRequestComponent {
     private readonly auctionResourcesService: AuctionResourcesService,
     private readonly toastrService: ToastrService,
     private readonly router: Router,
-    private readonly spinnerService: NgxSpinnerService) {
+    private readonly modalService: NgbModal,
+    private readonly spinnerService: NgxSpinnerService,
+    private readonly authSerivce: AuthService) {
 
   }
 
@@ -63,8 +70,13 @@ export class NewAuctionRequestComponent {
       setAimPriceFlag: new FormControl<boolean>(false),
       aimPrice: new FormControl<number | null>(null, [Validators.min(100), Validators.max(10e9)])
     });
+  }
 
-    this.fetchAuctionRecources();
+  ngAfterViewInit(): void {
+    if (this.authSerivce.userStatus === UserStatusEnum.Active)
+      this.fetchAuctionRecources();
+    else
+      this.modalService.open(this.userBlockedModal);
   }
 
   fetchAuctionRecources() {

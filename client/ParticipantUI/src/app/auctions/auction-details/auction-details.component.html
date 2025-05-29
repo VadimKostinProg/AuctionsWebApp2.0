@@ -11,7 +11,7 @@
                  class="d-block w-100">
           </div>
         </div>
-        <div *ngIf="auctionDetails.imageUrls.length > 1">
+        <div *ngIf="auctionDetails.imageUrls!.length > 1">
           <button class="carousel-control-prev"
                   type="button"
                   data-bs-target="#carouselExample"
@@ -52,8 +52,8 @@
             </span>
             <span class="h5">
               <b class="auction-details-property">Auctionist:</b>
-              <a [routerLink]="['/users', auctionDetails.auctionist.userId]">
-                {{ auctionDetails.auctionist.username }}
+              <a [routerLink]="['/users', auctionDetails.auctionist!.userId]">
+                {{ auctionDetails.auctionist!.username }}
               </a>
             </span>
             <span *ngIf="auctionDetails.status !== AuctionStatusEnum.CancelledByAuctionist || auctionDetails.status !== AuctionStatusEnum.CancelledByAuctionist"
@@ -91,20 +91,20 @@
           </div>
           <button *ngIf="auctionDetails.status === AuctionStatusEnum.Active"
                   class="btn default-btn-background bid-button"
-                  (click)="open(setBidModal)"
-                  [disabled]="userCannotPlaceBid">
+                  (click)="userStatus === UserStatusEnum.Active ? open(setBidModal) : open(userBlockedModal)"
+                  [disabled]="isPlacingBidDisabled">
             Place a bid
           </button>
         </div>
 
         <ng-template #auctionActionsPopContent>
           <div class="actions-container">
-            <button *ngIf="auctionDetails.auctionist.userId != user.userId"
+            <button *ngIf="auctionDetails.auctionist!.userId != user.userId"
                     class="btn"
                     (click)="open(complaintOnAuctionModal)">
               Complain
             </button>
-            <button *ngIf="auctionDetails.status !== AuctionStatusEnum.CancelledByAuctionist && auctionDetails.status !== AuctionStatusEnum.CancelledByModerator && auctionDetails.auctionist.userId == user.userId"
+            <button *ngIf="auctionDetails.status !== AuctionStatusEnum.CancelledByAuctionist && auctionDetails.status !== AuctionStatusEnum.CancelledByModerator && auctionDetails.auctionist!.userId == user.userId"
                     class="btn"
                     [disabled]="auctionDetails.status === AuctionStatusEnum.Finished"
                     (click)="open(cancelAuctionModal)">
@@ -265,5 +265,27 @@
     <button type="button"
             class="btn btn-outline-dark"
             (click)="cancelAuction(modal)">Submit</button>
+  </div>
+</ng-template>
+
+<ng-template #userBlockedModal
+             let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title"
+        id="modal-basic-title">
+      Cannot place a bid
+    </h4>
+    <button type="button"
+            class="btn-close"
+            aria-label="Close"
+            (click)="modal.close()"></button>
+  </div>
+  <div class="modal-body">
+    <span>Your account has been blocked! So, you are not able to place bids for now.</span>
+  </div>
+  <div class="modal-footer">
+    <button type="button"
+            class="btn btn-outline-dark"
+            (click)="modal.close()">Ok</button>
   </div>
 </ng-template>

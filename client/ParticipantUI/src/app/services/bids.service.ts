@@ -22,7 +22,7 @@ export class BidsService {
       .set('pageNumber', pageNumber)
       .set('pageSize', pageSize);
 
-    return this.httpClient.get<ServiceResult<PaginatedList<UserBid>>>(`${this.baseUrl}/bids`, { params });
+    return this.httpClient.get<ServiceResult<PaginatedList<UserBid>>>(`${this.baseUrl}/bids/own`, { params });
   }
 
   getAuctionBids(auctionId: number, pageNumber: number, pageSize: number):
@@ -61,8 +61,54 @@ export class BidsService {
           dataPropName: 'bidderUsername',
           isOrderable: false,
           isLink: true,
-          pageLink: '/profile',
+          pageLink: '/users/$routeParam$',
           linkRouteParamName: 'bidderId'
+        },
+        {
+          title: 'Date and time',
+          dataPropName: 'time',
+          isOrderable: false
+        },
+        {
+          title: 'Amount',
+          dataPropName: 'amount',
+          isOrderable: false
+        },
+      ]
+    } as DataTableOptionsModel;
+  }
+
+  getBidsHistoryDataTableApiUrl() {
+    return `${this.baseUrl}/bids/own`;
+  }
+
+  getBidsHistoryDataTableOptions() {
+    return {
+      id: 'bids',
+      title: 'Bids History',
+      resourceName: 'bid',
+      showIndexColumn: false,
+      allowCreating: false,
+      createFormOptions: null,
+      allowEdit: false,
+      editFormOptions: null,
+      allowDelete: false,
+      optionalAction: null,
+      emptyListDisplayLabel: 'There are not placed bids at any auction. Place a first one!',
+      columnSettings: [
+        {
+          title: 'Auction Id',
+          dataPropName: 'auctionId',
+          isOrderable: false,
+          isLink: true,
+          pageLink: '/auctions/$routeParam$/details',
+          linkRouteParamName: 'auctionId',
+          transformAction: (value) => `#${value}`
+        },
+        {
+          title: 'Auction name',
+          dataPropName: 'auctionName',
+          isOrderable: false,
         },
         {
           title: 'Date and time',

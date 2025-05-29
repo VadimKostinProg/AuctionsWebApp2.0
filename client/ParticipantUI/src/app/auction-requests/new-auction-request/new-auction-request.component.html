@@ -399,3 +399,26 @@
     </form>
   </div>
 </div>
+
+<ng-template #userBlockedModal
+             let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title"
+        id="modal-basic-title">
+      Cannot create an auction request
+    </h4>
+    <button type="button"
+            class="btn-close"
+            aria-label="Close"
+            (click)="modal.close()"></button>
+  </div>
+  <div class="modal-body">
+    <span>Your account has been blocked! So, you are not able to submit auction requests for now.</span>
+  </div>
+  <div class="modal-footer">
+    <a type="button"
+       class="btn btn-outline-dark"
+       routerLink="/"
+       (click)="modal.close()">Ok</a>
+  </div>
+</ng-template>

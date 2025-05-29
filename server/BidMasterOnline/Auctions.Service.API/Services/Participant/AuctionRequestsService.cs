@@ -23,18 +23,21 @@ namespace Auctions.Service.API.Services.Participant
         private readonly IUserAccessor _userAccessor;
         private readonly IImagesService _imagesService;
         private readonly ITransactionsService _transactionsService;
+        private readonly IUserStatusValidationService _userStatusValidationService;
         private readonly ILogger<AuctionRequestsService> _logger;
 
         public AuctionRequestsService(IRepository repository,
             IUserAccessor userAccessor,
             IImagesService imagesService,
             ITransactionsService transactionsService,
+            IUserStatusValidationService userStatusValidationService,
             ILogger<AuctionRequestsService> logger)
         {
             _repository = repository;
             _userAccessor = userAccessor;
             _imagesService = imagesService;
             _transactionsService = transactionsService;
+            _userStatusValidationService = userStatusValidationService;
             _logger = logger;
         }
 
@@ -89,6 +92,15 @@ namespace Auctions.Service.API.Services.Participant
             ServiceResult result = new();
 
             IDbContextTransaction transaction = _transactionsService.BeginTransaction();
+
+            if (!await _userStatusValidationService.IsActiveAsync())
+            {
+                result.IsSuccessfull = false;
+                result.StatusCode = System.Net.HttpStatusCode.Forbidden;
+                result.Errors.Add("You have no rights to create auction requests for now.");
+
+                return result;
+            }
 
             try
             {

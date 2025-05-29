@@ -1,4 +1,5 @@
 export enum UserStatusEnum {
   Active,
-  Blocked
+  Blocked,
+  Deleted
 }

@@ -18,6 +18,7 @@ namespace IdentityServer
                             RequirePkce = true,
                             RequireClientSecret = false,
                             AllowedScopes = ["openid", "profile", "participantScope"],
+                            AlwaysIncludeUserClaimsInIdToken = true,
                             RedirectUris = { "http://localhost:4200/auth/callback" },
                             PostLogoutRedirectUris = { "http://localhost:4200/" },
                             AllowedCorsOrigins = { "http://localhost:4200" },
@@ -122,11 +123,6 @@ namespace IdentityServer
                         new ApiResource()
                         {
                             Name = "Payments.Service.API",
-                            Scopes = ["participantScope", "moderatorScope"],
-                        },
-                        new ApiResource()
-                        {
-                            Name = "Deliveries.Service.API",
                             Scopes = ["participantScope", "moderatorScope"],
                         },
                         new ApiResource()

@@ -17,6 +17,7 @@ import { DataTableOptionsModel } from '../../models/shared/dataTableOptionsModel
 import { ComplaintTypeEnum } from '../../models/complaints/complaintTypeEnum';
 import { CancelAuction } from '../../models/auctions/CancelAuction';
 import { ActivatedRoute, Router } from '@angular/router';
+import { UserStatusEnum } from '../../models/user-profiles/userStatusEnum';
 
 @Component({
   selector: 'app-auction-details',
@@ -43,6 +44,8 @@ export class AuctionDetailsComponent implements OnInit {
   user: UserBasic | undefined;
 
   AuctionStatusEnum = AuctionStatusEnum;
+
+  UserStatusEnum = UserStatusEnum;
 
   constructor(private readonly toastrService: ToastrService,
     private readonly auctionsService: AuctionsService,
@@ -95,6 +98,10 @@ export class AuctionDetailsComponent implements OnInit {
     }
   }
 
+  get userStatus() {
+    return this.authService.userStatus;
+  }
+
   reloadAuctionDetails(auctionId: number) {
     this.auctionsService.getAuctionDetailsById(auctionId).subscribe({
       next: (response) => {
@@ -129,11 +136,11 @@ export class AuctionDetailsComponent implements OnInit {
     });
   }
 
-  get userCannotPlaceBid() {
+  get isPlacingBidDisabled() {
     return this.user && this.auctionDetails &&
       (this.auctionDetails.status === AuctionStatusEnum.CancelledByModerator ||
         this.auctionDetails.status === AuctionStatusEnum.CancelledByAuctionist ||
-        this.user.userId == this.auctionDetails.auctionist.userId);
+        this.user.userId == this.auctionDetails.auctionist!.userId);
   }
 
   get auctionActionsAreAvailable() {
@@ -191,7 +198,7 @@ export class AuctionDetailsComponent implements OnInit {
     this.reloadComplaintForm();
 
     const complaint = {
-      accusedUserId: this.auctionDetails!.auctionist.userId,
+      accusedUserId: this.auctionDetails!.auctionist!.userId,
       accusedAuctionId: this.auctionDetails!.id,
       type: ComplaintTypeEnum.ComplaintOnAuctionContent,
       complaintText: complaintText

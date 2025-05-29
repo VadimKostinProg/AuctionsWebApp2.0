@@ -6,7 +6,7 @@ namespace Feedbacks.Service.API.Extensions
     public static class ModelMappingExtensions
     {
         #region Participant
-        public static DTO.Participant.ParticipantAuctionCommentDTO ToParticipantDTO(this AuctionComment entity)
+        public static DTO.Participant.AuctionCommentDTO ToParticipantDTO(this AuctionComment entity)
             => new()
             {
                 Id = entity.Id,
@@ -18,7 +18,7 @@ namespace Feedbacks.Service.API.Extensions
                 Username = entity.User!.Username,
             };
 
-        public static DTO.Participant.ParticipantSummaryComplaintDTO ToParticipantSummaryDTO(this Complaint entity)
+        public static DTO.Participant.SummaryComplaintDTO ToParticipantSummaryDTO(this Complaint entity)
             => new()
             {
                 Id = entity.Id,
@@ -34,7 +34,7 @@ namespace Feedbacks.Service.API.Extensions
                 Status = entity.Status
             };
 
-        public static DTO.Participant.ParticipantComplaintDTO ToParticipantDTO(this Complaint entity)
+        public static DTO.Participant.ComplaintDTO ToParticipantDTO(this Complaint entity)
             => new()
             {
                 Id = entity.Id,
@@ -56,7 +56,7 @@ namespace Feedbacks.Service.API.Extensions
                 CreatedAt = entity.CreatedAt
             };
 
-        public static DTO.Participant.ParticipantSummarySupportTicketDTO ToParticipantSummaryDTO(this SupportTicket entity)
+        public static DTO.Participant.SummarySupportTicketDTO ToParticipantSummaryDTO(this SupportTicket entity)
             => new()
             {
                 Id = entity.Id,
@@ -65,7 +65,7 @@ namespace Feedbacks.Service.API.Extensions
                 Status = entity.Status
             };
 
-        public static DTO.Participant.ParticipantSupportTicketDTO ToParticipantDTO(this SupportTicket entity)
+        public static DTO.Participant.SupportTicketDTO ToParticipantDTO(this SupportTicket entity)
             => new()
             {
                 Id = entity.Id,
@@ -76,7 +76,7 @@ namespace Feedbacks.Service.API.Extensions
                 CreatedAt = entity.CreatedAt
             };
 
-        public static DTO.Participant.ParticipantUserFeedbackDTO ToParticipantDTO(this UserFeedback entity)
+        public static DTO.Participant.UserFeedbackDTO ToParticipantDTO(this UserFeedback entity)
             => new()
             {
                 Id = entity.Id,
@@ -87,7 +87,7 @@ namespace Feedbacks.Service.API.Extensions
                 CreatedAt = entity.CreatedAt
             };
 
-        public static AuctionComment ToDomain(this DTO.Participant.ParticipantPostCommentDTO dto)
+        public static AuctionComment ToDomain(this DTO.Participant.PostCommentDTO dto)
             => new()
             {
                 AuctionId = dto.AuctionId,
@@ -95,7 +95,7 @@ namespace Feedbacks.Service.API.Extensions
                 CommentText = dto.CommentText
             };
 
-        public static Complaint ToDomain(this DTO.Participant.ParticipantPostComplaintDTO dto)
+        public static Complaint ToDomain(this DTO.Participant.PostComplaintDTO dto)
             => new()
             {
                 AccusedUserId = dto.AccusedUserId,
@@ -106,14 +106,14 @@ namespace Feedbacks.Service.API.Extensions
                 Type = dto.Type
             };
 
-        public static SupportTicket ToDomain(this DTO.Participant.ParticipantPostSupportTicketDTO dto)
+        public static SupportTicket ToDomain(this DTO.Participant.PostSupportTicketDTO dto)
             => new()
             {
                 Title = dto.Title,
                 Text = dto.Text
             };
 
-        public static UserFeedback ToDomain(this DTO.Participant.ParticipantPostUserFeedbackDTO dto)
+        public static UserFeedback ToDomain(this DTO.Participant.PostUserFeedbackDTO dto)
             => new()
             {
                 ToUserId = dto.ToUserId,
@@ -123,7 +123,7 @@ namespace Feedbacks.Service.API.Extensions
         #endregion
 
         #region Moderator
-        public static DTO.Moderator.ModeratorAuctionCommentDTO ToModeratorDTO(this AuctionComment entity)
+        public static DTO.Moderator.AuctionCommentDTO ToModeratorDTO(this AuctionComment entity)
             => new()
             {
                 Id = entity.Id,
@@ -138,7 +138,7 @@ namespace Feedbacks.Service.API.Extensions
                 Username = entity.User!.Username
             };
 
-        public static DTO.Moderator.ModeratorSummaryComplaintDTO ToModeratorSummaryDTO(this Complaint entity)
+        public static DTO.Moderator.SummaryComplaintDTO ToModeratorSummaryDTO(this Complaint entity)
             => new()
             {
                 Id = entity.Id,
@@ -158,7 +158,7 @@ namespace Feedbacks.Service.API.Extensions
                 CreatedAt = entity.CreatedAt,
             };
 
-        public static DTO.Moderator.ModeratorComplaintDTO ToModeratorDTO(this Complaint entity)
+        public static DTO.Moderator.ComplaintDTO ToModeratorDTO(this Complaint entity)
             => new()
             {
                 Id = entity.Id,
@@ -192,7 +192,7 @@ namespace Feedbacks.Service.API.Extensions
                 ModifiedBy = entity.ModifiedBy,
             };
 
-        public static DTO.Moderator.ModeratorSummarySupportTicketDTO ToModeratorSummaryDTO(this SupportTicket entity)
+        public static DTO.Moderator.SummarySupportTicketDTO ToModeratorSummaryDTO(this SupportTicket entity)
             => new()
             {
                 Id = entity.Id,
@@ -205,7 +205,7 @@ namespace Feedbacks.Service.API.Extensions
                 ModeratorName = entity.Moderator!.FullName,
             };
 
-        public static DTO.Moderator.ModeratorSupportTicketDTO ToModeratorDTO(this SupportTicket entity)
+        public static DTO.Moderator.SupportTicketDTO ToModeratorDTO(this SupportTicket entity)
             => new()
             {
                 Id = entity.Id,
@@ -223,7 +223,7 @@ namespace Feedbacks.Service.API.Extensions
                 ModifiedBy = entity.ModifiedBy,
             };
 
-        public static DTO.Moderator.ModeratorUserFeedbackDTO ToModeratorDTO(this UserFeedback entity)
+        public static DTO.Moderator.UserFeedbackDTO ToModeratorDTO(this UserFeedback entity)
             => new()
             {
                 Id = entity.Id,

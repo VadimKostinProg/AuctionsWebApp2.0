@@ -50,6 +50,26 @@ namespace Auctions.Service.API.Services.Participant
             return result;
         }
 
+        public async Task<ServiceResult<PaginatedList<AuctionSummaryDTO>>> GetUserAuctionsAsync(PaginationRequestDTO pagination)
+        {
+            ServiceResult<PaginatedList<AuctionSummaryDTO>> result = new();
+
+            long userId = _userAccessor.UserId;
+
+            ISpecification<Auction> specification = new SpecificationBuilder<Auction>()
+                .With(x => x.AuctionistId == userId)
+                .OrderBy(x => x.StartTime, SortDirection.DESC)
+                .WithPagination(pagination.PageSize, pagination.PageNumber)
+                .Build();
+
+            ListModel<Auction> auctionsList = await _repository.GetFilteredAndPaginated(specification,
+                includeQuery: query => query.Include(e => e.Category)!);
+
+            result.Data = auctionsList.ToPaginatedList(e => e.ToParticipantSummaryDTO());
+
+            return result;
+        }
+
         public async Task<ServiceResult<AuctionDTO>> GetAuctionByIdAsync(long id)
         {
             ServiceResult<AuctionDTO> result = new();
@@ -193,7 +213,7 @@ namespace Auctions.Service.API.Services.Participant
                         builder.OrderBy(x => x.Bids!.Count(), SortDirection.DESC);
                         break;
                     case "finishTime":
-                        builder.OrderBy(x => x.FinishTime, SortDirection.DESC);
+                        builder.OrderBy(x => x.FinishTime, SortDirection.ASC);
                         break;
                 }
             }

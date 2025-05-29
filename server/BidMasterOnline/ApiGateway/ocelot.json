@@ -19,6 +19,18 @@
       "UpstreamPathTemplate": "/api/participant/auctions?{everything}"
     },
     {
+      "DownstreamPathTemplate": "/api/participant/auctions/own?{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7157
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "GET" ],
+      "UpstreamPathTemplate": "/api/participant/auctions/own?{everything}"
+    },
+    {
       "DownstreamPathTemplate": "/api/participant/auctions/{id}/",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
@@ -117,7 +129,7 @@
 
     // Bids.Service.API
     {
-      "DownstreamPathTemplate": "/api/participant/auctions/bids?{everything}",
+      "DownstreamPathTemplate": "/api/participant/auctions/bids/own?{everything}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -125,8 +137,8 @@
           "Port": 7024
         }
       ],
-      "UpstreamHttpMethod": [ "OPTIONS", "GET", "POST" ],
-      "UpstreamPathTemplate": "/api/participant/auctions/bids?{everything}"
+      "UpstreamHttpMethod": [ "OPTIONS", "GET" ],
+      "UpstreamPathTemplate": "/api/participant/auctions/bids/own?{everything}"
     },
     {
       "DownstreamPathTemplate": "/api/participant/auctions/{auctionId}/bids?{everything}",
@@ -139,6 +151,18 @@
       ],
       "UpstreamHttpMethod": [ "OPTIONS", "GET" ],
       "UpstreamPathTemplate": "/api/participant/auctions/{auctionId}/bids?{everything}"
+    },
+    {
+      "DownstreamPathTemplate": "/api/participant/auctions/bids",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7024
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "POST" ],
+      "UpstreamPathTemplate": "/api/participant/auctions/bids"
     },
 
     // Feedbacks.Service.API

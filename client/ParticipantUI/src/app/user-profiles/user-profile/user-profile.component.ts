@@ -10,6 +10,7 @@ import { AuthService } from "../../services/auth.service";
 import { ComplaintTypeEnum } from "../../models/complaints/complaintTypeEnum";
 import { PostComplaint } from "../../models/complaints/postComplaint";
 import { ResetPasswordModel } from "../../models/user-profiles/resetPasswordModel";
+import { UserStatusEnum } from "../../models/user-profiles/userStatusEnum";
 
 @Component({
   selector: 'app-user-profile',
@@ -27,6 +28,8 @@ export class UserProfileComponent implements OnInit {
   changePasswordForm!: FormGroup;
 
   isOwnProfile: boolean = false;
+
+  UserStatusEnum = UserStatusEnum;
 
   constructor(private readonly userProfileService: UserProfileService,
     private readonly toastrService: ToastrService,

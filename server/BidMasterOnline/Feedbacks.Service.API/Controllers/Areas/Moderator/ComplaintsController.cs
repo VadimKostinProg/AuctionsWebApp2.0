@@ -12,17 +12,17 @@ namespace Feedbacks.Service.API.Controllers.Areas.Moderator
     [Authorize(Roles = UserRoles.Moderator)]
     public class ComplaintsController : BaseController
     {
-        private readonly IModeratorComplaintsService _service;
+        private readonly IComplaintsService _service;
 
-        public ComplaintsController(IModeratorComplaintsService service)
+        public ComplaintsController(IComplaintsService service)
         {
             _service = service;
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetComplaints([FromQuery] ModeratorComplaintsSpecificationsDTO specifications)
+        public async Task<IActionResult> GetComplaints([FromQuery] ComplaintsSpecificationsDTO specifications)
         {
-            ServiceResult<PaginatedList<ModeratorSummaryComplaintDTO>> result =
+            ServiceResult<PaginatedList<SummaryComplaintDTO>> result =
                 await _service.GetComplaintsAsync(specifications);
 
             return FromResult(result);
@@ -31,13 +31,13 @@ namespace Feedbacks.Service.API.Controllers.Areas.Moderator
         [HttpGet("{complaintId}")]
         public async Task<IActionResult> GetComplaintById([FromRoute] long complaintId)
         {
-            ServiceResult<ModeratorComplaintDTO> result = await _service.GetComplaintByIdAsync(complaintId);
+            ServiceResult<ComplaintDTO> result = await _service.GetComplaintByIdAsync(complaintId);
 
             return FromResult(result);
         }
 
         [HttpPut("assing")]
-        public async Task<IActionResult> AssingComplaint([FromBody] ModeratorAssignComplaintDTO requestDTO)
+        public async Task<IActionResult> AssingComplaint([FromBody] AssignComplaintDTO requestDTO)
         {
             ServiceResult result = await _service.AssignComplaintAsync(requestDTO);
 
@@ -45,7 +45,7 @@ namespace Feedbacks.Service.API.Controllers.Areas.Moderator
         }
 
         [HttpPut("complete")]
-        public async Task<IActionResult> CompleteComplaint([FromBody] ModeratorCompleteComplaintDTO requestDTO)
+        public async Task<IActionResult> CompleteComplaint([FromBody] CompleteComplaintDTO requestDTO)
         {
             ServiceResult result = await _service.CompleteComplaintAsync(requestDTO);
 

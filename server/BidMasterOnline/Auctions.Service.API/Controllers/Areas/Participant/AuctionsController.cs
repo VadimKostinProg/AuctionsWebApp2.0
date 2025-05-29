@@ -28,6 +28,14 @@ public class AuctionsController : BaseController
         return FromResult(result);
     }
 
+    [HttpGet("own")]
+    public async Task<IActionResult> GetUserAuctions([FromQuery] PaginationRequestDTO pagination)
+    {
+        ServiceResult<PaginatedList<AuctionSummaryDTO>> result = await _service.GetUserAuctionsAsync(pagination);
+
+        return FromResult(result);
+    }
+
     [HttpGet("{id}")]
     public async Task<IActionResult> GetAuctionById([FromRoute] long id)
     {
