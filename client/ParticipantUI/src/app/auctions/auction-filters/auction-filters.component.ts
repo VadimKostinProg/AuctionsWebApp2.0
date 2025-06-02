@@ -43,10 +43,6 @@ export class AuctionFiltersComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     this.specifications = await this.auctionsQueryParamsService.getAuctionSpecifications();
-    this.specifications.minStartPrice = this.defaultSliderMin;
-    this.specifications.maxStartPrice = this.defaultSliderMax;
-    this.specifications.minCurrentPrice = this.defaultSliderMin;
-    this.specifications.maxCurrentPrice = this.defaultSliderMax;
 
     forkJoin([
       this.auctionResourcesService.getAuctionCategories(),

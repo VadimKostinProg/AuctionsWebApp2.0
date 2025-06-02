@@ -3,8 +3,6 @@ import { ToastrService } from 'ngx-toastr';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CommentsService } from '../../services/comments.service';
-import { PaginationModel } from '../../models/shared/paginationModel';
-import { CommentsQueryParamsService } from '../../services/comments-query-params.service';
 import { AuctionComment } from '../../models/auctions/AuctionComment';
 import { AuthService } from '../../services/auth.service';
 import { PostComment } from '../../models/auctions/PostComment';
@@ -30,7 +28,9 @@ export class CommentsComponent implements OnInit {
 
   choosenComment?: AuctionComment | null;
 
-  pagination: PaginationModel | undefined;
+  currentPage: number = 0;
+  pageSize: number = 10;
+  hasNext: boolean = false;
 
   UserStatusEnum = UserStatusEnum;
 
@@ -38,8 +38,7 @@ export class CommentsComponent implements OnInit {
     private readonly commentsService: CommentsService,
     private readonly toastrService: ToastrService,
     private readonly modalService: NgbModal,
-    private readonly complaintsService: ComplaintsService,
-    private readonly queryParamsService: CommentsQueryParamsService) {
+    private readonly complaintsService: ComplaintsService) {
 
   }
 
@@ -52,18 +51,7 @@ export class CommentsComponent implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
-    this.pagination = await this.queryParamsService.getPaginationParams();
-
-    if (!this.pagination.pageNumber || !this.pagination.pageSize) {
-      this.pagination = {
-        pageNumber: 1,
-        pageSize: 15
-      }
-
-      await this.queryParamsService.setPaginationParams(this.pagination);
-    }
-
-    this.reloadComments();
+    this.loadComments();
 
     this.reloadCommentForm();
 
@@ -71,16 +59,25 @@ export class CommentsComponent implements OnInit {
   }
 
   reloadComments() {
+    this.comments = [];
+    this.currentPage = 0;
+    this.hasNext = false;
+
+    this.loadComments();
+  }
+
+  loadComments() {
     if (this.auction)
-      this.commentsService.getCommentsForAuction(this.auction.id, this.pagination!.pageNumber!, this.pagination!.pageSize!).subscribe({
+      this.commentsService.getCommentsForAuction(this.auction.id, ++this.currentPage, this.pageSize).subscribe({
         next: (response) => {
-          if (response.isSuccessfull)
-            this.comments = response.data!.items;
-          else
-            this.toastrService.error(response.errors[0], 'Error');
+          this.comments = [...this.comments, ...response.data!.items];
+          this.currentPage = response.data!.pagination.currentPage;
+          this.hasNext = response.data!.pagination.hasNext;
         },
-        error: (error) => {
-          this.toastrService.error(error.error, 'Error');
+        error: (err) => {
+          if (err?.error?.errors && Array.isArray(err.error.errors)) {
+            this.toastrService.error(err.error.errors[0], 'Error');
+          }
         }
       });
   }
@@ -142,17 +139,14 @@ export class CommentsComponent implements OnInit {
 
     this.commentsService.postNewComment(comment).subscribe({
       next: (response) => {
-        if (response.isSuccessfull) {
-          this.toastrService.success(response.message!, 'Success');
+        this.toastrService.success(response.message!, 'Success');
 
-          this.reloadComments();
-        }
-        else {
-          this.toastrService.error(response.errors[0], 'Error');
-        }
+        this.reloadComments();
       },
-      error: (error) => {
-        this.toastrService.error(error.error, 'Error');
+      error: (err) => {
+        if (err?.error?.errors && Array.isArray(err.error.errors)) {
+          this.toastrService.error(err.error.errors[0], 'Error');
+        }
       }
     });
   }
@@ -166,8 +160,10 @@ export class CommentsComponent implements OnInit {
 
         this.reloadComments();
       },
-      error: (error) => {
-        this.toastrService.error(error.error, 'Error');
+      error: (err) => {
+        if (err?.error?.errors && Array.isArray(err.error.errors)) {
+          this.toastrService.error(err.error.errors[0], 'Error');
+        }
       }
     });
   }
@@ -192,13 +188,12 @@ export class CommentsComponent implements OnInit {
 
     this.complaintsService.postComplaint(complaint).subscribe({
       next: (response) => {
-        if (response.isSuccessfull)
-          this.toastrService.success(response.message!, 'Success');
-        else
-          this.toastrService.error(response.errors[0], 'Error');
+        this.toastrService.success(response.message!, 'Success');
       },
-      error: (error) => {
-        this.toastrService.error(error.error, 'Error');
+      error: (err) => {
+        if (err?.error?.errors && Array.isArray(err.error.errors)) {
+          this.toastrService.error(err.error.errors[0], 'Error');
+        }
       }
     });
   }

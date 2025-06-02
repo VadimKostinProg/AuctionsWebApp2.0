@@ -98,7 +98,7 @@ namespace Feedbacks.Service.API.Services.Participant
             ISpecification<UserFeedback> specification = new SpecificationBuilder<UserFeedback>()
                 .With(e => e.ToUserId == userId && !e.Deleted)
                 .WithPagination(pagination.PageSize, pagination.PageNumber)
-                .OrderBy(e => e.CreatedAt)
+                .OrderBy(e => e.CreatedAt, BidMasterOnline.Core.Enums.SortDirection.DESC)
                 .Build();
 
             ListModel<UserFeedback> entitiesList = await _repository.GetFilteredAndPaginated(specification,

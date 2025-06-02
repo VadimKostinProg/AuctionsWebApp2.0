@@ -48,6 +48,10 @@
         <i class="fa-solid fa-ellipsis"></i>
       </button>
     </div>
+
+    <button *ngIf="hasNext"
+            class="btn btn-outline-dark w-100"
+            (click)="loadComments()">Load more...</button>
   </div>
 </ng-container>
 

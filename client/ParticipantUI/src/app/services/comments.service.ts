@@ -21,7 +21,7 @@ export class CommentsService {
   getCommentsForAuction(auctionId: number, pageNumber: number, pageSize: number)
     : Observable<ServiceResult<PaginatedList<AuctionComment>>> {
     const params = new HttpParams()
-      .set('pageNumbe', pageNumber)
+      .set('pageNumber', pageNumber)
       .set('pageSize', pageSize);
 
     return this.httpClient.get<ServiceResult<PaginatedList<AuctionComment>>>(`${this.baseUrl}/${auctionId}/comments`, { params });

@@ -1,15 +1,11 @@
 import { Component, Input, TemplateRef } from "@angular/core";
-import { UserBasic } from "../../models/users/userBasic";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { AuthService } from "../../services/auth.service";
-import { PaginationModel } from "../../models/shared/paginationModel";
-import { AuctionComment } from "../../models/auctions/AuctionComment";
 import { UserFeedback } from "../../models/user-profiles/userFeedback";
 import { UserFeedbacksService } from "../../services/user-feedbacks.service";
 import { ToastrService } from "ngx-toastr";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { ComplaintsService } from "../../services/complaints.service";
-import { UserFeedbacksQueryParamsService } from "../../services/user-feedbacks-query-params.service";
 import { ComplaintTypeEnum } from "../../models/complaints/complaintTypeEnum";
 import { PostComplaint } from "../../models/complaints/postComplaint";
 import { PostUserFeedback } from "../../models/user-profiles/postUserFeedback";
@@ -31,7 +27,9 @@ export class UserFeedbacksComponent {
 
   choosenFeedback?: UserFeedback | null;
 
-  pagination: PaginationModel | undefined;
+  currentPage: number = 0;
+  pageSize: number = 10;
+  hasNext: boolean = false;
 
   UserStatusEnum = UserStatusEnum;
 
@@ -39,8 +37,7 @@ export class UserFeedbacksComponent {
     private readonly userFeedbacksService: UserFeedbacksService,
     private readonly toastrService: ToastrService,
     private readonly modalService: NgbModal,
-    private readonly complaintsService: ComplaintsService,
-    private readonly queryParamsService: UserFeedbacksQueryParamsService) {
+    private readonly complaintsService: ComplaintsService) {
 
   }
 
@@ -53,18 +50,7 @@ export class UserFeedbacksComponent {
   }
 
   async ngOnInit(): Promise<void> {
-    this.pagination = await this.queryParamsService.getPaginationParams();
-
-    if (!this.pagination.pageNumber || !this.pagination.pageSize) {
-      this.pagination = {
-        pageNumber: 1,
-        pageSize: 15
-      }
-
-      await this.queryParamsService.setPaginationParams(this.pagination);
-    }
-
-    this.reloadUserFeedbacks();
+    this.loadUserFeedbacks();
 
     this.reloadFeedbackForm();
 
@@ -72,15 +58,24 @@ export class UserFeedbacksComponent {
   }
 
   reloadUserFeedbacks() {
-    this.userFeedbacksService.getUserFeedbacks(this.userId, this.pagination!.pageNumber!, this.pagination!.pageSize!).subscribe({
+    this.feedbacks = [];
+    this.currentPage = 0;
+    this.hasNext = false;
+
+    this.loadUserFeedbacks();
+  }
+
+  loadUserFeedbacks() {
+    this.userFeedbacksService.getUserFeedbacks(this.userId, ++this.currentPage, this.pageSize).subscribe({
       next: (response) => {
-        if (response.isSuccessfull)
-          this.feedbacks = response.data!.items;
-        else
-          this.toastrService.error(response.errors[0], 'Error');
+        this.feedbacks = [...this.feedbacks, ...response.data!.items];
+        this.currentPage = response.data!.pagination.currentPage;
+        this.hasNext = response.data!.pagination.hasNext;
       },
-      error: (error) => {
-        this.toastrService.error(error.error, 'Error');
+      error: (err) => {
+        if (err?.error?.errors && Array.isArray(err.error.errors)) {
+          this.toastrService.error(err.error.errors[0], 'Error');
+        }
       }
     });
   }
@@ -142,17 +137,14 @@ export class UserFeedbacksComponent {
 
     this.userFeedbacksService.postUserFeedback(userFeedback).subscribe({
       next: (response) => {
-        if (response.isSuccessfull) {
-          this.toastrService.success(response.message!, 'Success');
+        this.toastrService.success(response.message!, 'Success');
 
-          this.reloadUserFeedbacks();
-        }
-        else {
-          this.toastrService.error(response.errors[0], 'Error');
-        }
+        this.reloadUserFeedbacks();
       },
-      error: (error) => {
-        this.toastrService.error(error.error, 'Error');
+      error: (err) => {
+        if (err?.error?.errors && Array.isArray(err.error.errors)) {
+          this.toastrService.error(err.error.errors[0], 'Error');
+        }
       }
     });
   }
@@ -166,8 +158,10 @@ export class UserFeedbacksComponent {
 
         this.reloadUserFeedbacks();
       },
-      error: (error) => {
-        this.toastrService.error(error.error, 'Error');
+      error: (err) => {
+        if (err?.error?.errors && Array.isArray(err.error.errors)) {
+          this.toastrService.error(err.error.errors[0], 'Error');
+        }
       }
     });
   }
@@ -192,13 +186,12 @@ export class UserFeedbacksComponent {
 
     this.complaintsService.postComplaint(complaint).subscribe({
       next: (response) => {
-        if (response.isSuccessfull)
-          this.toastrService.success(response.message!, 'Success');
-        else
-          this.toastrService.error(response.errors[0], 'Error');
+        this.toastrService.success(response.message!, 'Success');
       },
-      error: (error) => {
-        this.toastrService.error(error.error, 'Error');
+      error: (err) => {
+        if (err?.error?.errors && Array.isArray(err.error.errors)) {
+          this.toastrService.error(err.error.errors[0], 'Error');
+        }
       }
     });
   }
