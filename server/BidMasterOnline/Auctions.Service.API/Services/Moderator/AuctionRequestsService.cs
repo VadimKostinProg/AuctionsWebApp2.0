@@ -1,5 +1,4 @@
-﻿using Auctions.Service.API.DTO;
-using Auctions.Service.API.DTO.Moderator;
+﻿using Auctions.Service.API.DTO.Moderator;
 using Auctions.Service.API.Extensions;
 using Auctions.Service.API.GrpcServices.Client;
 using Auctions.Service.API.ServiceContracts.Moderator;
@@ -148,7 +147,7 @@ namespace Auctions.Service.API.Services.Moderator
 
                 await transaction.CommitAsync();
 
-                result.Message = "Auction request has been successfully approved!";
+                result.Message = "Auction request has been successfully declined!";
             }
             catch (Exception ex)
             {

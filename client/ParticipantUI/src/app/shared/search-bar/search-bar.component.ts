@@ -14,7 +14,7 @@ export class SearchBarComponent implements OnInit {
   placeholder: string = 'Search...';
 
   @Output()
-  onSubmit = new EventEmitter<void>();
+  onSubmit = new EventEmitter<string>();
 
   constructor(private readonly queryParamsService: QueryParamsService) {
   }
@@ -29,6 +29,6 @@ export class SearchBarComponent implements OnInit {
     else
       await this.queryParamsService.clearSearchTerm();
 
-    this.onSubmit.emit();
+    this.onSubmit.emit(this.searchTerm);
   }
 }

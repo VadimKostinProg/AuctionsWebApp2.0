@@ -8,17 +8,29 @@ import { NewAuctionRequestComponent } from "./new-auction-request/new-auction-re
 import { ToastrModule } from "ngx-toastr";
 import { NgxSpinnerModule } from "ngx-spinner";
 import { NgSelectModule } from "@ng-select/ng-select";
+import { AuctionRequestsHistoryComponent } from "./auction-requests-history/auction-requests-history.component";
+import { AuctionRequestDetailsComponent } from "./auction-request-details/auction-request-details.component";
 
 const routes: Routes = [
   {
+    path: '',
+    component: AuctionRequestsHistoryComponent
+  },
+  {
     path: 'new',
     component: NewAuctionRequestComponent
-  }
+  },
+  {
+    path: ':auctionRequestId',
+    component: AuctionRequestDetailsComponent
+  },
 ];
 
 @NgModule({
   declarations: [
     NewAuctionRequestComponent,
+    AuctionRequestsHistoryComponent,
+    AuctionRequestDetailsComponent
   ],
   imports: [
     CommonModule,
@@ -28,12 +40,9 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     NgbModule,
     NgSelectModule,
-    RouterModule,
     ToastrModule.forRoot(),
     NgxSpinnerModule.forRoot(),
   ],
-  exports: [
-    NewAuctionRequestComponent
-  ]
+  exports: []
 })
 export class AuctionRequestsModule { }

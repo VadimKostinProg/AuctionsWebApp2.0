@@ -28,12 +28,14 @@ export class SupportTicketDetailsComponent implements OnInit {
       }
 
       this.supportTicketsService.getSupportTicketDetails(parseInt(supportTicketId))
-        .subscribe(result => {
-          if (result.isSuccessfull) {
+        .subscribe({
+          next: result => {
             this.supportTicket = result.data!;
-          }
-          else {
-            this.toastrService.error(result.errors[0]);
+          },
+          error: (err) => {
+            if (err?.error?.errors && Array.isArray(err.error.errors)) {
+              this.toastrService.error(err.error.errors[0], 'Error');
+            }
           }
         });
     });

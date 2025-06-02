@@ -12,9 +12,9 @@ namespace Bids.Service.API.Controllers.Areas.Participant
     [Authorize(Roles = UserRoles.Participant)]
     public class BidsController : BaseController
     {
-        private readonly IParticipantBidsService _service;
+        private readonly IBidsService _service;
 
-        public BidsController(IParticipantBidsService service)
+        public BidsController(IBidsService service)
         {
             _service = service;
         }

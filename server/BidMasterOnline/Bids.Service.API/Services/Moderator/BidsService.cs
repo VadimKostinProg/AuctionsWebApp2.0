@@ -10,12 +10,12 @@ using Bids.Service.API.ServiceContracts.Moderator;
 
 namespace Bids.Service.API.Services.Moderator
 {
-    public class ModeratorBidsService : IModeratorBidsService
+    public class BidsService : IBidsService
     {
         private readonly IRepository _repository;
-        private readonly ILogger<ModeratorBidsService> _logger;
+        private readonly ILogger<BidsService> _logger;
 
-        public ModeratorBidsService(IRepository repository, ILogger<ModeratorBidsService> logger)
+        public BidsService(IRepository repository, ILogger<BidsService> logger)
         {
             _repository = repository;
             _logger = logger;

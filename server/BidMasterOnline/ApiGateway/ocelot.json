@@ -55,7 +55,7 @@
       "UpstreamPathTemplate": "/api/participant/auctions/{id}/cancel"
     },
     {
-      "DownstreamPathTemplate": "/api/participant/auction-requests?{everything}",
+      "DownstreamPathTemplate": "/api/participant/auction-requests/own?{everything}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -63,8 +63,20 @@
           "Port": 7157
         }
       ],
-      "UpstreamHttpMethod": [ "OPTIONS", "GET", "POST" ],
-      "UpstreamPathTemplate": "/api/participant/auction-requests?{everything}"
+      "UpstreamHttpMethod": [ "OPTIONS", "GET" ],
+      "UpstreamPathTemplate": "/api/participant/auction-requests/own?{everything}"
+    },
+    {
+      "DownstreamPathTemplate": "/api/participant/auction-requests",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7157
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "POST" ],
+      "UpstreamPathTemplate": "/api/participant/auction-requests"
     },
     {
       "DownstreamPathTemplate": "/api/participant/auction-requests/{id}/",
@@ -79,7 +91,7 @@
       "UpstreamPathTemplate": "/api/participant/auction-requests/{id}/"
     },
     {
-      "DownstreamPathTemplate": "/api/participant/auction-requests/{id}/cancell",
+      "DownstreamPathTemplate": "/api/participant/auction-requests/{id}/cancel",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -88,7 +100,7 @@
         }
       ],
       "UpstreamHttpMethod": [ "OPTIONS", "PUT" ],
-      "UpstreamPathTemplate": "/api/participant/auction-requests/{id}/cancell"
+      "UpstreamPathTemplate": "/api/participant/auction-requests/{id}/cancel"
     },
     {
       "DownstreamPathTemplate": "/api/participant/auction-categories",

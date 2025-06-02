@@ -1,5 +1,4 @@
-﻿using Auctions.Service.API.DTO;
-using Auctions.Service.API.DTO.Moderator;
+﻿using Auctions.Service.API.DTO.Moderator;
 using Auctions.Service.API.ServiceContracts.Moderator;
 using BidMasterOnline.Core.Constants;
 using BidMasterOnline.Core.DTO;

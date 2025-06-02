@@ -9,6 +9,7 @@ import { Auction } from "../models/auctions/Auction";
 import { CancelAuction } from "../models/auctions/CancelAuction";
 import { DataTableOptionsModel } from "../models/shared/dataTableOptionsModel";
 import { UserAuction } from "../models/auctions/userAuction";
+import { AuctionSpecifications } from "../models/auctions/auctionSpecifications";
 
 @Injectable({
   providedIn: 'root'
@@ -45,6 +46,41 @@ export class AuctionsService {
       .set('pageSize', pageSize);
 
     return this.httpClient.get<ServiceResult<PaginatedList<UserAuction>>>(`${this.baseUrl}/own`, { params });
+  }
+
+  searchAuctions(specs: AuctionSpecifications, pageNumber: number, pageSize: number)
+    : Observable<ServiceResult<PaginatedList<AuctionBasic>>> {
+    let params = new HttpParams()
+      .set('pageNumber', pageNumber)
+      .set('pageSize', pageSize);
+
+    if (specs.searchTerm)
+      params = params.set('searchTerm', specs.searchTerm);
+
+    if (specs.categoryId)
+      params = params.set('categoryId', specs.categoryId);
+
+    if (specs.typeId)
+      params = params.set('typeId', specs.typeId);
+
+    if (specs.minStartPrice && specs.maxStartPrice)
+      params = params.set('minStartPrice', specs.minStartPrice)
+        .set('maxStartPrice', specs.maxStartPrice);
+
+    if (specs.minCurrentPrice && specs.maxCurrentPrice)
+      params = params.set('minCurrentPrice', specs.minCurrentPrice)
+        .set('maxCurrentPrice', specs.maxCurrentPrice);
+
+    if (specs.auctionStatus)
+      params = params.set('auctionStatus', specs.auctionStatus);
+
+    if (specs.sortBy)
+      params = params.set('sortBy', specs.sortBy);
+
+    if (specs.sortDirection)
+      params = params.set('sortDirection', specs.sortDirection);
+
+    return this.httpClient.get<ServiceResult<PaginatedList<AuctionBasic>>>(this.baseUrl, { params });
   }
 
   getAuctionDetailsById(auctionId: number): Observable<ServiceResult<Auction>> {

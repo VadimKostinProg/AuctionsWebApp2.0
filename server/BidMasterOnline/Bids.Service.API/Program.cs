@@ -60,8 +60,8 @@ builder.Services.AddInfrastructure(builder.Configuration)
     .AddCoreServices();
 
 builder.Services.AddScoped<IBidsPlacingStrategyFactory, BidsPlacingStrategyFactory>();
-builder.Services.AddScoped<IParticipantBidsService, ParticipantBidsService>();
-builder.Services.AddScoped<IModeratorBidsService, ModeratorBidsService>();
+builder.Services.AddScoped<Bids.Service.API.ServiceContracts.Participant.IBidsService, Bids.Service.API.Services.Participant.BidsService>();
+builder.Services.AddScoped<Bids.Service.API.ServiceContracts.Moderator.IBidsService, Bids.Service.API.Services.Moderator.BidsService>();
 
 builder.Services.AddScoped<AuctionsGrpcClient>();
 

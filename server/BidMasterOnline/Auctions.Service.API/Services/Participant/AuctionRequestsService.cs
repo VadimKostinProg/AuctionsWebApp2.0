@@ -49,11 +49,12 @@ namespace Auctions.Service.API.Services.Participant
 
             ISpecification<AuctionRequest> specification = new SpecificationBuilder<AuctionRequest>()
                 .With(e => e.RequestedByUserId == userId)
+                .OrderBy(e => e.CreatedAt, SortDirection.DESC)
                 .WithPagination(pagination.PageSize, pagination.PageNumber)
                 .Build();
 
             ListModel<AuctionRequest> auctionRequestsList = await _repository.GetFilteredAndPaginated(specification,
-                includeQuery: query => query.Include(e => e.Images)!);
+                includeQuery: query => query.Include(e => e.Category)!);
 
             result.Data = auctionRequestsList.ToPaginatedList(e => e.ToParticipantSummaryDTO());
 

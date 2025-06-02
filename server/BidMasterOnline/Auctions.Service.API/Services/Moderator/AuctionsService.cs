@@ -185,20 +185,17 @@ namespace Auctions.Service.API.Services.Moderator
             if (specifications.CategoryId is not null)
                 builder.With(x => x.AuctionCategoryId == specifications.CategoryId);
 
-            if (specifications.AuctionistId is not null)
-                builder.With(x => x.AuctionistId == specifications.AuctionistId);
+            if (specifications.TypeId is not null)
+                builder.With(x => x.AuctionTypeId == specifications.TypeId);
 
             if (specifications.MinStartPrice is not null)
                 builder.With(x => x.StartPrice >= specifications.MinStartPrice && x.StartPrice <= specifications.MaxStartPrice!.Value);
 
-            if (specifications.MinCurrentBid is not null)
-                builder.With(x => x.CurrentPrice >= specifications.MinCurrentBid && x.CurrentPrice <= specifications.MaxCurrentBid!.Value);
+            if (specifications.MinCurrentPrice is not null)
+                builder.With(x => x.CurrentPrice >= specifications.MinCurrentPrice && x.CurrentPrice <= specifications.MaxCurrentPrice!.Value);
 
-            if (specifications.Status is not null)
-                builder.With(x => x.Status == specifications.Status);
-
-            if (specifications.WinnerId is not null)
-                builder.With(x => x.WinnerId == specifications.WinnerId);
+            if (specifications.AuctionStatus is not null)
+                builder.With(x => x.Status == specifications.AuctionStatus);
 
             if (!string.IsNullOrEmpty(specifications.SearchTerm))
                 builder.With(x => x.LotTitle.Contains(specifications.SearchTerm) || x.LotDescription.Contains(specifications.SearchTerm));

@@ -61,11 +61,15 @@ export class UserProfileComponent implements OnInit {
   }
 
   reloadUserProfileInfo() {
-    this.userProfileService.getUserProfile(this.userId!).subscribe(result => {
-      if (result.isSuccessfull)
+    this.userProfileService.getUserProfile(this.userId!).subscribe({
+      next: result => {
         this.userProfileInfo = result.data!;
-      else
-        this.toastrService.error(result.errors[0], 'Error');
+      },
+      error: (err) => {
+        if (err?.error?.errors && Array.isArray(err.error.errors)) {
+          this.toastrService.error(err.error.errors[0], 'Error');
+        }
+      }
     });
   }
 

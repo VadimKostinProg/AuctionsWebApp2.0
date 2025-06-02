@@ -2,7 +2,7 @@
 using BidMasterOnline.Core.Enums;
 using BidMasterOnline.Domain.Enums;
 
-namespace Auctions.Service.API.DTO
+namespace Auctions.Service.API.DTO.Moderator
 {
     public class AuctionRequestSpecificationsDTO : PaginationRequestDTO
     {

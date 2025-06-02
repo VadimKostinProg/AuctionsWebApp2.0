@@ -49,6 +49,12 @@ a {
 .default-span-background {
   @extend .default-background;
 }
+
+.auction-cards-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
 .auctions-cards-container-scroll {
   display: flex;
   overflow: auto;

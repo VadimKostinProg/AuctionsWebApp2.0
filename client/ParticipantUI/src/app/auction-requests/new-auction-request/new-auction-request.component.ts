@@ -85,30 +85,16 @@ export class NewAuctionRequestComponent implements OnInit, AfterViewInit {
       this.auctionResourcesService.getAuctionTypes(),
       this.auctionResourcesService.getAuctionFinishMethods()
     ])
-      .subscribe(([categoriesResult, typesResult, finishMethodsResult]) => {
-        if (categoriesResult.isSuccessfull)
+      .subscribe({
+        next: ([categoriesResult, typesResult, finishMethodsResult]) => {
           this.categories = categoriesResult.data!;
-        else {
-          this.toastrService.error(categoriesResult.errors[0], 'Error');
-          return;
-        }
-
-        if (typesResult.isSuccessfull)
           this.auctionTypes = typesResult.data!;
-        else {
-          this.toastrService.error(typesResult.errors[0], 'Error');
-          return;
-        }
-
-        if (finishMethodsResult.isSuccessfull)
           this.finishMethods = finishMethodsResult.data!;
-        else {
-          this.toastrService.error(finishMethodsResult.errors[0], 'Error');
-          return;
-        }
 
-        this.auctionResourcesInitialized = true;
-      })
+          this.auctionResourcesInitialized = true;
+        },
+        error: (err) => this.handleError(err)
+      });
   }
 
   get categoryId() {
@@ -297,5 +283,11 @@ export class NewAuctionRequestComponent implements OnInit, AfterViewInit {
 
   private isDynamicFinishMethod(finishMethodId: number): boolean {
     return finishMethodId === this.finishMethods.filter(x => x.name === 'Dynamic finish method')[0].id
+  }
+
+  private handleError(err: any): void {
+    if (err?.error?.errors && Array.isArray(err.error.errors)) {
+      this.toastrService.error(err.error.errors[0], 'Error');
+    }
   }
 }

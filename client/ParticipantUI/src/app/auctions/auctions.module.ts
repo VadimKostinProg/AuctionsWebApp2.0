@@ -8,6 +8,7 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { RouterModule, Routes } from "@angular/router";
 import { ToastrModule } from "ngx-toastr";
+import { AuctionFiltersComponent } from "./auction-filters/auction-filters.component";
 
 const routes: Routes = [
   {
@@ -20,7 +21,8 @@ const routes: Routes = [
   declarations: [
     AuctionDetailsComponent,
     AuctionCardComponent,
-    CommentsComponent
+    CommentsComponent,
+    AuctionFiltersComponent
   ],
   imports: [
     CommonModule,
@@ -35,7 +37,8 @@ const routes: Routes = [
   exports: [
     AuctionDetailsComponent,
     AuctionCardComponent,
-    CommentsComponent
+    CommentsComponent,
+    AuctionFiltersComponent
   ]
 })
 export class AuctionsModule { }

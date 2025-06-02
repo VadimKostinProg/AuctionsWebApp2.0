@@ -19,7 +19,7 @@ namespace BidMasterOnline.Core.Specifications
             return this;
         }
 
-        public SpecificationBuilder<T> OrderBy(Expression<Func<T, object>> sortBy, 
+        public SpecificationBuilder<T> OrderBy(Expression<Func<T, object>> sortBy,
             SortDirection sortOrder = SortDirection.ASC)
         {
             this._sortBy = sortBy;
@@ -46,18 +46,9 @@ namespace BidMasterOnline.Core.Specifications
             => new Specification<T>(this.GetPredicate(), this._sortBy, this._sortOrder, this._pageNumber, this._pageSize);
 
         private Expression<Func<T, bool>> GetPredicate()
-        {
-            if (!this._filters.Any())
-                return x => true;
-
-            Expression<Func<T, bool>> combinedExpression = this._filters.First();
-
-            if (this._filters.Count > 1)
-                for (int i = 0; i < this._filters.Count - 1; i++)
-                    combinedExpression = this.Combine(_filters[i], _filters[i + 1]);
-
-            return combinedExpression;
-        }
+            => _filters.Any()
+                ? _filters.Aggregate(Combine)
+                : x => true;
 
         private Expression<Func<T, bool>> Combine(Expression<Func<T, bool>> left, Expression<Func<T, bool>> right)
         {

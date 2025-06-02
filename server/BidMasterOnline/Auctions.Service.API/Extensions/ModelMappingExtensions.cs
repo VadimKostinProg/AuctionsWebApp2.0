@@ -32,8 +32,8 @@ namespace Auctions.Service.API.Extensions
                 Id = entity.Id,
                 LotTitle = entity.LotTitle,
                 RequestedAuctionTime = TimeSpan.FromTicks(entity.RequestedAuctionTimeInTicks),
+                StartPrice = entity.StartPrice,
                 Status = entity.Status,
-                Images = entity.Images?.Select(entity => entity.ToParticipantDTO()).ToList() ?? []
             };
         }
 
@@ -45,6 +45,7 @@ namespace Auctions.Service.API.Extensions
                 LotTitle = entity.LotTitle,
                 LotDescription = entity.LotDescription,
                 RequestedAuctionTime = TimeSpan.FromTicks(entity.RequestedAuctionTimeInTicks),
+                StartPrice = entity.StartPrice,
                 Category = entity.Category?.Name ?? string.Empty,
                 Type = entity.Type?.Name ?? string.Empty,
                 FinishMethod = entity.FinishMethod?.Name ?? string.Empty,
@@ -53,9 +54,10 @@ namespace Auctions.Service.API.Extensions
                     ? null
                     : TimeSpan.FromTicks(entity.FinishTimeIntervalInTicks.Value),
                 BidAmountInterval = entity.BidAmountInterval,
+                AimPrice = entity.AimPrice,
                 Status = entity.Status,
                 ReasonDeclined = entity.ReasonDeclined,
-                Images = entity.Images?.Select(entity => entity.ToParticipantDTO()).ToList() ?? []
+                ImageUrls = entity.Images?.Select(entity => entity.Url).ToList() ?? []
             };
         }
 
