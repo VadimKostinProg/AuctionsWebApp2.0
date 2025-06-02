@@ -307,6 +307,8 @@ namespace BidMasterOnline.Infrastructure
 
         private void ApplyAuditInfo()
         {
+            string? connection = this.Database.GetConnectionString();
+
             IEnumerable<EntityEntry<EntityBase>> entries = ChangeTracker.Entries<EntityBase>();
 
             DateTime currentTime = DateTime.UtcNow;

@@ -18,12 +18,9 @@ namespace Moderation.Service.API.GrpcServices.Server
         {
             ModerationActionResponse response = new();
 
-            //TODO: return back when issue with database bandwith is fixed
-            //response.Success = await _logService.LogModerationAction((ModerationAction)request.ActionCode, 
-            //    request.ResourceId,
-            //    request.ModeratorId);
-
-            response.Success = true;
+            response.Success = await _logService.LogModerationAction((ModerationAction)request.ActionCode,
+                request.ResourceId,
+                request.ModeratorId);
 
             return response;
         }

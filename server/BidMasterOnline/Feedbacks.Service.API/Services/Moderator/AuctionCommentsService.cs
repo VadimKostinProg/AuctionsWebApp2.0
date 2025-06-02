@@ -49,29 +49,23 @@ namespace Feedbacks.Service.API.Services.Moderator
                 return result;
             }
 
-            IDbContextTransaction transaction = _transactionsService.BeginTransaction();
-
             try
             {
                 entity.Deleted = true;
 
                 _repository.Update(entity);
                 await _repository.SaveChangesAsync();
-
-                await _moderationClient.LogModerationAction(ModerationAction.DeletingAuctionComment, commentId);
-
-                await transaction.CommitAsync();
             }
             catch (Exception ex)
             {
-                await transaction.RollbackAsync();
-
                 _logger.LogError(ex, "An error occured while deleting a comment.");
 
                 result.IsSuccessfull = false;
                 result.StatusCode = System.Net.HttpStatusCode.InternalServerError;
                 result.Errors.Add("An error occured while deleting a comment.");
             }
+
+            await _moderationClient.LogModerationAction(ModerationAction.DeletingAuctionComment, commentId);
 
             return result;
         }

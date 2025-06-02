@@ -93,8 +93,6 @@ namespace Auctions.Service.API.Services.Moderator
                 await _repository.AddAsync(newAuction);
                 await _repository.SaveChangesAsync();
 
-                await _moderationClient.LogModerationAction(ModerationAction.ApprovingAuctionRequest, auctionRequest.Id);
-
                 // TODO: notify auctionist
 
                 await transaction.CommitAsync();
@@ -111,6 +109,8 @@ namespace Auctions.Service.API.Services.Moderator
                 result.Errors.Add("An error occured during approving auction request.");
             }
 
+            await _moderationClient.LogModerationAction(ModerationAction.ApprovingAuctionRequest, requestDTO.AuctionRequestId);
+
             return result;
         }
 
@@ -118,16 +118,12 @@ namespace Auctions.Service.API.Services.Moderator
         {
             ServiceResult result = new();
 
-            IDbContextTransaction transaction = _transactionsService.BeginTransaction();
-
             try
             {
                 AuctionRequest auctionRequest = await _repository.GetByIdAsync<AuctionRequest>(requestDTO.AuctionRequestId);
 
                 if (auctionRequest.Status != AuctionRequestStatus.Pending)
                 {
-                    await transaction.RollbackAsync();
-
                     result.IsSuccessfull = false;
                     result.StatusCode = HttpStatusCode.BadRequest;
                     result.Errors.Add("Auction request has been already approved or declined.");
@@ -141,23 +137,20 @@ namespace Auctions.Service.API.Services.Moderator
 
                 await _repository.SaveChangesAsync();
 
-                await _moderationClient.LogModerationAction(ModerationAction.DecliningAuctionRequest, auctionRequest.Id);
-
                 // TODO: notify auctionist
-
-                await transaction.CommitAsync();
 
                 result.Message = "Auction request has been successfully declined!";
             }
             catch (Exception ex)
             {
-                await transaction.RollbackAsync();
                 _logger.LogError(ex, "An error occured during declining auction request.");
 
                 result.IsSuccessfull = false;
                 result.StatusCode = HttpStatusCode.InternalServerError;
                 result.Errors.Add("An error occured during declining auction request.");
             }
+
+            await _moderationClient.LogModerationAction(ModerationAction.DecliningAuctionRequest, requestDTO.AuctionRequestId);
 
             return result;
         }

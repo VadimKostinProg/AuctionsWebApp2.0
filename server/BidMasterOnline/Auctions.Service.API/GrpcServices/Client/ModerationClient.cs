@@ -9,11 +9,15 @@ namespace Auctions.Service.API.GrpcServices.Client
     {
         private readonly IUserAccessor _userAccessor;
         private readonly string _moderationHost;
+        private readonly ILogger<ModerationClient> _logger;
 
-        public ModerationClient(IConfiguration configuration, IUserAccessor userAccessor)
+        public ModerationClient(IConfiguration configuration,
+            IUserAccessor userAccessor,
+            ILogger<ModerationClient> logger)
         {
             _moderationHost = configuration["GrpcChannels:Moderation"]!;
             _userAccessor = userAccessor;
+            _logger = logger;
         }
 
         public async Task LogModerationAction(ModerationAction action, long resourceId)
@@ -32,7 +36,7 @@ namespace Auctions.Service.API.GrpcServices.Client
 
             if (!responce.Success)
             {
-                throw new InvalidOperationException($"Internal error on Moderation.Service while " +
+                _logger.LogError($"Internal error on Moderation.Service while " +
                     $"logging action {action} on resource {resourceId}.");
             }
         }
