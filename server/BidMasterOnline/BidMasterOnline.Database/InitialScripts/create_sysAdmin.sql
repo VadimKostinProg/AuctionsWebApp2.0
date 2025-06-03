@@ -12,6 +12,11 @@ INSERT INTO Users
 	Email,
 	PasswordHashed,
 	PasswordSalt,
+	ForceChangePassword,
+	IsPaymentMethodAttached,
+	TotalAuctions,
+	TotalWins,
+	CompletedAuctions,
 	RoleId
 )
 VALUES (
@@ -27,5 +32,10 @@ VALUES (
 	'vadkostinwork@gmail.com', 
 	'd8he8TlpKZwQP1oOC2mICs9KKPv5bx3NcgQ3HtVxCWM=', 
 	'Ky/21BIIi+PftirZNiqc0etWWNsnJUfVGCZ2o5Lsp2uXYHe5iQLNPAOwaCmj/8hFPG8Aft3qeFVUEplH4WE2AqCe8H5Mei0G9cTprHjPDvx7LWtK2+LF7wEZjrQSUOl9IGG4j4RG4RK51vlX7YzScEvafmShqlCQ2Dxe7faTx5U=', 
+	0,
+	0,
+	0,
+	0,
+	0,
 	1
 )

@@ -18,7 +18,7 @@ public class AuctionRequestsController : BaseController
         _service = service;
     }
 
-    [HttpGet]
+    [HttpGet("own")]
     public async Task<IActionResult> GetUserAuctionRequests([FromQuery] PaginationRequestDTO pagination)
     {
         ServiceResult<PaginatedList<AuctionRequestSummaryDTO>> result = await _service
@@ -43,7 +43,7 @@ public class AuctionRequestsController : BaseController
         return FromResult(result);
     }
 
-    [HttpPut("{id}/cancell")]
+    [HttpPut("{id}/cancel")]
     public async Task<IActionResult> CancellAuctionRequest([FromRoute] long id)
     {
         ServiceResult result = await _service.CancelAuctionRequestByIdAsync(id);

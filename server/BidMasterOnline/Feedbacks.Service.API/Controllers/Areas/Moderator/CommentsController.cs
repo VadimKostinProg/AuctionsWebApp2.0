@@ -12,9 +12,9 @@ namespace Feedbacks.Service.API.Controllers.Areas.Moderator
     [Authorize(Roles = UserRoles.Moderator)]
     public class CommentsController : BaseController
     {
-        private readonly IModeratorAuctionCommentsService _service;
+        private readonly IAuctionCommentsService _service;
 
-        public CommentsController(IModeratorAuctionCommentsService service)
+        public CommentsController(IAuctionCommentsService service)
         {
             _service = service;
         }
@@ -23,7 +23,7 @@ namespace Feedbacks.Service.API.Controllers.Areas.Moderator
         public async Task<IActionResult> GetAuctionComments([FromRoute] long auctionId,
             [FromQuery] PaginationRequestDTO pagination)
         {
-            ServiceResult<PaginatedList<ModeratorAuctionCommentDTO>> result = 
+            ServiceResult<PaginatedList<AuctionCommentDTO>> result = 
                 await _service.GetAuctionCommentsAsync(auctionId, pagination);
 
             return FromResult(result);

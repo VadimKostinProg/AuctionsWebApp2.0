@@ -37,7 +37,7 @@ namespace BidMasterOnline.Domain.Models.Entities
 
         public decimal? AimPrice { get; set; }
 
-        public double AverageScore { get; set; }
+        public double? AverageScore { get; set; }
 
         public AuctionStatus Status { get; set; }
 

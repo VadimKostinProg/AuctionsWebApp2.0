@@ -53,9 +53,7 @@ namespace BidMasterOnline.Core.RepositoryContracts
 
         void Delete<T>(T entity) where T : EntityBase;
 
-        Task DeleteByIdAsync<T>(long id) where T : EntityBase;
-
-        void DeleteMany<T>(IEnumerable<T> entities) where T : EntityBase;
+        Task<int> DeleteManyAsync<T>(Expression<Func<T, bool>> predicate) where T : EntityBase;
 
         Task<int> SaveChangesAsync();
     }

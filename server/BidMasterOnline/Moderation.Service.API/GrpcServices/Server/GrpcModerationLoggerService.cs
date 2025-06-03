@@ -18,7 +18,9 @@ namespace Moderation.Service.API.GrpcServices.Server
         {
             ModerationActionResponse response = new();
 
-            response.Success = await _logService.LogModerationAction((ModerationAction)request.ActionCode, request.ResourceId);
+            response.Success = await _logService.LogModerationAction((ModerationAction)request.ActionCode,
+                request.ResourceId,
+                request.ModeratorId);
 
             return response;
         }

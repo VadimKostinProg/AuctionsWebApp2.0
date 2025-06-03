@@ -8,7 +8,7 @@
         DecliningAuctionRequest,
         CancelingAuction,
         RecoveringAuction,
-        DeletingComment,
+        DeletingAuctionComment,
         DeletingUserFeedback
     }
 }

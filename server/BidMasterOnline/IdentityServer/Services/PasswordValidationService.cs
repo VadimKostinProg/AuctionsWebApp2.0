@@ -1,9 +1,10 @@
 ﻿using BidMasterOnline.Core.Constants;
+using BidMasterOnline.Core.Helpers;
 using BidMasterOnline.Core.RepositoryContracts;
+using BidMasterOnline.Domain.Enums;
 using BidMasterOnline.Domain.Models.Entities;
 using Duende.IdentityModel;
 using IdentityServer.Constants;
-using IdentityServer.Helpers;
 using IdentityServer.Services.Contracts;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
@@ -35,7 +36,8 @@ namespace IdentityServer.Services
 
             User? user = await _repository.GetFirstOrDefaultAsync<User>(
                 u => (u.Email == username || u.Username == username) &&
-                     (!roleId.HasValue || u.RoleId == roleId),
+                     (!roleId.HasValue || u.RoleId == roleId) &&
+                     u.Status != UserStatus.Deleted,
                 includeQuery: query => query.Include(e => e.Role)!);
 
             if (user != null && ValidatePassword(user, password))

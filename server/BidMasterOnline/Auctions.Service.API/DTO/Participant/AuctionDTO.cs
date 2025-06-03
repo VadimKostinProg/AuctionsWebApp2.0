@@ -5,8 +5,6 @@ namespace Auctions.Service.API.DTO.Participant
 {
     public class AuctionDTO : AuctionSummaryDTO
     {
-        public required string Category { get; set; }
-
         public required string Type { get; set; }
 
         public required string FinishMethod { get; set; }
@@ -15,15 +13,9 @@ namespace Auctions.Service.API.DTO.Participant
 
         public TimeSpan AuctionTime { get; set; }
 
-        public TimeSpan? FinishTimeInterval { get; set; }
-
-        public decimal StartPrice { get; set; }
-
         public decimal BidAmountInterval { get; set; }
 
         public AuctionStatus Status { get; set; }
-
-        public string? CancellationReason { get; set; }
 
         public decimal? FinishPrice { get; set; }
 

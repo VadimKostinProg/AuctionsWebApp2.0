@@ -26,6 +26,9 @@ namespace Auctions.Service.API.DTO.Participant
         [Range(10, 10e9)]
         public decimal BidAmountInterval { get; set; }
 
+        [Range(100, 10e9)]
+        public decimal? AimPrice { get; set; }
+
         public List<IFormFile> Images { get; set; } = [];
     }
 }

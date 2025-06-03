@@ -17,12 +17,13 @@ namespace Moderation.Service.API.Services
             _logger = logger;
         }
 
-        public async Task<bool> LogModerationAction(ModerationAction action, long resourceId)
+        public async Task<bool> LogModerationAction(ModerationAction action, long resourceId, long moderatorId)
         {
             try
             {
                 ModerationLog log = new();
                 log.Action = action;
+                log.ModeratorId = moderatorId;
 
                 SetResourceId(log, resourceId);
 
@@ -54,8 +55,11 @@ namespace Moderation.Service.API.Services
                 case ModerationAction.RecoveringAuction:
                     log.AuctionId = resourceId;
                     break;
-                case ModerationAction.DeletingComment:
+                case ModerationAction.DeletingAuctionComment:
                     log.AuctionCommentId = resourceId;
+                    break;
+                case ModerationAction.DeletingUserFeedback:
+                    log.UserFeedbackId = resourceId;
                     break;
             }
         }

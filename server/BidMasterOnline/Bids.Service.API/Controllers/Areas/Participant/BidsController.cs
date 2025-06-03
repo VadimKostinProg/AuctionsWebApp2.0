@@ -7,19 +7,19 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Bids.Service.API.Controllers.Areas.Participant
 {
-    [Route("api/participant")]
+    [Route("api/participant/auctions")]
     [ApiController]
     [Authorize(Roles = UserRoles.Participant)]
     public class BidsController : BaseController
     {
-        private readonly IParticipantBidsService _service;
+        private readonly IBidsService _service;
 
-        public BidsController(IParticipantBidsService service)
+        public BidsController(IBidsService service)
         {
             _service = service;
         }
 
-        [HttpGet("bids")]
+        [HttpGet("bids/own")]
         public async Task<IActionResult> GetUserBids([FromQuery] PaginationRequestDTO pagination)
         {
             ServiceResult<PaginatedList<UserBidDTO>> result = await _service.GetUserBidsAsync(pagination);
@@ -27,7 +27,7 @@ namespace Bids.Service.API.Controllers.Areas.Participant
             return FromResult(result);
         }
 
-        [HttpGet("auctions/{auctionId}/bids")]
+        [HttpGet("{auctionId}/bids")]
         public async Task<IActionResult> GetAuctionBids([FromRoute] long auctionId,
             [FromQuery] PaginationRequestDTO pagination)
         {

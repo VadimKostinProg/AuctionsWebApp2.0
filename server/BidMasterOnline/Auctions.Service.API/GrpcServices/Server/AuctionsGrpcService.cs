@@ -6,9 +6,9 @@ namespace Auctions.Service.API.GrpcServices.Server
 {
     public class AuctionsGrpcService : AuctionsGrpc.Auctions.AuctionsBase
     {
-        private readonly IParticipantAuctionsService _service;
+        private readonly IAuctionsService _service;
 
-        public AuctionsGrpcService(IParticipantAuctionsService service)
+        public AuctionsGrpcService(IAuctionsService service)
         {
             _service = service;
         }

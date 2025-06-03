@@ -13,7 +13,5 @@ namespace Auctions.Service.API.DTO.Participant
         public decimal StartPrice { get; set; }
 
         public AuctionRequestStatus Status { get; set; }
-
-        public List<AuctionImageDTO> Images { get; set; } = [];
     }
 }

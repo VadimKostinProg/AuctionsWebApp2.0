@@ -1,5 +1,4 @@
-﻿using Auctions.Service.API.DTO;
-using Auctions.Service.API.DTO.Moderator;
+﻿using Auctions.Service.API.DTO.Moderator;
 using Auctions.Service.API.ServiceContracts.Moderator;
 using BidMasterOnline.Core.Constants;
 using BidMasterOnline.Core.DTO;
@@ -12,9 +11,9 @@ namespace Auctions.Service.API.Controllers.Areas.Moderator;
 [Authorize(Roles = UserRoles.Moderator)]
 public class AuctionRequestsController : BaseController
 {
-    private readonly IModeratorAuctionRequestsService _service;
+    private readonly IAuctionRequestsService _service;
 
-    public AuctionRequestsController(IModeratorAuctionRequestsService service)
+    public AuctionRequestsController(IAuctionRequestsService service)
     {
         _service = service;
     }

@@ -1,0 +1,167 @@
+<search-bar [placeholder]="'Search auctions...'"
+            (onSubmit)="onSearchPressed($event)"></search-bar>
+
+<ng-container *ngIf="allResourcesInitialized">
+  <div class="d-flex justify-content-between w-75">
+    <div class="flex-fill">
+      <button type="button"
+              class="btn default-btn-background w-75"
+              placement="bottom"
+              [ngbPopover]="categoryPopContent">
+        <i class="fa-solid fa-filter"></i>
+        Category
+      </button>
+    </div>
+
+    <div class="flex-fill">
+      <button type="button"
+              class="btn default-btn-background w-75"
+              placement="bottom"
+              [ngbPopover]="typePopContent">
+        <i class="fa-solid fa-filter"></i>
+        Type
+      </button>
+    </div>
+
+    <div class="flex-fill">
+      <button type="button"
+              class="btn default-btn-background w-75"
+              placement="bottom"
+              [ngbPopover]="startPricePopContent"
+              [autoClose]="'outside'"
+              container="body">
+        <i class="fa-solid fa-filter"></i>
+        Start price
+      </button>
+    </div>
+
+    <div class="flex-fill">
+      <button type="button"
+              class="btn default-btn-background w-75"
+              placement="bottom"
+              [ngbPopover]="currentPricePopContent"
+              [autoClose]="'outside'"
+              container="body">
+        <i class="fa-solid fa-filter"></i>
+        Current price
+      </button>
+    </div>
+
+    <div class="flex-fill">
+      <button type="button"
+              class="btn default-btn-background w-75"
+              placement="bottom"
+              [ngbPopover]="statusPopContent">
+        <i class="fa-solid fa-filter"></i>
+        Status
+      </button>
+    </div>
+  </div>
+</ng-container>
+
+<ng-template #categoryPopContent>
+  <div *ngFor="let category of categories"
+       class="radio-container">
+    <div>
+      <input class="form-check-input"
+             type="radio"
+             [value]="category.id"
+             [checked]="category.id == specifications.categoryId"
+             (click)="onCategoryChanged($event)"> {{ category.name }}
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #typePopContent>
+  <div *ngFor="let type of types"
+       class="radio-container">
+    <div>
+      <input class="form-check-input"
+             type="radio"
+             [value]="type.id"
+             [checked]="type.id == specifications.typeId"
+             (click)="onTypeChanged($event)"> {{ type.name }}
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #startPricePopContent>
+  <div class="d-flex justify-content-between align-items-center">
+    <input class="form-control"
+           type="number"
+           [min]="defaultSliderMin"
+           [max]="defaultSliderMax"
+           [(ngModel)]="minStartPrice" />$
+
+    <span class="m-2"> - </span>
+
+    <input class="form-control"
+           type="number"
+           [min]="defaultSliderMin"
+           [max]="defaultSliderMax"
+           [(ngModel)]="maxStartPrice" />$
+  </div>
+
+  <button class="btn"
+          (click)="onStartPriceFilterChange()">
+    Apply
+  </button>
+
+  <button *ngIf="startPriceChanged"
+          class="btn"
+          (click)="resetStartPrice()">
+    Reset
+  </button>
+</ng-template>
+
+<ng-template #currentPricePopContent>
+  <div class="d-flex justify-content-between align-items-center">
+    <input class="form-control"
+           type="number"
+           [min]="defaultSliderMin"
+           [max]="defaultSliderMax"
+           [(ngModel)]="minCurrentPrice" />$
+
+    <span class="m-2"> - </span>
+
+    <input class="form-control"
+           type="number"
+           [min]="defaultSliderMin"
+           [max]="defaultSliderMax"
+           [(ngModel)]="maxCurrentPrice" />$
+  </div>
+
+  <button class="btn"
+          (click)="onCurrentPriceFilterChange()">
+    Apply
+  </button>
+
+  <button *ngIf="currentPriceChanged"
+          class="btn"
+          (click)="resetCurrentPrice()">
+    Reset
+  </button>
+</ng-template>
+
+<ng-template #statusPopContent>
+  <div class="radio-container">
+    <div>
+      <input #activeStatusRadio
+             class="form-check-input radio-button"
+             type="radio"
+             name="status"
+             value="Active"
+             [checked]="specifications.auctionStatus === AuctionStatusEnum.Active"
+             (click)="onStatusChanged($event)" /> Active
+    </div>
+    <div>
+      <input #finishedStatusRadio
+             class="form-check-input radio-button"
+             type="radio"
+             name="status"
+             value="Finished"
+             [checked]="specifications.auctionStatus === AuctionStatusEnum.Finished"
+             (click)="onStatusChanged($event)" /> Finished
+    </div>
+  </div>
+</ng-template>

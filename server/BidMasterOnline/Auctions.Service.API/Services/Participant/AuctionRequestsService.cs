@@ -3,6 +3,7 @@ using Auctions.Service.API.Extensions;
 using Auctions.Service.API.ServiceContracts.Participant;
 using BidMasterOnline.Core.DTO;
 using BidMasterOnline.Core.Enums;
+using BidMasterOnline.Core.Extensions;
 using BidMasterOnline.Core.RepositoryContracts;
 using BidMasterOnline.Core.ServiceContracts;
 using BidMasterOnline.Core.Specifications;
@@ -22,16 +23,22 @@ namespace Auctions.Service.API.Services.Participant
         private readonly IUserAccessor _userAccessor;
         private readonly IImagesService _imagesService;
         private readonly ITransactionsService _transactionsService;
+        private readonly IUserStatusValidationService _userStatusValidationService;
+        private readonly ILogger<AuctionRequestsService> _logger;
 
         public AuctionRequestsService(IRepository repository,
             IUserAccessor userAccessor,
             IImagesService imagesService,
-            ITransactionsService transactionsService)
+            ITransactionsService transactionsService,
+            IUserStatusValidationService userStatusValidationService,
+            ILogger<AuctionRequestsService> logger)
         {
             _repository = repository;
             _userAccessor = userAccessor;
             _imagesService = imagesService;
             _transactionsService = transactionsService;
+            _userStatusValidationService = userStatusValidationService;
+            _logger = logger;
         }
 
         public async Task<ServiceResult<PaginatedList<AuctionRequestSummaryDTO>>> GetUserAuctionRequestsAsync(PaginationRequestDTO pagination)
@@ -42,24 +49,14 @@ namespace Auctions.Service.API.Services.Participant
 
             ISpecification<AuctionRequest> specification = new SpecificationBuilder<AuctionRequest>()
                 .With(e => e.RequestedByUserId == userId)
+                .OrderBy(e => e.CreatedAt, SortDirection.DESC)
                 .WithPagination(pagination.PageSize, pagination.PageNumber)
                 .Build();
 
             ListModel<AuctionRequest> auctionRequestsList = await _repository.GetFilteredAndPaginated(specification,
-                includeQuery: query => query.Include(e => e.Images)!);
+                includeQuery: query => query.Include(e => e.Category)!);
 
-
-            result.Data = new PaginatedList<AuctionRequestSummaryDTO>
-            {
-                Items = auctionRequestsList.Items.Select(e => e.ToParticipantSummaryDTO()).ToList(),
-                Pagination = new()
-                {
-                    TotalCount = auctionRequestsList.TotalCount,
-                    TotalPages = auctionRequestsList.TotalPages,
-                    CurrentPage = auctionRequestsList.CurrentPage,
-                    PageSize = auctionRequestsList.PageSize
-                }
-            };
+            result.Data = auctionRequestsList.ToPaginatedList(e => e.ToParticipantSummaryDTO());
 
             return result;
         }
@@ -97,6 +94,15 @@ namespace Auctions.Service.API.Services.Participant
 
             IDbContextTransaction transaction = _transactionsService.BeginTransaction();
 
+            if (!await _userStatusValidationService.IsActiveAsync())
+            {
+                result.IsSuccessfull = false;
+                result.StatusCode = System.Net.HttpStatusCode.Forbidden;
+                result.Errors.Add("You have no rights to create auction requests for now.");
+
+                return result;
+            }
+
             try
             {
                 AuctionRequest entity = requestDTO.ToParticipantDomain();
@@ -129,10 +135,12 @@ namespace Auctions.Service.API.Services.Participant
 
                 result.Message = "Your auction request has been submitted!";
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 // TODO: handle image deleting
                 await transaction.RollbackAsync();
+
+                _logger.LogError(ex, "Something went wrong during processing your request.");
 
                 result.StatusCode = HttpStatusCode.BadRequest;
                 result.IsSuccessfull = false;

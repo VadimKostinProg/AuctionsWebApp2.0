@@ -6,9 +6,9 @@ namespace Bids.Service.API.GrpcServices.Server
 {
     public class BidsGrpcService : BidsGrpc.Bids.BidsBase
     {
-        private readonly IModeratorBidsService _moderatorBidsService;
+        private readonly IBidsService _moderatorBidsService;
 
-        public BidsGrpcService(IModeratorBidsService moderatorBidsService)
+        public BidsGrpcService(IBidsService moderatorBidsService)
         {
             _moderatorBidsService = moderatorBidsService;
         }

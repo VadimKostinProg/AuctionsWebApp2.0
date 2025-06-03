@@ -1,4 +1,5 @@
-﻿using BidMasterOnline.Domain.Enums;
+﻿using BidMasterOnline.Core.ServiceContracts;
+using BidMasterOnline.Domain.Enums;
 using Grpc.Net.Client;
 using ModerationGrpc;
 
@@ -6,11 +7,17 @@ namespace Auctions.Service.API.GrpcServices.Client
 {
     public class ModerationClient
     {
+        private readonly IUserAccessor _userAccessor;
         private readonly string _moderationHost;
+        private readonly ILogger<ModerationClient> _logger;
 
-        public ModerationClient(IConfiguration configuration)
+        public ModerationClient(IConfiguration configuration,
+            IUserAccessor userAccessor,
+            ILogger<ModerationClient> logger)
         {
             _moderationHost = configuration["GrpcChannels:Moderation"]!;
+            _userAccessor = userAccessor;
+            _logger = logger;
         }
 
         public async Task LogModerationAction(ModerationAction action, long resourceId)
@@ -21,14 +28,15 @@ namespace Auctions.Service.API.GrpcServices.Client
             ModerationLogRequest request = new()
             {
                 ActionCode = (int)action,
-                ResourceId = resourceId
+                ResourceId = resourceId,
+                ModeratorId = _userAccessor.UserId
             };
 
             ModerationActionResponse responce = await client.LogModerationAsync(request);
 
             if (!responce.Success)
             {
-                throw new InvalidOperationException($"Internal error on Moderation.Service while " +
+                _logger.LogError($"Internal error on Moderation.Service while " +
                     $"logging action {action} on resource {resourceId}.");
             }
         }

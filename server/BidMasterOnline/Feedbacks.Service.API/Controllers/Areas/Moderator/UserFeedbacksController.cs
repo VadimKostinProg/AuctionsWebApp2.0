@@ -12,9 +12,9 @@ namespace Feedbacks.Service.API.Controllers.Areas.Moderator
     [Authorize(Roles = UserRoles.Moderator)]
     public class UserFeedbacksController : BaseController
     {
-        private readonly IModeratorUserFeedbacksService _service;
+        private readonly IUserFeedbacksService _service;
 
-        public UserFeedbacksController(IModeratorUserFeedbacksService service)
+        public UserFeedbacksController(IUserFeedbacksService service)
         {
             _service = service;
         }
@@ -23,7 +23,7 @@ namespace Feedbacks.Service.API.Controllers.Areas.Moderator
         public async Task<IActionResult> GetUserFeedbacks([FromRoute] long userId,
             [FromQuery] PaginationRequestDTO pagination)
         {
-            ServiceResult<PaginatedList<ModeratorUserFeedbackDTO>> result =
+            ServiceResult<PaginatedList<UserFeedbackDTO>> result =
                 await _service.GetUserFeedbacksAsync(userId, pagination);
 
             return FromResult(result);

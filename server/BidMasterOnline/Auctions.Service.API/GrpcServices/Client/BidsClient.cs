@@ -6,10 +6,12 @@ namespace Auctions.Service.API.GrpcServices.Client
     public class BidsClient
     {
         private readonly string _bidsHost;
+        private readonly ILogger<BidsClient> _logger;
 
-        public BidsClient(IConfiguration configuration)
+        public BidsClient(IConfiguration configuration, ILogger<BidsClient> logger)
         {
             _bidsHost = configuration["GrcpChannels:Bids"]!;
+            _logger = logger;
         }
 
         public async Task ClearAllBidsForAuctionAsync(long auctionId)
@@ -26,7 +28,7 @@ namespace Auctions.Service.API.GrpcServices.Client
 
             if (!responce.Success)
             {
-                throw new InvalidOperationException($"Internal error on Bids.Service while " +
+                _logger.LogError($"Internal error on Bids.Service while " +
                     $"clearing bids for auction {auctionId}.");
             }
         }

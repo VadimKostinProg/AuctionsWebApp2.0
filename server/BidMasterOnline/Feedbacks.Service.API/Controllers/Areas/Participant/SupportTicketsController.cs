@@ -12,9 +12,9 @@ namespace Feedbacks.Service.API.Controllers.Areas.Participant
     [Authorize(Roles = UserRoles.Participant)]
     public class SupportTicketsController : BaseController
     {
-        private readonly IParticipantSupportTicketsService _service;
+        private readonly ISupportTicketsService _service;
 
-        public SupportTicketsController(IParticipantSupportTicketsService service)
+        public SupportTicketsController(ISupportTicketsService service)
         {
             _service = service;
         }
@@ -22,7 +22,7 @@ namespace Feedbacks.Service.API.Controllers.Areas.Participant
         [HttpGet]
         public async Task<IActionResult> GetUserSupportTickets([FromQuery] PaginationRequestDTO pagination)
         {
-            ServiceResult<PaginatedList<ParticipantSummarySupportTicketDTO>> result =
+            ServiceResult<PaginatedList<SummarySupportTicketDTO>> result =
                 await _service.GetUserSupportTicketsAsync(pagination);
 
             return FromResult(result);
@@ -31,14 +31,14 @@ namespace Feedbacks.Service.API.Controllers.Areas.Participant
         [HttpGet("{ticketId}")]
         public async Task<IActionResult> GetUserSupportTickets([FromRoute] long ticketId)
         {
-            ServiceResult<ParticipantSupportTicketDTO> result =
+            ServiceResult<SupportTicketDTO> result =
                 await _service.GetSupportTicketByIdAsync(ticketId);
 
             return FromResult(result);
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostSupportTicket([FromBody] ParticipantPostSupportTicketDTO ticketDTO)
+        public async Task<IActionResult> PostSupportTicket([FromBody] PostSupportTicketDTO ticketDTO)
         {
             ServiceResult result = await _service.PostSupportTicketAsync(ticketDTO);
 

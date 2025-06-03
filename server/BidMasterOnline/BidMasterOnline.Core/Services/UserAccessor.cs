@@ -1,6 +1,4 @@
-﻿using BidMasterOnline.Core.RepositoryContracts;
-using BidMasterOnline.Core.ServiceContracts;
-using BidMasterOnline.Domain.Models.Entities;
+﻿using BidMasterOnline.Core.ServiceContracts;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 
@@ -8,29 +6,29 @@ namespace BidMasterOnline.Core.Services
 {
     public class UserAccessor : IUserAccessor
     {
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IRepository _repository;
+        private readonly HttpContext _httpContext;
+        private IEnumerable<Claim> _userClaims = [];
 
-        public UserAccessor(IHttpContextAccessor httpContextAccessor, IRepository repository)
+        public UserAccessor(IHttpContextAccessor httpContextAccessor)
         {
-            _httpContextAccessor = httpContextAccessor;
-
-            InitUserId();
-            _repository = repository;
+            _httpContext = httpContextAccessor.HttpContext;
         }
 
-        private long _userId;
-        private User? _user;
-
-        public long UserId => _userId;
+        public long UserId
+        {
+            get
+            {
+                EnsureUserClaimsAreInitialized();
+                return long.Parse(_userClaims.First(x => x.Type == ClaimTypes.NameIdentifier).Value);
+            }
+        }
 
         public string UserName
         {
             get
             {
-                this.EnsureUserInitialized();
-
-                return _user!.Username;
+                EnsureUserClaimsAreInitialized();
+                return _userClaims.First(x => x.Type == "preferred_username").Value;
             }
         }
 
@@ -38,9 +36,8 @@ namespace BidMasterOnline.Core.Services
         {
             get
             {
-                this.EnsureUserInitialized();
-
-                return _user!.Email;
+                EnsureUserClaimsAreInitialized();
+                return _userClaims.First(x => x.Type == ClaimTypes.Email).Value;
             }
         }
 
@@ -48,27 +45,50 @@ namespace BidMasterOnline.Core.Services
         {
             get
             {
-                this.EnsureUserInitialized();
-
-                return _user!.Role!.Name;
+                EnsureUserClaimsAreInitialized();
+                return _userClaims.First(x => x.Type == ClaimTypes.Role).Value;
             }
         }
 
-        private void InitUserId()
+        public long? TryGetUserId()
         {
-            // TODO: add custom exception
-            string userId = _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value
-                ?? throw new ArgumentNullException();
-
-            _userId = long.Parse(userId);
-        }
-
-        private void EnsureUserInitialized()
-        {
-            if (_user == null)
+            if (!(_httpContext.User.Identity?.IsAuthenticated ?? false))
             {
-                _user = _repository.GetById<User>(_userId);
+                return null;
             }
+
+            EnsureUserClaimsAreInitialized();
+
+            string? userIdstr = _userClaims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
+
+            return string.IsNullOrEmpty(userIdstr)
+                ? null
+                : long.Parse(userIdstr);
+        }
+
+        public string? TryGetUserName()
+        {
+            if (!(_httpContext.User.Identity?.IsAuthenticated ?? false))
+            {
+                return null;
+            }
+
+            EnsureUserClaimsAreInitialized();
+
+            return _userClaims.FirstOrDefault(x => x.Type == "preferred_username")?.Value;
+        }
+
+        private void EnsureUserClaimsAreInitialized()
+        {
+            if (_userClaims.Any())
+                return;
+
+            if (!(_httpContext.User.Identity?.IsAuthenticated ?? false))
+            {
+                throw new UnauthorizedAccessException("User is not authorized.");
+            }
+
+            _userClaims = _httpContext.User.Claims;
         }
     }
 }

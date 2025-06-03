@@ -12,7 +12,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
@@ -59,14 +58,27 @@ builder.Services.AddInfrastructure(builder.Configuration)
     .AddCoreServices();
 
 builder.Services.AddScoped<ModerationClient>();
-builder.Services.AddScoped<IParticipantAuctionCommentsService, ParticipantAuctionCommentsService>();
-builder.Services.AddScoped<IParticipantComplaintsService, ParticipantComplaintsService>();
-builder.Services.AddScoped<IParticipantSupportTicketsService, ParticipantSupportTicketsService>();
-builder.Services.AddScoped<IParticipantUserFeedbacksService, ParticipantUserFeedbacksService>();
-builder.Services.AddScoped<IModeratorAuctionCommentsService, ModeratorAuctionCommentsService>();
-builder.Services.AddScoped<IModeratorComplaintsService, ModeratorComplaintsService>();
-builder.Services.AddScoped<IModeratorSupportTicketsService, ModeratorSupportTicketsService>();
-builder.Services.AddScoped<IModeratorUserFeedbacksService, ModeratorUserFeedbacksService>();
+builder.Services.AddScoped<Feedbacks.Service.API.ServiceContracts.Participant.IAuctionCommentsService, Feedbacks.Service.API.Services.Participant.AuctionCommentsService>();
+builder.Services.AddScoped<Feedbacks.Service.API.ServiceContracts.Participant.IComplaintsService, Feedbacks.Service.API.Services.Participant.ComplaintsService>();
+builder.Services.AddScoped<Feedbacks.Service.API.ServiceContracts.Participant.ISupportTicketsService, Feedbacks.Service.API.Services.Participant.SupportTicketsService>();
+builder.Services.AddScoped<Feedbacks.Service.API.ServiceContracts.Participant.IUserFeedbacksService, Feedbacks.Service.API.Services.Participant.UserFeedbacksService>();
+builder.Services.AddScoped<Feedbacks.Service.API.ServiceContracts.Moderator.IAuctionCommentsService, Feedbacks.Service.API.Services.Moderator.AuctionCommentsService>();
+builder.Services.AddScoped<Feedbacks.Service.API.ServiceContracts.Moderator.IComplaintsService, Feedbacks.Service.API.Services.Moderator.ComplaintsService>();
+builder.Services.AddScoped<Feedbacks.Service.API.ServiceContracts.Moderator.ISupportTicketsService, Feedbacks.Service.API.Services.Moderator.SupportTicketsService>();
+builder.Services.AddScoped<Feedbacks.Service.API.ServiceContracts.Moderator.IUserFeedbacksService, Feedbacks.Service.API.Services.Moderator.UserFeedbacksService>();
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CorsPolitics",
+        builder =>
+        {
+            builder.AllowAnyOrigin()
+                   .AllowAnyMethod()
+                   .AllowAnyHeader();
+        });
+});
+
+builder.Services.AddControllers();
 
 var app = builder.Build();
 
@@ -87,6 +99,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseRouting();
+
+app.UseCors("CorsPolitics");
 
 app.UseAuthentication();
 app.UseAuthorization();

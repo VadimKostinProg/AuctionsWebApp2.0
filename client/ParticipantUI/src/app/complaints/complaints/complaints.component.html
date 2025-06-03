@@ -1,0 +1,50 @@
+<div class="container-fluid">
+  <h3>Complaints</h3>
+
+  <span>What is the situation you need to complaint on?</span>
+
+  <a [routerLink]="'/complaints/history'">
+    View my complaints history
+  </a>
+  <div id="accordion">
+    <div class="card">
+      <div class="card-header"
+           id="headingOne">
+        <h5 class="mb-0">
+          <button class="btn btn-link"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#collapseOne"
+                  aria-expanded="false"
+                  aria-controls="collapseOne">
+            Seller does not apply a delivery of the lot.
+          </button>
+        </h5>
+      </div>
+
+      <div id="collapseOne"
+           class="collapse"
+           aria-labelledby="headingOne"
+           data-bs-parent="#accordion">
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"
+           id="headingTwo">
+        <h5 class="mb-0">
+          <button class="btn btn-link collapsed"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#collapseTwo"
+                  aria-expanded="false"
+                  aria-controls="collapseTwo">
+            Buyer of my auction does not pay for the lot.
+          </button>
+        </h5>
+      </div>
+      <div id="collapseTwo"
+           class="collapse"
+           aria-labelledby="headingTwo"
+           data-bs-parent="#accordion">
+      </div>
+    </div>
+  </div>
+</div>

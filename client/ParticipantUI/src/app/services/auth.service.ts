@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { OAuthService } from 'angular-oauth2-oidc';
 import { authConfig } from '../../auth.config';
+import { UserBasic } from '../models/users/userBasic';
+import { UserStatusEnum } from '../models/user-profiles/userStatusEnum';
 
 @Injectable({
   providedIn: 'root'
@@ -34,5 +36,21 @@ export class AuthService {
 
   get isLoggedIn(): boolean {
     return this.oauthService.hasValidAccessToken();
+  }
+
+  get userStatus(): UserStatusEnum {
+    const statusStr: string = this.identityClaims['user_status'];
+
+    return UserStatusEnum[statusStr as keyof typeof UserStatusEnum];
+  }
+
+  get user(): UserBasic {
+    const claims = this.identityClaims;
+
+    return {
+      userId: claims['sub'],
+      username: claims[''],
+      email: claims['email']
+    }
   }
 }

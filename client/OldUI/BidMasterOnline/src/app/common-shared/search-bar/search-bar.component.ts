@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AuctionsDeepLinkingService } from 'src/app/services/auctions-deep-linking.service';
-import { DeepLinkingService } from 'src/app/services/deep-linking.service';
 
 @Component({
   selector: 'search-bar',

@@ -1,0 +1,23 @@
+<div *ngIf="auction"
+     class="card auction-card">
+  <img [src]="auction.imageUrls[0]"
+       class="card-img-top">
+  <div class="card-body">
+    <h5 class="card-title">{{ auction.lotTitle }}</h5>
+    <p *ngIf="auction.averageScore"
+       class="card-text">
+      {{ auction.averageScore }} <i class="fa-solid fa-star"></i>
+    </p>
+    <p class="card-text">
+      {{ auction.category }}
+    </p>
+    <p class="card-text">
+      <span class="current-bid">${{ auction.currentPrice }}</span>/${{ auction.startPrice }}
+    </p>
+    <p class="card-text">
+      Finishes at {{ auction.finishTime | date: 'MM-dd-yyyy hh:mm' }}
+    </p>
+    <a class="btn default-btn-background w-100"
+       [routerLink]="['/auctions', auction.id, 'details']">Details</a>
+  </div>
+</div>

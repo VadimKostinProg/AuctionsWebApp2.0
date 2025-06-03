@@ -1,0 +1,43 @@
+<div class="margin-auto">
+  <div class="d-flex justify-content-center">
+    <div *ngIf="complaint"
+         class="complaint-details">
+      <div class="m-4 p-4 rounded shadow">
+        <h3 class="p-0 mb-3 text-center">Complaint #{{ complaint.id }}</h3>
+        <div class="d-flex flex-column">
+          <div class="info-row">
+            <span class="info-label">Date and time:</span>
+            <span class="info-value">{{ complaint.createdAt | date: 'MM-dd-yyyy HH:mm' }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Status:</span>
+            <span class="info-value"
+                  [ngClass]="{
+                    'status-pending': complaint.status === 0,
+                    'status-active': complaint.status === 1,
+                    'status-completed': complaint.status === 2
+                  }">
+              {{ complaint.status === 0 ? 'Pending' :
+              complaint.status === 1 ? 'Active' :
+              complaint.status === 2 ? 'Completed' : 'Unknown' }}
+            </span>
+          </div>
+          <div class="info-row mt-3">
+            <span class="info-label"><b class="details-property">Title:</b></span>
+            <span class="info-value">{{ complaint.title }}</span>
+          </div>
+          <!-- todo: add accusing component info -->
+          <div class="info-row mt-2">
+            <span class="info-label"><b class="details-property">Text:</b></span>
+            <span class="info-value">{{ complaint.complaintText }}</span>
+          </div>
+          <div *ngIf="complaint.moderatorConclusion"
+               class="mt-3">
+            <h5 class="mt-2"><b class="details-property">Moderator Conclusion:</b></h5>
+            <span>{{ complaint.moderatorConclusion }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

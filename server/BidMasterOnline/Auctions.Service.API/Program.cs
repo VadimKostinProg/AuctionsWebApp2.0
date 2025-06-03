@@ -1,10 +1,7 @@
 ﻿using Auctions.Service.API.BackgroundJobs;
 using Auctions.Service.API.Filters;
 using Auctions.Service.API.GrpcServices.Client;
-using Auctions.Service.API.ServiceContracts.Moderator;
-using Auctions.Service.API.ServiceContracts.Participant;
-using Auctions.Service.API.Services.Moderator;
-using Auctions.Service.API.Services.Participant;
+using Auctions.Service.API.GrpcServices.Server;
 using BidMasterOnline.Core;
 using BidMasterOnline.Infrastructure;
 using Microsoft.OpenApi.Models;
@@ -14,11 +11,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
-
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
+    c.CustomSchemaIds(type => type.FullName);
+
     c.SwaggerDoc("v1", new() { Title = "Auctions.Service.API", Version = "v1" });
 
     c.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
@@ -62,10 +59,17 @@ builder.Services.AddAuthentication("Bearer")
 builder.Services.AddInfrastructure(builder.Configuration)
     .AddCoreServices();
 
-builder.Services.AddScoped<IModeratorAuctionRequestsService, ModeratorAuctionRequestsService>();
+builder.Services.AddScoped<Auctions.Service.API.ServiceContracts.Moderator.IAuctionRequestsService, Auctions.Service.API.Services.Moderator.AuctionRequestsService>();
+builder.Services.AddScoped<Auctions.Service.API.ServiceContracts.Moderator.IAuctionsService, Auctions.Service.API.Services.Moderator.AuctionsService>();
+builder.Services.AddScoped<Auctions.Service.API.ServiceContracts.Moderator.IAuctionCategoriesService, Auctions.Service.API.Services.Moderator.AuctionCategoriesService>();
+builder.Services.AddScoped<Auctions.Service.API.ServiceContracts.Moderator.IAuctionTypesService, Auctions.Service.API.Services.Moderator.AuctionTypesService>();
+builder.Services.AddScoped<Auctions.Service.API.ServiceContracts.Moderator.IAuctionFinishMethodsService, Auctions.Service.API.Services.Moderator.AuctionFinishMethodsService>();
 
-builder.Services.AddScoped<IAuctionRequestsService, AuctionRequestsService>();
-builder.Services.AddScoped<IParticipantAuctionsService, ParticipantAuctionsService>();
+builder.Services.AddScoped<Auctions.Service.API.ServiceContracts.Participant.IAuctionRequestsService, Auctions.Service.API.Services.Participant.AuctionRequestsService>();
+builder.Services.AddScoped<Auctions.Service.API.ServiceContracts.Participant.IAuctionsService, Auctions.Service.API.Services.Participant.AuctionsService>();
+builder.Services.AddScoped<Auctions.Service.API.ServiceContracts.Participant.IAuctionCategoriesService, Auctions.Service.API.Services.Participant.AuctionCategoriesService>();
+builder.Services.AddScoped<Auctions.Service.API.ServiceContracts.Participant.IAuctionTypesService, Auctions.Service.API.Services.Participant.AuctionTypesService>();
+builder.Services.AddScoped<Auctions.Service.API.ServiceContracts.Participant.IAuctionFinishMethodsService, Auctions.Service.API.Services.Participant.AuctionFinishMethodsService>();
 
 builder.Services.AddScoped<ModerationClient>();
 builder.Services.AddScoped<BidsClient>();
@@ -82,6 +86,19 @@ builder.Services.AddQuartz(q =>
         .WithCronSchedule("0 * * ? * *")
     );
 });
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CorsPolitics",
+        builder =>
+        {
+            builder.AllowAnyOrigin()
+                   .AllowAnyMethod()
+                   .AllowAnyHeader();
+        });
+});
+
+builder.Services.AddControllers();
 
 var app = builder.Build();
 
@@ -103,9 +120,13 @@ app.UseHttpsRedirection();
 
 app.UseRouting();
 
+app.UseCors("CorsPolitics");
+
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapGrpcService<AuctionsGrpcService>();
 
 app.Run();

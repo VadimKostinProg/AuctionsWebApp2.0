@@ -18,6 +18,7 @@ namespace IdentityServer
                             RequirePkce = true,
                             RequireClientSecret = false,
                             AllowedScopes = ["openid", "profile", "participantScope"],
+                            AlwaysIncludeUserClaimsInIdToken = true,
                             RedirectUris = { "http://localhost:4200/auth/callback" },
                             PostLogoutRedirectUris = { "http://localhost:4200/" },
                             AllowedCorsOrigins = { "http://localhost:4200" },
@@ -85,6 +86,17 @@ namespace IdentityServer
                             RedirectUris = [$"{configuration["APIResources:ModerationServiceAPI"]}/swagger/oauth2-redirect.html"],
                             AllowedCorsOrigins = [configuration["APIResources:ModerationServiceAPI"]!],
                             AllowedScopes = ["openid", "profile", "participantScope", "moderatorScope"]
+                        },
+                        new Client
+                        {
+                            ClientId = "users-service-api-swagger",
+                            ClientName = "Users API - Swagger",
+                            AllowedGrantTypes = GrantTypes.Code,
+                            RequirePkce = true,
+                            RequireClientSecret = false,
+                            RedirectUris = [$"{configuration["APIResources:UsersServiceAPI"]}/swagger/oauth2-redirect.html"],
+                            AllowedCorsOrigins = [configuration["APIResources:UsersServiceAPI"]!],
+                            AllowedScopes = ["openid", "profile", "participantScope", "moderatorScope"]
                         }
                     ])
                 .AddInMemoryApiResources([
@@ -115,7 +127,7 @@ namespace IdentityServer
                         },
                         new ApiResource()
                         {
-                            Name = "Deliveries.Service.API",
+                            Name = "Users.Service.API",
                             Scopes = ["participantScope", "moderatorScope"],
                         },
                     ])

@@ -3,25 +3,17 @@ using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Configuration
+      .SetBasePath(builder.Environment.ContentRootPath)
+      .AddOcelot();
 
-builder.Services.AddOcelot();
-
-builder.Services.AddAuthentication("Bearer")
-    .AddJwtBearer("Bearer", options =>
-    {
-        options.Authority = builder.Configuration["IdentityServer:Authority"];
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateAudience = false
-        };
-    });
+builder.Services.AddOcelot(builder.Configuration);
 
 var app = builder.Build();
 
-app.UseRouting();
-
-app.UseEndpoints(options => options.MapControllers());
+//app.UseAuthentication();
+//app.UseAuthorization();
 
 await app.UseOcelot();
 
-app.Run();
+await app.RunAsync();

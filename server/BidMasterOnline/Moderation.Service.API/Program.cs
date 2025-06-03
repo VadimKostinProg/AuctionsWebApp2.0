@@ -2,6 +2,7 @@ using BidMasterOnline.Core;
 using BidMasterOnline.Infrastructure;
 using Microsoft.OpenApi.Models;
 using Moderation.Service.API.Filters;
+using Moderation.Service.API.GrpcServices.Server;
 using Moderation.Service.API.ServiceContracts;
 using Moderation.Service.API.Services;
 
@@ -9,7 +10,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
@@ -58,6 +58,19 @@ builder.Services.AddInfrastructure(builder.Configuration)
 
 builder.Services.AddScoped<IModerationLogsService, ModerationLogsService>();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CorsPolitics",
+        builder =>
+        {
+            builder.AllowAnyOrigin()
+                   .AllowAnyMethod()
+                   .AllowAnyHeader();
+        });
+});
+
+builder.Services.AddControllers();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -78,9 +91,12 @@ app.UseHttpsRedirection();
 
 app.UseRouting();
 
+app.UseCors("CorsPolitics");
+
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapGrpcService<GrpcModerationLoggerService>();
 
 app.Run();

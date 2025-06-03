@@ -13,9 +13,9 @@ namespace Auctions.Service.API.Controllers.Areas.Moderator;
 [Authorize(Roles = UserRoles.Moderator)]
 public class AuctionsController : BaseController
 {
-    private readonly IModeratorAuctionsService _service;
+    private readonly IAuctionsService _service;
 
-    public AuctionsController(IModeratorAuctionsService service)
+    public AuctionsController(IAuctionsService service)
     {
         _service = service;
     }

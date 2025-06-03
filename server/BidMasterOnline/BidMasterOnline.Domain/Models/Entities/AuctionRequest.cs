@@ -30,6 +30,8 @@ namespace BidMasterOnline.Domain.Models.Entities
 
         public decimal BidAmountInterval { get; set; }
 
+        public decimal? AimPrice { get; set; }
+
         public AuctionRequestStatus Status { get; set; }
 
         public string? ReasonDeclined { get; set; }

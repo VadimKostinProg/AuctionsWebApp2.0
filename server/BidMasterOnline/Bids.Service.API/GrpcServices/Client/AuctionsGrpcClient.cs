@@ -6,10 +6,12 @@ namespace Bids.Service.API.GrpcServices.Client
     public class AuctionsGrpcClient
     {
         private readonly string _auctionsHost;
+        private readonly ILogger<AuctionsGrpcClient> _logger;
 
-        public AuctionsGrpcClient(IConfiguration configuration)
+        public AuctionsGrpcClient(IConfiguration configuration, ILogger<AuctionsGrpcClient> logger)
         {
             _auctionsHost = configuration["GrcpChannels:Auctions"]!;
+            _logger = logger;
         }
 
         public async Task FinishAuctionAsync(long auctionId)
@@ -26,7 +28,7 @@ namespace Bids.Service.API.GrpcServices.Client
 
             if (!responce.Success)
             {
-                throw new InvalidOperationException($"Internal error on Auctions.Service while " +
+                _logger.LogError($"Internal error on Auctions.Service while " +
                     $"finishing auction {auctionId}.");
             }
         }

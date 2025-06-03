@@ -10,6 +10,7 @@ namespace BidMasterOnline.Core
         {
             services.AddScoped<IImagesService, ImagesService>();
             services.AddScoped<IUserAccessor, UserAccessor>();
+            services.AddScoped<IUserStatusValidationService, UserStatusValidationService>();
 
             return services;
         }

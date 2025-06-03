@@ -4,6 +4,8 @@ namespace BidMasterOnline.Domain.Models.Entities
 {
     public class ModerationLog : EntityBase
     {
+        public long ModeratorId { get; set; }
+
         public long? UserId { get; set; }
 
         public long? AuctionId { get; set; }
@@ -11,6 +13,8 @@ namespace BidMasterOnline.Domain.Models.Entities
         public long? AuctionRequestId { get; set; }
 
         public long? AuctionCommentId { get; set; }
+
+        public long? UserFeedbackId { get; set; }
 
         public ModerationAction Action { get; set; }
     }

@@ -12,9 +12,9 @@ namespace Feedbacks.Service.API.Controllers.Areas.Participant
     [Authorize(Roles = UserRoles.Participant)]
     public class UserFeedbacksController : BaseController
     {
-        private readonly IParticipantUserFeedbacksService _service;
+        private readonly IUserFeedbacksService _service;
 
-        public UserFeedbacksController(IParticipantUserFeedbacksService service)
+        public UserFeedbacksController(IUserFeedbacksService service)
         {
             _service = service;
         }
@@ -23,14 +23,14 @@ namespace Feedbacks.Service.API.Controllers.Areas.Participant
         public async Task<IActionResult> GetUserFeedbacks([FromRoute] long userId, 
             [FromQuery] PaginationRequestDTO pagination)
         {
-            ServiceResult<PaginatedList<ParticipantUserFeedbackDTO>> result = 
+            ServiceResult<PaginatedList<UserFeedbackDTO>> result = 
                 await _service.GetUserFeedbacksAsync(userId, pagination);
 
             return FromResult(result);
         }
 
         [HttpPost("feedbacks")]
-        public async Task<IActionResult> PostUserFeedback([FromBody] ParticipantPostUserFeedbackDTO userFeedbackDTO)
+        public async Task<IActionResult> PostUserFeedback([FromBody] PostUserFeedbackDTO userFeedbackDTO)
         {
             ServiceResult result = await _service.PostUserFeedbackAsync(userFeedbackDTO);
 

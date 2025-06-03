@@ -12,9 +12,9 @@ namespace Feedbacks.Service.API.Controllers.Areas.Participant
     [Authorize(Roles = UserRoles.Participant)]
     public class ComplaintsController : BaseController
     {
-        private readonly IParticipantComplaintsService _service;
+        private readonly IComplaintsService _service;
 
-        public ComplaintsController(IParticipantComplaintsService service)
+        public ComplaintsController(IComplaintsService service)
         {
             _service = service;
         }
@@ -22,23 +22,23 @@ namespace Feedbacks.Service.API.Controllers.Areas.Participant
         [HttpGet]
         public async Task<IActionResult> GetUserComplaints([FromQuery] PaginationRequestDTO pagination)
         {
-            ServiceResult<PaginatedList<ParticipantSummaryComplaintDTO>> result = 
+            ServiceResult<PaginatedList<SummaryComplaintDTO>> result = 
                 await _service.GetUserComplaintsAsync(pagination);
 
             return FromResult(result);
         }
 
         [HttpGet("{complaintId}")]
-        public async Task<IActionResult> GetUserComplaints([FromRoute] long complaintId)
+        public async Task<IActionResult> GetComplaintById([FromRoute] long complaintId)
         {
-            ServiceResult<ParticipantComplaintDTO> result =
+            ServiceResult<ComplaintDTO> result =
                 await _service.GetComplaintByIdAsync(complaintId);
 
             return FromResult(result);
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostComplaint([FromBody] ParticipantPostComplaintDTO complaintDTO)
+        public async Task<IActionResult> PostComplaint([FromBody] PostComplaintDTO complaintDTO)
         {
             ServiceResult result = await _service.PostComplaintAsync(complaintDTO);
 

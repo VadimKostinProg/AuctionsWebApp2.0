@@ -7,10 +7,12 @@ namespace Feedbacks.Service.API.GrpcServices.Client
     public class ModerationClient
     {
         private readonly string _moderationHost;
+        private readonly ILogger<ModerationClient> _logger;
 
-        public ModerationClient(IConfiguration configuration)
+        public ModerationClient(IConfiguration configuration, ILogger<ModerationClient> logger)
         {
             _moderationHost = configuration["GrpcChannels:Moderation"]!;
+            _logger = logger;
         }
 
         public async Task LogModerationAction(ModerationAction action, long resourceId)
@@ -28,7 +30,7 @@ namespace Feedbacks.Service.API.GrpcServices.Client
 
             if (!responce.Success)
             {
-                throw new InvalidOperationException($"Internal error on Moderation.Service while " +
+                _logger.LogError($"Internal error on Moderation.Service while " +
                     $"logging action {action} on resource {resourceId}.");
             }
         }

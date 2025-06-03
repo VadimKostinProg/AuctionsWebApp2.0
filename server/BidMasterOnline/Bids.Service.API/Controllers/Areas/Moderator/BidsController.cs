@@ -12,9 +12,9 @@ namespace Bids.Service.API.Controllers.Areas.Moderator
     [Authorize(Roles = UserRoles.Moderator)]
     public class BidsController : BaseController
     {
-        private readonly IModeratorBidsService _service;
+        private readonly IBidsService _service;
 
-        public BidsController(IModeratorBidsService service)
+        public BidsController(IBidsService service)
         {
             _service = service;
         }

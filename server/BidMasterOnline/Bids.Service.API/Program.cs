@@ -12,7 +12,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
@@ -61,10 +60,23 @@ builder.Services.AddInfrastructure(builder.Configuration)
     .AddCoreServices();
 
 builder.Services.AddScoped<IBidsPlacingStrategyFactory, BidsPlacingStrategyFactory>();
-builder.Services.AddScoped<IParticipantBidsService, ParticipantBidsService>();
-builder.Services.AddScoped<IModeratorBidsService, ModeratorBidsService>();
+builder.Services.AddScoped<Bids.Service.API.ServiceContracts.Participant.IBidsService, Bids.Service.API.Services.Participant.BidsService>();
+builder.Services.AddScoped<Bids.Service.API.ServiceContracts.Moderator.IBidsService, Bids.Service.API.Services.Moderator.BidsService>();
 
 builder.Services.AddScoped<AuctionsGrpcClient>();
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CorsPolitics",
+        builder =>
+        {
+            builder.AllowAnyOrigin()
+                   .AllowAnyMethod()
+                   .AllowAnyHeader();
+        });
+});
+
+builder.Services.AddControllers();
 
 var app = builder.Build();
 
@@ -85,6 +97,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseRouting();
+
+app.UseCors("CorsPolitics");
 
 app.UseAuthentication();
 app.UseAuthorization();
