@@ -1,1 +1,47 @@
-<router-outlet></router-outlet>
+<header>
+  <nav class="navbar navbar-expand-lg bg-body-tertiary w-100">
+    <div class="container-fluid">
+      <a class="navbar-brand"
+         routerLink="/"><b>BidMasterOnline</b> Moderator Tools</a>
+      <button class="navbar-toggler"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#navbarText"
+              aria-controls="navbarText"
+              aria-expanded="false"
+              aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div *ngIf="isLoggedIn"
+           class="collapse navbar-collapse header-container"
+           id="navbarText">
+        <span class="navbar-text ms-auto">
+          <a style="font-size: 1.5em; margin-right: 15px;"
+             [routerLink]="['/users', userId]">
+            <i class="fa-solid fa-user"></i>
+          </a>
+          <a class="logout-btn"
+             routerLink="/"
+             (click)="logout()"
+             style="font-size: 1.5em;">
+            <i class="fa-solid fa-right-from-bracket"></i>
+          </a>
+        </span>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<main>
+  <div class="container-fluid w-75 mt-3">
+    <router-outlet></router-outlet>
+  </div>
+</main>
+
+<footer class="border-top footer">
+  <div class="container text-center">
+    <span>
+      &copy; 2025 - BidMasterOnline
+    </span>
+  </div>
+</footer>

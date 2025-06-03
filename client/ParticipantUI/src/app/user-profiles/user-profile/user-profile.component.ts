@@ -10,7 +10,7 @@ import { AuthService } from "../../services/auth.service";
 import { ComplaintTypeEnum } from "../../models/complaints/complaintTypeEnum";
 import { PostComplaint } from "../../models/complaints/postComplaint";
 import { ResetPasswordModel } from "../../models/user-profiles/resetPasswordModel";
-import { UserStatusEnum } from "../../models/user-profiles/userStatusEnum";
+import { UserStatusEnum } from "../../models/users/userStatusEnum";
 
 @Component({
   selector: 'app-user-profile',

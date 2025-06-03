@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
   standalone: false
 })
 export class AppComponent {
-  title = 'ParticipantUI';
+  title = 'BidMasterOnline';
 
   currentRoute: string = '';
 

@@ -9,7 +9,7 @@ import { forkJoin } from "rxjs";
 import { PostAuctionRequest } from "../../models/auction-requests/postAuctionRequest";
 import { NgxSpinnerService } from "ngx-spinner";
 import { AuthService } from "../../services/auth.service";
-import { UserStatusEnum } from "../../models/user-profiles/userStatusEnum";
+import { UserStatusEnum } from "../../models/users/userStatusEnum";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
