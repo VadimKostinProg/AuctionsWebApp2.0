@@ -40,7 +40,6 @@ const routes: Routes = [
     CommonModule,
     RouterModule.forChild(routes),
     SharedModule,
-    RouterModule,
     AuctionsModule
   ],
   exports: [

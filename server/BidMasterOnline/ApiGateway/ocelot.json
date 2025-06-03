@@ -437,6 +437,43 @@
       "UpstreamHttpMethod": [ "OPTIONS", "PUT" ],
       "UpstreamPathTemplate": "/api/moderator/auction-requests/decline"
     },
+    {
+      "DownstreamPathTemplate": "/api/moderator/auction-categories?{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7157
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "GET" ],
+      "UpstreamPathTemplate": "/api/moderator/auction-categories?{everything}"
+    },
+    {
+      "DownstreamPathTemplate": "/api/moderator/auction-categories",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7157
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "POST" ],
+      "UpstreamPathTemplate": "/api/moderator/auction-categories"
+    },
+    {
+      "DownstreamPathTemplate": "/api/moderator/auction-categories/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7157
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "PUT", "DELETE" ],
+      "UpstreamPathTemplate": "/api/moderator/auction-categories/{id}"
+    },
+
 
     // Bids.Service.API
     {

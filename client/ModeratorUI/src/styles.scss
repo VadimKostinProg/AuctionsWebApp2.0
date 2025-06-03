@@ -80,14 +80,17 @@ a {
   @extend .radio-container;
 }
 
-.add-comment-button {
-  padding: 0;
-  background-color: transparent;
+.orderable-title {
   border: 0;
+  background-color: white;
+  font-weight: bold;
 }
 
-.add-user-feedback-button {
-  @extend .add-comment-button;
+.create-button {
+  padding: 0;
+  background-color: transparent;
+  color: orange;
+  border: 0;
 }
 
 .add-comment-button:hover {

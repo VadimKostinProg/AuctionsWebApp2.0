@@ -32,7 +32,7 @@ export class DataTableComponent implements OnInit {
   onEdit = new EventEmitter<void>();
 
   @Output()
-  onDelete = new EventEmitter<string>();
+  onDelete = new EventEmitter<number>();
 
   @Output()
   onAction = new EventEmitter<OptionalActionResultModel>();
@@ -177,17 +177,17 @@ export class DataTableComponent implements OnInit {
   }
 
   async onSortingChanged(field: string) {
-    if (this.sorting.sortField != field) {
-      this.sorting.sortField = field;
+    if (this.sorting.sortBy != field) {
+      this.sorting.sortBy = field;
       this.sorting.sortDirection = SortDirectionEnum.ASC;
 
       await this.queryParamsService.setSortingParams(this.sorting);
-    } else if (this.sorting.sortField == field && this.sorting.sortDirection == SortDirectionEnum.ASC) {
+    } else if (this.sorting.sortBy == field && this.sorting.sortDirection == SortDirectionEnum.ASC) {
       this.sorting.sortDirection = SortDirectionEnum.DESC;
 
       await this.queryParamsService.setSortingParams(this.sorting);
     } else {
-      this.sorting.sortField = undefined;
+      this.sorting.sortBy = undefined;
 
       await this.queryParamsService.clearSortingParams();
     }

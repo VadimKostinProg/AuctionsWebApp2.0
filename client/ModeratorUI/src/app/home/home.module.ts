@@ -5,6 +5,10 @@ import { HomeComponent } from './home/home.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
+  {
+    path: 'auction-categories',
+    loadChildren: () => import('../auction-categories/auction-categories.module').then(m => m.AuctionCategoriesModule)
+  },
 ];
 
 @NgModule({
@@ -13,7 +17,7 @@ const routes: Routes = [
   ],
   imports: [
     CommonModule,
-    RouterModule.forChild(routes)
+    RouterModule.forChild(routes),
   ],
   exports: [
     HomeComponent

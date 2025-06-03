@@ -29,9 +29,9 @@ namespace Auctions.Service.API.Services.Moderator
 
             SpecificationBuilder<AuctionType> specificationBuilder = new();
 
-            if (!string.IsNullOrEmpty(specifications.Search))
-                specificationBuilder.With(e => e.Name.Contains(specifications.Search) ||
-                                               e.Description.Contains(specifications.Search));
+            if (!string.IsNullOrEmpty(specifications.SearchTerm))
+                specificationBuilder.With(e => e.Name.Contains(specifications.SearchTerm) ||
+                                               e.Description.Contains(specifications.SearchTerm));
 
             if (!specifications.IncludeDeleted)
                 specificationBuilder.With(e => !e.Deleted);

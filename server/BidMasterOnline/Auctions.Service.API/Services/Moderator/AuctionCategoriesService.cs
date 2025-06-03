@@ -3,6 +3,7 @@ using Auctions.Service.API.DTO.Participant;
 using Auctions.Service.API.Extensions;
 using Auctions.Service.API.ServiceContracts.Moderator;
 using BidMasterOnline.Core.DTO;
+using BidMasterOnline.Core.Enums;
 using BidMasterOnline.Core.Extensions;
 using BidMasterOnline.Core.RepositoryContracts;
 using BidMasterOnline.Core.Specifications;
@@ -85,12 +86,23 @@ namespace Auctions.Service.API.Services.Moderator
 
             SpecificationBuilder<AuctionCategory> specificationBuilder = new();
 
-            if (!string.IsNullOrEmpty(specifications.Search))
-                specificationBuilder.With(e => e.Name.Contains(specifications.Search) ||
-                                               e.Description.Contains(specifications.Search));
+            if (!string.IsNullOrEmpty(specifications.SearchTerm))
+                specificationBuilder.With(e => e.Name.Contains(specifications.SearchTerm) ||
+                                               e.Description.Contains(specifications.SearchTerm));
 
             if (!specifications.IncludeDeleted)
                 specificationBuilder.With(e => !e.Deleted);
+
+            if (!string.IsNullOrEmpty(specifications.SortBy))
+                switch(specifications.SortBy)
+                {
+                    case "id":
+                        specificationBuilder.OrderBy(e => e.Id, specifications.SortDirection ?? SortDirection.ASC);
+                        break;
+                    case "name":
+                        specificationBuilder.OrderBy(e => e.Name, specifications.SortDirection ?? SortDirection.ASC);
+                        break;
+                }
 
             specificationBuilder.WithPagination(specifications.PageSize, specifications.PageNumber);
 

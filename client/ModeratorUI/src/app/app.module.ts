@@ -2,11 +2,12 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 import { OAuthModule, OAuthService } from 'angular-oauth2-oidc';
-import { authConfig } from '../auth.config';
 import { RouterModule, RouterOutlet, Routes } from '@angular/router';
 import { AuthModule } from './auth/auth.module';
 import { AuthGuard } from './auth.guard';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideAnimations } from '@angular/platform-browser/animations';
+import { provideToastr } from 'ngx-toastr';
 
 const routes: Routes = [
   {
@@ -29,7 +30,6 @@ const routes: Routes = [
     RouterOutlet,
     OAuthModule.forRoot({
       resourceServer: {
-        allowedUrls: [],
         sendAccessToken: true,
       }
     }),
@@ -38,7 +38,9 @@ const routes: Routes = [
   ],
   providers: [
     AuthGuard,
-    provideHttpClient(withInterceptorsFromDi())
+    provideHttpClient(withInterceptorsFromDi()),
+    provideAnimations(),
+    provideToastr(),
   ],
   bootstrap: [AppComponent]
 })
