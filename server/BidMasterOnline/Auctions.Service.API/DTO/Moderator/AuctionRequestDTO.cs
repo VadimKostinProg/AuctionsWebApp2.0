@@ -18,10 +18,12 @@ namespace Auctions.Service.API.DTO.Moderator
 
         public decimal BidAmountInterval { get; set; }
 
+        public decimal? AimPrice { get; set; }
+
         public string? ReasonDeclined { get; set; }
 
         public UserSummaryDTO? RequestedByUser { get; set; }
 
-        public List<AuctionImageDTO> Images { get; set; } = [];
+        public List<string> ImageUrls { get; set; } = [];
     }
 }

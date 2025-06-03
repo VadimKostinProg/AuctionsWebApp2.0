@@ -1,0 +1,202 @@
+<div class="margin-auto">
+  <div class="container-fluid"
+       *ngIf="auctionRequestDetails">
+    <h2>Auction request #{{ auctionRequestDetails.id }}</h2>
+
+    <div class="row">
+      <div class="col-4">
+        <div id="carouselExample"
+             class="carousel slide">
+          <div class="carousel-inner">
+            <div *ngFor="let imageUrl of auctionRequestDetails.imageUrls"
+                 class="carousel-item active">
+              <img [src]="imageUrl"
+                   class="d-block w-100">
+            </div>
+          </div>
+          <div *ngIf="auctionRequestDetails.imageUrls!.length > 1">
+            <button class="carousel-control-prev"
+                    type="button"
+                    data-bs-target="#carouselExample"
+                    data-bs-slide="prev">
+              <span class="carousel-control-prev-icon"
+                    aria-hidden="true"></span>
+              <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next"
+                    type="button"
+                    data-bs-target="#carouselExample"
+                    data-bs-slide="next">
+              <span class="carousel-control-next-icon"
+                    aria-hidden="true"></span>
+              <span class="visually-hidden">Next</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-8">
+        <div class="row mb-2">
+          <div>
+            <span><b>Lot title:</b> {{ auctionRequestDetails.lotTitle }}</span>
+          </div>
+        </div>
+
+        <div class="row mb-2">
+          <div>
+            <span><b>Auction category:</b> {{ auctionRequestDetails.category }}</span>
+          </div>
+        </div>
+
+        <div class="row mb-2">
+          <div>
+            <span><b>Auction type:</b> {{ auctionRequestDetails.type }}</span>
+          </div>
+        </div>
+
+        <div class="row mb-2">
+          <div>
+            <span><b>Auction finish method:</b> {{ auctionRequestDetails.finishMethod }}</span>
+          </div>
+        </div>
+
+
+        <div *ngIf="auctionRequestDetails.requestedFinishInterval"
+             class="row mb-2">
+          <div>
+            <span>Finish time internal: {{ auctionRequestDetails.requestedFinishInterval }}</span>
+          </div>
+        </div>
+
+        <div class="row mb-2">
+          <div>
+            <span><b>Lot description:</b> {{ auctionRequestDetails.lotDescription }}</span>
+          </div>
+        </div>
+
+        <div class="row mb-2">
+          <div>
+            <span><b>Auction time:</b> {{ auctionRequestDetails.requestedAuctionTime }}</span>
+          </div>
+        </div>
+
+        <div class="row mb-2">
+          <div>
+            <span><b>Start price:</b> ${{ auctionRequestDetails.startPrice }}</span>
+          </div>
+        </div>
+
+        <div class="row mb-2">
+          <span><b>Bid step:</b> ${{ auctionRequestDetails.bidAmountInterval }}</span>
+        </div>
+
+        <div *ngIf="auctionRequestDetails.requestedStartTime"
+             class="row mb-2">
+          <span><b>Start time:</b> {{auctionRequestDetails.requestedStartTime}}</span>
+        </div>
+
+        <div *ngIf="auctionRequestDetails.aimPrice"
+             class="row mb-2">
+          <span><b>Aim price:</b> {{auctionRequestDetails.aimPrice}}</span>
+        </div>
+
+        <div class="row mb-2">
+          <b>
+            Status:
+            <span [ngClass]="{
+                'status-pending': auctionRequestDetails.status === 0,
+                'status-canceled': auctionRequestDetails.status === 1,
+                'status-approved': auctionRequestDetails.status === 2,
+                'status-declined': auctionRequestDetails.status === 3
+              }"> {{ getAuctionRequestStatusText(auctionRequestDetails.status) }} </span>
+          </b>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="auctionRequestDetails.reasonDeclined"
+         class="row mt-4 d-flex flex-column">
+      <b class="h5 status-declined">Reason declined:</b>
+      <span>{{ auctionRequestDetails.reasonDeclined }}</span>
+    </div>
+
+    <div class="row mt-4 mb-4"
+         *ngIf="auctionRequestDetails.status === AuctionRequestStatusEnum.Pending">
+      <div class="col-12 d-flex justify-content-end">
+        <button class="btn btn-success me-2"
+                (click)="open(approveAuctionRequestModal)">Approve</button>
+        <button class="btn btn-danger"
+                (click)="open(declineAuctionRequestModal)">Decline</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #approveAuctionRequestModal
+             let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title"
+        id="modal-basic-title">
+      Approve auction request
+    </h4>
+    <button type="button"
+            class="btn-close"
+            aria-span="Close"
+            (click)="modal.close()"></button>
+  </div>
+  <div class="modal-body">
+    Are you sure you want to approve this auction request?
+  </div>
+  <div class="modal-footer">
+    <button type="button"
+            class="btn btn-outline-dark"
+            (click)="modal.close()">No</button>
+    <button type="button"
+            class="btn btn-outline-dark"
+            (click)="approveAuctionRequest(modal)">Yes</button>
+  </div>
+</ng-template>
+
+<ng-template #declineAuctionRequestModal
+             let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title"
+        id="modal-basic-title">
+      Decline auction request
+    </h4>
+    <button type="button"
+            class="btn-close"
+            aria-label="Close"
+            (click)="modal.close()"></button>
+  </div>
+  <div class="modal-body">
+    <form *ngIf="declineAuctionReuqestModal"
+          [formGroup]="declineAuctionReuqestModal">
+      <div class="form-field flex mb-2">
+        <div>
+          <label for="reasonDeclined"
+                 class="form-label pt">Reason:</label>
+        </div>
+
+        <div class="flex-1">
+          <textarea type="text"
+                    id="reasonDeclined"
+                    class="form-control"
+                    formControlName="reasonDeclined"></textarea>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button"
+            class="btn btn-outline-dark"
+            (click)="declineAuctionRequest(modal)">Submit</button>
+  </div>
+</ng-template>
+
+<ngx-spinner bdColor="rgba(0,0,0,0.8)"
+             size="medium"
+             color="#fff"
+             type="line-scale-pulse-out"
+             [fullScreen]="true">
+</ngx-spinner>

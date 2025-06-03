@@ -1,16 +1,16 @@
 import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
-import { AuctionCategoriesComponent } from "./auction-categories/auction-categories.component";
+import { AuctionCategoriesListComponent } from "./auction-categories-list/auction-categories-list.component";
 import { SharedModule } from "../shared/shared.module";
 
 const routes: Routes = [
-  { path: '', component: AuctionCategoriesComponent },
+  { path: '', component: AuctionCategoriesListComponent },
 ];
 
 @NgModule({
   declarations: [
-    AuctionCategoriesComponent
+    AuctionCategoriesListComponent
   ],
   imports: [
     CommonModule,
@@ -20,4 +20,4 @@ const routes: Routes = [
   exports: [
   ]
 })
-export class AuctionCategoriesModule { }
+export class AuctionCategoriesManagementModule { }

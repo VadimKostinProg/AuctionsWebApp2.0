@@ -28,6 +28,31 @@ a {
   text-decoration: none;
 }
 
+.btn-outline-main {
+  color: orange;
+  border-color: orange;
+  background-color: transparent;
+
+  &:hover {
+    color: #fff;
+    background-color: darkorange;
+    border-color: darkorange;
+  }
+
+  &:active,
+  &.active {
+    color: #fff;
+    background-color: orange;
+    border-color: orange;
+  }
+}
+
+.btn-check:checked + .btn-outline-main {
+  color: #fff;
+  background-color: orange;
+  border-color: orange;
+}
+
 .default-background {
   background-color: orange;
   color: white;

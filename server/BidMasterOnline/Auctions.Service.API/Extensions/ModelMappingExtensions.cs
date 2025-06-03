@@ -181,6 +181,7 @@ namespace Auctions.Service.API.Extensions
                     ? null
                     : TimeSpan.FromTicks(entity.FinishTimeIntervalInTicks.Value),
                 BidAmountInterval = entity.BidAmountInterval,
+                AimPrice = entity.AimPrice,
                 Status = entity.Status,
                 StartPrice = entity.StartPrice,
                 RequestedByUser = entity.RequestedByUser == null
@@ -192,7 +193,7 @@ namespace Auctions.Service.API.Extensions
                         Email = entity.RequestedByUser.Email,
                     },
                 ReasonDeclined = entity.ReasonDeclined,
-                Images = entity.Images?.Select(i => i.ToModeratorDTO()).ToList() ?? [],
+                ImageUrls = entity.Images?.Select(i => i.Url).ToList() ?? [],
                 CreatedAt = entity.CreatedAt,
                 CreatedBy = entity.CreatedBy,
                 ModifiedAt = entity.ModifiedAt,

@@ -3,6 +3,7 @@ using Auctions.Service.API.Extensions;
 using Auctions.Service.API.GrpcServices.Client;
 using Auctions.Service.API.ServiceContracts.Moderator;
 using BidMasterOnline.Core.DTO;
+using BidMasterOnline.Core.Enums;
 using BidMasterOnline.Core.Extensions;
 using BidMasterOnline.Core.RepositoryContracts;
 using BidMasterOnline.Core.ServiceContracts;
@@ -160,13 +161,18 @@ namespace Auctions.Service.API.Services.Moderator
         {
             ServiceResult<PaginatedList<AuctionRequestSummaryDTO>> result = new();
 
-            ISpecification<AuctionRequest> specification = new SpecificationBuilder<AuctionRequest>()
-                .With(e => e.Status == specifications.Status)
-                .OrderBy(e => e.CreatedAt, specifications.SortDirection)
-                .WithPagination(specifications.PageSize, specifications.PageNumber)
-                .Build();
+            SpecificationBuilder<AuctionRequest> specificationBuilder = new SpecificationBuilder<AuctionRequest>();
 
-            ListModel<AuctionRequest> auctionRequestsList = await _repository.GetFilteredAndPaginated(specification,
+            specificationBuilder
+                .With(e => e.Status == specifications.Status)
+                .OrderBy(e => e.CreatedAt, SortDirection.DESC)
+                .WithPagination(specifications.PageSize, specifications.PageNumber);
+
+            if (!string.IsNullOrEmpty(specifications.SearchTerm))
+                specificationBuilder.With(e => e.LotTitle.Contains(specifications.SearchTerm) || 
+                                               e.LotDescription.Contains(specifications.SearchTerm));
+
+            ListModel<AuctionRequest> auctionRequestsList = await _repository.GetFilteredAndPaginated(specificationBuilder.Build(),
                 includeQuery: query => query.Include(e => e.Images)!);
 
             result.Data = auctionRequestsList.ToPaginatedList(e => e.ToModeratorSummaryDTO());

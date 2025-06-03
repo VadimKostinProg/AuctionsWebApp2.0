@@ -1,0 +1,32 @@
+<div class="btn-group"
+     role="group">
+  <input type="radio"
+         class="btn-check"
+         name="btnradio"
+         id="btnradio1"
+         autocomplete="off"
+         [checked]="checkedStatus === AuctionRequestStatusEnum.Pending"
+         (change)="onStatusChanged(AuctionRequestStatusEnum.Pending)">
+  <label class="btn btn-outline-main"
+         for="btnradio1">Pending</label>
+
+  <input type="radio"
+         class="btn-check"
+         name="btnradio"
+         id="btnradio2"
+         autocomplete="off"
+         [checked]="checkedStatus === AuctionRequestStatusEnum.Approved"
+         (change)="onStatusChanged(AuctionRequestStatusEnum.Approved)">
+  <label class="btn btn-outline-main"
+         for="btnradio2">Approved</label>
+
+  <input type="radio"
+         class="btn-check"
+         name="btnradio"
+         id="btnradio3"
+         autocomplete="off"
+         [checked]="checkedStatus === AuctionRequestStatusEnum.Declined"
+         (change)="onStatusChanged(AuctionRequestStatusEnum.Declined)">
+  <label class="btn btn-outline-main"
+         for="btnradio3">Declined</label>
+</div>

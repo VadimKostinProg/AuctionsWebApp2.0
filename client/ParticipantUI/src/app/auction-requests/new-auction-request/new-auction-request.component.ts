@@ -207,17 +207,16 @@ export class NewAuctionRequestComponent implements OnInit, AfterViewInit {
       next: (response) => {
         this.spinnerService.hide();
 
-        if (response.isSuccessfull) {
-          this.toastrService.success(response.message!, 'Success');
+        this.toastrService.success(response.message!, 'Success');
 
-          this.router.navigate(['/']);
-        }
-        else {
-          this.toastrService.error(response.errors[0], 'Error');
-        }
+        this.router.navigate(['/']);
       },
-      error: (error) => {
+      error: (err) => {
         this.spinnerService.hide();
+
+        if (err?.error?.errors && Array.isArray(err.error.errors)) {
+          this.toastrService.error(err.error.errors[0], 'Error');
+        }
       }
     });
   }

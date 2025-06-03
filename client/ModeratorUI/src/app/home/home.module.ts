@@ -7,7 +7,11 @@ const routes: Routes = [
   { path: '', component: HomeComponent },
   {
     path: 'auction-categories',
-    loadChildren: () => import('../auction-categories/auction-categories.module').then(m => m.AuctionCategoriesModule)
+    loadChildren: () => import('../auction-categories-management/auction-categories-management.module').then(m => m.AuctionCategoriesManagementModule)
+  },
+  {
+    path: 'auction-requests',
+    loadChildren: () => import('../auction-requests-management/auction-requests-management.module').then(m => m.AuctionRequestsManagementModule)
   },
 ];
 

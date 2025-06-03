@@ -6,17 +6,17 @@ import { PostAuctionCategory } from "../../models/auction-categories/postAuction
 import { DataTableComponent } from "../../shared/data-table/data-table.component";
 
 @Component({
-  selector: 'app-auction-categories',
-  templateUrl: 'auction-categories.component.html',
+  selector: 'app-auction-categories-list',
+  templateUrl: 'auction-categories-list.component.html',
   standalone: false
 })
-export class AuctionCategoriesComponent implements OnInit {
+export class AuctionCategoriesListComponent implements OnInit {
 
   @ViewChild(DataTableComponent) dateTable: DataTableComponent | undefined;
 
   options: DataTableOptionsModel | undefined;
 
-  placeholder: string = 'Search category...';
+  placeholder: string = 'Search auction category...';
 
   constructor(private readonly auctionCategoriesService: AuctionCategoriesService,
     private readonly toastrService: ToastrService) { }
