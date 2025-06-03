@@ -39,7 +39,8 @@ export class AuctionDetailsComponent implements OnInit {
 
   complaintOnAuctionForm!: FormGroup;
 
-  maxBidAmount: number = 10e7;
+  minBidAmount: number | undefined;
+  maxBidAmount: number | undefined;
 
   user: UserBasic | undefined;
 
@@ -109,18 +110,35 @@ export class AuctionDetailsComponent implements OnInit {
 
         this.reloadSetBidForm();
       },
-      error: (error) => {
-        this.toastrService.error(error.error, 'Error');
+      error: (err) => {
+        if (err?.error?.errors && Array.isArray(err.error.errors)) {
+          this.toastrService.error(err.error.errors[0], 'Error');
+        }
       }
     });
   }
 
   reloadSetBidForm() {
-    this.setBidForm = new FormGroup({
-      amount: new FormControl(this.auctionDetails!.currentPrice + this.auctionDetails!.bidAmountInterval,
-        [Validators.required, Validators.min(this.auctionDetails!.currentPrice + this.auctionDetails!.bidAmountInterval),
-        Validators.max(10e7)])
-    });
+    if (this.auctionDetails!.type === 'Dutch Auction') {
+      this.minBidAmount = 100;
+      this.maxBidAmount = this.auctionDetails!.currentPrice - this.auctionDetails!.bidAmountInterval;
+
+      this.setBidForm = new FormGroup({
+        amount: new FormControl(this.auctionDetails!.currentPrice - this.auctionDetails!.bidAmountInterval,
+          [Validators.required, Validators.min(100),
+          Validators.max(this.auctionDetails!.currentPrice - this.auctionDetails!.bidAmountInterval)])
+      });
+    }
+    else {
+      this.minBidAmount = this.auctionDetails!.currentPrice + this.auctionDetails!.bidAmountInterval;
+      this.maxBidAmount = 10e7;
+
+      this.setBidForm = new FormGroup({
+        amount: new FormControl(this.auctionDetails!.currentPrice + this.auctionDetails!.bidAmountInterval,
+          [Validators.required, Validators.min(this.auctionDetails!.currentPrice + this.auctionDetails!.bidAmountInterval),
+          Validators.max(10e7)])
+      });
+    }
   }
 
   reloadCancelationForm() {
@@ -169,19 +187,16 @@ export class AuctionDetailsComponent implements OnInit {
 
     this.bidsService.postBid(bid).subscribe({
       next: (response) => {
-        if (response.isSuccessfull) {
-          this.toastrService.success(response.message!, 'Success');
+        this.toastrService.success(response.message!, 'Success');
 
-          this.reloadAuctionDetails(this.auctionDetails!.id);
+        this.reloadAuctionDetails(this.auctionDetails!.id);
 
-          this.bidsDataTable.reloadDatatable();
-        }
-        else {
-          this.toastrService.error(response.errors[0], 'Error');
-        }
+        this.bidsDataTable.reloadDatatable();
       },
-      error: (error) => {
-        this.toastrService.error(error.error, 'Error');
+      error: (err) => {
+        if (err?.error?.errors && Array.isArray(err.error.errors)) {
+          this.toastrService.error(err.error.errors[0], 'Error');
+        }
       }
     });
   }
@@ -206,13 +221,12 @@ export class AuctionDetailsComponent implements OnInit {
 
     this.complaintsService.postComplaint(complaint).subscribe({
       next: (response) => {
-        if (response.isSuccessfull)
-          this.toastrService.success(response.message!, 'Success');
-        else
-          this.toastrService.error(response.errors[0], 'Error');
+        this.toastrService.success(response.message!, 'Success');
       },
-      error: (error) => {
-        this.toastrService.error(error.error, 'Error');
+      error: (err) => {
+        if (err?.error?.errors && Array.isArray(err.error.errors)) {
+          this.toastrService.error(err.error.errors[0], 'Error');
+        }
       }
     });
   }
@@ -239,8 +253,10 @@ export class AuctionDetailsComponent implements OnInit {
 
         this.reloadAuctionDetails(this.auctionDetails!.id);
       },
-      error: (error) => {
-        this.toastrService.error(error.error, 'Error');
+      error: (err) => {
+        if (err?.error?.errors && Array.isArray(err.error.errors)) {
+          this.toastrService.error(err.error.errors[0], 'Error');
+        }
       }
     });
   }

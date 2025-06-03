@@ -77,6 +77,10 @@
               {{ auctionDetails.finishMethod }}
             </span>
             <span class="h5">
+              <b class="auction-details-property">Auction type:</b>
+              {{ auctionDetails.type }}
+            </span>
+            <span class="h5">
               <b class="auction-details-property">Status:</b>
               {{ auctionStatus }}
             </span>
@@ -156,8 +160,8 @@
         <div class="flex-1">
           <input type="number"
                  id="amount"
-                 [min]="auctionDetails.currentPrice + auctionDetails.bidAmountInterval"
-                 [max]="maxBidAmount"
+                 [min]="minBidAmount!"
+                 [max]="maxBidAmount!"
                  class="form-control"
                  formControlName="amount" />
         </div>
@@ -167,12 +171,8 @@
             <span class="text-danger">Amount is required.</span>
           </div>
 
-          <div *ngIf="amount?.errors?.['min']">
-            <span class="text-danger">Cannot set bid amount less than current bid.</span>
-          </div>
-
-          <div *ngIf="amount?.errors?.['max']">
-            <span class="text-danger">Cannot set bid amount more than {{ maxBidAmount }}.</span>
+          <div *ngIf="amount?.errors?.['min'] || amount?.errors?.['max']">
+            <span class="text-danger">Invalid bid amount.</span>
           </div>
         </div>
       </div>
