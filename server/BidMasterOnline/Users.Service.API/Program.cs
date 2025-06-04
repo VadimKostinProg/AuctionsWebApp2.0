@@ -2,8 +2,6 @@ using BidMasterOnline.Infrastructure;
 using BidMasterOnline.Core;
 using Microsoft.OpenApi.Models;
 using Users.Service.API.Filters;
-using Users.Service.API.ServiceContracts.Participant;
-using Users.Service.API.Services.Participant;
 using Quartz;
 using Users.Service.API.BackgroundJobs;
 
@@ -52,7 +50,8 @@ builder.Services.AddAuthentication("Bearer")
 builder.Services.AddInfrastructure(builder.Configuration)
     .AddCoreServices();
 
-builder.Services.AddScoped<IUserProfilesService, UserProfilesService>();
+builder.Services.AddScoped<Users.Service.API.ServiceContracts.Participant.IUserProfilesService, Users.Service.API.Services.Participant.UserProfilesService>();
+builder.Services.AddScoped<Users.Service.API.ServiceContracts.Moderator.IUsersService, Users.Service.API.Services.Moderator.UsersService>();
 
 builder.Services.AddQuartz(q =>
 {

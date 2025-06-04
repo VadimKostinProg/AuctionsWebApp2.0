@@ -11,11 +11,11 @@ namespace Users.Service.API.BackgroundJobs
     public class UnblockingUsersBackgroundJob : IJob
     {
         private readonly IRepository _repository;
-        private readonly IUserProfilesService _userProfilesService;
+        private readonly IUsersService _userProfilesService;
         private readonly ILogger<UnblockingUsersBackgroundJob> _logger;
 
         public UnblockingUsersBackgroundJob(IRepository repository,
-            IUserProfilesService userProfilesService,
+            IUsersService userProfilesService,
             ILogger<UnblockingUsersBackgroundJob> logger)
         {
             _repository = repository;

@@ -1,21 +1,10 @@
-﻿using BidMasterOnline.Core.DTO;
-using BidMasterOnline.Domain.Enums;
-
-namespace Users.Service.API.DTO.Moderator
+﻿namespace Users.Service.API.DTO.Moderator
 {
-    public class UserProfileInfoDTO : BaseDTO
+    public class UserProfileInfoDTO : UserProfileSummaryInfoDTO
     {
-        public required string Username { get; set; }
-
-        public required string FullName { get; set; }
-
-        public DateTime DateOfBirth { get; set; }
-
-        public required string Email { get; set; }
+        public required string Role { get; set; }
 
         public double? AverageScore { get; set; }
-
-        public UserStatus Status { get; set; }
 
         public string? ImageUrl { get; set; }
 
@@ -24,5 +13,11 @@ namespace Users.Service.API.DTO.Moderator
         public int CompletedAuctions { get; set; }
 
         public int TotalWins { get; set; }
+
+        public bool IsEmailConfirmed { get; set; }
+
+        public bool IsPaymentMethodAttached { get; set; }
+
+        public DateTime? UnblockDateTime { get; set; }
     }
 }
