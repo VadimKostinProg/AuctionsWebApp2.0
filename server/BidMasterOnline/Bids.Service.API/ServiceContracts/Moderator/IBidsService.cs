@@ -6,7 +6,7 @@ namespace Bids.Service.API.ServiceContracts.Moderator
     public interface IBidsService
     {
         Task<bool> ClearAllBidsForAuctionAsync(long auctionId);
-        Task<ServiceResult<PaginatedList<AuctionBidDTO>>> GetAuctionBidsAsync(long auctionId);
+        Task<ServiceResult<PaginatedList<AuctionBidDTO>>> GetAuctionBidsAsync(long auctionId, PaginationRequestDTO pagination);
         Task<ServiceResult<PaginatedList<UserBidDTO>>> GetUserBidsAsync(long userId);
     }
 }

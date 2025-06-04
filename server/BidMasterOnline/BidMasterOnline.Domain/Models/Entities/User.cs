@@ -24,6 +24,8 @@ namespace BidMasterOnline.Domain.Models.Entities
 
         public required string PasswordSalt { get; set; }
 
+        public string? BlockingReason { get; set; }
+
         public DateTime? UnblockDateTime { get; set; }
 
         public double? AverageScore { get; set; }

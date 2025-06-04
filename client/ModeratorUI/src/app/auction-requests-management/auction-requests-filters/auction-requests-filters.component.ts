@@ -19,7 +19,12 @@ export class AuctionRequestsFiltersComponent implements OnInit {
   constructor(private readonly queryParamsService: QueryParamsService) { }
 
   async ngOnInit(): Promise<void> {
-    await this.queryParamsService.setQueryParam('status', this.checkedStatus);
+    const status = await this.queryParamsService.getQueryParam('status');
+
+    if (status)
+      this.checkedStatus = parseInt(status, 10) as AuctionRequestStatusEnum;
+    else
+      await this.queryParamsService.setQueryParam('status', this.checkedStatus);
 
     this.onInitialized.emit();
   }

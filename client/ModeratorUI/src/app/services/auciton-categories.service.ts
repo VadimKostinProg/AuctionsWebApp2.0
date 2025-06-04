@@ -5,8 +5,9 @@ import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { FormInputTypeEnum } from "../models/shared/formInputTypeEnum";
 import { PostAuctionCategory } from "../models/auction-categories/postAuctionCategory";
 import { Observable } from "rxjs";
-import { ServiceMessage } from "../models/shared/serviceResult";
+import { ServiceMessage, ServiceResult } from "../models/shared/serviceResult";
 import { HttpClient } from "@angular/common/http";
+import { AuctionCategory } from "../models/auction-categories/auctionCategory";
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +16,10 @@ export class AuctionCategoriesService {
   baseUrl: string = `${environment.apiUrl}${environment.apiPrefix}/auction-categories`;
 
   constructor(private readonly httpClient: HttpClient) { }
+
+  getAllAuctionCategories(): Observable<ServiceResult<AuctionCategory[]>> {
+    return this.httpClient.get<ServiceResult<AuctionCategory[]>>(`${this.baseUrl}/all`);
+  }
 
   postAuctionCategory(category: PostAuctionCategory): Observable<ServiceMessage> {
     return this.httpClient.post<ServiceMessage>(`${this.baseUrl}`, category);

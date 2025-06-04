@@ -5,7 +5,7 @@ namespace Auctions.Service.API.ServiceContracts.Moderator
 {
     public interface IAuctionFinishMethodsService
     {
-        Task<ServiceResult<PaginatedList<AuctionFinishMethodDTO>>> GetAuctionFinishMethodsAsync(SpecificationsDTO specifications);
+        Task<ServiceResult<PaginatedList<AuctionFinishMethodDTO>>> GetAuctionFinishMethodsListAsync(SpecificationsDTO specifications);
 
         Task<ServiceResult> UpdateAuctionFinishMethodAsync(long id, UpdateAuctionFinishMethodDTO auctionFinishMethodDTO);
     }

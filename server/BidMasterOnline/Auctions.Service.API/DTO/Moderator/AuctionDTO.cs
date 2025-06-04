@@ -5,10 +5,6 @@ namespace Auctions.Service.API.DTO.Moderator
 {
     public class AuctionDTO : AuctionSummaryDTO
     {
-        public required string Category { get; set; }
-
-        public required string Type { get; set; }
-
         public required string FinishMethod { get; set; }
 
         public required string LotDescription { get; set; }
@@ -17,16 +13,16 @@ namespace Auctions.Service.API.DTO.Moderator
 
         public TimeSpan? FinishTimeInterval { get; set; }
 
-        public decimal StartPrice { get; set; }
-
         public decimal BidAmountInterval { get; set; }
-
-        public AuctionStatus Status { get; set; }
 
         public string? CancellationReason { get; set; }
 
+        public double? AverageScore { get; set; }
+
+        public UserSummaryDTO? Auctionist { get; set; }
+
         public UserSummaryDTO? Winner { get; set; }
 
-        public List<AuctionImageDTO> Images { get; set; } = [];
+        public List<string> ImageUrls { get; set; } = [];
     }
 }

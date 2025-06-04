@@ -28,9 +28,9 @@ namespace Bids.Service.API.Controllers.Areas.Moderator
         }
 
         [HttpGet("auctions/{auctionId}/bids")]
-        public async Task<IActionResult> GetAuctionBids([FromRoute] long auctionId)
+        public async Task<IActionResult> GetAuctionBids([FromRoute] long auctionId, [FromQuery] PaginationRequestDTO pagination)
         {
-            ServiceResult<PaginatedList<AuctionBidDTO>> result = await _service.GetAuctionBidsAsync(auctionId);
+            ServiceResult<PaginatedList<AuctionBidDTO>> result = await _service.GetAuctionBidsAsync(auctionId, pagination);
 
             return FromResult(result);
         }

@@ -27,11 +27,6 @@ export class AuctionRequestsListComponent implements OnInit {
     this.dataTableOptions = this.auctionRequestsService.getAuctionReuqestsDataTableOptions();
   }
 
-  async onSearchClicked() {
-    if (this.dateTable)
-      await this.dateTable.reloadDatatable();
-  }
-
   async onFiltersChanged() {
     if (this.dateTable)
       await this.dateTable.reloadDatatable();

@@ -1,0 +1,210 @@
+<div *ngIf="auctionDetails"
+     class="container-fluid">
+  <div class="row mt-2">
+    <div class="col-4">
+      <div id="carouselExample"
+           class="carousel slide">
+        <div class="carousel-inner">
+          <div *ngFor="let imageUrl of auctionDetails.imageUrls"
+               class="carousel-item active">
+            <img [src]="imageUrl"
+                 class="d-block w-100">
+          </div>
+        </div>
+        <div *ngIf="auctionDetails.imageUrls!.length > 1">
+          <button class="carousel-control-prev"
+                  type="button"
+                  data-bs-target="#carouselExample"
+                  data-bs-slide="prev">
+            <span class="carousel-control-prev-icon"
+                  aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+          </button>
+          <button class="carousel-control-next"
+                  type="button"
+                  data-bs-target="#carouselExample"
+                  data-bs-slide="next">
+            <span class="carousel-control-next-icon"
+                  aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="col-8">
+      <div class="d-flex justify-content-between align-items-start">
+        <div>
+          <div class="auction-info-container">
+            <h3> {{ auctionDetails.lotTitle }}</h3>
+            <div class="mt-3">
+              <span *ngIf="auctionDetails.averageScore"
+                    class="h5">
+                <b class="auction-details-property">Score:</b>
+                {{ auctionDetails.averageScore }}
+                <i class="fa-solid fa-star fa-xl mr-3"
+                   [ngStyle]="{ 'color': '#b6d714' }"></i>
+              </span>
+            </div>
+            <span class="h5 mt-1">
+              <b class="auction-details-property">Category:</b>
+              {{ auctionDetails.category }}
+            </span>
+            <span class="h5">
+              <b class="auction-details-property">Auctionist:</b>
+              <a [routerLink]="['/users', auctionDetails.auctionist!.userId]">
+                {{ auctionDetails.auctionist!.username }}
+              </a>
+            </span>
+            <span *ngIf="auctionDetails.status !== AuctionStatusEnum.CancelledByAuctionist || auctionDetails.status !== AuctionStatusEnum.CancelledByAuctionist"
+                  class="h5">
+              <b class="auction-details-property">Current bid:</b>
+              {{ auctionDetails.currentPrice }}$ / {{ auctionDetails.startPrice }}$
+            </span>
+            <span class="h5">
+              <b class="auction-details-property">Start time:</b>
+              {{ auctionDetails.startTime | date: 'MM-dd-yyyy hh:mm' }}
+            </span>
+            <span class="h5">
+              <b class="auction-details-property">Finish time:</b>
+              {{ auctionDetails.finishTime | date: 'MM-dd-yyyy hh:mm' }}
+            </span>
+            <span class="h5">
+              <b class="auction-details-property">Finish type:</b>
+              {{ auctionDetails.finishMethod }}
+            </span>
+            <span class="h5">
+              <b class="auction-details-property">Auction type:</b>
+              {{ auctionDetails.type }}
+            </span>
+            <span class="h5">
+              <b class="auction-details-property">Status:</b>
+              {{ auctionStatus }}
+            </span>
+            <span *ngIf="(auctionDetails.status === AuctionStatusEnum.CancelledByAuctionist || auctionDetails.status === AuctionStatusEnum.CancelledByModerator) && auctionDetails.cancellationReason"
+                  class="h5">
+              <b class="auction-details-property">Cancelation reason:</b>
+              {{ auctionDetails.cancellationReason }}
+            </span>
+            <span *ngIf="auctionDetails.status === AuctionStatusEnum.Finished && auctionDetails.winner"
+                  class="h5">
+              <b class="auction-details-property">Winner:</b>
+              <a routerLink="/profile"
+                 [queryParams]="{ userId: auctionDetails.winner.userId }">
+                {{ auctionDetails.winner!.username }}
+              </a>
+            </span>
+          </div>
+        </div>
+
+        <ng-template #auctionActionsPopContent>
+          <div class="actions-container">
+            <button *ngIf="auctionDetails.status === AuctionStatusEnum.Active || auctionDetails.status === AuctionStatusEnum.Pending"
+                    class="btn"
+                    (click)="open(cancelAuctionModal)">
+              Cancel
+            </button>
+            <button *ngIf="auctionDetails.status === AuctionStatusEnum.CancelledByModerator"
+                    class="btn"
+                    (click)="open(recoverAuctionModal)">
+              Recover
+            </button>
+          </div>
+        </ng-template>
+
+        <button *ngIf="auctionDetails.status === AuctionStatusEnum.Active ||
+                       auctionDetails.status === AuctionStatusEnum.Pending ||
+                       auctionDetails.status === AuctionStatusEnum.CancelledByModerator"
+                type="button"
+                class="btn actions-button"
+                placement="bottom"
+                [ngbPopover]="auctionActionsPopContent">
+          <i class="fa-solid fa-ellipsis"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="row mt-3">
+    <h3>Lot description</h3>
+    <span>{{ auctionDetails.lotDescription }}</span>
+  </div>
+  <div *ngIf="showBidsList"
+       class="row mt-3">
+    <data-table #bidsDataTable
+                *ngIf="bidsDataTableOptions"
+                [apiUrl]="bidsDataTableApiUrl"
+                [options]="bidsDataTableOptions">
+    </data-table>
+  </div>
+  <div *ngIf="auctionDetails.status !== AuctionStatusEnum.CancelledByAuctionist || auctionDetails.status !== AuctionStatusEnum.CancelledByAuctionist"
+       class="row mt-3">
+    <app-auction-comments [auction]="auctionDetails"></app-auction-comments>
+  </div>
+</div>
+
+<ng-template #cancelAuctionModal
+             let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title"
+        id="modal-basic-title">
+      Cancel auction
+    </h4>
+    <button type="button"
+            class="btn-close"
+            aria-label="Close"
+            (click)="modal.close()"></button>
+  </div>
+  <div class="modal-body">
+    <form *ngIf="cancelationForm"
+          [formGroup]="cancelationForm">
+      <input type="text"
+             id="auctionId"
+             class="form-control"
+             formControlName="auctionId"
+             hidden />
+
+      <div class="form-field flex mb-2">
+        <div>
+          <label for="cancelationReason"
+                 class="form-label pt">Cancelation reason:</label>
+        </div>
+
+        <div class="flex-1">
+          <textarea type="text"
+                    id="cancelationReason"
+                    class="form-control"
+                    formControlName="cancelationReason"></textarea>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button"
+            class="btn btn-outline-dark"
+            (click)="cancelAuction(modal)">Submit</button>
+  </div>
+</ng-template>
+
+<ng-template #recoverAuctionModal
+             let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title"
+        id="modal-basic-title">
+      Recover auction
+    </h4>
+    <button type="button"
+            class="btn-close"
+            aria-label="Close"
+            (click)="modal.close()"></button>
+  </div>
+  <div class="modal-body">
+    Are you sure you want to recover this auction?
+  </div>
+  <div class="modal-footer">
+    <button type="button"
+            class="btn btn-outline-dark"
+            (click)="modal.close()">No</button>
+    <button type="button"
+            class="btn btn-outline-dark"
+            (click)="recoverAuction(modal)">Yes</button>
+  </div>
+</ng-template>

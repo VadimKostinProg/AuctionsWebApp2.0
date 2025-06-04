@@ -238,7 +238,7 @@ export class AuctionDetailsComponent implements OnInit {
 
     modal.close();
 
-    var cancelationReason = this.cancelationForm.value.cancelationReason;
+    const cancelationReason = this.cancelationForm.value.cancelationReason;
 
     this.reloadCancelationForm();
 

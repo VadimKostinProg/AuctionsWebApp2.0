@@ -5,7 +5,9 @@ namespace Auctions.Service.API.ServiceContracts.Moderator
 {
     public interface IAuctionCategoriesService
     {
-        Task<ServiceResult<PaginatedList<AuctionCategoryDTO>>> GetAuctionCategoriesAsync(SpecificationsDTO specifications);
+        Task<ServiceResult<PaginatedList<AuctionCategoryDTO>>> GetAuctionCategoriesListAsync(SpecificationsDTO specifications);
+
+        Task<ServiceResult<IEnumerable<AuctionCategoryDTO>>> GetAllAuctionCategoriesAsync();
         
         Task<ServiceResult> CreateAuctionCategoryAsync(UpsertAuctionCategoryDTO auctionCategoryDTO);
 

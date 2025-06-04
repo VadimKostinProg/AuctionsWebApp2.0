@@ -63,7 +63,9 @@ namespace Auctions.Service.API.Services.Moderator
                 auctionist.TotalAuctions++;
                 _repository.Update(auctionist);
 
-                DateTime auctionStartTime = auctionRequest.RequestedStartTime ?? DateTime.UtcNow;
+                DateTime auctionStartTime = auctionRequest.RequestedStartTime.HasValue && auctionRequest.RequestedStartTime > DateTime.UtcNow
+                    ? auctionRequest.RequestedStartTime.Value
+                    : DateTime.UtcNow;
 
                 Auction newAuction = new()
                 {
@@ -78,9 +80,10 @@ namespace Auctions.Service.API.Services.Moderator
                     FinishTimeIntervalInTicks = auctionRequest.FinishTimeIntervalInTicks,
                     BidAmountInterval = auctionRequest.BidAmountInterval,
                     AimPrice = auctionRequest.AimPrice,
+                    AuctionTimeInTicks = auctionRequest.RequestedAuctionTimeInTicks,
                     StartTime = auctionStartTime,
                     FinishTime = auctionStartTime.AddTicks(auctionRequest.RequestedAuctionTimeInTicks),
-                    Status = auctionRequest.RequestedStartTime == null
+                    Status = auctionRequest.RequestedStartTime == null || auctionRequest.RequestedStartTime <= auctionStartTime
                         ? AuctionStatus.Active
                         : AuctionStatus.Pending,
                     Images = auctionRequest.Images?.Select(image => new AuctionImage

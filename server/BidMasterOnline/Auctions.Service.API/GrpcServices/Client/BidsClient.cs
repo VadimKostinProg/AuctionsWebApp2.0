@@ -10,7 +10,7 @@ namespace Auctions.Service.API.GrpcServices.Client
 
         public BidsClient(IConfiguration configuration, ILogger<BidsClient> logger)
         {
-            _bidsHost = configuration["GrcpChannels:Bids"]!;
+            _bidsHost = configuration["GrpcChannels:Bids"]!;
             _logger = logger;
         }
 

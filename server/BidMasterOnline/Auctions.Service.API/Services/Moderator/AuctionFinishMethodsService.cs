@@ -23,7 +23,8 @@ namespace Auctions.Service.API.Services.Moderator
             _logger = logger;
         }
 
-        public async Task<ServiceResult<PaginatedList<DTO.Moderator.AuctionFinishMethodDTO>>> GetAuctionFinishMethodsAsync(SpecificationsDTO specifications)
+        public async Task<ServiceResult<PaginatedList<DTO.Moderator.AuctionFinishMethodDTO>>> GetAuctionFinishMethodsListAsync(
+            SpecificationsDTO specifications)
         {
             ServiceResult<PaginatedList<DTO.Moderator.AuctionFinishMethodDTO>> result = new();
 

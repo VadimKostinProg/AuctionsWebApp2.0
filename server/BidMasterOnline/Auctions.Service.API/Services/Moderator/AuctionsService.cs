@@ -1,9 +1,9 @@
-﻿using Auctions.Service.API.DTO;
-using Auctions.Service.API.DTO.Moderator;
+﻿using Auctions.Service.API.DTO.Moderator;
 using Auctions.Service.API.Extensions;
 using Auctions.Service.API.GrpcServices.Client;
 using Auctions.Service.API.ServiceContracts.Moderator;
 using BidMasterOnline.Core.DTO;
+using BidMasterOnline.Core.Enums;
 using BidMasterOnline.Core.Extensions;
 using BidMasterOnline.Core.RepositoryContracts;
 using BidMasterOnline.Core.ServiceContracts;
@@ -12,7 +12,6 @@ using BidMasterOnline.Domain.Enums;
 using BidMasterOnline.Domain.Models;
 using BidMasterOnline.Domain.Models.Entities;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
 using System.Net;
 
 namespace Auctions.Service.API.Services.Moderator
@@ -56,6 +55,7 @@ namespace Auctions.Service.API.Services.Moderator
 
                 entity.Status = AuctionStatus.CancelledByModerator;
                 entity.FinishTime = DateTime.UtcNow;
+                entity.CancellationReason = requestDTO.Reason;
 
                 _repository.Update(entity);
                 await _repository.SaveChangesAsync();
@@ -98,6 +98,8 @@ namespace Auctions.Service.API.Services.Moderator
                 entity.Status = AuctionStatus.Active;
                 entity.StartTime = DateTime.UtcNow;
                 entity.FinishTime = entity.StartTime.AddTicks(entity.AuctionTimeInTicks);
+                entity.CurrentPrice = entity.StartPrice;
+                entity.CancellationReason = null;
 
                 _repository.Update(entity);
                 await _repository.SaveChangesAsync();
@@ -156,8 +158,8 @@ namespace Auctions.Service.API.Services.Moderator
             ISpecification<Auction> specification = GetSpecification(specifications);
 
             ListModel<Auction> auctionsList = await _repository.GetFilteredAndPaginated(specification,
-                includeQuery: query => query.Include(e => e.Auctionist)
-                                            .Include(e => e.Images)!);
+                includeQuery: query => query.Include(e => e.Category)
+                                            .Include(e => e.Type)!);
 
             result.Data = auctionsList.ToPaginatedList(e => e.ToModeratorSummaryDTO());
 
@@ -168,38 +170,61 @@ namespace Auctions.Service.API.Services.Moderator
         {
             var builder = new SpecificationBuilder<Auction>();
 
+            if (specifications.AuctionId is not null)
+                builder.With(x => x.Id == specifications.AuctionId);
+
             if (specifications.CategoryId is not null)
                 builder.With(x => x.AuctionCategoryId == specifications.CategoryId);
 
             if (specifications.TypeId is not null)
                 builder.With(x => x.AuctionTypeId == specifications.TypeId);
 
-            if (specifications.MinStartPrice is not null)
-                builder.With(x => x.StartPrice >= specifications.MinStartPrice && x.StartPrice <= specifications.MaxStartPrice!.Value);
-
-            if (specifications.MinCurrentPrice is not null)
-                builder.With(x => x.CurrentPrice >= specifications.MinCurrentPrice && x.CurrentPrice <= specifications.MaxCurrentPrice!.Value);
-
-            if (specifications.AuctionStatus is not null)
-                builder.With(x => x.Status == specifications.AuctionStatus);
+            if (specifications.Status is not null)
+                builder.With(x => x.Status == specifications.Status);
 
             if (!string.IsNullOrEmpty(specifications.SearchTerm))
                 builder.With(x => x.LotTitle.Contains(specifications.SearchTerm) || x.LotDescription.Contains(specifications.SearchTerm));
 
-            // TODO: implement sorting
+            if (specifications.StartTime is not null)
+            {
+                DateTime startRange = specifications.StartTime.Value.Date;
+                DateTime endRange = startRange.AddDays(1);
 
-            //if (!string.IsNullOrEmpty(specifications.SortField))
-            //{
-            //    switch (specifications.SortField)
-            //    {
-            //        case "popularity":
-            //            builder.OrderBy(x => x.Bids.Count(), specifications.SortDirection ?? Enums.SortDirection.DESC);
-            //            break;
-            //        case "dateAndTime":
-            //            builder.OrderBy(x => x.FinishDateTime, specifications.SortDirection ?? Enums.SortDirection.ASC);
-            //            break;
-            //    }
-            //}
+                builder.With(x => x.StartTime >= startRange && x.StartTime <= endRange);
+            }
+
+            if (specifications.FinishTime is not null)
+            {
+                DateTime startRange = specifications.FinishTime.Value.Date;
+                DateTime endRange = startRange.AddDays(1);
+
+                builder.With(x => x.FinishTime >= startRange && x.StartTime <= endRange);
+            }
+
+            if (!string.IsNullOrEmpty(specifications.SortBy))
+            {
+                switch (specifications.SortBy)
+                {
+                    case "id":
+                        builder.OrderBy(x => x.Id, specifications.SortDirection);
+                        break;
+                    case "lotTitle":
+                        builder.OrderBy(x => x.LotTitle, specifications.SortDirection);
+                        break;
+                    case "startTime":
+                        builder.OrderBy(x => x.StartTime, specifications.SortDirection);
+                        break;
+                    case "finishTime":
+                        builder.OrderBy(x => x.FinishTime, specifications.SortDirection);
+                        break;
+                    case "startPrice":
+                        builder.OrderBy(x => x.StartPrice, specifications.SortDirection);
+                        break;
+                    case "currentPrice":
+                        builder.OrderBy(x => x.CurrentPrice, specifications.SortDirection);
+                        break;
+                }
+            }
 
             builder.WithPagination(specifications.PageSize, specifications.PageNumber);
 

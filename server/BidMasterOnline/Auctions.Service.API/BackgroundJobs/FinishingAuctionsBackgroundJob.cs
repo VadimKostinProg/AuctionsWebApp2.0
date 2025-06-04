@@ -26,7 +26,7 @@ namespace Auctions.Service.API.BackgroundJobs
 
             await Parallel.ForEachAsync(finishedAuctionIds, async (auctionId, token) =>
             {
-                await _service.FinishAuctionAsync(auctionId); 
+                await _service.FinishAuctionAsync(auctionId, token); 
             });
         }
     }

@@ -7,6 +7,7 @@ using BidMasterOnline.Core.RepositoryContracts;
 using BidMasterOnline.Core.Specifications;
 using BidMasterOnline.Domain.Models;
 using BidMasterOnline.Domain.Models.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace Auctions.Service.API.Services.Moderator
 {
@@ -22,7 +23,20 @@ namespace Auctions.Service.API.Services.Moderator
             _logger = logger;
         }
 
-        public async Task<ServiceResult<PaginatedList<AuctionTypeDTO>>> GetAuctionTypesAsync(
+        public async Task<ServiceResult<IEnumerable<AuctionTypeDTO>>> GetAllAuctionTypesAsync()
+        {
+            ServiceResult<IEnumerable<AuctionTypeDTO>> result = new();
+
+            List<AuctionType> entities = await _repository.GetFiltered<AuctionType>(e => !e.Deleted)
+                .OrderBy(e => e.Name)
+                .ToListAsync();
+
+            result.Data = entities.Select(e => e.ToModeratorDTO());
+
+            return result;
+        }
+
+        public async Task<ServiceResult<PaginatedList<AuctionTypeDTO>>> GetAuctionTypesListAsync(
             SpecificationsDTO specifications)
         {
             ServiceResult<PaginatedList<AuctionTypeDTO>> result = new();

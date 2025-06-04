@@ -10,6 +10,10 @@ const routes: Routes = [
     loadChildren: () => import('../auction-categories-management/auction-categories-management.module').then(m => m.AuctionCategoriesManagementModule)
   },
   {
+    path: 'auctions',
+    loadChildren: () => import('../auctions-management/auctions-management.module').then(m => m.AuctionsManagementModule)
+  },
+  {
     path: 'auction-requests',
     loadChildren: () => import('../auction-requests-management/auction-requests-management.module').then(m => m.AuctionRequestsManagementModule)
   },

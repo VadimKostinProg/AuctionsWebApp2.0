@@ -4,6 +4,8 @@ using Microsoft.OpenApi.Models;
 using Users.Service.API.Filters;
 using Users.Service.API.ServiceContracts.Participant;
 using Users.Service.API.Services.Participant;
+using Quartz;
+using Users.Service.API.BackgroundJobs;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
@@ -51,6 +53,19 @@ builder.Services.AddInfrastructure(builder.Configuration)
     .AddCoreServices();
 
 builder.Services.AddScoped<IUserProfilesService, UserProfilesService>();
+
+builder.Services.AddQuartz(q =>
+{
+    JobKey jobKey = new("UnblockingUsersBackgroundJob");
+
+    q.AddJob<UnblockingUsersBackgroundJob>(opts => opts.WithIdentity(jobKey));
+
+    q.AddTrigger(opts => opts
+        .ForJob(jobKey)
+        .WithIdentity("MyJob-trigger")
+        .WithCronSchedule("0 * * ? * *")
+    );
+});
 
 builder.Services.AddCors(options =>
 {

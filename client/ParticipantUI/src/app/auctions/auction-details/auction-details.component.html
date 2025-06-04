@@ -89,7 +89,7 @@
               <b class="auction-details-property">Winner:</b>
               <a routerLink="/profile"
                  [queryParams]="{ userId: auctionDetails.winner.userId }">
-                {{ auctionDetails.winner }}
+                {{ auctionDetails.winner!.username }}
               </a>
             </span>
           </div>
@@ -108,9 +108,8 @@
                     (click)="open(complaintOnAuctionModal)">
               Complain
             </button>
-            <button *ngIf="auctionDetails.status !== AuctionStatusEnum.CancelledByAuctionist && auctionDetails.status !== AuctionStatusEnum.CancelledByModerator && auctionDetails.auctionist!.userId == user.userId"
+            <button *ngIf="auctionDetails.status === AuctionStatusEnum.Active && auctionDetails.auctionist!.userId == user.userId"
                     class="btn"
-                    [disabled]="auctionDetails.status === AuctionStatusEnum.Finished"
                     (click)="open(cancelAuctionModal)">
               Cancel
             </button>
@@ -131,7 +130,7 @@
     <h3>Lot description</h3>
     <span>{{ auctionDetails.lotDescription }}</span>
   </div>
-  <div *ngIf="auctionDetails.status !== AuctionStatusEnum.CancelledByAuctionist || auctionDetails.status !== AuctionStatusEnum.CancelledByAuctionist"
+  <div *ngIf="auctionDetails.status !== AuctionStatusEnum.CancelledByAuctionist && auctionDetails.status !== AuctionStatusEnum.CancelledByModerator"
        class="row mt-3">
     <data-table #bidsDataTable
                 *ngIf="bidsDataTableOptions"
@@ -139,7 +138,7 @@
                 [options]="bidsDataTableOptions">
     </data-table>
   </div>
-  <div *ngIf="auctionDetails.status !== AuctionStatusEnum.CancelledByAuctionist || auctionDetails.status !== AuctionStatusEnum.CancelledByAuctionist"
+  <div *ngIf="auctionDetails.status !== AuctionStatusEnum.CancelledByAuctionist && auctionDetails.status !== AuctionStatusEnum.CancelledByModerator"
        class="row mt-3">
     <comments [auction]="auctionDetails"></comments>
   </div>

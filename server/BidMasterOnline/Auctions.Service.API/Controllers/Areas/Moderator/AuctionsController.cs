@@ -1,5 +1,4 @@
-﻿using Auctions.Service.API.DTO;
-using Auctions.Service.API.DTO.Moderator;
+﻿using Auctions.Service.API.DTO.Moderator;
 using Auctions.Service.API.ServiceContracts.Moderator;
 using BidMasterOnline.Core.Constants;
 using BidMasterOnline.Core.DTO;
@@ -21,7 +20,7 @@ public class AuctionsController : BaseController
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAllAuctions([FromQuery] AuctionSpecificationsDTO specifications)
+    public async Task<IActionResult> GetAuctionsList([FromQuery] AuctionSpecificationsDTO specifications)
     {
         ServiceResult<PaginatedList<AuctionSummaryDTO>> result = await _service.GetAuctionsListAsync(specifications);
 
@@ -29,7 +28,7 @@ public class AuctionsController : BaseController
     }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetAllAuctions([FromRoute] long id)
+    public async Task<IActionResult> GetAuctionDetails([FromRoute] long id)
     {
         ServiceResult<AuctionDTO> result = await _service.GetAuctionByIdAsync(id);
 
