@@ -14,5 +14,7 @@ namespace Auctions.Service.API.ServiceContracts.Participant
         Task<ServiceResult> CancelAuctionAsync(CancelAuctionDTO request);
 
         Task<bool> FinishAuctionAsync(long id, CancellationToken? token = null);
+
+        Task<bool> SwitchAuctionToActiveAsync(long id);
     }
 }

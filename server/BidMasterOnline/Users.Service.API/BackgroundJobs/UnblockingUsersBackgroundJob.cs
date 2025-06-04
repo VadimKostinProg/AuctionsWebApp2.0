@@ -1,4 +1,5 @@
-﻿using BidMasterOnline.Core.RepositoryContracts;
+﻿using BidMasterOnline.Core.DTO;
+using BidMasterOnline.Core.RepositoryContracts;
 using BidMasterOnline.Domain.Enums;
 using BidMasterOnline.Domain.Models.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -11,25 +12,59 @@ namespace Users.Service.API.BackgroundJobs
     {
         private readonly IRepository _repository;
         private readonly IUserProfilesService _userProfilesService;
+        private readonly ILogger<UnblockingUsersBackgroundJob> _logger;
 
         public UnblockingUsersBackgroundJob(IRepository repository,
-            IUserProfilesService userProfilesService)
+            IUserProfilesService userProfilesService,
+            ILogger<UnblockingUsersBackgroundJob> logger)
         {
             _repository = repository;
             _userProfilesService = userProfilesService;
+            _logger = logger;
         }
 
         public async Task Execute(IJobExecutionContext context)
         {
+            _logger.LogInformation("UnblockingUsersBackgroundJob: started work...");
+
             List<long> blockedUserIds = await _repository
                 .GetFiltered<User>(e => e.Status == UserStatus.Blocked && e.UnblockDateTime.HasValue && e.UnblockDateTime >= DateTime.UtcNow)
                 .Select(user => user.Id)
                 .ToListAsync();
 
-            await Parallel.ForEachAsync(blockedUserIds, async (userId, token) =>
+            string message = $"UnblockingUsersBackgroundJob: " +
+                $"fetched {blockedUserIds.Count} blocked users.";
+
+            if (blockedUserIds.Count > 0)
             {
-                await _userProfilesService.UnblockUserAsync(userId, token);
-            });
+                message += " Started chenging the status of users...";
+            }
+            else
+            {
+                message += " Skiped changing users status for now.";
+            }
+
+            _logger.LogInformation(message);
+
+            if (blockedUserIds.Count > 0)
+            {
+                int succeededUsers = 0;
+                int failedUsers = 0;
+
+                await Parallel.ForEachAsync(blockedUserIds, async (userId, token) =>
+                {
+                    ServiceResult result = await _userProfilesService.UnblockUserAsync(userId, token);
+
+                    if (result.IsSuccessfull)
+                        Interlocked.Increment(ref succeededUsers);
+                    else
+                        Interlocked.Increment(ref failedUsers);
+                });
+
+                _logger.LogInformation($"UnblockingUsersBackgroundJob: successfully changed status for " +
+                    $"{succeededUsers} of {blockedUserIds.Count} blocked users. " +
+                    $"Failed {failedUsers} of {blockedUserIds.Count} blocked users.");
+            }
         }
     }
 }

@@ -159,7 +159,7 @@ namespace Auctions.Service.API.Services.Participant
                 }
                 else
                 {
-                    // TODO: send notification (no winner) wrap to try catch
+                    // TODO: send notification (no winner)
                 }
 
                 _repository.Update(auction);
@@ -175,6 +175,29 @@ namespace Auctions.Service.API.Services.Participant
                 if (token != null) await transaction.RollbackAsync(token.Value);
                 else await transaction.RollbackAsync();
 
+                _logger.LogError(ex, "An error occured while finishing auction.");
+
+                return false;
+            }
+        }
+
+        public async Task<bool> SwitchAuctionToActiveAsync(long id)
+        {
+            Auction auction = await _repository.GetByIdAsync<Auction>(id);
+
+            try
+            {
+                auction.Status = AuctionStatus.Active;
+
+                // TODO: send notification to auctionist
+
+                _repository.Update(auction);
+                await _repository.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
                 _logger.LogError(ex, "An error occured while finishing auction.");
 
                 return false;

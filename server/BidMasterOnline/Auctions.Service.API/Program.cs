@@ -76,9 +76,9 @@ builder.Services.AddScoped<BidsClient>();
 
 builder.Services.AddQuartz(q =>
 {
-    JobKey jobKey = new("FinishingAuctionsBackgroundJob");
+    JobKey jobKey = new("AuctionsStatusCheckBackgroundJob");
 
-    q.AddJob<FinishingAuctionsBackgroundJob>(opts => opts.WithIdentity(jobKey));
+    q.AddJob<AuctionsStatusCheckBackgroundJob>(opts => opts.WithIdentity(jobKey));
 
     q.AddTrigger(opts => opts
         .ForJob(jobKey)
