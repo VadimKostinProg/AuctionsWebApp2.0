@@ -5,7 +5,7 @@ namespace Feedbacks.Service.API.ServiceContracts.Moderator
 {
     public interface ISupportTicketsService
     {
-        Task<ServiceResult<PaginatedList<SummarySupportTicketDTO>>> GetSupportTicketsAsync(
+        Task<ServiceResult<PaginatedList<SupportTicketSummaryDTO>>> GetSupportTicketsAsync(
             SupportTicketsSpecificationsDTO specifications);
 
         Task<ServiceResult<SupportTicketDTO>> GetSupportTicketByIdAsync(long supportTicketId);

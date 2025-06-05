@@ -3,14 +3,14 @@ using Grpc.Net.Client;
 
 namespace Auctions.Service.API.GrpcServices.Client
 {
-    public class BidsClient
+    public class BidsGrpcClient
     {
         private readonly string _bidsHost;
-        private readonly ILogger<BidsClient> _logger;
+        private readonly ILogger<BidsGrpcClient> _logger;
 
-        public BidsClient(IConfiguration configuration, ILogger<BidsClient> logger)
+        public BidsGrpcClient(IConfiguration configuration, ILogger<BidsGrpcClient> logger)
         {
-            _bidsHost = configuration["GrcpChannels:Bids"]!;
+            _bidsHost = configuration["GrpcChannels:Bids"]!;
             _logger = logger;
         }
 

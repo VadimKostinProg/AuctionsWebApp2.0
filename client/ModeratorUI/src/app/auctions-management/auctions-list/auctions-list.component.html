@@ -1,0 +1,9 @@
+<div class="w-100">
+  <h3 class="mb-4">Auctions</h3>
+
+  <app-auction-filters (onFiltersChanged)="onFiltersChanged()"></app-auction-filters>
+
+  <data-table *ngIf="showList && dataTableApiUrl && dataTableOptions"
+              [apiUrl]="dataTableApiUrl"
+              [options]="dataTableOptions"></data-table>
+</div>

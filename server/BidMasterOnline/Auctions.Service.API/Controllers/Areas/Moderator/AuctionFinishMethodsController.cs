@@ -22,7 +22,7 @@ namespace Auctions.Service.API.Controllers.Areas.Moderator
         public async Task<IActionResult> GetFinishMethods([FromQuery] SpecificationsDTO specifications)
         {
             ServiceResult<PaginatedList<AuctionFinishMethodDTO>> result = await _service
-                .GetAuctionFinishMethodsAsync(specifications);
+                .GetAuctionFinishMethodsListAsync(specifications);
 
             return FromResult(result);
         }

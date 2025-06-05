@@ -7,25 +7,22 @@ import { Router } from '@angular/router';
   templateUrl: './app.component.html',
   standalone: false
 })
-export class AppComponent implements OnInit {
-  title = 'ModeratorUI';
+export class AppComponent {
+  title = 'BidMasterOnline Moderator Tools';
 
-  constructor(private authService: AuthService,
-    private router: Router) { }
+  currentRoute: string = '';
 
-  ngOnInit() {
-    if (this.authService.isLoggedIn) {
-      return;
-    }
+  constructor(private authService: AuthService) { }
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const hasCode = urlParams.has('code');
+  get isLoggedIn() {
+    return this.authService.isLoggedIn;
+  }
 
-    if (hasCode) {
-      return;
-    }
-    else {
-      this.authService.login();
-    }
+  get userId() {
+    return this.authService.user.userId;
+  }
+
+  logout() {
+    this.authService.logout();
   }
 }

@@ -17,7 +17,7 @@ import { DataTableOptionsModel } from '../../models/shared/dataTableOptionsModel
 import { ComplaintTypeEnum } from '../../models/complaints/complaintTypeEnum';
 import { CancelAuction } from '../../models/auctions/CancelAuction';
 import { ActivatedRoute, Router } from '@angular/router';
-import { UserStatusEnum } from '../../models/user-profiles/userStatusEnum';
+import { UserStatusEnum } from '../../models/users/userStatusEnum';
 
 @Component({
   selector: 'app-auction-details',
@@ -238,7 +238,7 @@ export class AuctionDetailsComponent implements OnInit {
 
     modal.close();
 
-    var cancelationReason = this.cancelationForm.value.cancelationReason;
+    const cancelationReason = this.cancelationForm.value.cancelationReason;
 
     this.reloadCancelationForm();
 

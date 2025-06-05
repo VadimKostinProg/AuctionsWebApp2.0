@@ -354,6 +354,18 @@
       "UpstreamPathTemplate": "/api/moderator/auctions?{everything}"
     },
     {
+      "DownstreamPathTemplate": "/api/moderator/users/{id}/auctions?{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7157
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "GET" ],
+      "UpstreamPathTemplate": "/api/moderator/users/{id}/auctions?{everything}"
+    },
+    {
       "DownstreamPathTemplate": "/api/moderator/auctions/{id}/",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
@@ -366,7 +378,7 @@
       "UpstreamPathTemplate": "/api/moderator/auctions/{id}/"
     },
     {
-      "DownstreamPathTemplate": "/api/moderator/auctions/cancell",
+      "DownstreamPathTemplate": "/api/moderator/auctions/cancel",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -375,7 +387,7 @@
         }
       ],
       "UpstreamHttpMethod": [ "OPTIONS", "PUT" ],
-      "UpstreamPathTemplate": "/api/moderator/auctions/cancell"
+      "UpstreamPathTemplate": "/api/moderator/auctions/cancel"
     },
     {
       "DownstreamPathTemplate": "/api/moderator/auctions/recover",
@@ -436,6 +448,138 @@
       ],
       "UpstreamHttpMethod": [ "OPTIONS", "PUT" ],
       "UpstreamPathTemplate": "/api/moderator/auction-requests/decline"
+    },
+    {
+      "DownstreamPathTemplate": "/api/moderator/auction-categories?{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7157
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "GET" ],
+      "UpstreamPathTemplate": "/api/moderator/auction-categories?{everything}"
+    },
+    {
+      "DownstreamPathTemplate": "/api/moderator/auction-categories/all",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7157
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "GET" ],
+      "UpstreamPathTemplate": "/api/moderator/auction-categories/all"
+    },
+    {
+      "DownstreamPathTemplate": "/api/moderator/auction-categories",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7157
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "POST" ],
+      "UpstreamPathTemplate": "/api/moderator/auction-categories"
+    },
+    {
+      "DownstreamPathTemplate": "/api/moderator/auction-categories/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7157
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "PUT", "DELETE" ],
+      "UpstreamPathTemplate": "/api/moderator/auction-categories/{id}"
+    },
+    {
+      "DownstreamPathTemplate": "/api/moderator/auction-types?{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7157
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "GET" ],
+      "UpstreamPathTemplate": "/api/moderator/auction-types?{everything}"
+    },
+    {
+      "DownstreamPathTemplate": "/api/moderator/auction-types/all",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7157
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "GET" ],
+      "UpstreamPathTemplate": "/api/moderator/auction-types/all"
+    },
+    {
+      "DownstreamPathTemplate": "/api/moderator/auction-types",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7157
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "POST" ],
+      "UpstreamPathTemplate": "/api/moderator/auction-types"
+    },
+    {
+      "DownstreamPathTemplate": "/api/moderator/auction-types/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7157
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "PUT" ],
+      "UpstreamPathTemplate": "/api/moderator/auction-types/{id}"
+    },
+    {
+      "DownstreamPathTemplate": "/api/moderator/auction-finish-methods?{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7157
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "GET" ],
+      "UpstreamPathTemplate": "/api/moderator/auction-finish-methods?{everything}"
+    },
+    {
+      "DownstreamPathTemplate": "/api/moderator/auction-finish-methods",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7157
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "POST" ],
+      "UpstreamPathTemplate": "/api/moderator/auction-finish-methods"
+    },
+    {
+      "DownstreamPathTemplate": "/api/moderator/auction-finish-methods/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7157
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "PUT" ],
+      "UpstreamPathTemplate": "/api/moderator/auction-finish-methods/{id}"
     },
 
     // Bids.Service.API
@@ -608,6 +752,68 @@
       ],
       "UpstreamHttpMethod": [ "OPTIONS", "DELETE" ],
       "UpstreamPathTemplate": "/api/moderator/users/feedbacks/{feedbackId}"
+    },
+
+    // Users.Service.API
+    {
+      "DownstreamPathTemplate": "/api/moderator/moderators",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7220
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "GET" ],
+      "UpstreamPathTemplate": "/api/moderator/moderators"
+    },
+    {
+      "DownstreamPathTemplate": "/api/moderator/users?{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7220
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "GET" ],
+      "UpstreamPathTemplate": "/api/moderator/users?{everything}"
+    },
+    {
+      "DownstreamPathTemplate": "/api/moderator/users/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7220
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "GET" ],
+      "UpstreamPathTemplate": "/api/moderator/users/{id}"
+    },
+    {
+      "DownstreamPathTemplate": "/api/moderator/users/{id}/block",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7220
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "PUT" ],
+      "UpstreamPathTemplate": "/api/moderator/users/{id}/block"
+    },
+    {
+      "DownstreamPathTemplate": "/api/moderator/users/{id}/unblock",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7220
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "PUT" ],
+      "UpstreamPathTemplate": "/api/moderator/users/{id}/unblock"
     }
   ]
 }

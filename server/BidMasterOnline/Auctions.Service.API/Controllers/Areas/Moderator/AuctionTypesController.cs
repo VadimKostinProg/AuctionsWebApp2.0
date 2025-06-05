@@ -19,10 +19,19 @@ namespace Auctions.Service.API.Controllers.Areas.Moderator
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetTypes([FromQuery] SpecificationsDTO specifications)
+        public async Task<IActionResult> GetTypesList([FromQuery] SpecificationsDTO specifications)
         {
             ServiceResult<PaginatedList<AuctionTypeDTO>> result = await _service
-                .GetAuctionTypesAsync(specifications);
+                .GetAuctionTypesListAsync(specifications);
+
+            return FromResult(result);
+        }
+
+        [HttpGet("all")]
+        public async Task<IActionResult> GetAllTypes()
+        {
+            ServiceResult<IEnumerable<AuctionTypeDTO>> result = await _service
+                .GetAllAuctionTypesAsync();
 
             return FromResult(result);
         }

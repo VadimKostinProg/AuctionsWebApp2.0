@@ -10,7 +10,7 @@ import { PostComplaint } from '../../models/complaints/postComplaint';
 import { ComplaintsService } from '../../services/complaints.service';
 import { ComplaintTypeEnum } from '../../models/complaints/complaintTypeEnum';
 import { Auction } from '../../models/auctions/Auction';
-import { UserStatusEnum } from '../../models/user-profiles/userStatusEnum';
+import { UserStatusEnum } from '../../models/users/userStatusEnum';
 
 @Component({
   selector: 'comments',

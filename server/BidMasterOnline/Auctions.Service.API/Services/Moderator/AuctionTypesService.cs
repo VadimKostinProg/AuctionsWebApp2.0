@@ -7,6 +7,7 @@ using BidMasterOnline.Core.RepositoryContracts;
 using BidMasterOnline.Core.Specifications;
 using BidMasterOnline.Domain.Models;
 using BidMasterOnline.Domain.Models.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace Auctions.Service.API.Services.Moderator
 {
@@ -22,16 +23,29 @@ namespace Auctions.Service.API.Services.Moderator
             _logger = logger;
         }
 
-        public async Task<ServiceResult<PaginatedList<AuctionTypeDTO>>> GetAuctionTypesAsync(
+        public async Task<ServiceResult<IEnumerable<AuctionTypeDTO>>> GetAllAuctionTypesAsync()
+        {
+            ServiceResult<IEnumerable<AuctionTypeDTO>> result = new();
+
+            List<AuctionType> entities = await _repository.GetFiltered<AuctionType>(e => !e.Deleted)
+                .OrderBy(e => e.Name)
+                .ToListAsync();
+
+            result.Data = entities.Select(e => e.ToModeratorDTO());
+
+            return result;
+        }
+
+        public async Task<ServiceResult<PaginatedList<AuctionTypeDTO>>> GetAuctionTypesListAsync(
             SpecificationsDTO specifications)
         {
             ServiceResult<PaginatedList<AuctionTypeDTO>> result = new();
 
             SpecificationBuilder<AuctionType> specificationBuilder = new();
 
-            if (!string.IsNullOrEmpty(specifications.Search))
-                specificationBuilder.With(e => e.Name.Contains(specifications.Search) ||
-                                               e.Description.Contains(specifications.Search));
+            if (!string.IsNullOrEmpty(specifications.SearchTerm))
+                specificationBuilder.With(e => e.Name.Contains(specifications.SearchTerm) ||
+                                               e.Description.Contains(specifications.SearchTerm));
 
             if (!specifications.IncludeDeleted)
                 specificationBuilder.With(e => !e.Deleted);

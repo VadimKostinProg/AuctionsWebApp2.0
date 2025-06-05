@@ -3,6 +3,7 @@ using Auctions.Service.API.Extensions;
 using Auctions.Service.API.GrpcServices.Client;
 using Auctions.Service.API.ServiceContracts.Moderator;
 using BidMasterOnline.Core.DTO;
+using BidMasterOnline.Core.Enums;
 using BidMasterOnline.Core.Extensions;
 using BidMasterOnline.Core.RepositoryContracts;
 using BidMasterOnline.Core.ServiceContracts;
@@ -21,12 +22,12 @@ namespace Auctions.Service.API.Services.Moderator
         private readonly IRepository _repository;
         private readonly ITransactionsService _transactionsService;
         private readonly ILogger<AuctionRequestsService> _logger;
-        private readonly ModerationClient _moderationClient;
+        private readonly ModerationGrpcClient _moderationClient;
 
         public AuctionRequestsService(IRepository repository,
             ITransactionsService transactionsService,
             ILogger<AuctionRequestsService> logger,
-            ModerationClient moderationClient)
+            ModerationGrpcClient moderationClient)
         {
             _repository = repository;
             _transactionsService = transactionsService;
@@ -62,7 +63,9 @@ namespace Auctions.Service.API.Services.Moderator
                 auctionist.TotalAuctions++;
                 _repository.Update(auctionist);
 
-                DateTime auctionStartTime = auctionRequest.RequestedStartTime ?? DateTime.UtcNow;
+                DateTime auctionStartTime = auctionRequest.RequestedStartTime.HasValue && auctionRequest.RequestedStartTime > DateTime.UtcNow
+                    ? auctionRequest.RequestedStartTime.Value
+                    : DateTime.UtcNow;
 
                 Auction newAuction = new()
                 {
@@ -77,9 +80,10 @@ namespace Auctions.Service.API.Services.Moderator
                     FinishTimeIntervalInTicks = auctionRequest.FinishTimeIntervalInTicks,
                     BidAmountInterval = auctionRequest.BidAmountInterval,
                     AimPrice = auctionRequest.AimPrice,
+                    AuctionTimeInTicks = auctionRequest.RequestedAuctionTimeInTicks,
                     StartTime = auctionStartTime,
                     FinishTime = auctionStartTime.AddTicks(auctionRequest.RequestedAuctionTimeInTicks),
-                    Status = auctionRequest.RequestedStartTime == null
+                    Status = auctionRequest.RequestedStartTime == null || auctionRequest.RequestedStartTime <= auctionStartTime
                         ? AuctionStatus.Active
                         : AuctionStatus.Pending,
                     Images = auctionRequest.Images?.Select(image => new AuctionImage
@@ -160,13 +164,18 @@ namespace Auctions.Service.API.Services.Moderator
         {
             ServiceResult<PaginatedList<AuctionRequestSummaryDTO>> result = new();
 
-            ISpecification<AuctionRequest> specification = new SpecificationBuilder<AuctionRequest>()
-                .With(e => e.Status == specifications.Status)
-                .OrderBy(e => e.CreatedAt, specifications.SortDirection)
-                .WithPagination(specifications.PageSize, specifications.PageNumber)
-                .Build();
+            SpecificationBuilder<AuctionRequest> specificationBuilder = new SpecificationBuilder<AuctionRequest>();
 
-            ListModel<AuctionRequest> auctionRequestsList = await _repository.GetFilteredAndPaginated(specification,
+            specificationBuilder
+                .With(e => e.Status == specifications.Status)
+                .OrderBy(e => e.CreatedAt, SortDirection.DESC)
+                .WithPagination(specifications.PageSize, specifications.PageNumber);
+
+            if (!string.IsNullOrEmpty(specifications.SearchTerm))
+                specificationBuilder.With(e => e.LotTitle.Contains(specifications.SearchTerm) || 
+                                               e.LotDescription.Contains(specifications.SearchTerm));
+
+            ListModel<AuctionRequest> auctionRequestsList = await _repository.GetFilteredAndPaginated(specificationBuilder.Build(),
                 includeQuery: query => query.Include(e => e.Images)!);
 
             result.Data = auctionRequestsList.ToPaginatedList(e => e.ToModeratorSummaryDTO());

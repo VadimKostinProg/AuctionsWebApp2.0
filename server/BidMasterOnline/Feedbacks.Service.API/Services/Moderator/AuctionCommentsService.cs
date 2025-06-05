@@ -49,15 +49,25 @@ namespace Feedbacks.Service.API.Services.Moderator
                 return result;
             }
 
+            IDbContextTransaction transaction = _transactionsService.BeginTransaction();
+
             try
             {
                 entity.Deleted = true;
 
                 _repository.Update(entity);
                 await _repository.SaveChangesAsync();
+
+                await RecalculateAuctionAverageScoreAsync(entity.AuctionId);
+
+                await transaction.CommitAsync();
+
+                result.Message = "Auction comment has been deleted successfully.";
             }
             catch (Exception ex)
             {
+                await transaction.RollbackAsync();
+
                 _logger.LogError(ex, "An error occured while deleting a comment.");
 
                 result.IsSuccessfull = false;
@@ -76,7 +86,7 @@ namespace Feedbacks.Service.API.Services.Moderator
             ServiceResult<PaginatedList<AuctionCommentDTO>> result = new();
 
             ISpecification<AuctionComment> specifications = new SpecificationBuilder<AuctionComment>()
-                .With(e => e.AuctionId == auctionId)
+                .With(e => e.AuctionId == auctionId && !e.Deleted)
                 .WithPagination(pagination.PageSize, pagination.PageNumber)
                 .OrderBy(e => e.CreatedAt, BidMasterOnline.Core.Enums.SortDirection.DESC)
                 .Build();
@@ -87,6 +97,20 @@ namespace Feedbacks.Service.API.Services.Moderator
             result.Data = entitiesList.ToPaginatedList(e => e.ToModeratorDTO());
 
             return result;
+        }
+
+        private async Task RecalculateAuctionAverageScoreAsync(long auctionId)
+        {
+            IEnumerable<int> score = _repository.GetFiltered<AuctionComment>(x => x.AuctionId == auctionId && !x.Deleted)
+                .Select(comment => comment.Score);
+
+            Auction auction = await _repository.GetByIdAsync<Auction>(auctionId);
+            auction.AverageScore = score.Any()
+                ? Math.Round(score.Average(), 1)
+                : null;
+
+            _repository.Update(auction);
+            await _repository.SaveChangesAsync();
         }
     }
 }

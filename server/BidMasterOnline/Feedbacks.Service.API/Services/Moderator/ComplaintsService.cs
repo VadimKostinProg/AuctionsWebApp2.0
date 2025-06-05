@@ -41,7 +41,7 @@ namespace Feedbacks.Service.API.Services.Moderator
                 Complaint complaint = await _repository.GetByIdAsync<Complaint>(requestDTO.ComplaintId);
 
                 if (complaint.Status != ComplaintStatus.Pending && 
-                    complaint.ModeratorId != requestDTO.ModeratorId)
+                    complaint.ModeratorId != _userAccessor.UserId)
                 {
                     result.IsSuccessfull = false;
                     result.StatusCode = System.Net.HttpStatusCode.BadRequest;
@@ -53,6 +53,7 @@ namespace Feedbacks.Service.API.Services.Moderator
 
                 complaint.Status = ComplaintStatus.Active;
                 complaint.ModeratorId = requestDTO.ModeratorId;
+                complaint.ModeratorConclusion = null;
 
                 _repository.Update(complaint);
                 await _repository.SaveChangesAsync();
@@ -160,8 +161,12 @@ namespace Feedbacks.Service.API.Services.Moderator
 
             specificationBuilder.WithPagination(specifications.PageSize, specifications.PageNumber);
 
+            specificationBuilder.OrderBy(e => e.CreatedBy, BidMasterOnline.Core.Enums.SortDirection.DESC);
+
             ListModel<Complaint> entitiesList = await _repository.GetFilteredAndPaginated(
-                specificationBuilder.Build(), includeQuery: query => query.Include(e => e.Moderator)!);
+                specificationBuilder.Build(), 
+                includeQuery: query => query.Include(e => e.AccusingUser)
+                                            .Include(e => e.Moderator)!);
 
             result.Data = entitiesList.ToPaginatedList(e => e.ToModeratorSummaryDTO());
 

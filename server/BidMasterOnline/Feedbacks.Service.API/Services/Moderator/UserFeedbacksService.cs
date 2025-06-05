@@ -48,6 +48,8 @@ namespace Feedbacks.Service.API.Services.Moderator
 
                 return result;
             }
+            
+            IDbContextTransaction transaction = _transactionsService.BeginTransaction();
 
             try
             {
@@ -55,9 +57,17 @@ namespace Feedbacks.Service.API.Services.Moderator
 
                 _repository.Update(entity);
                 await _repository.SaveChangesAsync();
+
+                await RecalculateUserAverageScore(entity.ToUserId);
+
+                await transaction.CommitAsync();
+
+                result.Message = "User feedback has been deleted successfully.";
             }
             catch (Exception ex)
             {
+                await transaction.RollbackAsync();
+
                 _logger.LogError(ex, "An error occured while deleting a user feedback.");
 
                 result.IsSuccessfull = false;
@@ -77,7 +87,7 @@ namespace Feedbacks.Service.API.Services.Moderator
             ServiceResult<PaginatedList<UserFeedbackDTO>> result = new();
 
             ISpecification<UserFeedback> specifications = new SpecificationBuilder<UserFeedback>()
-                .With(e => e.ToUserId == userId)
+                .With(e => e.ToUserId == userId && !e.Deleted)
                 .WithPagination(pagination.PageSize, pagination.PageNumber)
                 .OrderBy(e => e.CreatedAt, BidMasterOnline.Core.Enums.SortDirection.DESC)
                 .Build();
@@ -89,6 +99,20 @@ namespace Feedbacks.Service.API.Services.Moderator
             result.Data = entitiesList.ToPaginatedList(e => e.ToModeratorDTO());
 
             return result;
+        }
+
+        private async Task RecalculateUserAverageScore(long userId)
+        {
+            IEnumerable<int> scores = _repository.GetFiltered<UserFeedback>(e => e.ToUserId == userId && !e.Deleted)
+                .Select(e => e.Score);
+
+            User user = await _repository.GetByIdAsync<User>(userId);
+            user.AverageScore = scores.Any()
+                ? Math.Round(scores.Average(), 1)
+                : null;
+
+            _repository.Update(user);
+            await _repository.SaveChangesAsync();
         }
     }
 }

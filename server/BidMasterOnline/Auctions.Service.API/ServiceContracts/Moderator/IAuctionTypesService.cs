@@ -5,7 +5,9 @@ namespace Auctions.Service.API.ServiceContracts.Moderator
 {
     public interface IAuctionTypesService
     {
-        Task<ServiceResult<PaginatedList<AuctionTypeDTO>>> GetAuctionTypesAsync(SpecificationsDTO specifications);
+        Task<ServiceResult<PaginatedList<AuctionTypeDTO>>> GetAuctionTypesListAsync(SpecificationsDTO specifications);
+
+        Task<ServiceResult<IEnumerable<AuctionTypeDTO>>> GetAllAuctionTypesAsync();
 
         Task<ServiceResult> UpdateAuctionTypeAsync(long id, UpdateAuctionTypeDTO auctionTypeDTO);
     }

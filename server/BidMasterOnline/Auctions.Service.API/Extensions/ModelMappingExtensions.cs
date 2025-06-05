@@ -181,6 +181,7 @@ namespace Auctions.Service.API.Extensions
                     ? null
                     : TimeSpan.FromTicks(entity.FinishTimeIntervalInTicks.Value),
                 BidAmountInterval = entity.BidAmountInterval,
+                AimPrice = entity.AimPrice,
                 Status = entity.Status,
                 StartPrice = entity.StartPrice,
                 RequestedByUser = entity.RequestedByUser == null
@@ -192,7 +193,7 @@ namespace Auctions.Service.API.Extensions
                         Email = entity.RequestedByUser.Email,
                     },
                 ReasonDeclined = entity.ReasonDeclined,
-                Images = entity.Images?.Select(i => i.ToModeratorDTO()).ToList() ?? [],
+                ImageUrls = entity.Images?.Select(i => i.Url).ToList() ?? [],
                 CreatedAt = entity.CreatedAt,
                 CreatedBy = entity.CreatedBy,
                 ModifiedAt = entity.ModifiedAt,
@@ -206,18 +207,13 @@ namespace Auctions.Service.API.Extensions
             {
                 Id = entity.Id,
                 LotTitle = entity.LotTitle,
+                Category = entity.Category?.Name ?? string.Empty,
+                Type = entity.Type?.Name ?? string.Empty,
                 StartTime = entity.StartTime,
                 FinishTime = entity.FinishTime,
+                StartPrice = entity.StartPrice,
                 CurrentPrice = entity.CurrentPrice,
-                AverageScore = entity.AverageScore,
-                Auctionist = entity.Auctionist == null
-                    ? null
-                    : new BidMasterOnline.Core.DTO.UserSummaryDTO
-                    {
-                        UserId = entity.Auctionist.Id,
-                        Username = entity.Auctionist.Username,
-                        Email = entity.Auctionist.Email
-                    },
+                Status = entity.Status,
                 CreatedAt = entity.CreatedAt,
                 CreatedBy = entity.CreatedBy,
                 ModifiedAt = entity.ModifiedAt,
@@ -263,7 +259,7 @@ namespace Auctions.Service.API.Extensions
                         Username = entity.Winner.Username,
                         Email = entity.Winner.Email
                     },
-                Images = entity.Images?.Select(entity => entity.ToModeratorDTO()).ToList() ?? [],
+                ImageUrls = entity.Images?.Select(entity => entity.Url).ToList() ?? [],
                 CreatedAt = entity.CreatedAt,
                 CreatedBy = entity.CreatedBy,
                 ModifiedAt = entity.ModifiedAt,

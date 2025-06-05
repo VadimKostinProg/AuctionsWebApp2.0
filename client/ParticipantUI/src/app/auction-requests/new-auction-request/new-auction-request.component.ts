@@ -9,7 +9,7 @@ import { forkJoin } from "rxjs";
 import { PostAuctionRequest } from "../../models/auction-requests/postAuctionRequest";
 import { NgxSpinnerService } from "ngx-spinner";
 import { AuthService } from "../../services/auth.service";
-import { UserStatusEnum } from "../../models/user-profiles/userStatusEnum";
+import { UserStatusEnum } from "../../models/users/userStatusEnum";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
@@ -207,17 +207,16 @@ export class NewAuctionRequestComponent implements OnInit, AfterViewInit {
       next: (response) => {
         this.spinnerService.hide();
 
-        if (response.isSuccessfull) {
-          this.toastrService.success(response.message!, 'Success');
+        this.toastrService.success(response.message!, 'Success');
 
-          this.router.navigate(['/']);
-        }
-        else {
-          this.toastrService.error(response.errors[0], 'Error');
-        }
+        this.router.navigate(['/']);
       },
-      error: (error) => {
+      error: (err) => {
         this.spinnerService.hide();
+
+        if (err?.error?.errors && Array.isArray(err.error.errors)) {
+          this.toastrService.error(err.error.errors[0], 'Error');
+        }
       }
     });
   }

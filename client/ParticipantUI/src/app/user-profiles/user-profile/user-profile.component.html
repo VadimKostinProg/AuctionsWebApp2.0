@@ -31,7 +31,7 @@
             <span><b>Status:</b> {{ userProfileInfo.status == UserStatusEnum.Active ? 'Active' :
               userProfileInfo.status == UserStatusEnum.Blocked ? 'Blocked' : 'Deleted' }}</span>
           </div>
-          <div class="col-6  d-flex flex-column justify-content-between">
+          <div class="col-6  d-flex flex-column">
             <span><b>Total auctions:</b> {{ userProfileInfo.totalAuctions }}</span>
             <span><b>Completed auctions:</b> {{ userProfileInfo.completedAuctions }}</span>
             <span><b>Total wins:</b> {{ userProfileInfo.totalWins }}</span>

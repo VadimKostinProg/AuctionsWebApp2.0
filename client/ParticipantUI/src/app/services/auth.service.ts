@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { OAuthService } from 'angular-oauth2-oidc';
 import { authConfig } from '../../auth.config';
 import { UserBasic } from '../models/users/userBasic';
-import { UserStatusEnum } from '../models/user-profiles/userStatusEnum';
+import { UserStatusEnum } from '../models/users/userStatusEnum';
 
 @Injectable({
   providedIn: 'root'
@@ -49,7 +49,7 @@ export class AuthService {
 
     return {
       userId: claims['sub'],
-      username: claims[''],
+      username: claims['preferred_username'],
       email: claims['email']
     }
   }

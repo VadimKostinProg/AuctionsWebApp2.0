@@ -2,6 +2,7 @@ using BidMasterOnline.Core;
 using BidMasterOnline.Infrastructure;
 using Bids.Service.API.Filters;
 using Bids.Service.API.GrpcServices.Client;
+using Bids.Service.API.GrpcServices.Server;
 using Bids.Service.API.ServiceContracts.Moderator;
 using Bids.Service.API.ServiceContracts.Participant;
 using Bids.Service.API.Services.Moderator;
@@ -104,5 +105,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapGrpcService<BidsGrpcService>();
 
 app.Run();

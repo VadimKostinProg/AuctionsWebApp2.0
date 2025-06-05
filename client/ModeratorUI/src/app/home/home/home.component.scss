@@ -1,0 +1,65 @@
+/* Визначення змінних для кольорів */
+$main-orange: #FFA500; // Стандартний помаранчевий
+$accent-color-1: #FF8C00; // Темніший помаранчевий або інший відтінок
+$accent-color-2: #FFD700; // Золотистий або жовтий для гармонії
+
+// Ви можете використовувати й інші кольори, які гармоніюють з помаранчевим
+// Наприклад, для успіху - зелений, для помилок - червоний
+$success-color: #28a745; // Зелений
+$danger-color: #dc3545; // Червоний
+$info-color: #17a2b8; // Синій (можливо, світліший відтінок)
+
+
+.main-page-container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 20px auto;
+}
+
+.main-color {
+  color: $main-orange !important; // Застосовуємо основний помаранчевий
+}
+
+.accent-color-1 {
+  color: $accent-color-1 !important;
+}
+
+.accent-color-2 {
+  color: $accent-color-2 !important;
+}
+
+.text-danger-custom { // Клас для червоного кольору (для скарг)
+  color: $danger-color !important;
+}
+
+.text-info-custom { // Клас для інформаційних елементів (для сапорт тікетів)
+  color: $info-color !important;
+}
+
+
+.menu-card {
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  // Можливо, легкий помаранчевий фон при наведенні
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    background-color: lighten($main-orange, 45%); // Дуже світлий помаранчевий фон
+  }
+}
+
+.menu-card .card-title {
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.menu-card .card-text {
+  color: #6c757d; // Залишаємо сірий для опису, або зробіть темнішим помаранчевим
+}
+
+/* Колір іконок у хедері (якщо вони були чорними) */
+.navbar-nav a .fa-solid {
+  color: black !important; // Залишаємо чорними, як просили раніше
+}

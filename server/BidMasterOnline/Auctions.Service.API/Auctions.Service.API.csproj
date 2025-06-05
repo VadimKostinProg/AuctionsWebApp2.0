@@ -11,6 +11,7 @@
 
 	<ItemGroup>
 		<Protobuf Include="Protos\auctions.proto" GrpcServices="Server" />
+		<Protobuf Include="Protos\userBlocking.proto" GrpcServices="Server" />
 		<Protobuf Include="Protos\bids.proto" GrpcServices="Client" />
 		<Protobuf Include="Protos\moderation.proto" GrpcServices="Client" />
 	</ItemGroup>

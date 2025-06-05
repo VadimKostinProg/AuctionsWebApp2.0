@@ -1,13 +1,14 @@
 ﻿using Auctions.Service.API.DTO.Moderator;
-using Auctions.Service.API.DTO.Participant;
 using Auctions.Service.API.Extensions;
 using Auctions.Service.API.ServiceContracts.Moderator;
 using BidMasterOnline.Core.DTO;
+using BidMasterOnline.Core.Enums;
 using BidMasterOnline.Core.Extensions;
 using BidMasterOnline.Core.RepositoryContracts;
 using BidMasterOnline.Core.Specifications;
 using BidMasterOnline.Domain.Models;
 using BidMasterOnline.Domain.Models.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace Auctions.Service.API.Services.Moderator
 {
@@ -79,18 +80,42 @@ namespace Auctions.Service.API.Services.Moderator
             return result;
         }
 
-        public async Task<ServiceResult<PaginatedList<DTO.Moderator.AuctionCategoryDTO>>> GetAuctionCategoriesAsync(SpecificationsDTO specifications)
+        public async Task<ServiceResult<IEnumerable<AuctionCategoryDTO>>> GetAllAuctionCategoriesAsync()
+        {
+            ServiceResult<IEnumerable<AuctionCategoryDTO>> result = new();
+
+            List<AuctionCategory> entities = await _repository.GetFiltered<AuctionCategory>(e => !e.Deleted)
+                .OrderBy(e => e.Name)
+                .ToListAsync();
+
+            result.Data = entities.Select(e => e.ToModeratorDTO());
+
+            return result;
+        }
+
+        public async Task<ServiceResult<PaginatedList<DTO.Moderator.AuctionCategoryDTO>>> GetAuctionCategoriesListAsync(SpecificationsDTO specifications)
         {
             ServiceResult<PaginatedList<DTO.Moderator.AuctionCategoryDTO>> result = new();
 
             SpecificationBuilder<AuctionCategory> specificationBuilder = new();
 
-            if (!string.IsNullOrEmpty(specifications.Search))
-                specificationBuilder.With(e => e.Name.Contains(specifications.Search) ||
-                                               e.Description.Contains(specifications.Search));
+            if (!string.IsNullOrEmpty(specifications.SearchTerm))
+                specificationBuilder.With(e => e.Name.Contains(specifications.SearchTerm) ||
+                                               e.Description.Contains(specifications.SearchTerm));
 
             if (!specifications.IncludeDeleted)
                 specificationBuilder.With(e => !e.Deleted);
+
+            if (!string.IsNullOrEmpty(specifications.SortBy))
+                switch(specifications.SortBy)
+                {
+                    case "id":
+                        specificationBuilder.OrderBy(e => e.Id, specifications.SortDirection ?? SortDirection.ASC);
+                        break;
+                    case "name":
+                        specificationBuilder.OrderBy(e => e.Name, specifications.SortDirection ?? SortDirection.ASC);
+                        break;
+                }
 
             specificationBuilder.WithPagination(specifications.PageSize, specifications.PageNumber);
 

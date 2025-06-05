@@ -1,4 +1,4 @@
-import { UserStatusEnum } from "./userStatusEnum";
+import { UserStatusEnum } from "../users/userStatusEnum";
 
 export class UserProfileInfo {
   public id!: number;

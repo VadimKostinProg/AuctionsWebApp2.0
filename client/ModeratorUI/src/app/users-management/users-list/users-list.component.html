@@ -1,0 +1,9 @@
+<div class="w-100">
+  <h3 class="mb-4">Users</h3>
+
+  <app-user-filters (onFiltersChanged)="onFiltersChanged()"></app-user-filters>
+
+  <data-table *ngIf="showList && dataTableApiUrl && dataTableOptions"
+              [apiUrl]="dataTableApiUrl"
+              [options]="dataTableOptions"></data-table>
+</div>

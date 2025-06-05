@@ -1,5 +1,4 @@
-﻿using Auctions.Service.API.DTO;
-using Auctions.Service.API.DTO.Participant;
+﻿using Auctions.Service.API.DTO.Participant;
 using Auctions.Service.API.Extensions;
 using Auctions.Service.API.ServiceContracts.Participant;
 using BidMasterOnline.Core.DTO;
@@ -8,6 +7,7 @@ using BidMasterOnline.Core.Extensions;
 using BidMasterOnline.Core.RepositoryContracts;
 using BidMasterOnline.Core.ServiceContracts;
 using BidMasterOnline.Core.Specifications;
+using BidMasterOnline.Domain.Enums;
 using BidMasterOnline.Domain.Models;
 using BidMasterOnline.Domain.Models.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -74,7 +74,7 @@ namespace Auctions.Service.API.Services.Participant
         {
             ServiceResult<AuctionDTO> result = new();
 
-            Auction? auction = await _repository.GetFirstOrDefaultAsync<Auction>(x => x.Id == id,
+            Auction? auction = await _repository.GetFirstOrDefaultAsync<Auction>(x => x.Id == id && x.Status != AuctionStatus.Pending,
                 includeQuery: query => query.Include(e => e.Category)
                                             .Include(e => e.Type)
                                             .Include(e => e.FinishMethod)
@@ -116,6 +116,7 @@ namespace Auctions.Service.API.Services.Participant
 
             auction.Status = BidMasterOnline.Domain.Enums.AuctionStatus.CancelledByAuctionist;
             auction.CancellationReason = request.CancellationReason;
+            auction.FinishTime = DateTime.UtcNow;
             _repository.Update(auction);
 
             await _repository.SaveChangesAsync();
@@ -125,7 +126,7 @@ namespace Auctions.Service.API.Services.Participant
             return result;
         }
 
-        public async Task<bool> FinishAuctionAsync(long id)
+        public async Task<bool> FinishAuctionAsync(long id, CancellationToken? token = null)
         {
             Auction auction = await _repository.GetByIdAsync<Auction>(id,
                 includeQuery: query => query.Include(e => e.Bids)!);
@@ -137,7 +138,7 @@ namespace Auctions.Service.API.Services.Participant
 
             try
             {
-                auction.Status = BidMasterOnline.Domain.Enums.AuctionStatus.Finished;
+                auction.Status = AuctionStatus.Finished;
 
                 if (winningBid != null)
                 {
@@ -158,20 +159,45 @@ namespace Auctions.Service.API.Services.Participant
                 }
                 else
                 {
-                    // TODO: send notification (no winner) wrap to try catch
+                    // TODO: send notification (no winner)
                 }
 
                 _repository.Update(auction);
                 await _repository.SaveChangesAsync();
 
-                await transaction.CommitAsync();
+                if (token != null) await transaction.CommitAsync(token.Value);
+                else await transaction.CommitAsync();
 
                 return true;
             }
             catch (Exception ex)
             {
-                await transaction.RollbackAsync();
+                if (token != null) await transaction.RollbackAsync(token.Value);
+                else await transaction.RollbackAsync();
 
+                _logger.LogError(ex, "An error occured while finishing auction.");
+
+                return false;
+            }
+        }
+
+        public async Task<bool> SwitchAuctionToActiveAsync(long id)
+        {
+            Auction auction = await _repository.GetByIdAsync<Auction>(id);
+
+            try
+            {
+                auction.Status = AuctionStatus.Active;
+
+                // TODO: send notification to auctionist
+
+                _repository.Update(auction);
+                await _repository.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
                 _logger.LogError(ex, "An error occured while finishing auction.");
 
                 return false;
@@ -181,6 +207,8 @@ namespace Auctions.Service.API.Services.Participant
         private ISpecification<Auction> GetSpecification(AuctionSpecificationsDTO specifications)
         {
             var builder = new SpecificationBuilder<Auction>();
+
+            builder.With(x => x.Status != AuctionStatus.Pending);
 
             if (specifications.CategoryId is not null)
                 builder.With(x => x.AuctionCategoryId == specifications.CategoryId);
@@ -207,9 +235,11 @@ namespace Auctions.Service.API.Services.Participant
                 switch (specifications.SortBy)
                 {
                     case "popularity":
+                        builder.With(x => x.Status == AuctionStatus.Active);
                         builder.OrderBy(x => x.Bids!.Count(), SortDirection.DESC);
                         break;
                     case "finishTime":
+                        builder.With(x => x.Status == AuctionStatus.Active);
                         builder.OrderBy(x => x.FinishTime, SortDirection.ASC);
                         break;
                 }

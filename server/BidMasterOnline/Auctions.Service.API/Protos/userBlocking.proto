@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+option csharp_namespace = "UsersGrpc";
+
+package UsersGrpc;
+
+service UserAuctions {
+	rpc CancelAuctionsAfterUserBlocking(UserInfoRequest) returns (ActionResponse) {
+
+	}
+}
+
+message UserInfoRequest {
+	int64 userId = 1;
+}
+
+message ActionResponse {
+	bool success = 1;
+}

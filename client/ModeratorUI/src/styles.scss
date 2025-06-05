@@ -1,1 +1,190 @@
-/* You can add global styles to this file, and also import other style files */
+@import 'bootstrap/scss/bootstrap';
+@import "font-awesome/css/font-awesome.css";
+@import 'ngx-toastr/toastr';
+@import 'bootstrap/scss/functions';
+@import 'bootstrap/scss/variables';
+@import 'bootstrap/scss/mixins';
+@import 'ngx-toastr/toastr-bs5-alert';
+
+header {
+  display: flex;
+  align-items: center;
+  min-height: 7vh;
+}
+
+main {
+  min-height: 82vh;
+  margin-bottom: 4vh;
+}
+
+footer {
+  display: flex;
+  align-items: center;
+  height: 7vh;
+  width: 100%;
+}
+
+a {
+  text-decoration: none;
+}
+
+.card {
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+.form-label {
+  font-weight: bold;
+  color: #333;
+}
+
+.profile-image {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  margin-bottom: 1rem;
+}
+
+.btn-main-orange {
+  color: #fff;
+  background-color: orange;
+  border-color: orange;
+
+  &:hover {
+    background-color: darken(orange, 10%);
+    border-color: darken(orange, 10%);
+  }
+
+  &:active {
+    background-color: darken(orange, 15%);
+    border-color: darken(orange, 15%);
+  }
+}
+
+.btn-outline-main {
+  color: orange;
+  border-color: orange;
+  background-color: transparent;
+
+  &:hover {
+    color: #fff;
+    background-color: darkorange;
+    border-color: darkorange;
+  }
+
+  &:active,
+  &.active {
+    color: #fff;
+    background-color: orange;
+    border-color: orange;
+  }
+}
+
+.btn-check:checked + .btn-outline-main {
+  color: #fff;
+  background-color: orange;
+  border-color: orange;
+}
+
+.default-background {
+  background-color: orange;
+  color: white;
+}
+.default-btn-background {
+  @extend .default-background;
+  border: 0;
+}
+
+.default-btn-background:hover {
+  background-color: darkorange;
+  color: white;
+}
+
+.default-btn-background:focus {
+  background-color: darkorange;
+}
+
+.default-span-background {
+  @extend .default-background;
+}
+
+.auction-cards-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.auctions-cards-container-scroll {
+  display: flex;
+  overflow: auto;
+}
+
+.radio-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: start;
+  margin: 0 15px 0 15px;
+}
+
+.user-info-container {
+  @extend .radio-container;
+}
+
+.auction-info-container {
+  @extend .radio-container;
+}
+
+.actions-container {
+  @extend .radio-container;
+}
+
+.orderable-title {
+  border: 0;
+  background-color: white;
+  font-weight: bold;
+}
+
+.create-button {
+  padding: 0;
+  background-color: transparent;
+  color: orange;
+  border: 0;
+}
+
+.add-comment-button:hover {
+  color: rgb(106, 106, 106);
+}
+
+.data-table-page-size-select {
+  width: 7vh;
+  height: 50px;
+}
+
+.bid-button {
+  padding: 15px 30px;
+  font-size: 1.2em;
+  font-weight: 500;
+  margin-left: 15px;
+}
+
+.details-container {
+  display: flex;
+  justify-content: center;
+}
+
+.custom-form-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 82vh;
+
+  form {
+      width: 30%;
+  }
+}
+
+.account-image {
+  width: 300px;
+  height: 300px;
+  border-radius: 20px;
+}

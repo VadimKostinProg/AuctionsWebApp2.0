@@ -69,8 +69,8 @@ namespace Users.Service.API.Services.Participant
             }
 
             result.Data = userId == _userAccessor.UserId
-                ? user.ToExpandedUserProfileDTO()
-                : user.ToUserProfileDTO();
+                ? user.ToExpandedParticipantUserProfileDTO()
+                : user.ToParticipantUserProfileDTO();
 
             return result;
         }

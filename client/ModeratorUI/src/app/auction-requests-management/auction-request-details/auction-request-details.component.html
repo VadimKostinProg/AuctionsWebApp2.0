@@ -1,0 +1,230 @@
+<div class="container auction-request-page py-4">
+  <div *ngIf="auctionRequestDetails">
+    <h2 class="mb-4 text-center">
+      <i class="fas fa-file-invoice me-2 text-primary"></i>Auction Request #{{ auctionRequestDetails.id }}
+    </h2>
+
+    <div class="card shadow-sm mb-4">
+      <div class="card-body p-4">
+        <div class="row g-4">
+          <div class="col-md-5">
+            <div id="requestImagesCarousel"
+                 class="carousel slide carousel-fade border rounded shadow-sm"
+                 data-bs-ride="carousel">
+              <div class="carousel-inner rounded">
+                <div *ngFor="let imageUrl of auctionRequestDetails.imageUrls; let i = index"
+                     [class.carousel-item]="true"
+                     [class.active]="i === 0">
+                  <img [src]="imageUrl"
+                       alt="Request Image {{i + 1}}"
+                       class="d-block w-100 carousel-image">
+                </div>
+              </div>
+              <div *ngIf="auctionRequestDetails.imageUrls!.length > 1">
+                <div class="carousel-indicators">
+                  <button *ngFor="let imageUrl of auctionRequestDetails.imageUrls; let i = index"
+                          type="button"
+                          [attr.data-bs-target]="'#requestImagesCarousel'"
+                          [attr.data-bs-slide-to]="i"
+                          [class.active]="i === 0"
+                          [attr.aria-current]="i === 0 ? 'true' : null"
+                          [attr.aria-label]="'Slide ' + (i + 1)">
+                  </button>
+                </div>
+                <button class="carousel-control-prev"
+                        type="button"
+                        data-bs-target="#requestImagesCarousel"
+                        data-bs-slide="prev">
+                  <span class="carousel-control-prev-icon"
+                        aria-hidden="true"></span>
+                  <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next"
+                        type="button"
+                        data-bs-target="#requestImagesCarousel"
+                        data-bs-slide="next">
+                  <span class="carousel-control-next-icon"
+                        aria-hidden="true"></span>
+                  <span class="visually-hidden">Next</span>
+                </button>
+              </div>
+              <div *ngIf="!auctionRequestDetails.imageUrls || auctionRequestDetails.imageUrls.length === 0"
+                   class="carousel-item active placeholder-image rounded">
+                <img src="assets/no-image-available.png"
+                     alt="No image available"
+                     class="d-block w-100">
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-7">
+            <div class="card shadow-sm mb-4">
+              <div class="card-body">
+                <h5 class="card-title mb-3"><i class="fas fa-box me-2 text-primary"></i>Lot Details</h5>
+                <p class="mb-2"><i class="fas fa-heading me-2 text-muted"></i><b>Lot Title:</b> {{
+                  auctionRequestDetails.lotTitle }}</p>
+                <p class="mb-2"><i class="fas fa-tags me-2 text-muted"></i><b>Category:</b> {{
+                  auctionRequestDetails.category }}</p>
+                <p class="mb-0"><i class="fas fa-align-left me-2 text-muted"></i><b>Description:</b></p>
+                <div class="p-3 bg-light rounded border mt-2">
+                  <p class="card-text mb-0">{{ auctionRequestDetails.lotDescription }}</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="card shadow-sm mb-4">
+              <div class="card-body">
+                <h5 class="card-title mb-3"><i class="fas fa-cogs me-2 text-primary"></i>Auction Parameters</h5>
+                <p class="mb-2">
+                  <i class="fas fa-gavel me-2 text-muted"></i>
+                  <b>Auction Type:</b> {{ auctionRequestDetails.type }}
+                </p>
+                <p class="mb-2">
+                  <i class="fas fa-hourglass-end me-2 text-muted"></i>
+                  <b>Finish Method:</b> {{ auctionRequestDetails.finishMethod }}
+                </p>
+                <p *ngIf="auctionRequestDetails.requestedFinishInterval"
+                   class="mb-2">
+                  <i class="fas fa-stopwatch me-2 text-muted"></i>
+                  <b>Finish Interval:</b> {{ auctionRequestDetails.requestedFinishInterval }}
+                </p>
+                <p class="mb-2">
+                  <i class="fas fa-clock me-2 text-muted"></i>
+                  <b>Requested Auction Time:</b>
+                  {{ auctionRequestDetails.requestedAuctionTime }}
+                </p>
+                <p *ngIf="auctionRequestDetails.requestedStartTime"
+                   class="mb-2">
+                  <i class="fas fa-calendar-alt me-2 text-muted"></i><b>Requested Start Time:</b>
+                  {{auctionRequestDetails.requestedStartTime | date: 'MM-dd-yyyy HH:mm'}}
+                </p>
+              </div>
+            </div>
+
+            <div class="card shadow-sm">
+              <div class="card-body">
+                <h5 class="card-title mb-3"><i class="fas fa-dollar-sign me-2 text-primary"></i>Pricing Details</h5>
+                <p class="mb-2"><i class="fas fa-coins me-2 text-muted"></i>
+                  <b>Start Price:</b> ${{ auctionRequestDetails.startPrice }}
+                </p>
+                <p class="mb-2"><i class="fas fa-plus-minus me-2 text-muted"></i>
+                  <b>Bid Step:</b> ${{ auctionRequestDetails.bidAmountInterval }}
+                </p>
+                <p *ngIf="auctionRequestDetails.aimPrice"
+                   class="mb-0">
+                  <i class="fas fa-bullseye me-2 text-muted"></i>
+                  <b>Aim Price:</b> {{auctionRequestDetails.aimPrice}}$
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+      <div class="card-body d-flex flex-column flex-md-row justify-content-between align-items-center">
+        <h5 class="mb-2 mb-md-0"><i class="fas fa-info-circle me-2"></i>Request Status:</h5>
+        <span class="h4 fw-bold"
+              [ngClass]="{
+                  'text-warning': auctionRequestDetails.status === AuctionRequestStatusEnum.Pending,
+                  'text-danger': auctionRequestDetails.status === AuctionRequestStatusEnum.Declined,
+                  'text-success': auctionRequestDetails.status === AuctionRequestStatusEnum.Approved,
+                }">
+          {{ getAuctionRequestStatusText(auctionRequestDetails.status) }}
+        </span>
+      </div>
+    </div>
+
+    <div *ngIf="auctionRequestDetails.reasonDeclined"
+         class="card shadow-sm mb-4 border-danger">
+      <div class="card-body">
+        <h5 class="card-title text-danger mb-3"><i class="fas fa-exclamation-triangle me-2"></i>Reason Declined:</h5>
+        <p class="card-text">{{ auctionRequestDetails.reasonDeclined }}</p>
+      </div>
+    </div>
+
+    <div class="row mt-4 mb-4"
+         *ngIf="auctionRequestDetails.status === AuctionRequestStatusEnum.Pending">
+      <div class="col-12 d-flex justify-content-end">
+        <button class="btn btn-success btn-lg me-3"
+                (click)="open(approveAuctionRequestModal)">
+          <i class="fas fa-check-circle me-2"></i>Approve
+        </button>
+        <button class="btn btn-danger btn-lg"
+                (click)="open(declineAuctionRequestModal)">
+          <i class="fas fa-times-circle me-2"></i>Decline
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #approveAuctionRequestModal
+             let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title"
+        id="modal-basic-title">
+      Approve auction request
+    </h4>
+    <button type="button"
+            class="btn-close"
+            aria-span="Close"
+            (click)="modal.close()"></button>
+  </div>
+  <div class="modal-body">
+    Are you sure you want to approve this auction request?
+  </div>
+  <div class="modal-footer">
+    <button type="button"
+            class="btn btn-outline-dark"
+            (click)="modal.close()">No</button>
+    <button type="button"
+            class="btn btn-outline-dark"
+            (click)="approveAuctionRequest(modal)">Yes</button>
+  </div>
+</ng-template>
+
+<ng-template #declineAuctionRequestModal
+             let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title"
+        id="modal-basic-title">
+      Decline auction request
+    </h4>
+    <button type="button"
+            class="btn-close"
+            aria-label="Close"
+            (click)="modal.close()"></button>
+  </div>
+  <div class="modal-body">
+    <form *ngIf="declineAuctionReuqestForm"
+          [formGroup]="declineAuctionReuqestForm">
+      <div class="form-field flex mb-2">
+        <div>
+          <label for="reasonDeclined"
+                 class="form-label pt">Reason:</label>
+        </div>
+
+        <div class="flex-1">
+          <textarea type="text"
+                    id="reasonDeclined"
+                    class="form-control"
+                    formControlName="reasonDeclined"></textarea>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button"
+            class="btn btn-outline-dark"
+            (click)="declineAuctionRequest(modal)">Submit</button>
+  </div>
+</ng-template>
+
+<ngx-spinner bdColor="rgba(0,0,0,0.8)"
+             size="medium"
+             color="#fff"
+             type="line-scale-pulse-out"
+             [fullScreen]="true">
+</ngx-spinner>
