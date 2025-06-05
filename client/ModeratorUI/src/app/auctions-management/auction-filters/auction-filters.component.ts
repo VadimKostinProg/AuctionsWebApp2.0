@@ -111,8 +111,8 @@ export class AuctionFiltersComponent implements OnInit {
     this.startTime = null;
     this.finishTime = null;
     this.selectedStatus = null;
-    this.selectedCategory = null; // Додано
-    this.selectedType = null;     // Додано
+    this.selectedCategory = null;
+    this.selectedType = null;
     await this.onSearchClicked();
   }
 

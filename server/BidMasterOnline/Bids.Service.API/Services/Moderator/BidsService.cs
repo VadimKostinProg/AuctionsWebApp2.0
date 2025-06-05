@@ -73,7 +73,8 @@ namespace Bids.Service.API.Services.Moderator
             return result;
         }
 
-        public async Task<ServiceResult<PaginatedList<UserBidDTO>>> GetUserBidsAsync(long userId)
+        public async Task<ServiceResult<PaginatedList<UserBidDTO>>> GetUserBidsAsync(long userId, 
+            PaginationRequestDTO pagination)
         {
             ServiceResult<PaginatedList<UserBidDTO>> result = new();
 
@@ -82,9 +83,11 @@ namespace Bids.Service.API.Services.Moderator
                 ISpecification<Bid> specification = new SpecificationBuilder<Bid>()
                     .With(e => e.BidderId == userId)
                     .OrderBy(e => e.CreatedAt, BidMasterOnline.Core.Enums.SortDirection.DESC)
+                    .WithPagination(pagination.PageSize, pagination.PageNumber)
                     .Build();
 
-                ListModel<Bid> bidsList = await _repository.GetFilteredAndPaginated(specification);
+                ListModel<Bid> bidsList = await _repository.GetFilteredAndPaginated(specification,
+                    includeQuery: query => query.Include(e => e.Auction)!);
 
                 result.Data = bidsList.ToPaginatedList(e => e.ToModeratorUserBidDTO());
             }

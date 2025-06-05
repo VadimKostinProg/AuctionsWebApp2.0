@@ -20,9 +20,9 @@ namespace Bids.Service.API.Controllers.Areas.Moderator
         }
 
         [HttpGet("users/{userId}/bids")]
-        public async Task<IActionResult> GetUserBids([FromRoute] long userId)
+        public async Task<IActionResult> GetUserBids([FromRoute] long userId, [FromQuery] PaginationRequestDTO pagination)
         {
-            ServiceResult<PaginatedList<UserBidDTO>> result = await _service.GetUserBidsAsync(userId);
+            ServiceResult<PaginatedList<UserBidDTO>> result = await _service.GetUserBidsAsync(userId, pagination);
 
             return FromResult(result);
         }

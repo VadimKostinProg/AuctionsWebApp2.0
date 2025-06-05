@@ -4,6 +4,8 @@
     {
         public required string Role { get; set; }
 
+        public DateTime DateOfBirth { get; set; }
+
         public double? AverageScore { get; set; }
 
         public string? ImageUrl { get; set; }
@@ -17,6 +19,8 @@
         public bool IsEmailConfirmed { get; set; }
 
         public bool IsPaymentMethodAttached { get; set; }
+
+        public string? BlockingReason { get; set; }
 
         public DateTime? UnblockDateTime { get; set; }
     }

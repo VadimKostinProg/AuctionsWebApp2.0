@@ -8,6 +8,7 @@ using BidMasterOnline.Domain.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 using Users.Service.API.DTO.Moderator;
 using Users.Service.API.Extensions;
+using Users.Service.API.GrpcServices.Client;
 using Users.Service.API.ServiceContracts.Moderator;
 
 namespace Users.Service.API.Services.Moderator
@@ -15,11 +16,15 @@ namespace Users.Service.API.Services.Moderator
     public class UsersService : IUsersService
     {
         private readonly IRepository _repository;
+        private readonly UserAuctionsGrpcClient _userAuctionsClient;
         private readonly ILogger<UsersService> _logger;
 
-        public UsersService(IRepository repository, ILogger<UsersService> logger)
+        public UsersService(IRepository repository,
+            UserAuctionsGrpcClient userAuctionsClient,
+            ILogger<UsersService> logger)
         {
             _repository = repository;
+            _userAuctionsClient = userAuctionsClient;
             _logger = logger;
         }
 
@@ -72,6 +77,8 @@ namespace Users.Service.API.Services.Moderator
 
                 _repository.Update(user);
                 await _repository.SaveChangesAsync();
+
+                await _userAuctionsClient.CancelUserAuctionsAsync(userId);
 
                 // TODO: Notify user
 

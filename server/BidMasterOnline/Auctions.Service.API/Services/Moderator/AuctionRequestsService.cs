@@ -22,12 +22,12 @@ namespace Auctions.Service.API.Services.Moderator
         private readonly IRepository _repository;
         private readonly ITransactionsService _transactionsService;
         private readonly ILogger<AuctionRequestsService> _logger;
-        private readonly ModerationClient _moderationClient;
+        private readonly ModerationGrpcClient _moderationClient;
 
         public AuctionRequestsService(IRepository repository,
             ITransactionsService transactionsService,
             ILogger<AuctionRequestsService> logger,
-            ModerationClient moderationClient)
+            ModerationGrpcClient moderationClient)
         {
             _repository = repository;
             _transactionsService = transactionsService;

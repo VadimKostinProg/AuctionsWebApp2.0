@@ -71,8 +71,8 @@ builder.Services.AddScoped<Auctions.Service.API.ServiceContracts.Participant.IAu
 builder.Services.AddScoped<Auctions.Service.API.ServiceContracts.Participant.IAuctionTypesService, Auctions.Service.API.Services.Participant.AuctionTypesService>();
 builder.Services.AddScoped<Auctions.Service.API.ServiceContracts.Participant.IAuctionFinishMethodsService, Auctions.Service.API.Services.Participant.AuctionFinishMethodsService>();
 
-builder.Services.AddScoped<ModerationClient>();
-builder.Services.AddScoped<BidsClient>();
+builder.Services.AddScoped<ModerationGrpcClient>();
+builder.Services.AddScoped<BidsGrpcClient>();
 
 builder.Services.AddQuartz(q =>
 {
@@ -128,5 +128,6 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.MapGrpcService<AuctionsGrpcService>();
+app.MapGrpcService<UserAuctionsGrpcService>();
 
 app.Run();

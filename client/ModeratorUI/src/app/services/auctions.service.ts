@@ -102,4 +102,74 @@ export class AuctionsService {
       ]
     } as DataTableOptionsModel;
   }
+
+  getAuctionsHistoryDataTableApiUrl(userId: number) {
+    return `${environment.apiUrl}${environment.apiPrefix}/users/${userId}/auctions`;
+  }
+
+  getAuctionsHistoryDataTableOptions() {
+    return {
+      id: 'auctions',
+      title: 'Auctions History',
+      resourceName: 'auction',
+      showIndexColumn: false,
+      allowCreating: false,
+      createFormOptions: null,
+      allowEdit: false,
+      editFormOptions: null,
+      allowDelete: false,
+      optionalAction: null,
+      emptyListDisplayLabel: 'You have not had any auction. Submit an auction request to start one!',
+      columnSettings: [
+        {
+          title: 'Id',
+          dataPropName: 'id',
+          isOrderable: false,
+          isLink: true,
+          pageLink: '/auctions/$routeParam$',
+          linkRouteParamName: 'id',
+          transformAction: (value) => `#${value}`
+        },
+        {
+          title: 'Name',
+          dataPropName: 'lotTitle',
+          isOrderable: false
+        },
+        {
+          title: 'Category',
+          dataPropName: 'category',
+          isOrderable: false
+        },
+        {
+          title: 'Start time',
+          dataPropName: 'startTime',
+          isOrderable: false
+        },
+        {
+          title: 'Current/Completed price',
+          dataPropName: 'currentPrice',
+          isOrderable: false
+        },
+        {
+          title: 'Status',
+          dataPropName: 'status',
+          isOrderable: false,
+          transformAction: (value: AuctionStatusEnum) => {
+            switch (value) {
+              case AuctionStatusEnum.Active:
+                return 'Active';
+              case AuctionStatusEnum.Pending:
+                return 'Pending';
+              case AuctionStatusEnum.CancelledByAuctionist:
+                return 'Cancelled by Auctionist';
+              case AuctionStatusEnum.CancelledByModerator:
+                return 'Cancelled by Moderator';
+              case AuctionStatusEnum.Finished:
+                return 'Finished';
+            }
+          }
+        }
+      ]
+    } as DataTableOptionsModel;
+  }
 }

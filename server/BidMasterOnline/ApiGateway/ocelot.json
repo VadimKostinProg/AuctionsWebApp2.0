@@ -354,6 +354,18 @@
       "UpstreamPathTemplate": "/api/moderator/auctions?{everything}"
     },
     {
+      "DownstreamPathTemplate": "/api/moderator/users/{id}/auctions?{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7157
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "GET" ],
+      "UpstreamPathTemplate": "/api/moderator/users/{id}/auctions?{everything}"
+    },
+    {
       "DownstreamPathTemplate": "/api/moderator/auctions/{id}/",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [

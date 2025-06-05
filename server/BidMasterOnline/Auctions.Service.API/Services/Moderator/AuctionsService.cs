@@ -3,7 +3,6 @@ using Auctions.Service.API.Extensions;
 using Auctions.Service.API.GrpcServices.Client;
 using Auctions.Service.API.ServiceContracts.Moderator;
 using BidMasterOnline.Core.DTO;
-using BidMasterOnline.Core.Enums;
 using BidMasterOnline.Core.Extensions;
 using BidMasterOnline.Core.RepositoryContracts;
 using BidMasterOnline.Core.ServiceContracts;
@@ -21,14 +20,14 @@ namespace Auctions.Service.API.Services.Moderator
         private readonly IRepository _repository;
         private readonly ITransactionsService _transactionService;
         private readonly ILogger<AuctionsService> _logger;
-        private readonly ModerationClient _moderationClient;
-        private readonly BidsClient _bidsClient;
+        private readonly ModerationGrpcClient _moderationClient;
+        private readonly BidsGrpcClient _bidsClient;
 
         public AuctionsService(IRepository repository,
             ITransactionsService transactionService,
             ILogger<AuctionsService> logger,
-            ModerationClient moderationClient,
-            BidsClient bidsClient)
+            ModerationGrpcClient moderationClient,
+            BidsGrpcClient bidsClient)
         {
             _repository = repository;
             _transactionService = transactionService;
@@ -84,7 +83,8 @@ namespace Auctions.Service.API.Services.Moderator
 
             try
             {
-                Auction entity = await _repository.GetByIdAsync<Auction>(requestDTO.AuctionId);
+                Auction entity = await _repository.GetByIdAsync<Auction>(requestDTO.AuctionId,
+                    includeQuery: query => query.Include(e => e.Auctionist!));
 
                 if (entity.Status != AuctionStatus.CancelledByAuctionist && 
                     entity.Status != AuctionStatus.CancelledByModerator)
@@ -92,6 +92,14 @@ namespace Auctions.Service.API.Services.Moderator
                     result.IsSuccessfull = false;
                     result.StatusCode = HttpStatusCode.BadRequest;
                     result.Errors.Add("Auction is not cancelled.");
+                    return result;
+                }
+
+                if (entity.Auctionist!.Status != UserStatus.Active)
+                {
+                    result.IsSuccessfull = false;
+                    result.StatusCode = HttpStatusCode.BadRequest;
+                    result.Errors.Add("Could not recover auction of non-active user.");
                     return result;
                 }
 
@@ -164,6 +172,53 @@ namespace Auctions.Service.API.Services.Moderator
             result.Data = auctionsList.ToPaginatedList(e => e.ToModeratorSummaryDTO());
 
             return result;
+        }
+
+        public async Task<ServiceResult<PaginatedList<AuctionSummaryDTO>>> GetUserAuctionsAsync(long userId, 
+            PaginationRequestDTO pagination)
+        {
+            ServiceResult<PaginatedList<AuctionSummaryDTO>> result = new();
+
+            ISpecification<Auction> specification = new SpecificationBuilder<Auction>()
+                .With(x => x.AuctionistId == userId)
+                .OrderBy(x => x.StartTime)
+                .WithPagination(pagination.PageSize, pagination.PageNumber)
+                .Build();
+
+            ListModel<Auction> auctionsList = await _repository.GetFilteredAndPaginated(specification,
+                includeQuery: query => query.Include(e => e.Category)
+                                            .Include(e => e.Type)!);
+
+            result.Data = auctionsList.ToPaginatedList(e => e.ToModeratorSummaryDTO());
+
+            return result;
+        }
+
+        public async Task<bool> CancelAllUserAuctionsAfterBlockingAsync(long userId)
+        {
+            try
+            {
+                List<Auction> userAuctions = await _repository
+                    .GetFiltered<Auction>(e => e.AuctionistId == userId && (e.Status == AuctionStatus.Pending || e.Status == AuctionStatus.Active))
+                    .ToListAsync();
+
+                userAuctions.ForEach(auction =>
+                {
+                    auction.Status = AuctionStatus.CancelledByModerator;
+                    auction.FinishTime = DateTime.UtcNow;
+                    auction.CancellationReason = "User's account has been blocked.";
+                });
+
+                await _repository.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"An error occured during cancelling all auctions for user #{userId}.");
+
+                return false;
+            }
         }
 
         private ISpecification<Auction> GetSpecification(AuctionSpecificationsDTO specifications)

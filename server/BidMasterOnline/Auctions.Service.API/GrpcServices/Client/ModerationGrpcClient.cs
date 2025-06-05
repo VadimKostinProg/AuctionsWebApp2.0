@@ -5,15 +5,15 @@ using ModerationGrpc;
 
 namespace Auctions.Service.API.GrpcServices.Client
 {
-    public class ModerationClient
+    public class ModerationGrpcClient
     {
         private readonly IUserAccessor _userAccessor;
         private readonly string _moderationHost;
-        private readonly ILogger<ModerationClient> _logger;
+        private readonly ILogger<ModerationGrpcClient> _logger;
 
-        public ModerationClient(IConfiguration configuration,
+        public ModerationGrpcClient(IConfiguration configuration,
             IUserAccessor userAccessor,
-            ILogger<ModerationClient> logger)
+            ILogger<ModerationGrpcClient> logger)
         {
             _moderationHost = configuration["GrpcChannels:Moderation"]!;
             _userAccessor = userAccessor;

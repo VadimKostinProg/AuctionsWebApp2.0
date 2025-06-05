@@ -17,6 +17,10 @@ const routes: Routes = [
     path: 'auction-requests',
     loadChildren: () => import('../auction-requests-management/auction-requests-management.module').then(m => m.AuctionRequestsManagementModule)
   },
+  {
+    path: 'users',
+    loadChildren: () => import('../users-management/users-management.module').then(m => m.UsersManagementModule)
+  },
 ];
 
 @NgModule({
