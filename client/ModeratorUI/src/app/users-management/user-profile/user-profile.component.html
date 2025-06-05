@@ -1,93 +1,147 @@
-<ng-container *ngIf="userProfileInfo"
-              class="container-fluid">
-  <div class="row">
-    <div class="col-3">
-      <img *ngIf="userProfileInfo.imageUrl; else defaultImage"
-           [src]="userProfileInfo.imageUrl"
-           class="account-image">
+<ng-container *ngIf="userProfileInfo">
+  <div class="container user-profile-page py-4">
+    <div class="card shadow-sm mb-4">
+      <div class="card-body p-4">
+        <div class="row align-items-center">
 
-      <ng-template #defaultImage>
-        <img src="assets/default-user-image.png"
-             class="account-image">
-      </ng-template>
-    </div>
-    <div class="col-9">
-      <div class="d-flex justify-content-between align-items-start">
-        <div class="row">
-          <h3>{{ userProfileInfo.username }}</h3>
-          <div *ngIf="userProfileInfo.averageScore"
-               class="col-12 mt-2 mb-2">
-            <span class="h5">
-              <b>Score:</b>
-              {{ userProfileInfo.averageScore }}
-              <i class="fa-solid fa-star fa-xl mr-3"
-                 [ngStyle]="{ 'color': '#b6d714' }"></i>
-            </span>
+          <div class="col-md-3 text-center mb-3 mb-md-0">
+            <img *ngIf="userProfileInfo.imageUrl; else defaultImage"
+                 [src]="userProfileInfo.imageUrl"
+                 alt="User Profile"
+                 class="profile-image rounded-circle border border-3 border-light shadow-sm">
+
+            <ng-template #defaultImage>
+              <img src="assets/default-user-image.png"
+                   alt="Default User"
+                   class="profile-image rounded-circle border border-3 border-light shadow-sm">
+            </ng-template>
           </div>
-          <div class="col-6 d-flex flex-column justify-content-between">
-            <span><b>Full name:</b> {{ userProfileInfo.fullName }}</span>
-            <span><b>Email:</b> {{ userProfileInfo.email }}</span>
-            <span><b>Date of birth:</b> {{ userProfileInfo.dateOfBirth }}</span>
-            <span>
-              <b>Status:</b>
-              <span [ngStyle]="{
-                'color': userProfileInfo.status == UserStatusEnum.Active ? 'green' :
-                         userProfileInfo.status == UserStatusEnum.Blocked ? 'red' : 'gray',
-                'font-weight': 'bold'
-              }">
-                {{ userProfileInfo.status == UserStatusEnum.Active ? 'Active' :
-                userProfileInfo.status == UserStatusEnum.Blocked ? 'Blocked' : 'Deleted' }}
-              </span>
-            </span>
-            <span *ngIf="userProfileInfo.status === UserStatusEnum.Blocked && userProfileInfo.blockingReason">
-              <b>Reason blocked:</b> {{ userProfileInfo.blockingReason }}
-            </span>
-          </div>
-          <div class="col-6  d-flex flex-column">
-            <span><b>Total auctions:</b> {{ userProfileInfo.totalAuctions }}</span>
-            <span><b>Completed auctions:</b> {{ userProfileInfo.completedAuctions }}</span>
-            <span><b>Total wins:</b> {{ userProfileInfo.totalWins }}</span>
+
+          <div class="col-md-9">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h2 class="mb-0">
+                {{ userProfileInfo.username }}
+              </h2>
+              <button type="button"
+                      class="btn actions-button btn-outline-secondary"
+                      placement="bottom"
+                      [ngbPopover]="profileActionsPopContent">
+                <i class="fa-solid fa-ellipsis-h"></i>
+              </button>
+            </div>
+
+            <div class="row g-3">
+              <div class="col-md-6 d-flex flex-column gap-2">
+                <p class="mb-0">
+                  <i class="fas fa-address-card me-2 text-muted"></i>
+                  <b>Full name:</b> {{ userProfileInfo.fullName }}
+                </p>
+                <p class="mb-0">
+                  <i class="fas fa-envelope me-2 text-muted"></i>
+                  <b>Email:</b> {{ userProfileInfo.email }}
+                </p>
+                <p class="mb-0">
+                  <i class="fas fa-calendar-alt me-2 text-muted"></i>
+                  <b>Date of birth:</b> {{ userProfileInfo.dateOfBirth | date: 'MM-dd-yyyy' }}
+                </p>
+                <p class="mb-0">
+                  <i class="fas fa-toggle-on me-2"
+                     [ngClass]="{
+                       'text-success': userProfileInfo.status === UserStatusEnum.Active,
+                       'text-danger': userProfileInfo.status === UserStatusEnum.Blocked,
+                       'text-muted': userProfileInfo.status === UserStatusEnum.Deleted
+                     }">
+                  </i>
+                  <b>Status:</b>
+                  <span [ngStyle]="{
+                    'color': userProfileInfo.status == UserStatusEnum.Active ? 'green' :
+                             userProfileInfo.status == UserStatusEnum.Blocked ? 'red' : 'gray',
+                    'font-weight': 'bold'
+                  }">
+                    {{ userProfileInfo.status == UserStatusEnum.Active ? 'Active' :
+                    userProfileInfo.status == UserStatusEnum.Blocked ? 'Blocked' : 'Deleted' }}
+                  </span>
+                </p>
+                <p *ngIf="userProfileInfo.status === UserStatusEnum.Blocked && userProfileInfo.blockingReason"
+                   class="mb-0">
+                  <i class="fas fa-exclamation-triangle me-2 text-danger"></i>
+                  <b>Reason blocked:</b> {{ userProfileInfo.blockingReason }}
+                </p>
+              </div>
+
+              <div class="col-md-6 d-flex flex-column gap-2">
+                <h5 *ngIf="userProfileInfo.averageScore"
+                    class="mb-2">
+                  <i class="fas fa-star me-2 text-warning"></i>
+                  Average Score: <span class="fw-bold">{{ userProfileInfo.averageScore | number:'1.1-1' }}</span>
+                </h5>
+                <div *ngIf="userProfileInfo.averageScore"
+                     class="progress"
+                     style="height: 25px;">
+                  <div class="progress-bar"
+                       role="progressbar"
+                       [style.width]="(userProfileInfo.averageScore / 5 * 100) + '%'"
+                       [attr.aria-valuenow]="userProfileInfo.averageScore"
+                       aria-valuemin="0"
+                       aria-valuemax="5"
+                       [ngClass]="{
+                         'bg-danger': userProfileInfo.averageScore < 2,
+                         'bg-warning': userProfileInfo.averageScore >= 2 && userProfileInfo.averageScore < 3.5,
+                         'bg-success': userProfileInfo.averageScore >= 3.5
+                       }">
+                    {{ userProfileInfo.averageScore | number:'1.1-1' }}
+                  </div>
+                </div>
+                <hr *ngIf="userProfileInfo.averageScore">
+
+                <p class="mb-0">
+                  <i class="fas fa-gavel me-2 text-muted"></i>
+                  <b>Total auctions:</b> {{ userProfileInfo.totalAuctions }}
+                </p>
+                <p class="mb-0">
+                  <i class="fas fa-check-double me-2 text-muted"></i>
+                  <b>Completed auctions:</b> {{ userProfileInfo.completedAuctions }}
+                </p>
+                <p class="mb-0">
+                  <i class="fas fa-trophy me-2 text-muted"></i>
+                  <b>Total wins:</b> {{ userProfileInfo.totalWins }}
+                </p>
+              </div>
+            </div>
           </div>
         </div>
-
-        <ng-template #profileActionsPopContent>
-          <div class="actions-container">
-            <button *ngIf="userProfileInfo.status === UserStatusEnum.Active"
-                    class="btn"
-                    (click)="open(blockAccountModal)">
-              Block account
-            </button>
-            <button *ngIf="userProfileInfo.status === UserStatusEnum.Blocked"
-                    class="btn"
-                    (click)="open(unblockAccountModal)">
-              Unblock account
-            </button>
-            <a class="btn"
-               [routerLink]="['/users', userId, 'auctions-history']">
-              Auctions history
-            </a>
-            <a class="btn"
-               [routerLink]="['/users', userId, 'bids-history']">
-              Bids history
-            </a>
-          </div>
-        </ng-template>
-
-        <button type="button"
-                class="btn actions-button"
-                placement="bottom"
-                [ngbPopover]="profileActionsPopContent">
-          <i class="fa-solid fa-ellipsis"></i>
-        </button>
       </div>
     </div>
-  </div>
 
-  <div *ngIf="showUserFeedbacks"
-       class="mt-3">
-    <app-user-feedbacks [userId]="userId!"></app-user-feedbacks>
+    <div *ngIf="showUserFeedbacks"
+         class="mt-4">
+      <app-user-feedbacks [userId]="userId!"></app-user-feedbacks>
+    </div>
   </div>
 </ng-container>
+
+<ng-template #profileActionsPopContent>
+  <div class="actions-container d-flex flex-column gap-2 p-2">
+    <button *ngIf="userProfileInfo?.status === UserStatusEnum.Active"
+            class="btn"
+            (click)="open(blockAccountModal)">
+      Block account
+    </button>
+    <button *ngIf="userProfileInfo?.status === UserStatusEnum.Blocked"
+            class="btn"
+            (click)="open(unblockAccountModal)">
+      Unblock account
+    </button>
+    <a class="btn"
+       [routerLink]="['/users', userId, 'auctions-history']">
+      Auctions history
+    </a>
+    <a class="btn"
+       [routerLink]="['/users', userId, 'bids-history']">
+      Bids history
+    </a>
+  </div>
+</ng-template>
 
 <ng-template #blockAccountModal
              let-modal>
