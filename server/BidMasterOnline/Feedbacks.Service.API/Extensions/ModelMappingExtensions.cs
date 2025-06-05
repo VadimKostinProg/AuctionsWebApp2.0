@@ -152,10 +152,10 @@ namespace Feedbacks.Service.API.Extensions
                     ComplaintType.ComplaintOnUserFeedback => $"Complaint on user feedback",
                     _ => string.Empty
                 },
-                Type = entity.Type,
                 Status = entity.Status,
-                ModeratorName = entity.Moderator!.FullName,
-                CreatedAt = entity.CreatedAt,
+                AccusingUsername = entity.AccusingUser!.FullName,
+                ModeratorName = entity.Moderator?.FullName,
+                SubmittedTime = entity.CreatedAt,
             };
 
         public static DTO.Moderator.ComplaintDTO ToModeratorDTO(this Complaint entity)
@@ -185,7 +185,7 @@ namespace Feedbacks.Service.API.Extensions
                 ModeratorConclusion = entity.ModeratorConclusion,
                 Type = entity.Type,
                 Status = entity.Status,
-                ModeratorName = entity.Moderator!.FullName,
+                ModeratorName = entity.Moderator?.FullName,
                 CreatedAt = entity.CreatedAt,
                 CreatedBy = entity.CreatedBy,
                 ModifiedAt = entity.ModifiedAt,

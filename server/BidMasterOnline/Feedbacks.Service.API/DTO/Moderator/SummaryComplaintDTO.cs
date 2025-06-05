@@ -12,11 +12,11 @@ namespace Feedbacks.Service.API.DTO.Moderator
 
         public required string Title { get; set; }
 
-        public ComplaintType Type { get; set; }
-
         public ComplaintStatus Status { get; set; }
 
-        public DateTime CreatedAt { get; set; }
+        public DateTime SubmittedTime { get; set; }
+
+        public required string AccusingUsername { get; set; }
 
         public string? ModeratorName { get; set; }
     }

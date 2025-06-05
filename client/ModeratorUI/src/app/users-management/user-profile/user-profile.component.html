@@ -30,6 +30,13 @@
               </button>
             </div>
 
+            <div *ngIf="userProfileInfo.averageScore"
+                 class="row mb-2">
+              <h5>
+                <i class="fas fa-star me-2 text-warning"></i>
+                Average Score: <span class="fw-bold">{{ userProfileInfo.averageScore | number:'1.1-1' }}</span>
+              </h5>
+            </div>
             <div class="row g-3">
               <div class="col-md-6 d-flex flex-column gap-2">
                 <p class="mb-0">
@@ -70,30 +77,6 @@
               </div>
 
               <div class="col-md-6 d-flex flex-column gap-2">
-                <h5 *ngIf="userProfileInfo.averageScore"
-                    class="mb-2">
-                  <i class="fas fa-star me-2 text-warning"></i>
-                  Average Score: <span class="fw-bold">{{ userProfileInfo.averageScore | number:'1.1-1' }}</span>
-                </h5>
-                <div *ngIf="userProfileInfo.averageScore"
-                     class="progress"
-                     style="height: 25px;">
-                  <div class="progress-bar"
-                       role="progressbar"
-                       [style.width]="(userProfileInfo.averageScore / 5 * 100) + '%'"
-                       [attr.aria-valuenow]="userProfileInfo.averageScore"
-                       aria-valuemin="0"
-                       aria-valuemax="5"
-                       [ngClass]="{
-                         'bg-danger': userProfileInfo.averageScore < 2,
-                         'bg-warning': userProfileInfo.averageScore >= 2 && userProfileInfo.averageScore < 3.5,
-                         'bg-success': userProfileInfo.averageScore >= 3.5
-                       }">
-                    {{ userProfileInfo.averageScore | number:'1.1-1' }}
-                  </div>
-                </div>
-                <hr *ngIf="userProfileInfo.averageScore">
-
                 <p class="mb-0">
                   <i class="fas fa-gavel me-2 text-muted"></i>
                   <b>Total auctions:</b> {{ userProfileInfo.totalAuctions }}

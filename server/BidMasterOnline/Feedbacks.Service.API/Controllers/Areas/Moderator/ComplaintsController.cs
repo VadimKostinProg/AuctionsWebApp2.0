@@ -36,8 +36,8 @@ namespace Feedbacks.Service.API.Controllers.Areas.Moderator
             return FromResult(result);
         }
 
-        [HttpPut("assing")]
-        public async Task<IActionResult> AssingComplaint([FromBody] AssignComplaintDTO requestDTO)
+        [HttpPut("assign")]
+        public async Task<IActionResult> AssignComplaint([FromBody] AssignComplaintDTO requestDTO)
         {
             ServiceResult result = await _service.AssignComplaintAsync(requestDTO);
 

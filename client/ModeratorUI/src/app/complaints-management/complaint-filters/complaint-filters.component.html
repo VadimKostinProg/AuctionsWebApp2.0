@@ -1,0 +1,76 @@
+<div class="card complaint-filters-card shadow-sm mb-4">
+  <div class="card-body">
+    <h5 class="card-title mb-3"><i class="fas fa-filter me-2"></i>Filter Complaints</h5>
+
+    <div class="row g-3 align-items-center">
+      <div class="col-md-6 col-lg-4">
+        <label class="form-label d-block mb-2 fw-bold">
+          <i class="fas fa-dot-circle me-1 text-muted"></i>Filter by Status:
+        </label>
+        <div class="btn-group w-100"
+             role="group">
+          <input type="radio"
+                 class="btn-check"
+                 name="statusFilter"
+                 id="statusPending"
+                 autocomplete="off"
+                 [checked]="checkedStatus === ComplaintStatusEnum.Pending"
+                 (change)="onStatusChanged(ComplaintStatusEnum.Pending)">
+          <label class="btn btn-outline-main"
+                 for="statusPending">Pending</label>
+
+          <input type="radio"
+                 class="btn-check"
+                 name="statusFilter"
+                 id="statusActive"
+                 autocomplete="off"
+                 [checked]="checkedStatus === ComplaintStatusEnum.Active"
+                 (change)="onStatusChanged(ComplaintStatusEnum.Active)">
+          <label class="btn btn-outline-main"
+                 for="statusActive">Active</label>
+
+          <input type="radio"
+                 class="btn-check"
+                 name="statusFilter"
+                 id="statusCompleted"
+                 autocomplete="off"
+                 [checked]="checkedStatus === ComplaintStatusEnum.Completed"
+                 (change)="onStatusChanged(ComplaintStatusEnum.Completed)">
+          <label class="btn btn-outline-main"
+                 for="statusCompleted">Completed</label>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-4">
+        <label for="complaintType"
+               class="form-label fw-bold">
+          <i class="fas fa-list me-1 text-muted"></i>Filter by Type:
+        </label>
+        <select class="form-select"
+                id="complaintType"
+                [(ngModel)]="selectedComplaintType"
+                (change)="onTypeChanged()">
+          <option [ngValue]="null">All Types</option>
+          <option *ngFor="let type of complaintTypes"
+                  [ngValue]="type.value">{{ type.name }}</option>
+        </select>
+      </div>
+
+      <div *ngIf="showAssignedOnMeFlag"
+           class="col-md-12 col-lg-4 d-flex align-items-center justify-content-md-end">
+        <div class="form-check form-switch">
+          <input class="form-check-input"
+                 type="checkbox"
+                 role="switch"
+                 id="assignedOnMeSwitch"
+                 [(ngModel)]="assignedOnMeChecked"
+                 (change)="onAssignedOnMeChanged()">
+          <label class="form-check-label ms-2"
+                 for="assignedOnMeSwitch">
+            <i class="fas fa-user-check me-1 text-info"></i>Assigned to me
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

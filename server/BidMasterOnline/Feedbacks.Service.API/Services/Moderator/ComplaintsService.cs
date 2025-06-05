@@ -161,8 +161,12 @@ namespace Feedbacks.Service.API.Services.Moderator
 
             specificationBuilder.WithPagination(specifications.PageSize, specifications.PageNumber);
 
+            specificationBuilder.OrderBy(e => e.CreatedBy, BidMasterOnline.Core.Enums.SortDirection.DESC);
+
             ListModel<Complaint> entitiesList = await _repository.GetFilteredAndPaginated(
-                specificationBuilder.Build(), includeQuery: query => query.Include(e => e.Moderator)!);
+                specificationBuilder.Build(), 
+                includeQuery: query => query.Include(e => e.AccusingUser)
+                                            .Include(e => e.Moderator)!);
 
             result.Data = entitiesList.ToPaginatedList(e => e.ToModeratorSummaryDTO());
 
