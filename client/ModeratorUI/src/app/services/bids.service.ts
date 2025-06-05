@@ -15,7 +15,7 @@ export class BidsService {
   getDataTableOptions() {
     return {
       id: 'bids',
-      title: 'Auction bids',
+      title: null,
       resourceName: 'bid',
       showIndexColumn: false,
       allowCreating: false,

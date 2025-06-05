@@ -1,20 +1,34 @@
 <div *ngIf="auctionDetails"
-     class="container-fluid">
-  <div class="row mt-2">
-    <div class="col-4">
-      <div id="carouselExample"
-           class="carousel slide">
-        <div class="carousel-inner">
-          <div *ngFor="let imageUrl of auctionDetails.imageUrls"
-               class="carousel-item active">
+     class="container auction-details-page py-4">
+  <div class="row g-4">
+    <div class="col-md-5">
+      <div id="auctionImagesCarousel"
+           class="carousel slide carousel-fade border rounded shadow-sm"
+           data-bs-ride="carousel">
+        <div class="carousel-inner rounded">
+          <div *ngFor="let imageUrl of auctionDetails.imageUrls; let i = index"
+               [class.carousel-item]="true"
+               [class.active]="i === 0">
             <img [src]="imageUrl"
-                 class="d-block w-100">
+                 alt="Auction Image {{i + 1}}"
+                 class="d-block w-100 carousel-image">
           </div>
         </div>
         <div *ngIf="auctionDetails.imageUrls!.length > 1">
+          <div class="carousel-indicators">
+            <button *ngFor="let imageUrl of auctionDetails.imageUrls; let i = index"
+                    type="button"
+                    [attr.data-bs-target]="'#auctionImagesCarousel'"
+                    [attr.data-bs-slide-to]="i"
+                    [class.active]="i === 0"
+                    [attr.aria-current]="i === 0 ? 'true' : null"
+                    [attr.aria-label]="'Slide ' + (i + 1)">
+            </button>
+          </div>
+
           <button class="carousel-control-prev"
                   type="button"
-                  data-bs-target="#carouselExample"
+                  data-bs-target="#auctionImagesCarousel"
                   data-bs-slide="prev">
             <span class="carousel-control-prev-icon"
                   aria-hidden="true"></span>
@@ -22,124 +36,162 @@
           </button>
           <button class="carousel-control-next"
                   type="button"
-                  data-bs-target="#carouselExample"
+                  data-bs-target="#auctionImagesCarousel"
                   data-bs-slide="next">
             <span class="carousel-control-next-icon"
                   aria-hidden="true"></span>
             <span class="visually-hidden">Next</span>
           </button>
         </div>
+        <div *ngIf="!auctionDetails.imageUrls || auctionDetails.imageUrls.length === 0"
+             class="carousel-item active placeholder-image rounded">
+          <img src="assets/no-image-available.png"
+               alt="No image available"
+               class="d-block w-100">
+        </div>
       </div>
     </div>
-    <div class="col-8">
-      <div class="d-flex justify-content-between align-items-start">
-        <div>
-          <div class="auction-info-container">
-            <h3> {{ auctionDetails.lotTitle }}</h3>
-            <div class="mt-3">
-              <span *ngIf="auctionDetails.averageScore"
-                    class="h5">
-                <b class="auction-details-property">Score:</b>
-                {{ auctionDetails.averageScore }}
-                <i class="fa-solid fa-star fa-xl mr-3"
-                   [ngStyle]="{ 'color': '#b6d714' }"></i>
-              </span>
-            </div>
-            <span class="h5 mt-1">
-              <b class="auction-details-property">Category:</b>
-              {{ auctionDetails.category }}
-            </span>
-            <span class="h5">
-              <b class="auction-details-property">Auctionist:</b>
-              <a [routerLink]="['/users', auctionDetails.auctionist!.userId]">
-                {{ auctionDetails.auctionist!.username }}
-              </a>
-            </span>
-            <span *ngIf="auctionDetails.status !== AuctionStatusEnum.CancelledByAuctionist || auctionDetails.status !== AuctionStatusEnum.CancelledByAuctionist"
-                  class="h5">
-              <b class="auction-details-property">Current bid:</b>
-              {{ auctionDetails.currentPrice }}$ / {{ auctionDetails.startPrice }}$
-            </span>
-            <span class="h5">
-              <b class="auction-details-property">Start time:</b>
-              {{ auctionDetails.startTime | date: 'MM-dd-yyyy hh:mm' }}
-            </span>
-            <span class="h5">
-              <b class="auction-details-property">Finish time:</b>
-              {{ auctionDetails.finishTime | date: 'MM-dd-yyyy hh:mm' }}
-            </span>
-            <span class="h5">
-              <b class="auction-details-property">Finish type:</b>
-              {{ auctionDetails.finishMethod }}
-            </span>
-            <span class="h5">
-              <b class="auction-details-property">Auction type:</b>
-              {{ auctionDetails.type }}
-            </span>
-            <span class="h5">
-              <b class="auction-details-property">Status:</b>
-              {{ auctionStatus }}
-            </span>
-            <span *ngIf="(auctionDetails.status === AuctionStatusEnum.CancelledByAuctionist || auctionDetails.status === AuctionStatusEnum.CancelledByModerator) && auctionDetails.cancellationReason"
-                  class="h5">
-              <b class="auction-details-property">Cancelation reason:</b>
-              {{ auctionDetails.cancellationReason }}
-            </span>
-            <span *ngIf="auctionDetails.status === AuctionStatusEnum.Finished && auctionDetails.winner"
-                  class="h5">
-              <b class="auction-details-property">Winner:</b>
-              <a routerLink="/profile"
-                 [queryParams]="{ userId: auctionDetails.winner.userId }">
-                {{ auctionDetails.winner!.username }}
-              </a>
-            </span>
-          </div>
-        </div>
 
-        <ng-template #auctionActionsPopContent>
-          <div class="actions-container">
-            <button *ngIf="auctionDetails.status === AuctionStatusEnum.Active || auctionDetails.status === AuctionStatusEnum.Pending"
-                    class="btn"
-                    (click)="open(cancelAuctionModal)">
-              Cancel
-            </button>
-            <button *ngIf="auctionDetails.status === AuctionStatusEnum.CancelledByModerator"
-                    class="btn"
-                    (click)="open(recoverAuctionModal)">
-              Recover
-            </button>
-          </div>
-        </ng-template>
-
+    <div class="col-md-7">
+      <div class="d-flex justify-content-between align-items-start mb-3">
+        <h2 class="mb-0">{{ auctionDetails.lotTitle }}</h2>
         <button *ngIf="auctionDetails.status === AuctionStatusEnum.Active ||
-                       auctionDetails.status === AuctionStatusEnum.Pending ||
-                       auctionDetails.status === AuctionStatusEnum.CancelledByModerator"
+                         auctionDetails.status === AuctionStatusEnum.Pending ||
+                         auctionDetails.status === AuctionStatusEnum.CancelledByModerator"
                 type="button"
-                class="btn actions-button"
+                class="btn actions-button btn-outline-secondary"
                 placement="bottom"
                 [ngbPopover]="auctionActionsPopContent">
-          <i class="fa-solid fa-ellipsis"></i>
+          <i class="fa-solid fa-ellipsis-h"></i>
         </button>
+      </div>
+
+      <div class="card shadow-sm mb-4">
+        <div class="card-body">
+          <h5 class="card-title mb-3"><i class="fas fa-info-circle me-2"></i>Auction Details</h5>
+          <div class="row g-2">
+            <div class="col-sm-6">
+              <p class="mb-2">
+                <i class="fas fa-star me-2 text-warning"></i>
+                <b>Score:</b>
+                <span *ngIf="auctionDetails.averageScore">{{ auctionDetails.averageScore }}</span>
+                <span *ngIf="!auctionDetails.averageScore">N/A</span>
+              </p>
+              <p class="mb-2">
+                <i class="fas fa-tag me-2 text-primary"></i>
+                <b>Category:</b> {{ auctionDetails.category }}
+              </p>
+              <p class="mb-2">
+                <i class="fas fa-user-tag me-2 text-muted"></i>
+                <b>Auctioneer:</b>
+                <a [routerLink]="['/users', auctionDetails.auctionist!.userId]"
+                   class="text-decoration-none">
+                  {{ auctionDetails.auctionist!.username }}
+                </a>
+              </p>
+              <p class="mb-2">
+                <i class="fas fa-gavel me-2 text-info"></i>
+                <b>Auction type:</b> {{ auctionDetails.type }}
+              </p>
+            </div>
+            <div class="col-sm-6">
+              <p class="mb-2">
+                <i class="fas fa-clock me-2 text-secondary"></i>
+                <b>Start time:</b> {{ auctionDetails.startTime | date: 'MM-dd-yyyy HH:mm' }}
+              </p>
+              <p class="mb-2">
+                <i class="fas fa-hourglass-end me-2 text-secondary"></i>
+                <b>Finish time:</b> {{ auctionDetails.finishTime | date: 'MM-dd-yyyy HH:mm' }}
+              </p>
+              <p class="mb-2">
+                <i class="fas fa-check-circle me-2 text-secondary"></i>
+                <b>Finish method:</b> {{ auctionDetails.finishMethod }}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card shadow-sm mb-4">
+        <div class="card-body d-flex justify-content-between align-items-center">
+          <div>
+            <h5 class="card-title mb-2"><i class="fas fa-money-bill-wave me-2"></i>Pricing</h5>
+            <div
+                 *ngIf="auctionDetails.status !== AuctionStatusEnum.CancelledByAuctionist && auctionDetails.status !== AuctionStatusEnum.CancelledByModerator">
+              <p class="h4 text-success mb-0">
+                <b>Current Bid:</b> {{ auctionDetails.currentPrice }}$
+                <small class="text-muted">(Start: {{ auctionDetails.startPrice }}$)</small>
+              </p>
+            </div>
+            <p *ngIf="auctionDetails.status === AuctionStatusEnum.Finished && auctionDetails.winner"
+               class="mb-0 mt-2">
+              <i class="fas fa-trophy me-2 text-warning"></i>
+              <b>Winner:</b>
+              <a [routerLink]="['/users', auctionDetails.winner.userId]"
+                 class="text-decoration-none">
+                {{ auctionDetails.winner!.username }}
+              </a>
+            </p>
+          </div>
+
+          <div>
+            <h5 class="card-title mb-2"><i class="fas fa-info-circle me-2"></i>Status</h5>
+            <span class="h4 fw-bold"
+                  [ngClass]="{
+                    'text-warning': auctionDetails.status === AuctionStatusEnum.Pending,
+                    'text-success': auctionDetails.status === AuctionStatusEnum.Active || auctionDetails.status === AuctionStatusEnum.Finished,
+                    'text-danger': auctionDetails.status === AuctionStatusEnum.CancelledByAuctionist || auctionDetails.status === AuctionStatusEnum.CancelledByModerator
+                  }">
+              {{ auctionStatus }} </span>
+            <p *ngIf="(auctionDetails.status === AuctionStatusEnum.CancelledByAuctionist || auctionDetails.status === AuctionStatusEnum.CancelledByModerator) && auctionDetails.cancellationReason"
+               class="text-danger small mt-2">
+              <i class="fas fa-times-circle me-1"></i>
+              Reason: {{ auctionDetails.cancellationReason }}
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-  <div class="row mt-3">
-    <h3>Lot description</h3>
-    <span>{{ auctionDetails.lotDescription }}</span>
+
+  <div class="card shadow-sm mt-4 mb-4">
+    <div class="card-body">
+      <h4 class="card-title mb-3"><i class="fas fa-align-left me-2"></i>Lot Description</h4>
+      <p class="card-text">{{ auctionDetails.lotDescription }}</p>
+    </div>
   </div>
+
   <div *ngIf="showBidsList"
-       class="row mt-3">
+       class="mt-4">
+    <h4 class="mb-3"><i class="fas fa-dollar-sign me-2"></i>Bids History</h4>
     <data-table #bidsDataTable
                 *ngIf="bidsDataTableOptions"
                 [apiUrl]="bidsDataTableApiUrl"
                 [options]="bidsDataTableOptions">
     </data-table>
   </div>
-  <div *ngIf="auctionDetails.status !== AuctionStatusEnum.CancelledByAuctionist || auctionDetails.status !== AuctionStatusEnum.CancelledByAuctionist"
-       class="row mt-3">
+
+  <div *ngIf="auctionDetails.status !== AuctionStatusEnum.CancelledByAuctionist && auctionDetails.status !== AuctionStatusEnum.CancelledByModerator"
+       class="mt-4">
     <app-auction-comments [auction]="auctionDetails"></app-auction-comments>
   </div>
 </div>
+
+<ng-template #auctionActionsPopContent>
+  <div *ngIf="auctionDetails"
+       class="actions-container d-flex flex-column gap-2 p-2">
+    <button *ngIf="auctionDetails.status === AuctionStatusEnum.Active || auctionDetails.status === AuctionStatusEnum.Pending"
+            class="btn"
+            (click)="open(cancelAuctionModal)">
+      Cancel
+    </button>
+    <button *ngIf="auctionDetails.status === AuctionStatusEnum.CancelledByModerator"
+            class="btn"
+            (click)="open(recoverAuctionModal)">
+      Recover
+    </button>
+  </div>
+</ng-template>
 
 <ng-template #cancelAuctionModal
              let-modal>

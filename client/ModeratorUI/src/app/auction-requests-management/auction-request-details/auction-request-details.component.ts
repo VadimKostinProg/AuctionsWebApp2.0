@@ -18,7 +18,7 @@ export class AuctionRequestDetailsComponent implements OnInit {
 
   auctionRequestDetails: AuctionRequest | undefined;
 
-  declineAuctionReuqestModal: FormGroup | undefined;
+  declineAuctionReuqestForm: FormGroup | undefined;
 
   AuctionRequestStatusEnum = AuctionRequestStatusEnum;
 
@@ -55,7 +55,7 @@ export class AuctionRequestDetailsComponent implements OnInit {
   }
 
   reloadDeclineAuctionRequestForm() {
-    this.declineAuctionReuqestModal = new FormGroup({
+    this.declineAuctionReuqestForm = new FormGroup({
       reasonDeclined: new FormControl(null, [Validators.required])
     });
   }
@@ -88,13 +88,13 @@ export class AuctionRequestDetailsComponent implements OnInit {
   }
 
   declineAuctionRequest(modal: any) {
-    if (!this.declineAuctionReuqestModal!.valid) {
+    if (!this.declineAuctionReuqestForm!.valid) {
       return;
     }
 
     modal.close();
 
-    const reason = this.declineAuctionReuqestModal!.value.reasonDeclined;
+    const reason = this.declineAuctionReuqestForm!.value.reasonDeclined;
 
     this.spinnerService.show();
 
