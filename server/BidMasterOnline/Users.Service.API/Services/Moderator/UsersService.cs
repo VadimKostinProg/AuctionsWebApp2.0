@@ -61,7 +61,8 @@ namespace Users.Service.API.Services.Moderator
 
             try
             {
-                User? user = await _repository.GetFirstOrDefaultAsync<User>(e => e.Id == userId);
+                User? user = await _repository.GetFirstOrDefaultAsync<User>(e => e.Id == userId && e.Role!.Name == UserRoles.Participant,
+                    includeQuery: query => query.Include(e => e.Role)!);
 
                 if (user == null)
                 {

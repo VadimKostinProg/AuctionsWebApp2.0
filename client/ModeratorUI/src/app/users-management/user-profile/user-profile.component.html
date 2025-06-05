@@ -75,6 +75,11 @@
                   <i class="fas fa-exclamation-triangle me-2 text-danger"></i>
                   <b>Reason blocked:</b> {{ userProfileInfo.blockingReason }}
                 </p>
+                <p *ngIf="userProfileInfo.status === UserStatusEnum.Blocked && userProfileInfo.unblockDateTime"
+                   class="mb-0">
+                  <i class="fas fa-calendar-alt me-2 text-danger"></i>
+                  <b>Unblocking time:</b> {{ userProfileInfo.unblockDateTime | date: 'MM-dd-yyyy HH:mm' }}
+                </p>
               </div>
 
               <div *ngIf="userProfileInfo.role === 'Participant'"

@@ -26,11 +26,11 @@ export class UsersService {
   }
 
   blockUser(userId: number, blockUser: BlockUserModel): Observable<ServiceMessage> {
-    return this.httpClient.put<ServiceMessage>(`${this.baseUrl}/${userId}/users/block`, blockUser);
+    return this.httpClient.put<ServiceMessage>(`${this.baseUrl}/users/${userId}/block`, blockUser);
   }
 
   unblockUser(userId: number): Observable<ServiceMessage> {
-    return this.httpClient.put<ServiceMessage>(`${this.baseUrl}/${userId}/users/unblock`, null);
+    return this.httpClient.put<ServiceMessage>(`${this.baseUrl}/users/${userId}/unblock`, null);
   }
 
   getDataTableApiUrl() {
