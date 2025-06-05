@@ -57,7 +57,8 @@ export class UserProfileComponent implements OnInit {
       next: result => {
         this.userProfileInfo = result.data!;
 
-        this.showUserFeedbacks = true;
+        if (this.userProfileInfo.role === 'Participant')
+          this.showUserFeedbacks = true;
       },
       error: (err) => {
         if (err?.error?.errors && Array.isArray(err.error.errors)) {

@@ -22,7 +22,8 @@
               <h2 class="mb-0">
                 {{ userProfileInfo.username }}
               </h2>
-              <button type="button"
+              <button *ngIf="userProfileInfo.role === 'Participant'"
+                      type="button"
                       class="btn actions-button btn-outline-secondary"
                       placement="bottom"
                       [ngbPopover]="profileActionsPopContent">
@@ -30,7 +31,7 @@
               </button>
             </div>
 
-            <div *ngIf="userProfileInfo.averageScore"
+            <div *ngIf="userProfileInfo.averageScore && userProfileInfo.role === 'Participant'"
                  class="row mb-2">
               <h5>
                 <i class="fas fa-star me-2 text-warning"></i>
@@ -76,7 +77,8 @@
                 </p>
               </div>
 
-              <div class="col-md-6 d-flex flex-column gap-2">
+              <div *ngIf="userProfileInfo.role === 'Participant'"
+                   class="col-md-6 d-flex flex-column gap-2">
                 <p class="mb-0">
                   <i class="fas fa-gavel me-2 text-muted"></i>
                   <b>Total auctions:</b> {{ userProfileInfo.totalAuctions }}
