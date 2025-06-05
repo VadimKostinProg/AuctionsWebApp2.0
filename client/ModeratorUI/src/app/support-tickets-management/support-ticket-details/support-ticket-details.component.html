@@ -1,0 +1,153 @@
+<div class="margin-auto">
+  <div *ngIf="supportTicketDetails"
+       class="container-fluid">
+    <h3>Support ticket #{{ supportTicketDetails.id }}</h3>
+
+    <div class="row mt-2">
+      <div class="d-flex justify-content-between align-items-start">
+        <div class="d-flex flex-column">
+          <span class="h5 mt-1">
+            <b>User:</b>
+            <a [routerLink]="['/users', supportTicketDetails.userId]">
+              {{ supportTicketDetails.submitUsername }}
+            </a>
+          </span>
+
+          <span class="h5 mt-1">
+            <b>Submitted time:</b>
+            {{ supportTicketDetails.createdAt | date: 'MM-dd-yyyy hh:mm' }}
+          </span>
+
+          <span class="h5 mt-1">
+            <b>Status:</b>
+            {{ supportTicketDetails.status === SupportTicketStatusEnum.Pending ? 'Pending' :
+            supportTicketDetails.status === SupportTicketStatusEnum.Active ? 'Active' : 'Completed' }}
+          </span>
+
+          <span *ngIf="supportTicketDetails.moderatorId"
+                class="h5 mt-1">
+            <b>Assigned on:</b>
+            <a [routerLink]="['/users', supportTicketDetails.moderatorId]">
+              {{ supportTicketDetails.moderatorName }}
+            </a>
+          </span>
+
+          <span class="h5 mt-5">
+            <b>Title:</b>
+            {{ supportTicketDetails.title }}
+          </span>
+
+          <div class="h5 mt-2 d-flex flex-column">
+            <b class="mb-2">Text:</b>
+            {{ supportTicketDetails.text }}
+          </div>
+
+          <div *ngIf="supportTicketDetails.status === SupportTicketStatusEnum.Completed && supportTicketDetails.moderatorComment"
+               class="h5 mt-5 d-flex flex-column">
+            <b class="mb-2">Moderators comment:</b>
+            {{ supportTicketDetails.moderatorComment }}
+          </div>
+        </div>
+
+        <ng-template #actionsPopContent>
+          <div class="actions-container">
+            <button *ngIf="supportTicketDetails.status === SupportTicketStatusEnum.Pending || supportTicketDetails.moderatorId === currentModeratorId"
+                    class="btn"
+                    (click)="open(assignSupportTicketModal)">
+              Assign to
+            </button>
+            <button *ngIf="supportTicketDetails.status === SupportTicketStatusEnum.Active && supportTicketDetails.moderatorId === currentModeratorId"
+                    class="btn"
+                    (click)="open(completeSupportTicketModal)">
+              Complete
+            </button>
+          </div>
+        </ng-template>
+
+        <button *ngIf="supportTicketDetails.status === SupportTicketStatusEnum.Pending || supportTicketDetails.moderatorId === currentModeratorId"
+                type="button"
+                class="btn actions-button"
+                placement="bottom"
+                [ngbPopover]="actionsPopContent">
+          <i class="fa-solid fa-ellipsis"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #assignSupportTicketModal
+             let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title"
+        id="modal-basic-title">
+      Assign support ticket
+    </h4>
+    <button type="button"
+            class="btn-close"
+            aria-label="Close"
+            (click)="modal.close()"></button>
+  </div>
+  <div class="modal-body">
+    <div class="mb-3">
+      <label for="moderatorTypeahead"
+             class="form-label">Assign to:</label>
+      <input id="moderatorTypeahead"
+             type="text"
+             class="form-control"
+             [(ngModel)]="assignedModerator"
+             [ngbTypeahead]="searchModerators"
+             [resultFormatter]="formatter"
+             [inputFormatter]="formatter"
+             placeholder="Search for a moderator by name or username"
+             [editable]="false"
+             [disabled]="moderators === undefined || moderators.length === 0">
+      <div *ngIf="!moderators || moderators.length === 0"
+           class="text-muted mt-2">
+        No moderators available or still loading...
+      </div>
+    </div>
+    <div class="d-flex justify-content-end mt-2">
+      <button type="button"
+              class="btn btn-main-orange me-2"
+              (click)="assignToMyselfClicked()"
+              [disabled]="currentModeratorId === undefined || !moderators">
+        Assign to myself
+      </button>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button"
+            class="btn btn-outline-dark"
+            (click)="assignSupportTicket(modal)">Submit</button>
+  </div>
+</ng-template>
+
+<ng-template #completeSupportTicketModal
+             let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title"
+        id="modal-basic-title">
+      Complete support ticket
+    </h4>
+    <button type="button"
+            class="btn-close"
+            aria-label="Close"
+            (click)="modal.close()"></button>
+  </div>
+  <div class="modal-body">
+    <div class="mb-3">
+      <label for="moderatorComment"
+             class="form-label">Moderator Comment:</label>
+      <textarea class="form-control"
+                id="moderatorComment"
+                [(ngModel)]="moderatorComment"
+                placeholder="Enter comments about the resolution of the support ticket..."></textarea>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button"
+            class="btn btn-outline-dark"
+            (click)="completeSupportTicket(modal)">Submit</button>
+  </div>
+</ng-template>

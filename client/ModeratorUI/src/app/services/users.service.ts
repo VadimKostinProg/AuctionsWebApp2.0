@@ -7,29 +7,34 @@ import { Observable } from "rxjs";
 import { ServiceMessage, ServiceResult } from "../models/shared/serviceResult";
 import { UserProfileInfo } from "../models/users/userProfileInfo";
 import { BlockUserModel } from "../models/users/blockUserModel";
+import { ModeratorInfoBasic } from "../models/users/moderatorInfoBasic";
 
 @Injectable({
   providedIn: 'root'
 })
 export class UsersService {
-  baseUrl: string = `${environment.apiUrl}${environment.apiPrefix}/users`;
+  baseUrl: string = `${environment.apiUrl}${environment.apiPrefix}`;
 
   constructor(private readonly httpClient: HttpClient) { }
 
+  getAllModerators(): Observable<ServiceResult<ModeratorInfoBasic[]>> {
+    return this.httpClient.get<ServiceResult<ModeratorInfoBasic[]>>(`${this.baseUrl}/moderators`);
+  }
+
   getUserProfileDetails(userId: number): Observable<ServiceResult<UserProfileInfo>> {
-    return this.httpClient.get<ServiceResult<UserProfileInfo>>(`${this.baseUrl}/${userId}`);
+    return this.httpClient.get<ServiceResult<UserProfileInfo>>(`${this.baseUrl}/users/${userId}`);
   }
 
   blockUser(userId: number, blockUser: BlockUserModel): Observable<ServiceMessage> {
-    return this.httpClient.put<ServiceMessage>(`${this.baseUrl}/${userId}/block`, blockUser);
+    return this.httpClient.put<ServiceMessage>(`${this.baseUrl}/${userId}/users/block`, blockUser);
   }
 
   unblockUser(userId: number): Observable<ServiceMessage> {
-    return this.httpClient.put<ServiceMessage>(`${this.baseUrl}/${userId}/unblock`, null);
+    return this.httpClient.put<ServiceMessage>(`${this.baseUrl}/${userId}/users/unblock`, null);
   }
 
   getDataTableApiUrl() {
-    return this.baseUrl;
+    return `${this.baseUrl}/users`;
   }
 
   getDataTableOptions() {

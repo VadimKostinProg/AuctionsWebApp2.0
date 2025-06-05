@@ -756,6 +756,18 @@
 
     // Users.Service.API
     {
+      "DownstreamPathTemplate": "/api/moderator/moderators",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7220
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "GET" ],
+      "UpstreamPathTemplate": "/api/moderator/moderators"
+    },
+    {
       "DownstreamPathTemplate": "/api/moderator/users?{everything}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [

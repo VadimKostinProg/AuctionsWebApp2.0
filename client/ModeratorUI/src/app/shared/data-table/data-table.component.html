@@ -52,16 +52,16 @@
             </td>
 
             <td *ngFor="let column of options.columnSettings">
-              <a *ngIf="column.isLink"
+              <a *ngIf="column.isLink && row[column.dataPropName!] != null"
                  [routerLink]="getNavigationLink(row, column)">
                 {{ getPropValue(row, column) }}
               </a>
-              <span *ngIf="column.isBoolean">
+              <span *ngIf="column.isBoolean && row[column.dataPropName!] != null">
                 <i *ngIf="column.dataPropName && row[column.dataPropName]"
                    class="fa-regular fa-circle-check fa-xl m-3"
                    style="color: #94ef0b;"></i>
               </span>
-              <span *ngIf="!column.isBoolean && !column.isLink">
+              <span *ngIf="!column.isBoolean && !column.isLink && row[column.dataPropName!] != null">
                 {{ getPropValue(row, column) }}
               </span>
             </td>

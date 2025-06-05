@@ -42,6 +42,15 @@ namespace Users.Service.API.Extensions
         #endregion
 
         #region Moderator
+        public static DTO.Moderator.ModeratorSummaryDTO ToModeratorSummaryDTO(this User entity)
+            => new()
+            {
+                Id = entity.Id,
+                Username = entity.Username,
+                FullName = entity.FullName,
+                Email = entity.Email
+            };
+
         public static DTO.Moderator.UserProfileSummaryInfoDTO ToModeratorUserProfileSummaryDTO(this User entity)
             => new()
             {

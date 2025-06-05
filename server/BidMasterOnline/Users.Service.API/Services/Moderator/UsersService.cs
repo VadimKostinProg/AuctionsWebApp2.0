@@ -28,6 +28,20 @@ namespace Users.Service.API.Services.Moderator
             _logger = logger;
         }
 
+        public async Task<ServiceResult<IEnumerable<ModeratorSummaryDTO>>> GetAllModerators()
+        {
+            ServiceResult<IEnumerable<ModeratorSummaryDTO>> result = new();
+
+            List<User> entities = await _repository.GetFiltered<User>(e => e.Role.Name == UserRoles.Moderator && !e.Deleted)
+                .OrderBy(e => e.FullName)
+                .ThenBy(e => e.Username)
+                .ToListAsync();
+
+            result.Data = entities.Select(e => e.ToModeratorSummaryDTO());
+
+            return result;
+        }
+
         public async Task<ServiceResult<PaginatedList<UserProfileSummaryInfoDTO>>> GetUsersListAsync(
             UserSpecificationsDTO specifications)
         {

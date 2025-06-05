@@ -42,7 +42,7 @@ namespace Feedbacks.Service.API.Services.Moderator
                     requestDTO.SupportTicketId);
 
                 if (supportTicket.Status != SupportTicketStatus.Pending &&
-                    supportTicket.ModeratorId != requestDTO.ModeratorId)
+                    supportTicket.ModeratorId != _userAccessor.UserId)
                 {
                     result.IsSuccessfull = false;
                     result.StatusCode = System.Net.HttpStatusCode.BadRequest;
@@ -54,6 +54,7 @@ namespace Feedbacks.Service.API.Services.Moderator
 
                 supportTicket.Status = SupportTicketStatus.Active;
                 supportTicket.ModeratorId = requestDTO.ModeratorId;
+                supportTicket.ModeratorComment = null;
 
                 _repository.Update(supportTicket);
                 await _repository.SaveChangesAsync();
@@ -137,10 +138,10 @@ namespace Feedbacks.Service.API.Services.Moderator
             return result;
         }
 
-        public async Task<ServiceResult<PaginatedList<SummarySupportTicketDTO>>> GetSupportTicketsAsync(
+        public async Task<ServiceResult<PaginatedList<SupportTicketSummaryDTO>>> GetSupportTicketsAsync(
             SupportTicketsSpecificationsDTO specifications)
         {
-            ServiceResult<PaginatedList<SummarySupportTicketDTO>> result = new();
+            ServiceResult<PaginatedList<SupportTicketSummaryDTO>> result = new();
 
             SpecificationBuilder<SupportTicket> specificationBuilder = new();
 

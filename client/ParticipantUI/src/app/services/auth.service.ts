@@ -49,7 +49,7 @@ export class AuthService {
 
     return {
       userId: claims['sub'],
-      username: claims[''],
+      username: claims['preferred_username'],
       email: claims['email']
     }
   }

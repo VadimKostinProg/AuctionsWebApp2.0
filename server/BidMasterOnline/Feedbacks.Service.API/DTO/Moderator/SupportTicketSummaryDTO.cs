@@ -2,7 +2,7 @@
 
 namespace Feedbacks.Service.API.DTO.Moderator
 {
-    public class SummarySupportTicketDTO
+    public class SupportTicketSummaryDTO
     {
         public long Id { get; set; }
 
@@ -14,9 +14,9 @@ namespace Feedbacks.Service.API.DTO.Moderator
 
         public SupportTicketStatus Status { get; set; }
 
-        public DateTime CreatedAt { get; set; }
+        public DateTime SubmittedTime { get; set; }
 
-        public string SubmitUsername { get; set; } = string.Empty;
+        public string SubmittedUsername { get; set; } = string.Empty;
 
         public string? ModeratorName { get; set; }
     }

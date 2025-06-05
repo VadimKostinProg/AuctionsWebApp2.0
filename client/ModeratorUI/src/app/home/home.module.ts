@@ -21,6 +21,10 @@ const routes: Routes = [
     path: 'users',
     loadChildren: () => import('../users-management/users-management.module').then(m => m.UsersManagementModule)
   },
+  {
+    path: 'support-tickets',
+    loadChildren: () => import('../support-tickets-management/support-tickets-management.module').then(m => m.SupportTicketsManagementModule)
+  },
 ];
 
 @NgModule({

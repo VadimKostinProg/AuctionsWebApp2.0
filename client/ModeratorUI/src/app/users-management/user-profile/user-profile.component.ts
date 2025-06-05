@@ -3,7 +3,6 @@ import { ToastrService } from "ngx-toastr";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { ActivatedRoute } from "@angular/router";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
-import { AuthService } from "../../services/auth.service";
 import { UserStatusEnum } from "../../models/users/userStatusEnum";
 import { UserProfileInfo } from "../../models/users/userProfileInfo";
 import { UsersService } from "../../services/users.service";

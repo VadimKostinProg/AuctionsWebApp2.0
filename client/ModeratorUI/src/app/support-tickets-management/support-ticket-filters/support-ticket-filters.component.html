@@ -1,0 +1,43 @@
+<div class="d-flex">
+  <div class="btn-group"
+       role="group">
+    <input type="radio"
+           class="btn-check"
+           name="btnradio"
+           id="btnradio1"
+           autocomplete="off"
+           [checked]="checkedStatus === SupportTicketStatusEnum.Pending"
+           (change)="onStatusChanged(SupportTicketStatusEnum.Pending)">
+    <label class="btn btn-outline-main"
+           for="btnradio1">Pending</label>
+
+    <input type="radio"
+           class="btn-check"
+           name="btnradio"
+           id="btnradio2"
+           autocomplete="off"
+           [checked]="checkedStatus === SupportTicketStatusEnum.Active"
+           (change)="onStatusChanged(SupportTicketStatusEnum.Active)">
+    <label class="btn btn-outline-main"
+           for="btnradio2">Active</label>
+
+    <input type="radio"
+           class="btn-check"
+           name="btnradio"
+           id="btnradio3"
+           autocomplete="off"
+           [checked]="checkedStatus === SupportTicketStatusEnum.Completed"
+           (change)="onStatusChanged(SupportTicketStatusEnum.Completed)">
+    <label class="btn btn-outline-main"
+           for="btnradio3">Completed</label>
+  </div>
+
+  <div *ngIf="showAssignedOnMeFlag"
+       class="ms-auto d-flex align-items-center">
+    <input type="checkbox"
+           class="form-field"
+           [(ngModel)]="assignedOnMeChecked"
+           (change)="onAssignedOnMeChanged()">
+    <label class="form-label ms-2">Assigned on me</label>
+  </div>
+</div>

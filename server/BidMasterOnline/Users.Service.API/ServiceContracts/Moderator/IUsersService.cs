@@ -5,6 +5,8 @@ namespace Users.Service.API.ServiceContracts.Moderator
 {
     public interface IUsersService
     {
+        Task<ServiceResult<IEnumerable<ModeratorSummaryDTO>>> GetAllModerators();
+
         Task<ServiceResult<PaginatedList<UserProfileSummaryInfoDTO>>> GetUsersListAsync(UserSpecificationsDTO specifications);
 
         Task<ServiceResult<UserProfileInfoDTO>> GetUserProfileInfoAsync(long userId);

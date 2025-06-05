@@ -192,7 +192,7 @@ namespace Feedbacks.Service.API.Extensions
                 ModifiedBy = entity.ModifiedBy,
             };
 
-        public static DTO.Moderator.SummarySupportTicketDTO ToModeratorSummaryDTO(this SupportTicket entity)
+        public static DTO.Moderator.SupportTicketSummaryDTO ToModeratorSummaryDTO(this SupportTicket entity)
             => new()
             {
                 Id = entity.Id,
@@ -200,9 +200,9 @@ namespace Feedbacks.Service.API.Extensions
                 ModeratorId = entity.ModeratorId,
                 Title = entity.Title,
                 Status = entity.Status,
-                CreatedAt = entity.CreatedAt,
-                SubmitUsername = entity.User!.Username,
-                ModeratorName = entity.Moderator!.FullName,
+                SubmittedTime = entity.CreatedAt,
+                SubmittedUsername = entity.User!.Username,
+                ModeratorName = entity.Moderator?.FullName,
             };
 
         public static DTO.Moderator.SupportTicketDTO ToModeratorDTO(this SupportTicket entity)
@@ -216,7 +216,7 @@ namespace Feedbacks.Service.API.Extensions
                 Status = entity.Status,
                 ModeratorComment = entity.ModeratorComment,
                 SubmitUsername = entity.User!.Username,
-                ModeratorName = entity.Moderator!.FullName,
+                ModeratorName = entity.Moderator?.FullName,
                 CreatedAt = entity.CreatedAt,
                 CreatedBy = entity.CreatedBy,
                 ModifiedAt = entity.ModifiedAt,

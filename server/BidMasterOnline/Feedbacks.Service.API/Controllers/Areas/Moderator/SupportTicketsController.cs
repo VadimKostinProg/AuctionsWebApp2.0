@@ -22,7 +22,7 @@ namespace Feedbacks.Service.API.Controllers.Areas.Moderator
         [HttpGet]
         public async Task<IActionResult> GetSupportTickets([FromQuery] SupportTicketsSpecificationsDTO specifications)
         {
-            ServiceResult<PaginatedList<SummarySupportTicketDTO>> result =
+            ServiceResult<PaginatedList<SupportTicketSummaryDTO>> result =
                 await _service.GetSupportTicketsAsync(specifications);
 
             return FromResult(result);
@@ -36,8 +36,8 @@ namespace Feedbacks.Service.API.Controllers.Areas.Moderator
             return FromResult(result);
         }
 
-        [HttpPut("assing")]
-        public async Task<IActionResult> AssingSupportTicket([FromBody] AssignSupportTicketDTO requestDTO)
+        [HttpPut("assign")]
+        public async Task<IActionResult> AssignSupportTicket([FromBody] AssignSupportTicketDTO requestDTO)
         {
             ServiceResult result = await _service.AssignSupportTicketAsync(requestDTO);
 

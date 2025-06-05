@@ -19,6 +19,15 @@ namespace Users.Service.API.Controllers.Areas.Moderator
             _service = service;
         }
 
+        [HttpGet("/api/moderator/moderators")]
+        public async Task<IActionResult> GetAllModerators()
+        {
+            ServiceResult<IEnumerable<ModeratorSummaryDTO>> result =
+                await _service.GetAllModerators();
+
+            return FromResult(result);
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetUsersList([FromQuery] UserSpecificationsDTO specs)
         {
