@@ -88,8 +88,8 @@ export class AuctionsService {
             switch (value) {
               case AuctionStatusEnum.Active:
                 return 'Active';
-              case AuctionStatusEnum.CancelledByAuctionist:
-                return 'Canceled by Auctionist';
+              case AuctionStatusEnum.CancelledByAuctioneer:
+                return 'Canceled by Auctioneer';
               case AuctionStatusEnum.CancelledByModerator:
                 return 'Canceled by Moderator';
               case AuctionStatusEnum.Pending:
@@ -160,8 +160,8 @@ export class AuctionsService {
                 return 'Active';
               case AuctionStatusEnum.Pending:
                 return 'Pending';
-              case AuctionStatusEnum.CancelledByAuctionist:
-                return 'Cancelled by Auctionist';
+              case AuctionStatusEnum.CancelledByAuctioneer:
+                return 'Cancelled by Auctioneer';
               case AuctionStatusEnum.CancelledByModerator:
                 return 'Cancelled by Moderator';
               case AuctionStatusEnum.Finished:

@@ -4,7 +4,7 @@
 
     <button class="add-comment-button"
             (click)="userStatus === UserStatusEnum.Active ? open(commentModal) : open(userBlockedModal)"
-            [disabled]="auction.auctionist.userId == userId">
+            [disabled]="auction.auctioneer.userId == userId">
       <i class="fa-solid fa-circle-plus fa-2xl"></i>
     </button>
   </div>

@@ -36,7 +36,7 @@
         <div>
           <div class="auction-info-container">
             <h3> {{ auctionDetails.lotTitle }}</h3>
-            <div *ngIf="auctionDetails.status !== AuctionStatusEnum.CancelledByAuctionist || auctionDetails.status !== AuctionStatusEnum.CancelledByAuctionist"
+            <div *ngIf="auctionDetails.status !== AuctionStatusEnum.CancelledByAuctioneer || auctionDetails.status !== AuctionStatusEnum.CancelledByAuctioneer"
                  class="mt-3">
               <span *ngIf="auctionDetails.averageScore"
                     class="h5">
@@ -51,27 +51,27 @@
               {{ auctionDetails.category }}
             </span>
             <span class="h5">
-              <b class="auction-details-property">Auctionist:</b>
-              <a [routerLink]="['/users', auctionDetails.auctionist!.userId]">
-                {{ auctionDetails.auctionist!.username }}
+              <b class="auction-details-property">Auctioneer:</b>
+              <a [routerLink]="['/users', auctionDetails.auctioneer!.userId]">
+                {{ auctionDetails.auctioneer!.username }}
               </a>
             </span>
-            <span *ngIf="auctionDetails.status !== AuctionStatusEnum.CancelledByAuctionist || auctionDetails.status !== AuctionStatusEnum.CancelledByAuctionist"
+            <span *ngIf="auctionDetails.status !== AuctionStatusEnum.CancelledByAuctioneer || auctionDetails.status !== AuctionStatusEnum.CancelledByAuctioneer"
                   class="h5">
               <b class="auction-details-property">Current bid:</b>
               {{ auctionDetails.currentPrice }}$ / {{ auctionDetails.startPrice }}$
             </span>
-            <span *ngIf="auctionDetails.status !== AuctionStatusEnum.CancelledByAuctionist || auctionDetails.status !== AuctionStatusEnum.CancelledByAuctionist"
+            <span *ngIf="auctionDetails.status !== AuctionStatusEnum.CancelledByAuctioneer || auctionDetails.status !== AuctionStatusEnum.CancelledByAuctioneer"
                   class="h5">
               <b class="auction-details-property">Start time:</b>
               {{ auctionDetails.startTime | date: 'MM-dd-yyyy hh:mm' }}
             </span>
-            <span *ngIf="auctionDetails.status !== AuctionStatusEnum.CancelledByAuctionist && auctionDetails.status !== AuctionStatusEnum.CancelledByModerator"
+            <span *ngIf="auctionDetails.status !== AuctionStatusEnum.CancelledByAuctioneer && auctionDetails.status !== AuctionStatusEnum.CancelledByModerator"
                   class="h5">
               <b class="auction-details-property">Finish time:</b>
               {{ auctionDetails.finishTime | date: 'MM-dd-yyyy hh:mm' }}
             </span>
-            <span *ngIf="auctionDetails.status !== AuctionStatusEnum.CancelledByAuctionist && auctionDetails.status !== AuctionStatusEnum.CancelledByModerator"
+            <span *ngIf="auctionDetails.status !== AuctionStatusEnum.CancelledByAuctioneer && auctionDetails.status !== AuctionStatusEnum.CancelledByModerator"
                   class="h5">
               <b class="auction-details-property">Finish type:</b>
               {{ auctionDetails.finishMethod }}
@@ -103,12 +103,12 @@
 
         <ng-template #auctionActionsPopContent>
           <div class="actions-container">
-            <button *ngIf="auctionDetails.auctionist!.userId != user.userId"
+            <button *ngIf="auctionDetails.auctioneer!.userId != user.userId"
                     class="btn"
                     (click)="open(complaintOnAuctionModal)">
               Complain
             </button>
-            <button *ngIf="auctionDetails.status === AuctionStatusEnum.Active && auctionDetails.auctionist!.userId == user.userId"
+            <button *ngIf="auctionDetails.status === AuctionStatusEnum.Active && auctionDetails.auctioneer!.userId == user.userId"
                     class="btn"
                     (click)="open(cancelAuctionModal)">
               Cancel
@@ -130,7 +130,7 @@
     <h3>Lot description</h3>
     <span>{{ auctionDetails.lotDescription }}</span>
   </div>
-  <div *ngIf="auctionDetails.status !== AuctionStatusEnum.CancelledByAuctionist && auctionDetails.status !== AuctionStatusEnum.CancelledByModerator"
+  <div *ngIf="auctionDetails.status !== AuctionStatusEnum.CancelledByAuctioneer && auctionDetails.status !== AuctionStatusEnum.CancelledByModerator"
        class="row mt-3">
     <data-table #bidsDataTable
                 *ngIf="bidsDataTableOptions"
@@ -138,7 +138,7 @@
                 [options]="bidsDataTableOptions">
     </data-table>
   </div>
-  <div *ngIf="auctionDetails.status !== AuctionStatusEnum.CancelledByAuctionist && auctionDetails.status !== AuctionStatusEnum.CancelledByModerator"
+  <div *ngIf="auctionDetails.status !== AuctionStatusEnum.CancelledByAuctioneer && auctionDetails.status !== AuctionStatusEnum.CancelledByModerator"
        class="row mt-3">
     <comments [auction]="auctionDetails"></comments>
   </div>

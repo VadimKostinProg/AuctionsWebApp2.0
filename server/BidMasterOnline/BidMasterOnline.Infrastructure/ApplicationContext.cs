@@ -85,9 +85,9 @@ namespace BidMasterOnline.Infrastructure
                     .HasForeignKey(a => a.AuctionFinishMethodId)
                     .OnDelete(DeleteBehavior.Restrict);
 
-                options.HasOne(a => a.Auctionist)
+                options.HasOne(a => a.Auctioneer)
                     .WithMany()
-                    .HasForeignKey(a => a.AuctionistId)
+                    .HasForeignKey(a => a.AuctioneerId)
                     .OnDelete(DeleteBehavior.Restrict);
 
                 options.HasOne(a => a.Winner)

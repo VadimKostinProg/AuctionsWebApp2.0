@@ -19,7 +19,7 @@ namespace Auctions.Service.API.DTO.Moderator
 
         public double? AverageScore { get; set; }
 
-        public UserSummaryDTO? Auctionist { get; set; }
+        public UserSummaryDTO? Auctioneer { get; set; }
 
         public UserSummaryDTO? Winner { get; set; }
 

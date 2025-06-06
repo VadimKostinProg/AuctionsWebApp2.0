@@ -84,9 +84,9 @@ namespace Auctions.Service.API.Services.Moderator
             try
             {
                 Auction entity = await _repository.GetByIdAsync<Auction>(requestDTO.AuctionId,
-                    includeQuery: query => query.Include(e => e.Auctionist!));
+                    includeQuery: query => query.Include(e => e.Auctioneer!));
 
-                if (entity.Status != AuctionStatus.CancelledByAuctionist && 
+                if (entity.Status != AuctionStatus.CancelledByAuctioneer && 
                     entity.Status != AuctionStatus.CancelledByModerator)
                 {
                     result.IsSuccessfull = false;
@@ -95,7 +95,7 @@ namespace Auctions.Service.API.Services.Moderator
                     return result;
                 }
 
-                if (entity.Auctionist!.Status != UserStatus.Active)
+                if (entity.Auctioneer!.Status != UserStatus.Active)
                 {
                     result.IsSuccessfull = false;
                     result.StatusCode = HttpStatusCode.BadRequest;
@@ -140,7 +140,7 @@ namespace Auctions.Service.API.Services.Moderator
                 includeQuery: query => query.Include(e => e.Category)
                                             .Include(e => e.Type)
                                             .Include(e => e.FinishMethod)
-                                            .Include(e => e.Auctionist)
+                                            .Include(e => e.Auctioneer)
                                             .Include(e => e.Winner)
                                             .Include(e => e.Images)!);
 
@@ -180,7 +180,7 @@ namespace Auctions.Service.API.Services.Moderator
             ServiceResult<PaginatedList<AuctionSummaryDTO>> result = new();
 
             ISpecification<Auction> specification = new SpecificationBuilder<Auction>()
-                .With(x => x.AuctionistId == userId)
+                .With(x => x.AuctioneerId == userId)
                 .OrderBy(x => x.StartTime)
                 .WithPagination(pagination.PageSize, pagination.PageNumber)
                 .Build();
@@ -199,7 +199,7 @@ namespace Auctions.Service.API.Services.Moderator
             try
             {
                 List<Auction> userAuctions = await _repository
-                    .GetFiltered<Auction>(e => e.AuctionistId == userId && (e.Status == AuctionStatus.Pending || e.Status == AuctionStatus.Active))
+                    .GetFiltered<Auction>(e => e.AuctioneerId == userId && (e.Status == AuctionStatus.Pending || e.Status == AuctionStatus.Active))
                     .ToListAsync();
 
                 userAuctions.ForEach(auction =>

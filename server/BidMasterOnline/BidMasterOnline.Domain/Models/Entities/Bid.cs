@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-
-namespace BidMasterOnline.Domain.Models.Entities
+﻿namespace BidMasterOnline.Domain.Models.Entities
 {
     public class Bid : EntityBase
     {

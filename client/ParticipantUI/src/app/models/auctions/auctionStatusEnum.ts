@@ -1,7 +1,7 @@
 export enum AuctionStatusEnum {
   Pending,
   Active,
-  CancelledByAuctionist,
+  CancelledByAuctioneer,
   CancelledByModerator,
   Finished
 }
