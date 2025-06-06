@@ -11,7 +11,7 @@ namespace BidMasterOnline.Domain.Models.Entities
 
         public long AuctionFinishMethodId { get; set; }
 
-        public long AuctionistId { get; set; }
+        public long AuctioneerId { get; set; }
 
         public long? WinnerId { get; set; }
 
@@ -45,7 +45,7 @@ namespace BidMasterOnline.Domain.Models.Entities
 
         public decimal? FinishPrice { get; set; }
 
-        public User? Auctionist { get; set; }
+        public User? Auctioneer { get; set; }
 
         public User? Winner { get; set; }
 

@@ -29,6 +29,10 @@ const routes: Routes = [
     path: 'support-tickets',
     loadChildren: () => import('../support-tickets-management/support-tickets-management.module').then(m => m.SupportTicketsManagementModule)
   },
+  {
+    path: 'suspicious-activity-reports',
+    loadChildren: () => import('../suspicious-activity-reports/suspicious-activity-reports.module').then(m => m.SuspiciousActivityReportsModule)
+  },
 ];
 
 @NgModule({

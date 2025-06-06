@@ -120,7 +120,7 @@ export class AuctionFiltersComponent implements OnInit {
     switch (statusValue) {
       case AuctionStatusEnum.Pending: return 'Pending';
       case AuctionStatusEnum.Active: return 'Active';
-      case AuctionStatusEnum.CancelledByAuctionist: return 'Cancelled by Auctionist';
+      case AuctionStatusEnum.CancelledByAuctioneer: return 'Cancelled by Auctioneer';
       case AuctionStatusEnum.CancelledByModerator: return 'Cancelled by Moderator';
       case AuctionStatusEnum.Finished: return 'Finished';
       default: return 'Unknown';

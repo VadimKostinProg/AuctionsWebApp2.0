@@ -41,7 +41,7 @@ namespace Auctions.Service.API.Services.Participant
 
             ListModel<Auction> auctionsList = await _repository.GetFilteredAndPaginated(specification,
                 includeQuery: query => query.Include(e => e.Category)
-                                            .Include(e => e.Auctionist)
+                                            .Include(e => e.Auctioneer)
                                             .Include(e => e.Images)
                                             .Include(e => e.Bids)!);
 
@@ -57,7 +57,7 @@ namespace Auctions.Service.API.Services.Participant
             long userId = _userAccessor.UserId;
 
             ISpecification<Auction> specification = new SpecificationBuilder<Auction>()
-                .With(x => x.AuctionistId == userId)
+                .With(x => x.AuctioneerId == userId)
                 .OrderBy(x => x.StartTime, SortDirection.DESC)
                 .WithPagination(pagination.PageSize, pagination.PageNumber)
                 .Build();
@@ -78,7 +78,7 @@ namespace Auctions.Service.API.Services.Participant
                 includeQuery: query => query.Include(e => e.Category)
                                             .Include(e => e.Type)
                                             .Include(e => e.FinishMethod)
-                                            .Include(e => e.Auctionist)
+                                            .Include(e => e.Auctioneer)
                                             .Include(e => e.Winner)
                                             .Include(e => e.Images)!);
 
@@ -103,7 +103,7 @@ namespace Auctions.Service.API.Services.Participant
             long userId = _userAccessor.UserId;
 
             Auction? auction = await _repository
-                .GetFirstOrDefaultAsync<Auction>(x => x.Id == request.AuctionId && x.AuctionistId == userId);
+                .GetFirstOrDefaultAsync<Auction>(x => x.Id == request.AuctionId && x.AuctioneerId == userId);
 
             if (auction == null)
             {
@@ -114,7 +114,7 @@ namespace Auctions.Service.API.Services.Participant
                 return result;
             }
 
-            auction.Status = BidMasterOnline.Domain.Enums.AuctionStatus.CancelledByAuctionist;
+            auction.Status = BidMasterOnline.Domain.Enums.AuctionStatus.CancelledByAuctioneer;
             auction.CancellationReason = request.CancellationReason;
             auction.FinishTime = DateTime.UtcNow;
             _repository.Update(auction);
@@ -145,7 +145,7 @@ namespace Auctions.Service.API.Services.Participant
                     auction.WinnerId = winningBid.BidderId;
                     auction.FinishPrice = winningBid.Amount;
 
-                    User auctionist = await _repository.GetByIdAsync<User>(auction.AuctionistId);
+                    User auctionist = await _repository.GetByIdAsync<User>(auction.AuctioneerId);
                     User winner = await _repository.GetByIdAsync<User>(winningBid.BidderId);
 
                     auctionist.CompletedAuctions++;

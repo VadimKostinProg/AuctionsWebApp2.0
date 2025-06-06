@@ -1,0 +1,68 @@
+/* src/app/suspicious-activity-reports/suspicious-activity-reports-page/suspicious-activity-reports-page.component.css */
+
+.card-header {
+  cursor: pointer;
+  user-select: none;
+}
+
+.badge {
+  min-width: 70px;
+  text-align: center;
+  font-size: 0.8em;
+  padding: 0.35em 0.6em;
+}
+
+.card-header.bg-danger {
+  background-color: #dc3545 !important;
+}
+
+.card-header.bg-warning {
+  background-color: #ffc107 !important;
+  color: #343a40 !important;
+}
+
+.card-header.bg-success {
+  background-color: #28a745 !important;
+}
+
+.card-header.bg-info {
+  background-color: #17a2b8 !important;
+}
+
+.badge.bg-danger { background-color: #dc3545 !important; }
+.badge.bg-warning { background-color: #ffc107 !important; color: #343a40 !important; }
+.badge.bg-success { background-color: #28a745 !important; }
+.badge.bg-secondary { background-color: #6c757d !important; }
+.badge.bg-info { background-color: #17a2b8 !important; }
+
+.list-group-item a {
+  font-weight: bold;
+  color: #007bff;
+  text-decoration: none;
+}
+
+.list-group-item a:hover {
+  text-decoration: underline;
+}
+
+.form-select.w-auto {
+  width: auto !important;
+}
+
+.card.shadow-sm {
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.card-header {
+  border-bottom: none;
+}
+
+.card-body {
+  border-top: 1px solid rgba(0, 0, 0, 0.125);
+}
+
+.card.mb-3.border {
+    border-color: #e9ecef !important;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075) !important;
+}

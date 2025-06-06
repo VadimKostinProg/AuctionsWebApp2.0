@@ -20,7 +20,7 @@ namespace Auctions.Service.API.DTO.Participant
 
         public double? AverageScore { get; set; }
 
-        public UserSummaryDTO? Auctionist { get; set; }
+        public UserSummaryDTO? Auctioneer { get; set; }
 
         public List<string> ImageUrls { get; set; } = [];
     }

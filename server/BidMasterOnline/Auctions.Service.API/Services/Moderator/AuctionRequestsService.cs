@@ -69,7 +69,7 @@ namespace Auctions.Service.API.Services.Moderator
 
                 Auction newAuction = new()
                 {
-                    AuctionistId = auctionRequest.RequestedByUserId,
+                    AuctioneerId = auctionRequest.RequestedByUserId,
                     AuctionCategoryId = auctionRequest.AuctionCategoryId,
                     AuctionTypeId = auctionRequest.AuctionTypeId,
                     AuctionFinishMethodId = auctionRequest.AuctionFinishMethodId,

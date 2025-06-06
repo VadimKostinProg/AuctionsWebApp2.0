@@ -73,13 +73,13 @@ namespace Auctions.Service.API.Extensions
                 StartPrice = entity.StartPrice,
                 CurrentPrice = entity.CurrentPrice,
                 AverageScore = entity.AverageScore,
-                Auctionist = entity.Auctionist == null
+                Auctioneer = entity.Auctioneer == null
                     ? null
                     : new BidMasterOnline.Core.DTO.UserSummaryDTO
                     {
-                        UserId = entity.Auctionist.Id,
-                        Username = entity.Auctionist.Username,
-                        Email = entity.Auctionist.Email
+                        UserId = entity.Auctioneer.Id,
+                        Username = entity.Auctioneer.Username,
+                        Email = entity.Auctioneer.Email
                     },
                 ImageUrls = entity.Images?.Select(entity => entity.Url).ToList() ?? []
             };
@@ -104,9 +104,9 @@ namespace Auctions.Service.API.Extensions
                 CurrentPrice = entity.CurrentPrice,
                 AverageScore = entity.AverageScore,
                 FinishPrice = entity.FinishPrice,
-                Auctionist = entity.Auctionist == null
+                Auctioneer = entity.Auctioneer == null
                     ? null
-                    : entity.Auctionist.ToSummaryDTO(),
+                    : entity.Auctioneer.ToSummaryDTO(),
                 Winner = entity.Winner == null
                     ? null
                     : entity.Winner.ToSummaryDTO(),
@@ -243,13 +243,13 @@ namespace Auctions.Service.API.Extensions
                 CurrentPrice = entity.CurrentPrice,
                 AverageScore = entity.AverageScore,
                 CancellationReason = entity.CancellationReason,
-                Auctionist = entity.Auctionist == null
+                Auctioneer = entity.Auctioneer == null
                     ? null
                     : new BidMasterOnline.Core.DTO.UserSummaryDTO
                     {
-                        UserId = entity.Auctionist.Id,
-                        Username = entity.Auctionist.Username,
-                        Email = entity.Auctionist.Email
+                        UserId = entity.Auctioneer.Id,
+                        Username = entity.Auctioneer.Username,
+                        Email = entity.Auctioneer.Email
                     },
                 Winner = entity.Winner == null
                     ? null

@@ -157,8 +157,8 @@ export class AuctionDetailsComponent implements OnInit {
   get isPlacingBidDisabled() {
     return this.user && this.auctionDetails &&
       (this.auctionDetails.status === AuctionStatusEnum.CancelledByModerator ||
-        this.auctionDetails.status === AuctionStatusEnum.CancelledByAuctionist ||
-        this.user.userId == this.auctionDetails.auctionist!.userId);
+        this.auctionDetails.status === AuctionStatusEnum.CancelledByAuctioneer ||
+        this.user.userId == this.auctionDetails.auctioneer!.userId);
   }
 
   get auctionActionsAreAvailable() {
@@ -213,7 +213,7 @@ export class AuctionDetailsComponent implements OnInit {
     this.reloadComplaintForm();
 
     const complaint = {
-      accusedUserId: this.auctionDetails!.auctionist!.userId,
+      accusedUserId: this.auctionDetails!.auctioneer!.userId,
       accusedAuctionId: this.auctionDetails!.id,
       type: ComplaintTypeEnum.ComplaintOnAuctionContent,
       complaintText: complaintText

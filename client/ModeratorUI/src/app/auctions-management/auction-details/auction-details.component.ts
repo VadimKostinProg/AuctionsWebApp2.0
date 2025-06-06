@@ -65,8 +65,8 @@ export class AuctionDetailsComponent implements OnInit {
         return 'Active';
       case AuctionStatusEnum.Finished:
         return 'Finished';
-      case AuctionStatusEnum.CancelledByAuctionist:
-        return 'Canceled by Auctionist';
+      case AuctionStatusEnum.CancelledByAuctioneer:
+        return 'Canceled by Auctioneer';
       case AuctionStatusEnum.CancelledByModerator:
         return 'Canceled by Moderator';
     }

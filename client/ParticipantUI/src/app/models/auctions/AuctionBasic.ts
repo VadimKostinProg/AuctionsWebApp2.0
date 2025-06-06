@@ -9,6 +9,6 @@ export class AuctionBasic {
   public startPrice!: number;
   public currentPrice!: number;
   public averageScore!: number | null;
-  public auctionist!: UserBasic;
+  public auctioneer!: UserBasic;
   public imageUrls!: string[];
 }
