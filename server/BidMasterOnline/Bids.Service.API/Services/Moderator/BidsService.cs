@@ -22,6 +22,40 @@ namespace Bids.Service.API.Services.Moderator
             _logger = logger;
         }
 
+        public async Task<bool> CancelUserWinningBidsAsync(long userId)
+        {
+            try
+            {
+                List<Auction> auctionsWinningByUser = _repository.GetAll<Auction>(includeQuery: query => query.Include(e => e.Bids)!)
+                    .Where(e => e.Status == BidMasterOnline.Domain.Enums.AuctionStatus.Active)
+                    .AsEnumerable()
+                    .Where(e => e.Bids!.Where(b => !b.Deleted).Any() && 
+                        e.Bids!.Where(b => !b.Deleted).OrderByDescending(b => b.CreatedAt).First().BidderId == userId)
+                    .ToList();
+
+                foreach (Auction auction in auctionsWinningByUser)
+                {
+                    Bid winningBid = auction.Bids!.Where(b => !b.Deleted).OrderByDescending(b => b.CreatedAt).First();
+
+                    winningBid.Deleted = true;
+
+                    auction.CurrentPrice = auction.Bids!.Where(b => !b.Deleted)
+                        .OrderByDescending(b => b.CreatedAt)
+                        .FirstOrDefault()?.Amount ?? auction.StartPrice;
+                }
+
+                await _repository.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"An error occured during canceling winning bids for user {userId}");
+
+                return false;
+            }
+        }
+
         public async Task<bool> ClearAllBidsForAuctionAsync(long auctionId)
         {
             try
@@ -73,7 +107,7 @@ namespace Bids.Service.API.Services.Moderator
             return result;
         }
 
-        public async Task<ServiceResult<PaginatedList<UserBidDTO>>> GetUserBidsAsync(long userId, 
+        public async Task<ServiceResult<PaginatedList<UserBidDTO>>> GetUserBidsAsync(long userId,
             PaginationRequestDTO pagination)
         {
             ServiceResult<PaginatedList<UserBidDTO>> result = new();

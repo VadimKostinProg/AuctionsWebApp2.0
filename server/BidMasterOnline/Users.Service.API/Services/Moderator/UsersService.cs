@@ -17,14 +17,17 @@ namespace Users.Service.API.Services.Moderator
     {
         private readonly IRepository _repository;
         private readonly UserAuctionsGrpcClient _userAuctionsClient;
+        private readonly UserBidsGrpcClient _userBidsClient;
         private readonly ILogger<UsersService> _logger;
 
         public UsersService(IRepository repository,
             UserAuctionsGrpcClient userAuctionsClient,
+            UserBidsGrpcClient userBidsClient,
             ILogger<UsersService> logger)
         {
             _repository = repository;
             _userAuctionsClient = userAuctionsClient;
+            _userBidsClient = userBidsClient;
             _logger = logger;
         }
 
@@ -94,6 +97,7 @@ namespace Users.Service.API.Services.Moderator
                 await _repository.SaveChangesAsync();
 
                 await _userAuctionsClient.CancelUserAuctionsAsync(userId);
+                await _userBidsClient.CancelUserWinningBidsAsync(userId);
 
                 // TODO: Notify user
 

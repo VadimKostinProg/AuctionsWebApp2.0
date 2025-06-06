@@ -75,7 +75,8 @@
         <div class="collapse"
              id="collapseAuction{{i}}">
           <div class="card-body">
-            <p class="alert alert-info"><strong>Overall Analysis Summary:</strong> {{ analysis.overallAnalysisSummary }}
+            <p *ngIf="analysis.overallAnalysisSummary && analysis.overallAnalysisSummary !== ''"
+               class="alert alert-info"><strong>Overall Analysis Summary:</strong> {{ analysis.overallAnalysisSummary }}
             </p>
 
             <ng-container *ngIf="analysis.suspicions && analysis.suspicions.length > 0">

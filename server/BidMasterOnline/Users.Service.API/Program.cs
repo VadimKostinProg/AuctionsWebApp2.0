@@ -57,6 +57,7 @@ builder.Services.AddScoped<Users.Service.API.ServiceContracts.Participant.IUserP
 builder.Services.AddScoped<Users.Service.API.ServiceContracts.Moderator.IUsersService, Users.Service.API.Services.Moderator.UsersService>();
 
 builder.Services.AddScoped<UserAuctionsGrpcClient>();
+builder.Services.AddScoped<UserBidsGrpcClient>();
 
 builder.Services.AddQuartz(q =>
 {

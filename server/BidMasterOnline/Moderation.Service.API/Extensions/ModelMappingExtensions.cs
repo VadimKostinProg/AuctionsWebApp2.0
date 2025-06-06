@@ -10,7 +10,8 @@ namespace Moderation.Service.API.Extensions
             {
                 ReportId = Guid.NewGuid().ToString(),
                 CreatedAt = DateTime.UtcNow,
-                AuctionAnalyses = payload.AuctionAnalyses.Select(a => new SuspiciousActivityReportAuctionAnalysis
+                AuctionAnalyses = payload.AuctionAnalyses.Where(a => a.Suspicions.Any())
+                .Select(a => new SuspiciousActivityReportAuctionAnalysis
                 {
                     AuctionId = a.AuctionId,
                     OverallAnalysisSummary = a.OverallAnalysisSummary,

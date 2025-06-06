@@ -29,7 +29,7 @@ namespace Users.Service.API.GrpcServices.Client
             if (!responce.Success)
             {
                 _logger.LogError($"Internal error on Auctions.Service while " +
-                    $"canceling auctions for user {userId}.");
+                    $"canceling auctions of user {userId}.");
             }
         }
     }
