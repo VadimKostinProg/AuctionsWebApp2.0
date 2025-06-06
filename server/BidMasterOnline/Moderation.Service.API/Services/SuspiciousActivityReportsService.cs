@@ -5,7 +5,10 @@ using Microsoft.EntityFrameworkCore;
 using Moderation.Service.API.Constants;
 using Moderation.Service.API.DTO.Gemini;
 using Moderation.Service.API.Enums;
+using Moderation.Service.API.Extensions;
+using Moderation.Service.API.Models;
 using Moderation.Service.API.ServiceContracts;
+using MongoDB.Driver;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -13,21 +16,27 @@ using System.Text.RegularExpressions;
 
 namespace Moderation.Service.API.Services
 {
-    public class SuspiciousActivityCheckService : ISuspiciousActivityCheckService
+    public class SuspiciousActivityReportsService : ISuspiciousActivityReportsService
     {
         private readonly IRepository _repository;
         private readonly HttpClient _httpClient;
-        private readonly ILogger<SuspiciousActivityCheckService> _logger;
+        private readonly ILogger<SuspiciousActivityReportsService> _logger;
+
+        IMongoCollection<SuspiciousActivityReport> _reportsCollection;
 
         private readonly string _geminiApiUrl;
         private readonly string _geminiApiKey;
 
-        public SuspiciousActivityCheckService(IRepository repository,
+        public SuspiciousActivityReportsService(IRepository repository,
             IConfiguration configuration,
-            ILogger<SuspiciousActivityCheckService> logger)
+            ILogger<SuspiciousActivityReportsService> logger)
         {
             _geminiApiUrl = configuration["Gemini:ApiUrl"]!;
             _geminiApiKey = configuration["Gemini:ApiKey"]!;
+
+            MongoClient client = new(configuration["ConnectionStrings:MongoDBConnection"]!);
+            _reportsCollection = client.GetDatabase(configuration["MongoDBSettings:DatabaseName"]!)
+                .GetCollection<SuspiciousActivityReport>("suspicious-activity-reports");
 
             _repository = repository;
 
@@ -37,9 +46,59 @@ namespace Moderation.Service.API.Services
             _logger = logger;
         }
 
-        public async Task<ServiceResult<object>> GenerateSuspiciousActivityReportAsync(SuspiciousActivityReportPeriod period)
+        public async Task<ServiceResult<SuspiciousActivityReport>> GetSuspiciousActivityReportAsync(SuspiciousActivityReportPeriod period)
         {
-            ServiceResult<object> result = new();
+            ServiceResult<SuspiciousActivityReport> result = new();
+
+            SuspiciousActivityReport report = await _reportsCollection
+                .Find(e => e.Period == period.ToString())
+                .FirstOrDefaultAsync();
+
+            if (report == null)
+            {
+                ServiceResult<SuspiciousActivityReport> generatedReportResult = await GenerateSuspiciousActivityReportAsync(period);
+
+                if (!generatedReportResult.IsSuccessfull)
+                {
+                    return generatedReportResult;
+                }
+
+                report = generatedReportResult.Data!;
+
+                await _reportsCollection.InsertOneAsync(report);
+            }
+
+            result.Data = report;
+
+            return result;
+        }
+
+        public async Task<ServiceResult<SuspiciousActivityReportAuctionAnalysis>> GetAuctionAnalysisAsync(string analysisId)
+        {
+            ServiceResult<SuspiciousActivityReportAuctionAnalysis> result = new();
+
+            SuspiciousActivityReport report = await _reportsCollection
+                .Find(e => e.AuctionAnalyses.Any(e => e.AuctionAnalysisId == analysisId))
+                .FirstOrDefaultAsync();
+
+            if (report == null)
+            {
+                result.IsSuccessfull = false;
+                result.StatusCode = System.Net.HttpStatusCode.NotFound;
+                result.Errors.Add("Suspicious report or auction analysis not found.");
+
+                return result;
+            }
+
+            result.Data = report.AuctionAnalyses.First(a => a.AuctionAnalysisId == analysisId);
+
+            return result;
+        }
+
+        private async Task<ServiceResult<SuspiciousActivityReport>> GenerateSuspiciousActivityReportAsync(
+            SuspiciousActivityReportPeriod period)
+        {
+            ServiceResult<SuspiciousActivityReport> result = new();
 
             try
             {
@@ -84,7 +143,9 @@ namespace Moderation.Service.API.Services
 
                     GeminiOutputPayload outputPayload = JsonSerializer.Deserialize<GeminiOutputPayload>(CleanGeminiJsonResponse(responseText))!;
 
-                    result.Data = outputPayload;
+                    SuspiciousActivityReport report = outputPayload.ToModel();
+                    report.Period = period.ToString();
+                    result.Data = report;
                 }
                 else
                 {

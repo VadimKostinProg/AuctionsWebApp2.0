@@ -120,12 +120,6 @@ namespace Moderation.Service.API.DTO.Gemini
         [JsonPropertyName("type")]
         public string Type { get; set; } = string.Empty;
 
-        [JsonPropertyName("isLikely")]
-        public bool IsLikely { get; set; } // For Shill Bidding
-
-        [JsonPropertyName("isDetected")]
-        public bool IsDetected { get; set; } // For Bid Sniping
-
         [JsonPropertyName("confidenceScore")]
         public double ConfidenceScore { get; set; }
 

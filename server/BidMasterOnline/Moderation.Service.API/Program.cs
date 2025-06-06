@@ -57,7 +57,7 @@ builder.Services.AddInfrastructure(builder.Configuration)
     .AddCoreServices();
 
 builder.Services.AddScoped<IModerationLogsService, ModerationLogsService>();
-builder.Services.AddScoped<ISuspiciousActivityCheckService, SuspiciousActivityCheckService>();
+builder.Services.AddScoped<ISuspiciousActivityReportsService, SuspiciousActivityReportsService>();
 
 builder.Services.AddCors(options =>
 {
