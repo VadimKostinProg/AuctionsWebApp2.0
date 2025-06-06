@@ -814,6 +814,33 @@
       ],
       "UpstreamHttpMethod": [ "OPTIONS", "PUT" ],
       "UpstreamPathTemplate": "/api/moderator/users/{id}/unblock"
+    },
+
+    // Moderation.Service.API
+
+    {
+      "DownstreamPathTemplate": "/api/moderator/suspicious-activity-reports?{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7232
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "GET" ],
+      "UpstreamPathTemplate": "/api/moderator/suspicious-activity-reports?{everything}"
+    },
+    {
+      "DownstreamPathTemplate": "/api/moderator/suspicious-activity-reports/auction-analyses/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7232
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "PUT" ],
+      "UpstreamPathTemplate": "/api/moderator/suspicious-activity-reports/auction-analyses/{id}"
     }
   ]
 }

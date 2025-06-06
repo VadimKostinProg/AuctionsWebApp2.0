@@ -50,8 +50,11 @@ namespace Moderation.Service.API.Services
         {
             ServiceResult<SuspiciousActivityReport> result = new();
 
+            DateTime endRange = DateTime.UtcNow;
+            DateTime startRange = endRange.AddDays(-1);
+
             SuspiciousActivityReport report = await _reportsCollection
-                .Find(e => e.Period == period.ToString())
+                .Find(e => e.Period == period.ToString() && e.CreatedAt >= startRange && e.CreatedAt <= endRange)
                 .FirstOrDefaultAsync();
 
             if (report == null)
@@ -73,28 +76,6 @@ namespace Moderation.Service.API.Services
             return result;
         }
 
-        public async Task<ServiceResult<SuspiciousActivityReportAuctionAnalysis>> GetAuctionAnalysisAsync(string analysisId)
-        {
-            ServiceResult<SuspiciousActivityReportAuctionAnalysis> result = new();
-
-            SuspiciousActivityReport report = await _reportsCollection
-                .Find(e => e.AuctionAnalyses.Any(e => e.AuctionAnalysisId == analysisId))
-                .FirstOrDefaultAsync();
-
-            if (report == null)
-            {
-                result.IsSuccessfull = false;
-                result.StatusCode = System.Net.HttpStatusCode.NotFound;
-                result.Errors.Add("Suspicious report or auction analysis not found.");
-
-                return result;
-            }
-
-            result.Data = report.AuctionAnalyses.First(a => a.AuctionAnalysisId == analysisId);
-
-            return result;
-        }
-
         private async Task<ServiceResult<SuspiciousActivityReport>> GenerateSuspiciousActivityReportAsync(
             SuspiciousActivityReportPeriod period)
         {
@@ -103,11 +84,9 @@ namespace Moderation.Service.API.Services
             try
             {
                 // Prepare prompt
-                //List<Auction> auctions = await FetchAuctionsForSpecifiedPeriodAsync(period);
+                List<Auction> auctions = await FetchAuctionsForSpecifiedPeriodAsync(period);
 
-                //GeminiInputPayload payload = GetGeminiInputPayload(auctions);
-                
-                GeminiInputPayload payload = GetDummyPayload();
+                GeminiInputPayload payload = GetGeminiInputPayload(auctions);
 
                 string payloadSerialized = JsonSerializer.Serialize(payload, new JsonSerializerOptions { WriteIndented = false, DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull });
 

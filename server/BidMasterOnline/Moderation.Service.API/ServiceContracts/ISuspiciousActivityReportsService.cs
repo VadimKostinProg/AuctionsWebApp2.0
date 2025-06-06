@@ -7,6 +7,5 @@ namespace Moderation.Service.API.ServiceContracts
     public interface ISuspiciousActivityReportsService
     {
         Task<ServiceResult<SuspiciousActivityReport>> GetSuspiciousActivityReportAsync(SuspiciousActivityReportPeriod period);
-        Task<ServiceResult<SuspiciousActivityReportAuctionAnalysis>> GetAuctionAnalysisAsync(string analysisId);
     }
 }

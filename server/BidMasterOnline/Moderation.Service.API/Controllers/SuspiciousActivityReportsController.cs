@@ -26,14 +26,5 @@ namespace Moderation.Service.API.Controllers
 
             return FromResult(result);
         }
-
-        [HttpGet("auction-analyses/{id}")]
-        public async Task<IActionResult> GetAuctionAnalyses([FromRoute] string id)
-        {
-            ServiceResult<SuspiciousActivityReportAuctionAnalysis> result = 
-                await _service.GetAuctionAnalysisAsync(id);
-
-            return FromResult(result);
-        }
     }
 }

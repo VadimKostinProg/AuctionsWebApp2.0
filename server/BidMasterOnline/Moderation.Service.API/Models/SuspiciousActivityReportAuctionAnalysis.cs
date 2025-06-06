@@ -1,11 +1,7 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
-
-namespace Moderation.Service.API.Models
+﻿namespace Moderation.Service.API.Models
 {
     public class SuspiciousActivityReportAuctionAnalysis
     {
-        public required string AuctionAnalysisId { get; set; }
-
         public long AuctionId { get; set; }
 
         public string OverallAnalysisSummary { get; set; } = string.Empty;

@@ -12,7 +12,6 @@ namespace Moderation.Service.API.Extensions
                 CreatedAt = DateTime.UtcNow,
                 AuctionAnalyses = payload.AuctionAnalyses.Select(a => new SuspiciousActivityReportAuctionAnalysis
                 {
-                    AuctionAnalysisId = Guid.NewGuid().ToString(),
                     AuctionId = a.AuctionId,
                     OverallAnalysisSummary = a.OverallAnalysisSummary,
                     Suspicions = a.Suspicions.Select(s => new ActivitySuspicion
