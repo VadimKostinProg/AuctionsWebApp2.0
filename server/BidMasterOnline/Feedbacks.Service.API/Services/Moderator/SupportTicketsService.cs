@@ -8,6 +8,7 @@ using BidMasterOnline.Domain.Models;
 using BidMasterOnline.Domain.Models.Entities;
 using Feedbacks.Service.API.DTO.Moderator;
 using Feedbacks.Service.API.Extensions;
+using Feedbacks.Service.API.ServiceContracts;
 using Feedbacks.Service.API.ServiceContracts.Moderator;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -20,16 +21,19 @@ namespace Feedbacks.Service.API.Services.Moderator
         private readonly ILogger<SupportTicketsService> _logger;
         private readonly ITransactionsService _transactionsService;
         private readonly IUserAccessor _userAccessor;
+        private readonly INotificationsService _notificationsService;
 
-        public SupportTicketsService(IRepository repository, 
-            ILogger<SupportTicketsService> logger, 
-            ITransactionsService transactionsService, 
-            IUserAccessor userAccessor)
+        public SupportTicketsService(IRepository repository,
+            ILogger<SupportTicketsService> logger,
+            ITransactionsService transactionsService,
+            IUserAccessor userAccessor,
+            INotificationsService notificationsService)
         {
             _repository = repository;
             _logger = logger;
             _transactionsService = transactionsService;
             _userAccessor = userAccessor;
+            _notificationsService = notificationsService;
         }
 
         public async Task<ServiceResult> AssignSupportTicketAsync(AssignSupportTicketDTO requestDTO)
@@ -107,7 +111,7 @@ namespace Feedbacks.Service.API.Services.Moderator
                 _repository.Update(supportTicket);
                 await _repository.SaveChangesAsync();
 
-                //TODO: notify user
+                await _notificationsService.SendMessageOfCompletingSupportTicketAsync(supportTicket);
 
                 await transaction.CommitAsync();
             }

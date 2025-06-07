@@ -7,6 +7,7 @@ using BidMasterOnline.Domain.Models;
 using BidMasterOnline.Domain.Models.Entities;
 using Feedbacks.Service.API.DTO.Participant;
 using Feedbacks.Service.API.Extensions;
+using Feedbacks.Service.API.ServiceContracts;
 using Feedbacks.Service.API.ServiceContracts.Participant;
 
 namespace Feedbacks.Service.API.Services.Participant
@@ -16,12 +17,17 @@ namespace Feedbacks.Service.API.Services.Participant
         private readonly IRepository _repository;
         private readonly IUserAccessor _userAccessor;
         private readonly ILogger<ComplaintsService> _logger;
+        private readonly INotificationsService _notificationsService;
 
-        public ComplaintsService(IRepository repository, IUserAccessor userAccessor, ILogger<ComplaintsService> logger)
+        public ComplaintsService(IRepository repository,
+            IUserAccessor userAccessor,
+            ILogger<ComplaintsService> logger,
+            INotificationsService notificationsService)
         {
             _repository = repository;
             _userAccessor = userAccessor;
             _logger = logger;
+            _notificationsService = notificationsService;
         }
 
         public async Task<ServiceResult<ComplaintDTO>> GetComplaintByIdAsync(long complaintId)
@@ -79,6 +85,8 @@ namespace Feedbacks.Service.API.Services.Participant
 
                 await _repository.AddAsync(complaint);
                 await _repository.SaveChangesAsync();
+
+                await _notificationsService.SendMessageOfProcessingComplaintAsync(complaint);
 
                 result.Message = "Your complaint has been successfully submitted.";
             }

@@ -1,6 +1,7 @@
 ﻿using Auctions.Service.API.DTO.Moderator;
 using Auctions.Service.API.Extensions;
 using Auctions.Service.API.GrpcServices.Client;
+using Auctions.Service.API.ServiceContracts;
 using Auctions.Service.API.ServiceContracts.Moderator;
 using BidMasterOnline.Core.DTO;
 using BidMasterOnline.Core.Extensions;
@@ -22,18 +23,21 @@ namespace Auctions.Service.API.Services.Moderator
         private readonly ILogger<AuctionsService> _logger;
         private readonly ModerationGrpcClient _moderationClient;
         private readonly BidsGrpcClient _bidsClient;
+        private readonly INotificationsService _notificationsService;
 
         public AuctionsService(IRepository repository,
             ITransactionsService transactionService,
             ILogger<AuctionsService> logger,
             ModerationGrpcClient moderationClient,
-            BidsGrpcClient bidsClient)
+            BidsGrpcClient bidsClient,
+            INotificationsService notificationsService)
         {
             _repository = repository;
             _transactionService = transactionService;
             _logger = logger;
             _moderationClient = moderationClient;
             _bidsClient = bidsClient;
+            _notificationsService = notificationsService;
         }
 
         public async Task<ServiceResult> CancelAuctionAsync(CancelAuctionDTO requestDTO)
@@ -59,7 +63,7 @@ namespace Auctions.Service.API.Services.Moderator
                 _repository.Update(entity);
                 await _repository.SaveChangesAsync();
 
-                // TODO: notify auctionist and auctioners
+                await _notificationsService.SendMessageOfCancelingAuctionToAuctioneer(entity);
 
                 result.Message = "Auction has been successfully cancelled!";
             }
@@ -112,7 +116,7 @@ namespace Auctions.Service.API.Services.Moderator
                 _repository.Update(entity);
                 await _repository.SaveChangesAsync();
 
-                // TODO: notify auctionist and auctioners
+                await _notificationsService.SendMessageOfRecoveringAuctionToAuctioneer(entity);
 
                 result.Message = "Auction has been successfully recovered.";
             }

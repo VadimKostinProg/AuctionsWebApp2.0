@@ -2,8 +2,10 @@ using BidMasterOnline.Core;
 using BidMasterOnline.Infrastructure;
 using Feedbacks.Service.API.Filters;
 using Feedbacks.Service.API.GrpcServices.Client;
+using Feedbacks.Service.API.ServiceContracts;
 using Feedbacks.Service.API.ServiceContracts.Moderator;
 using Feedbacks.Service.API.ServiceContracts.Participant;
+using Feedbacks.Service.API.Services;
 using Feedbacks.Service.API.Services.Moderator;
 using Feedbacks.Service.API.Services.Participant;
 using Microsoft.OpenApi.Models;
@@ -62,10 +64,13 @@ builder.Services.AddScoped<Feedbacks.Service.API.ServiceContracts.Participant.IA
 builder.Services.AddScoped<Feedbacks.Service.API.ServiceContracts.Participant.IComplaintsService, Feedbacks.Service.API.Services.Participant.ComplaintsService>();
 builder.Services.AddScoped<Feedbacks.Service.API.ServiceContracts.Participant.ISupportTicketsService, Feedbacks.Service.API.Services.Participant.SupportTicketsService>();
 builder.Services.AddScoped<Feedbacks.Service.API.ServiceContracts.Participant.IUserFeedbacksService, Feedbacks.Service.API.Services.Participant.UserFeedbacksService>();
+
 builder.Services.AddScoped<Feedbacks.Service.API.ServiceContracts.Moderator.IAuctionCommentsService, Feedbacks.Service.API.Services.Moderator.AuctionCommentsService>();
 builder.Services.AddScoped<Feedbacks.Service.API.ServiceContracts.Moderator.IComplaintsService, Feedbacks.Service.API.Services.Moderator.ComplaintsService>();
 builder.Services.AddScoped<Feedbacks.Service.API.ServiceContracts.Moderator.ISupportTicketsService, Feedbacks.Service.API.Services.Moderator.SupportTicketsService>();
 builder.Services.AddScoped<Feedbacks.Service.API.ServiceContracts.Moderator.IUserFeedbacksService, Feedbacks.Service.API.Services.Moderator.UserFeedbacksService>();
+
+builder.Services.AddScoped<INotificationsService, NotificationsSevice>();
 
 builder.Services.AddCors(options =>
 {

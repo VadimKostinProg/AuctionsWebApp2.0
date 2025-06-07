@@ -133,6 +133,14 @@ public class Index : PageModel
                     });
                 }
 
+                if (!user.IsEmailConfirmed)
+                {
+                    return RedirectToPage("/Account/EmailConfirmation/Index", new
+                    {
+                        returnUrl = Input.ReturnUrl,
+                    });
+                }
+
                 if (context != null)
                 {
                     // This "can't happen", because if the ReturnUrl was null, then the context would be null

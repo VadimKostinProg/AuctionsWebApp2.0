@@ -12,6 +12,8 @@ namespace IdentityServer.Services.Contracts
         Task<bool> ExistsWithEmailAsync(string email);
         Task<User> CreateUserAsync(CreateUserModel userModel, string role);
         Task<ServiceResult<User>> ChangePasswordAsync(long userId, string newPassword, bool forceChange = false);
+        string GenerateEmailConfirmationCodeForUser(long userId);
+        Task<bool> ConfirmEmailAsync(long userId, string code);
         Task DeleteUserAsync(long id);
     }
 }

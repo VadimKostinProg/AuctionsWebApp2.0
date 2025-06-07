@@ -6,7 +6,6 @@ using Duende.IdentityServer.Models;
 using Duende.IdentityServer.Services;
 using IdentityServer.Services.Contracts;
 using IdentityServerHost.Pages;
-using IdentityServerHost.Pages.Login;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;

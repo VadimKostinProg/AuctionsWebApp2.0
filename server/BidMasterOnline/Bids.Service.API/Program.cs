@@ -106,5 +106,6 @@ app.UseAuthorization();
 
 app.MapControllers();
 app.MapGrpcService<BidsGrpcService>();
+app.MapGrpcService<UserBidsGrpcService>();
 
 app.Run();

@@ -53,9 +53,14 @@ namespace Moderation.Service.API.Services
             DateTime endRange = DateTime.UtcNow;
             DateTime startRange = endRange.AddDays(-1);
 
-            SuspiciousActivityReport report = await _reportsCollection
-                .Find(e => e.Period == period.ToString() && e.CreatedAt >= startRange && e.CreatedAt <= endRange)
-                .FirstOrDefaultAsync();
+            SuspiciousActivityReport? report = null;
+
+            if (period != SuspiciousActivityReportPeriod.LastDay)
+            {
+                report = await _reportsCollection
+                    .Find(e => e.Period == period.ToString() && e.CreatedAt >= startRange && e.CreatedAt <= endRange)
+                    .FirstOrDefaultAsync();
+            }
 
             if (report == null)
             {
@@ -299,7 +304,7 @@ namespace Moderation.Service.API.Services
         {
             string cleaned = rawResponseText.Trim();
 
-            
+
             if (cleaned.StartsWith("```json", StringComparison.OrdinalIgnoreCase))
             {
                 cleaned = Regex.Replace(cleaned, @"^```json\s*\n?", "", RegexOptions.IgnoreCase).TrimStart();

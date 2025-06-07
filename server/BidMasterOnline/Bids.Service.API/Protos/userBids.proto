@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+option csharp_namespace = "UserBidsGrpc";
+
+package UserBidsGrpc;
+
+service UserBids {
+	rpc CancelWinningBidsAfterUserBlocking(UserInfoRequest) returns (ActionResponse) {
+
+	}
+}
+
+message UserInfoRequest {
+	int64 userId = 1;
+}
+
+message ActionResponse {
+	bool success = 1;
+}
