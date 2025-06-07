@@ -27,9 +27,9 @@ namespace Auctions.Service.API.Services
             string message = "We are happy to inform you, that your auction request has been successfully approved." +
                              "Now your auction is visible for other users and thay can set bids on your auction.<br>" +
                              "Here is information of the approved auction:<br>" +
-                             $"Auction Id: {auctionRequest.Id}<br>" +
-                             $"Lot: {auctionRequest.LotTitle}<br>" +
-                             $"Description: {auctionRequest.LotDescription}<br>" +
+                             $"<b>Auction Id</b>: {auctionRequest.Id}<br>" +
+                             $"<b>Lot</b>: {auctionRequest.LotTitle}<br>" +
+                             $"<b>Description</b>: {auctionRequest.LotDescription}<br>" +
                              "<br><br>Best regards," +
                              "<br>BidMasterOnline Technical Support Team.";
 
@@ -52,9 +52,9 @@ namespace Auctions.Service.API.Services
 
             string message = "We are informing you, that your auction has been canceled.<br>" +
                              "Here is information of the canceled auction:<br>" +
-                             $"Auction Id: {auction.Id}<br>" +
-                             $"Lot: {auction.LotTitle}<br>" +
-                             $"Description: {auction.LotDescription}<br>" +
+                             $"<b>Auction Id</b>: {auction.Id}<br>" +
+                             $"<b>Lot</b>: {auction.LotTitle}<br>" +
+                             $"<b>Description</b>: {auction.LotDescription}<br>" +
                              $"<br><br>Here is the canceling reason explained:<br>" +
                              auction.CancellationReason +
                              "<br><br>Best regards," +
@@ -101,9 +101,9 @@ namespace Auctions.Service.API.Services
             string message = "We are informing you that your auction has been finished. " +
                              "Unfortunately, there were no bids on your auction, so there is no winner of it." +
                              "Here is information of the finished auction:<br>" +
-                             $"Auction Id: {auction.Id}<br>" +
-                             $"Lot: {auction.LotTitle}<br>" +
-                             $"Description: {auction.LotDescription}<br>" +
+                             $"<b>Auction Id</b>: {auction.Id}<br>" +
+                             $"<b>Lot</b>: {auction.LotTitle}<br>" +
+                             $"<b>Description</b>: {auction.LotDescription}<br>" +
                              "<br><br>Best regards," +
                              "<br>BidMasterOnline Technical Support Team.";
 
@@ -128,9 +128,9 @@ namespace Auctions.Service.API.Services
                              "Now the auction request is on the verification step. " +
                              "When it is approved, new auction will be created and visible for other users, so they will be able to place bids at it." +
                              "Here is information of the published auction request:<br>" +
-                             $"Auction request Id: {auctionRequest.Id}<br>" +
-                             $"Lot: {auctionRequest.LotTitle}<br>" +
-                             $"Description: {auctionRequest.LotDescription}<br>" +
+                             $"<b>Auction request Id</b>: {auctionRequest.Id}<br>" +
+                             $"<b>Lot</b>: {auctionRequest.LotTitle}<br>" +
+                             $"<b>Description</b>: {auctionRequest.LotDescription}<br>" +
                              "<br><br>Best regards," +
                              "<br>BidMasterOnline Technical Support Team.";
 
@@ -153,9 +153,9 @@ namespace Auctions.Service.API.Services
 
             string message = "We are informing you, that your auction has been recovered.<br>" +
                              "Here is information of the recovered auction:<br>" +
-                             $"Auction Id: {auction.Id}<br>" +
-                             $"Lot: {auction.LotTitle}<br>" +
-                             $"Description: {auction.LotDescription}<br>" +
+                             $"<b>Auction Id</b>: {auction.Id}<br>" +
+                             $"<b>Lot</b>: {auction.LotTitle}<br>" +
+                             $"<b>Description</b>: {auction.LotDescription}<br>" +
                              "<br><br>Best regards," +
                              "<br>BidMasterOnline Technical Support Team.";
 
@@ -178,9 +178,9 @@ namespace Auctions.Service.API.Services
 
             string message = "We are informing you that, unfortunately, your auction request has been declined. " +
                              "Here is information of the auction request:<br>" +
-                             $"Auction request Id: {auctionRequest.Id}<br>" +
-                             $"Lot: {auctionRequest.LotTitle}<br>" +
-                             $"Description: {auctionRequest.LotDescription}<br>" +
+                             $"<b>Auction request Id</b>: {auctionRequest.Id}<br>" +
+                             $"<b>Lot</b>: {auctionRequest.LotTitle}<br>" +
+                             $"<b>Description</b>: {auctionRequest.LotDescription}<br>" +
                              $"<br><br>Here is the declining reason explained:<br>" +
                              auctionRequest.ReasonDeclined +
                              "<br><br>Best regards," +

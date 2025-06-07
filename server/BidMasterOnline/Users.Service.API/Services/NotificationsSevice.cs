@@ -23,7 +23,7 @@ namespace Users.Service.API.Services
             string title = "Your account has been blocked.";
 
             string message = "We are informing you that your account on the BidMasterOnline has been blocked." +
-                             "Here is the reason of blocking you account explained:<br>" +
+                             "<br>Here is the reason of blocking you account explained:<br>" +
                              user.BlockingReason +
                              "<br><br>Best regards," +
                              "<br>BidMasterOnline Technical Support Team.";
