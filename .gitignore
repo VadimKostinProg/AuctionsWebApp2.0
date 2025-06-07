@@ -380,3 +380,7 @@ Migrations
 appsettings.Development.json
 server/BidMasterOnline/Auctions.Service.API/appsettings.Development.json
 server/BidMasterOnline/Feedbacks.Service.API/appsettings.Development.json
+server/BidMasterOnline/Feedbacks.Service.API/appsettings.Development.json
+server/BidMasterOnline/Users.Service.API/appsettings.Development.json
+server/BidMasterOnline/Bids.Service.API/appsettings.Development.json
+server/BidMasterOnline/Moderation.Service.API/appsettings.Development.json
