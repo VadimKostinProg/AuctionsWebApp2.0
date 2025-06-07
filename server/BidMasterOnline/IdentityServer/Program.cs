@@ -15,6 +15,9 @@ builder.Services.AddCoreServices()
 
 builder.Services.AddScoped<IPasswordValidationService, PasswordValidationService>();
 builder.Services.AddScoped<IUserManager, UserManager>();
+builder.Services.AddScoped<INotificationsService, NotificationsService>();
+
+builder.Services.AddMemoryCache();
 
 var app = builder.Build();
 

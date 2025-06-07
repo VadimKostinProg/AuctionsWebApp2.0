@@ -3,7 +3,6 @@ using BidMasterOnline.Domain.Models.Entities;
 using IdentityServer.Models;
 using IdentityServer.Services.Contracts;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace IdentityServer.Pages.Admin.StaffList

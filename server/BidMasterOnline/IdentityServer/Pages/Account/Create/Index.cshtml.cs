@@ -3,6 +3,7 @@
 
 using BidMasterOnline.Core.Constants;
 using BidMasterOnline.Domain.Models.Entities;
+using Duende.IdentityModel;
 using Duende.IdentityServer;
 using Duende.IdentityServer.Models;
 using Duende.IdentityServer.Services;
@@ -12,6 +13,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Security.Claims;
 
 namespace IdentityServerHost.Pages.Create;
 
@@ -95,38 +97,17 @@ public class Index : PageModel
             // issue authentication cookie with subject ID and username
             IdentityServerUser isuser = new(user.Id.ToString())
             {
-                DisplayName = user.Username
+                DisplayName = user.Username,
+                AdditionalClaims = [new Claim(JwtClaimTypes.Role, UserRoles.Participant)]
             };
 
             await HttpContext.SignInAsync(isuser);
 
-            if (context != null)
+            return RedirectToPage("/Account/EmailConfirmation/Index", new
             {
-                if (context.IsNativeClient())
-                {
-                    // The client is native, so this change in how to
-                    // return the response is for better UX for the end user.
-                    return this.LoadingPage(Input.ReturnUrl);
-                }
+                returnUrl = Input.ReturnUrl,
+            });
 
-                // we can trust Input.ReturnUrl since GetAuthorizationContextAsync returned non-null
-                return Redirect(Input.ReturnUrl ?? "~/");
-            }
-
-            // request for a local page
-            if (Url.IsLocalUrl(Input.ReturnUrl))
-            {
-                return Redirect(Input.ReturnUrl);
-            }
-            else if (string.IsNullOrEmpty(Input.ReturnUrl))
-            {
-                return Redirect("~/");
-            }
-            else
-            {
-                // user might have clicked on a malicious link - should be logged
-                throw new ArgumentException("invalid return URL");
-            }
         }
 
         return Page();

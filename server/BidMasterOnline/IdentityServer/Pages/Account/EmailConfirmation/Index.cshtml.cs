@@ -1,34 +1,47 @@
 using BidMasterOnline.Core.Constants;
-using BidMasterOnline.Core.DTO;
 using BidMasterOnline.Domain.Models.Entities;
 using Duende.IdentityServer.Extensions;
 using Duende.IdentityServer.Models;
 using Duende.IdentityServer.Services;
 using IdentityServer.Services.Contracts;
 using IdentityServerHost.Pages;
+using IdentityServerHost.Pages.Account.EmailConfirmation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Security.Claims;
 
-namespace IdentityServer.Pages.Account.ForceChangePassword
+namespace IdentityServer.Pages.Account.EmailConfirmation
 {
-    [Authorize(Roles = UserRoles.Moderator)]
+    [Authorize(Roles = UserRoles.Participant)]
     public class IndexModel : PageModel
     {
         private readonly IUserManager _userManager;
+        private readonly INotificationsService _notificationsService;
         private readonly IIdentityServerInteractionService _interaction;
 
-        public IndexModel(IUserManager userManager, IIdentityServerInteractionService interaction)
+        public IndexModel(IUserManager userManager,
+            INotificationsService notificationsService,
+            IIdentityServerInteractionService interaction)
         {
             _userManager = userManager;
+            _notificationsService = notificationsService;
             _interaction = interaction;
         }
 
         [BindProperty]
         public InputModel Input { get; set; } = default!;
 
-        public void OnGet(string? returnUrl)
+        public async Task OnGetAsync(string? returnUrl)
         {
+            long userId = long.Parse(User.GetSubjectId());
+
+            User user = await _userManager.GetByIdAsync(userId);
+
+            string code = _userManager.GenerateEmailConfirmationCodeForUser(userId);
+
+            await _notificationsService.SendEmailConfirmationMessageAsync(user.Email, user.FullName, code);
+
             Input = new InputModel()
             {
                 ReturnUrl = returnUrl,
@@ -44,19 +57,14 @@ namespace IdentityServer.Pages.Account.ForceChangePassword
             {
                 long userId = long.Parse(User.GetSubjectId());
 
-                ServiceResult<User> result = await _userManager
-                    .ChangePasswordAsync(userId, Input.NewPassword!, forceChange: true);
+                bool result = await _userManager.ConfirmEmailAsync(userId, Input.Code!);
 
-                if (!result.IsSuccessfull)
+                if (!result)
                 {
-                    if (result.Errors.Any())
-                    {
-                        ModelState.AddModelError(string.Empty, result.Errors.First());
-                    }
-
                     Input = new InputModel()
                     {
                         ReturnUrl = Input.ReturnUrl,
+                        Errors = "Invalid code"
                     };
 
                     return Page();

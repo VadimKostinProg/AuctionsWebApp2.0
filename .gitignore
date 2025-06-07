@@ -390,3 +390,4 @@ server/BidMasterOnline/Moderation.Service.API/appsettings.Development.json
 /server/BidMasterOnline/Bids.Service.API/appsettings.Development.json
 /server/BidMasterOnline/Payments.Service.API/appsettings.Development.json
 /server/BidMasterOnline/Moderation.Service.API/appsettings.Development.json
+/server/BidMasterOnline/IdentityServer/appsettings.Development.json

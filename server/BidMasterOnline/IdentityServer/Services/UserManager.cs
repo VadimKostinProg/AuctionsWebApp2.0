@@ -10,16 +10,58 @@ using BidMasterOnline.Domain.Models;
 using BidMasterOnline.Domain.Models.Entities;
 using IdentityServer.Models;
 using IdentityServer.Services.Contracts;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace IdentityServer.Services
 {
     public class UserManager : IUserManager
     {
         private readonly IRepository _repository;
+        private readonly IMemoryCache _memoryCache;
 
-        public UserManager(IRepository repository)
+        public UserManager(IRepository repository, IMemoryCache memoryCache)
         {
             _repository = repository;
+            _memoryCache = memoryCache;
+        }
+
+        public string GenerateEmailConfirmationCodeForUser(long userId)
+        {
+            string code = Guid.NewGuid().ToString().Substring(0, 8).ToUpper();
+
+            string key = $"user_{userId}_confirmation_code";
+
+            MemoryCacheEntryOptions cacheEntryOptions = new MemoryCacheEntryOptions()
+                .SetAbsoluteExpiration(TimeSpan.FromMinutes(5));
+
+            _memoryCache.Set(key, code, cacheEntryOptions);
+
+            return code;
+        }
+
+        public async Task<bool> ConfirmEmailAsync(long userId, string code)
+        {
+            string key = $"user_{userId}_confirmation_code";
+
+            string? actualCode;
+
+            if (!_memoryCache.TryGetValue(key, out actualCode))
+            {
+                return false;
+            }
+
+            if (code != actualCode)
+            {
+                return false;
+            }
+
+            User user = await _repository.GetByIdAsync<User>(userId);
+            user.IsEmailConfirmed = true;
+
+            _repository.Update(user);
+            await _repository.SaveChangesAsync();
+
+            return true;
         }
 
         public async Task<PaginatedList<User>> GetStaffListAsync(StaffListSpecifications specifications)
@@ -79,6 +121,7 @@ namespace IdentityServer.Services
                 PasswordHashed = passwordHashed,
                 PasswordSalt = passwordSalt,
                 ForceChangePassword = role == UserRoles.Moderator,
+                IsEmailConfirmed = role == UserRoles.Moderator,
                 RoleId = roleId
             };
 

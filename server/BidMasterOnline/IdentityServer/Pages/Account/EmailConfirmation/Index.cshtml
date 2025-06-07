@@ -1,0 +1,32 @@
+﻿@page
+@model IdentityServer.Pages.Account.EmailConfirmation.IndexModel;
+@{
+}
+
+<div class="login-page">
+    <div class="lead">
+        <h1>Confirm email</h1>
+    </div>
+
+    <partial name="_ValidationSummary" />
+
+    <div class="row">
+        <div class="col-sm-6">
+            <form method="post" class="d-flex flex-column">
+                <input type="hidden" asp-for="Input.ReturnUrl" />
+
+                <div class="form-group">
+                    <label asp-for="Input.Code">We have sent you an email verification code. Please, check your email notifications and enter code:</label>
+                    <input type="text" class="form-control" placeholder="Verification Code" asp-for="Input.Code" autocomplete="off">
+                </div>
+
+                @if (Model.Input.Errors != null)
+                {
+                    <span class="text-danger">@Model.Input.Errors</span>
+                }
+
+                <button type="submit" class="btn btn-primary mt-2" value="create">Submit</button>
+            </form>
+        </div>
+    </div>
+</div>
