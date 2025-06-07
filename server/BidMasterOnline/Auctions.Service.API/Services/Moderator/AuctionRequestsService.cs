@@ -1,6 +1,7 @@
 ﻿using Auctions.Service.API.DTO.Moderator;
 using Auctions.Service.API.Extensions;
 using Auctions.Service.API.GrpcServices.Client;
+using Auctions.Service.API.ServiceContracts;
 using Auctions.Service.API.ServiceContracts.Moderator;
 using BidMasterOnline.Core.DTO;
 using BidMasterOnline.Core.Enums;
@@ -23,16 +24,19 @@ namespace Auctions.Service.API.Services.Moderator
         private readonly ITransactionsService _transactionsService;
         private readonly ILogger<AuctionRequestsService> _logger;
         private readonly ModerationGrpcClient _moderationClient;
+        private readonly INotificationsService _notificationsService;
 
         public AuctionRequestsService(IRepository repository,
             ITransactionsService transactionsService,
             ILogger<AuctionRequestsService> logger,
-            ModerationGrpcClient moderationClient)
+            ModerationGrpcClient moderationClient,
+            INotificationsService notificationsService)
         {
             _repository = repository;
             _transactionsService = transactionsService;
             _logger = logger;
             _moderationClient = moderationClient;
+            _notificationsService = notificationsService;
         }
 
         public async Task<ServiceResult> ApproveAuctionRequestAsync(ApproveAuctionRequestDTO requestDTO)
@@ -97,9 +101,9 @@ namespace Auctions.Service.API.Services.Moderator
                 await _repository.AddAsync(newAuction);
                 await _repository.SaveChangesAsync();
 
-                // TODO: notify auctionist
-
                 await transaction.CommitAsync();
+
+                await _notificationsService.SendMessageOfApprovalAuctionRequestToAuctioneer(auctionRequest);
 
                 result.Message = "Auction request has been approved successfully.";
             }
@@ -141,7 +145,7 @@ namespace Auctions.Service.API.Services.Moderator
 
                 await _repository.SaveChangesAsync();
 
-                // TODO: notify auctionist
+                await _notificationsService.SendMessageOfDecliningAuctionRequestToUser(auctionRequest);
 
                 result.Message = "Auction request has been successfully declined!";
             }

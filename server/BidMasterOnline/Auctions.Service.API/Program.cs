@@ -2,6 +2,8 @@
 using Auctions.Service.API.Filters;
 using Auctions.Service.API.GrpcServices.Client;
 using Auctions.Service.API.GrpcServices.Server;
+using Auctions.Service.API.ServiceContracts;
+using Auctions.Service.API.Services;
 using BidMasterOnline.Core;
 using BidMasterOnline.Infrastructure;
 using Microsoft.OpenApi.Models;
@@ -71,6 +73,7 @@ builder.Services.AddScoped<Auctions.Service.API.ServiceContracts.Participant.IAu
 builder.Services.AddScoped<Auctions.Service.API.ServiceContracts.Participant.IAuctionTypesService, Auctions.Service.API.Services.Participant.AuctionTypesService>();
 builder.Services.AddScoped<Auctions.Service.API.ServiceContracts.Participant.IAuctionFinishMethodsService, Auctions.Service.API.Services.Participant.AuctionFinishMethodsService>();
 
+builder.Services.AddScoped<INotificationsService, NotificationsSevice>();
 builder.Services.AddScoped<ModerationGrpcClient>();
 builder.Services.AddScoped<BidsGrpcClient>();
 

@@ -5,6 +5,8 @@ using Users.Service.API.Filters;
 using Quartz;
 using Users.Service.API.BackgroundJobs;
 using Users.Service.API.GrpcServices.Client;
+using Users.Service.API.ServiceContracts;
+using Users.Service.API.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
@@ -55,6 +57,8 @@ builder.Services.AddInfrastructure(builder.Configuration)
 
 builder.Services.AddScoped<Users.Service.API.ServiceContracts.Participant.IUserProfilesService, Users.Service.API.Services.Participant.UserProfilesService>();
 builder.Services.AddScoped<Users.Service.API.ServiceContracts.Moderator.IUsersService, Users.Service.API.Services.Moderator.UsersService>();
+
+builder.Services.AddScoped<INotificationsService, NotificationsSevice>();
 
 builder.Services.AddScoped<UserAuctionsGrpcClient>();
 builder.Services.AddScoped<UserBidsGrpcClient>();

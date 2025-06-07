@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Users.Service.API.DTO.Moderator;
 using Users.Service.API.Extensions;
 using Users.Service.API.GrpcServices.Client;
+using Users.Service.API.ServiceContracts;
 using Users.Service.API.ServiceContracts.Moderator;
 
 namespace Users.Service.API.Services.Moderator
@@ -19,23 +20,26 @@ namespace Users.Service.API.Services.Moderator
         private readonly UserAuctionsGrpcClient _userAuctionsClient;
         private readonly UserBidsGrpcClient _userBidsClient;
         private readonly ILogger<UsersService> _logger;
+        private readonly INotificationsService _notificationsService;
 
         public UsersService(IRepository repository,
             UserAuctionsGrpcClient userAuctionsClient,
             UserBidsGrpcClient userBidsClient,
-            ILogger<UsersService> logger)
+            ILogger<UsersService> logger,
+            INotificationsService notificationsService)
         {
             _repository = repository;
             _userAuctionsClient = userAuctionsClient;
             _userBidsClient = userBidsClient;
             _logger = logger;
+            _notificationsService = notificationsService;
         }
 
         public async Task<ServiceResult<IEnumerable<ModeratorSummaryDTO>>> GetAllModerators()
         {
             ServiceResult<IEnumerable<ModeratorSummaryDTO>> result = new();
 
-            List<User> entities = await _repository.GetFiltered<User>(e => e.Role.Name == UserRoles.Moderator && !e.Deleted)
+            List<User> entities = await _repository.GetFiltered<User>(e => e.Role!.Name == UserRoles.Moderator && !e.Deleted)
                 .OrderBy(e => e.FullName)
                 .ThenBy(e => e.Username)
                 .ToListAsync();
@@ -99,7 +103,7 @@ namespace Users.Service.API.Services.Moderator
                 await _userAuctionsClient.CancelUserAuctionsAsync(userId);
                 await _userBidsClient.CancelUserWinningBidsAsync(userId);
 
-                // TODO: Notify user
+                await _notificationsService.SendMessageOfBlockingUserAsync(user);
 
                 result.Message = "User's account has been successfully blocked.";
             }
@@ -169,7 +173,7 @@ namespace Users.Service.API.Services.Moderator
                 _repository.Update(user);
                 await _repository.SaveChangesAsync();
 
-                // TODO: Notify user
+                await _notificationsService.SendMessageOfUnblockingUserAsync(user);
 
                 result.Message = "User's account has been successfully unblocked.";
             }

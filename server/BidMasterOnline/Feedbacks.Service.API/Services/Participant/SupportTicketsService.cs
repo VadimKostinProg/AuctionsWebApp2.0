@@ -7,6 +7,7 @@ using BidMasterOnline.Domain.Models;
 using BidMasterOnline.Domain.Models.Entities;
 using Feedbacks.Service.API.DTO.Participant;
 using Feedbacks.Service.API.Extensions;
+using Feedbacks.Service.API.ServiceContracts;
 using Feedbacks.Service.API.ServiceContracts.Participant;
 
 namespace Feedbacks.Service.API.Services.Participant
@@ -16,14 +17,17 @@ namespace Feedbacks.Service.API.Services.Participant
         private readonly IRepository _repository;
         private readonly IUserAccessor _userAccessor;
         private readonly ILogger<SupportTicketsService> _logger;
+        private readonly INotificationsService _notificationsSerivce;
 
         public SupportTicketsService(IRepository repository,
             IUserAccessor userAccessor,
-            ILogger<SupportTicketsService> logger)
+            ILogger<SupportTicketsService> logger,
+            INotificationsService notificationsSerivce)
         {
             _repository = repository;
             _userAccessor = userAccessor;
             _logger = logger;
+            _notificationsSerivce = notificationsSerivce;
         }
 
         public async Task<ServiceResult<SupportTicketDTO>> GetSupportTicketByIdAsync(long ticketId)
@@ -79,6 +83,8 @@ namespace Feedbacks.Service.API.Services.Participant
 
                 await _repository.AddAsync(ticket);
                 await _repository.SaveChangesAsync();
+
+                await _notificationsSerivce.SendMessageOfProcessingSupportTicketAsync(ticket);
 
                 result.Message = "Your support ticket has been successfully submitted.";
             }

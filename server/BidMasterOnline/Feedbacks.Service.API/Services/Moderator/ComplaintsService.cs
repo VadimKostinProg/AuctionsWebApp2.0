@@ -8,6 +8,7 @@ using BidMasterOnline.Domain.Models;
 using BidMasterOnline.Domain.Models.Entities;
 using Feedbacks.Service.API.DTO.Moderator;
 using Feedbacks.Service.API.Extensions;
+using Feedbacks.Service.API.ServiceContracts;
 using Feedbacks.Service.API.ServiceContracts.Moderator;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -20,16 +21,19 @@ namespace Feedbacks.Service.API.Services.Moderator
         private readonly ILogger<ComplaintsService> _logger;
         private readonly ITransactionsService _transactionsService;
         private readonly IUserAccessor _userAccessor;
+        private readonly INotificationsService _notificationsService;
 
         public ComplaintsService(IRepository repository,
             ILogger<ComplaintsService> logger,
             ITransactionsService transactionsService,
-            IUserAccessor userAccessor)
+            IUserAccessor userAccessor,
+            INotificationsService notificationsService)
         {
             _repository = repository;
             _logger = logger;
             _transactionsService = transactionsService;
             _userAccessor = userAccessor;
+            _notificationsService = notificationsService;
         }
 
         public async Task<ServiceResult> AssignComplaintAsync(AssignComplaintDTO requestDTO)
@@ -105,7 +109,7 @@ namespace Feedbacks.Service.API.Services.Moderator
                 _repository.Update(complaint);
                 await _repository.SaveChangesAsync();
 
-                //TODO: notify user
+                await _notificationsService.SendMessageOfCompletingComplaintAsync(complaint);
 
                 await transaction.CommitAsync();
             }

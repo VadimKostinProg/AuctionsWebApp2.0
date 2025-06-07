@@ -1,5 +1,6 @@
 ﻿using Auctions.Service.API.DTO.Participant;
 using Auctions.Service.API.Extensions;
+using Auctions.Service.API.ServiceContracts;
 using Auctions.Service.API.ServiceContracts.Participant;
 using BidMasterOnline.Core.DTO;
 using BidMasterOnline.Core.Enums;
@@ -21,16 +22,19 @@ namespace Auctions.Service.API.Services.Participant
         private readonly IUserAccessor _userAccessor;
         private readonly ITransactionsService _transactionsService;
         private readonly ILogger<AuctionsService> _logger;
+        private readonly INotificationsService _notificationsService;
 
         public AuctionsService(IRepository repository,
             IUserAccessor userAccessor,
             ITransactionsService transactionsService,
-            ILogger<AuctionsService> logger)
+            ILogger<AuctionsService> logger,
+            INotificationsService notificationsService)
         {
             _repository = repository;
             _userAccessor = userAccessor;
             _transactionsService = transactionsService;
             _logger = logger;
+            _notificationsService = notificationsService;
         }
 
         public async Task<ServiceResult<PaginatedList<AuctionSummaryDTO>>> GetAuctionsListAsync(AuctionSpecificationsDTO specifications)
@@ -159,7 +163,7 @@ namespace Auctions.Service.API.Services.Participant
                 }
                 else
                 {
-                    // TODO: send notification (no winner)
+                    await _notificationsService.SendMessageOfNoWinnersOfAuctionToAuctioneer(auction);
                 }
 
                 _repository.Update(auction);

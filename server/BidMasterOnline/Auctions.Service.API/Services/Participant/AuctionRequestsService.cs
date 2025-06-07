@@ -1,5 +1,6 @@
 ﻿using Auctions.Service.API.DTO.Participant;
 using Auctions.Service.API.Extensions;
+using Auctions.Service.API.ServiceContracts;
 using Auctions.Service.API.ServiceContracts.Participant;
 using BidMasterOnline.Core.DTO;
 using BidMasterOnline.Core.Enums;
@@ -25,13 +26,15 @@ namespace Auctions.Service.API.Services.Participant
         private readonly ITransactionsService _transactionsService;
         private readonly IUserStatusValidationService _userStatusValidationService;
         private readonly ILogger<AuctionRequestsService> _logger;
+        private readonly INotificationsService _notificationsService;
 
         public AuctionRequestsService(IRepository repository,
             IUserAccessor userAccessor,
             IImagesService imagesService,
             ITransactionsService transactionsService,
             IUserStatusValidationService userStatusValidationService,
-            ILogger<AuctionRequestsService> logger)
+            ILogger<AuctionRequestsService> logger,
+            INotificationsService notificationsService)
         {
             _repository = repository;
             _userAccessor = userAccessor;
@@ -39,6 +42,7 @@ namespace Auctions.Service.API.Services.Participant
             _transactionsService = transactionsService;
             _userStatusValidationService = userStatusValidationService;
             _logger = logger;
+            _notificationsService = notificationsService;
         }
 
         public async Task<ServiceResult<PaginatedList<AuctionRequestSummaryDTO>>> GetUserAuctionRequestsAsync(PaginationRequestDTO pagination)
@@ -132,6 +136,8 @@ namespace Auctions.Service.API.Services.Participant
                 await _repository.SaveChangesAsync();
 
                 await transaction.CommitAsync();
+
+                await _notificationsService.SendMessageOfPublishingAuctionRequestToUserAsync(entity);
 
                 result.Message = "Your auction request has been submitted!";
             }

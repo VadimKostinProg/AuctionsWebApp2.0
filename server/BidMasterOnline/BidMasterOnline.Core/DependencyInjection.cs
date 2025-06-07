@@ -11,6 +11,7 @@ namespace BidMasterOnline.Core
             services.AddScoped<IImagesService, ImagesService>();
             services.AddScoped<IUserAccessor, UserAccessor>();
             services.AddScoped<IUserStatusValidationService, UserStatusValidationService>();
+            services.AddScoped<INotificationsQueueProducer, NotificationQueueProducer>();
 
             return services;
         }
