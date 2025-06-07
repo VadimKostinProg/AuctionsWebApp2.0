@@ -11,6 +11,7 @@ namespace Moderation.Service.API.Controllers
             {
                 System.Net.HttpStatusCode.OK => Ok(result),
                 System.Net.HttpStatusCode.NotFound => NotFound(result),
+                System.Net.HttpStatusCode.BadRequest => BadRequest(result),
                 _ => BadRequest(result)
             };
 
@@ -19,6 +20,7 @@ namespace Moderation.Service.API.Controllers
             {
                 System.Net.HttpStatusCode.OK => Ok(result),
                 System.Net.HttpStatusCode.NotFound => NotFound(result),
+                System.Net.HttpStatusCode.BadRequest => BadRequest(result),
                 _ => BadRequest(result)
             };
     }
