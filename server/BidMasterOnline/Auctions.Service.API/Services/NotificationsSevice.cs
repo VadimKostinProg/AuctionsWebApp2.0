@@ -24,7 +24,7 @@ namespace Auctions.Service.API.Services
 
             string title = "Your auction request has been approved!";
 
-            string message = "We are happy to inform you, that your auction request has been successfully approved." +
+            string message = "We are happy to inform you, that your auction request has been successfully approved. " +
                              "Now your auction is visible for other users and thay can set bids on your auction.<br>" +
                              "Here is information of the approved auction:<br>" +
                              $"<b>Auction Id</b>: {auctionRequest.Id}<br>" +

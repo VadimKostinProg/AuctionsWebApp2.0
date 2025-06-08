@@ -383,6 +383,10 @@
                id="aimPrice"
                class="form-control"
                formControlName="aimPrice" />
+
+        <div *ngIf="aimPriceError">
+          <span class="text-danger">{{ aimPriceError }}</span>
+        </div>
       </div>
 
       <div *ngIf="error"

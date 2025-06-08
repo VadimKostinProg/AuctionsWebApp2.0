@@ -38,6 +38,8 @@ namespace BidMasterOnline.Domain.Models.Entities
 
         public bool ForceChangePassword { get; set; } = false;
 
+        public string? StripeCustomerId { get; set; }
+
         public string? PaymentMethodId { get; set; }
 
         public bool IsPaymentMethodAttached { get; set; }

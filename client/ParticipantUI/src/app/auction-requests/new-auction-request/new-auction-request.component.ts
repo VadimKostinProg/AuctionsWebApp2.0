@@ -40,6 +40,8 @@ export class NewAuctionRequestComponent implements OnInit, AfterViewInit {
 
   requestedStartTimeError: string | null = null;
 
+  aimPriceError: string | null = null;
+
   error: string | null = null;
 
   constructor(private readonly auctionRequestsService: AuctionRequestsService,
@@ -174,7 +176,11 @@ export class NewAuctionRequestComponent implements OnInit, AfterViewInit {
   }
 
   onSubmit() {
-    if (!this.createAuctionRequestForm!.valid || !this.validateAuctionTime() || !this.validateFinishIntervalTime()) {
+    if (!this.createAuctionRequestForm!.valid ||
+      !this.validateAuctionTime() ||
+      !this.validateFinishIntervalTime() ||
+      !this.validateRequestedStartTime() ||
+      !this.validateAimPrice()) {
       return;
     }
 
@@ -190,7 +196,6 @@ export class NewAuctionRequestComponent implements OnInit, AfterViewInit {
       requestedAuctionTime: `${formValue.auctionTimeDays}.${formValue.auctionTimeHours}:0:0`,
       startPrice: formValue.startPrice,
       bidAmountInterval: formValue.bidAmountInterval,
-      aimPrice: formValue.aimPrice
     } as PostAuctionRequest;
 
     if (this.isDynamicFinishMethod(formValue.finishMethodId)) {
@@ -199,6 +204,10 @@ export class NewAuctionRequestComponent implements OnInit, AfterViewInit {
 
     if (formValue.requestStartTimeFlag) {
       auctionRequest.requestedStartTime = formValue.requestedStartTime;
+    }
+
+    if (this.showAimPrice) {
+      auctionRequest.aimPrice = formValue.aimPrice;
     }
 
     this.spinnerService.show();
@@ -252,7 +261,7 @@ export class NewAuctionRequestComponent implements OnInit, AfterViewInit {
   }
 
   private validateRequestedStartTime(): boolean {
-    if (!this.requestStartTimeFlag) {
+    if (!this.requestStartTimeFlag!.value) {
       return true;
     }
 
@@ -276,6 +285,29 @@ export class NewAuctionRequestComponent implements OnInit, AfterViewInit {
     }
 
     this.requestedStartTimeError = null;
+
+    return true;
+  }
+
+  private validateAimPrice() {
+    if (!this.showAimPrice)
+      return true;
+
+    if (this.showAimPrice && !this.aimPrice!.value) {
+      this.aimPriceError = 'Enter aim price';
+
+      return false;
+    }
+
+    const minAimPrice = this.startPrice!.value + this.bidAmountInterval!.value;
+
+    if (this.aimPrice!.value <= minAimPrice) {
+      this.aimPriceError = `Aim price should be more then $${minAimPrice}`;
+
+      return false;
+    }
+
+    this.aimPriceError = null;
 
     return true;
   }

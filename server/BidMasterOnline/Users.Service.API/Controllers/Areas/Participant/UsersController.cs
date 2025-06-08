@@ -1,6 +1,7 @@
 ﻿using Azure.Core;
 using BidMasterOnline.Core.Constants;
 using BidMasterOnline.Core.DTO;
+using BidMasterOnline.Core.ServiceContracts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Users.Service.API.DTO.Participant;
@@ -14,18 +15,30 @@ namespace Users.Service.API.Controllers.Areas.Participant
     public class UsersController : BaseController
     {
         private readonly IUserProfilesService _service;
+        private readonly IUserAccessor _userAccessor;
 
-        public UsersController(IUserProfilesService service)
+        public UsersController(IUserProfilesService service,
+            IUserAccessor userAccessor)
         {
             _service = service;
+            _userAccessor = userAccessor;
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetUserProfileInfo([FromRoute] long id)
         {
-            ServiceResult<UserProfileInfoDTO> result = await _service.GetUserProfileInfoAsync(id);
+            if (id == _userAccessor.UserId)
+            {
+                ServiceResult<ExtendedUserProfileInfoDTO> result = await _service.GetOwnUserProfileInfoAsync();
 
-            return FromResult(result);
+                return FromResult(result);
+            }
+            else
+            {
+                ServiceResult<UserProfileInfoDTO> result = await _service.GetUserProfileInfoAsync(id);
+
+                return FromResult(result);
+            }
         }
 
         [HttpPut("password")]

@@ -2,6 +2,7 @@
 using Auctions.Service.API.Extensions;
 using Auctions.Service.API.ServiceContracts;
 using Auctions.Service.API.ServiceContracts.Participant;
+using BidMasterOnline.Core.Constants;
 using BidMasterOnline.Core.DTO;
 using BidMasterOnline.Core.Enums;
 using BidMasterOnline.Core.Extensions;
@@ -207,6 +208,69 @@ namespace Auctions.Service.API.Services.Participant
                 return false;
             }
         }
+
+        public async Task<ServiceResult> SetDeliveryWaybillForAuctionAsync(SetDeliveryWaybillDTO request)
+        {
+            ServiceResult result = new();
+
+            long userId = _userAccessor.UserId;
+
+            Auction? auction = await _repository.GetFirstOrDefaultAsync<Auction>(e => e.Id == request.AuctionId,
+                includeQuery: query => query.Include(e => e.Type)!);
+
+            if (auction == null)
+            {
+                result.IsSuccessfull = false;
+                result.StatusCode = System.Net.HttpStatusCode.NotFound;
+                result.Errors.Add("Auction not found");
+
+                return result;
+            }
+
+            if (!CheckSellerForAuction(auction, userId))
+            {
+                result.IsSuccessfull = false;
+                result.StatusCode = System.Net.HttpStatusCode.BadRequest;
+                result.Errors.Add("Only seller of this auction are allowed to apply delivery of it");
+
+                return result;
+            }
+
+            if (auction.Status != AuctionStatus.Finished)
+            {
+                result.IsSuccessfull = false;
+                result.StatusCode = System.Net.HttpStatusCode.BadRequest;
+                result.Errors.Add("Auction is not finished yet");
+
+                return result;
+            }
+
+            try
+            {
+                auction.IsDeliveryPerformed = true;
+                auction.DeliveryPerformedTime = DateTime.Now;
+                auction.DeliveryWaybill = request.Waybill;
+
+                _repository.Update(auction);
+                await _repository.SaveChangesAsync();
+
+                result.Message = "Your waybill has been successfully saved.";
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, "An error occured while saving waybill for auction.");
+
+                result.IsSuccessfull = false;
+                result.StatusCode = System.Net.HttpStatusCode.InternalServerError;
+                result.Errors.Add("An error occured while saving waybill for auction.");
+            }
+
+            return result;
+        }
+
+        private bool CheckSellerForAuction(Auction auction, long sellerId)
+            => (auction.Type!.Name == AuctionTypes.DuchAuction && auction.WinnerId != sellerId) ||
+               (auction.Type!.Name != AuctionTypes.DuchAuction && auction.AuctioneerId != sellerId);
 
         private ISpecification<Auction> GetSpecification(AuctionSpecificationsDTO specifications)
         {

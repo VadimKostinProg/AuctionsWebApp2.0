@@ -162,7 +162,8 @@ export class AuctionDetailsComponent implements OnInit {
   }
 
   get auctionActionsAreAvailable() {
-    return this.user && this.auctionDetails?.status !== AuctionStatusEnum.CancelledByModerator;
+    return this.user && this.auctionDetails?.status !== AuctionStatusEnum.CancelledByModerator &&
+      this.auctionDetails?.status !== AuctionStatusEnum.CancelledByAuctioneer;
   }
 
   open(content: TemplateRef<any>) {
@@ -244,7 +245,7 @@ export class AuctionDetailsComponent implements OnInit {
 
     const model = {
       auctionId: this.auctionDetails!.id,
-      cancelationReason: cancelationReason
+      cancellationReason: cancelationReason
     } as CancelAuction;
 
     this.auctionsService.cancelAuction(model).subscribe({

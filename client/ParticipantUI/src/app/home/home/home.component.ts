@@ -85,8 +85,6 @@ export class HomeComponent implements OnInit {
   async checkMode(): Promise<void> {
     this.specifications = await this.auctionsQueryParamsService.getAuctionSpecifications();
 
-    console.log(this.specifications);
-
     this.searchMode = this.checkIfSpecificationsAreNotEmpty(this.specifications);
   }
 

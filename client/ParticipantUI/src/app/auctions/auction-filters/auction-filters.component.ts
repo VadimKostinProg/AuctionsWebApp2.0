@@ -6,10 +6,12 @@ import { AuctionsQueryParamsService } from "../../services/auctions-query-params
 import { AuctionResourcesService } from "../../services/auction-resources.service";
 import { forkJoin } from "rxjs";
 import { ToastrService } from "ngx-toastr";
+import { Options } from "@angular-slider/ngx-slider";
 
 @Component({
   selector: 'app-auction-filters',
   templateUrl: './auction-filters.component.html',
+  styleUrls: ['./auction-filters.component.scss'],
   standalone: false
 })
 export class AuctionFiltersComponent implements OnInit {
@@ -19,13 +21,27 @@ export class AuctionFiltersComponent implements OnInit {
   specifications = new AuctionSpecifications();
 
   defaultSliderMin = 100;
-  defaultSliderMax = 9 * 10e5;
+  defaultSliderMax = 900000;
 
   minStartPrice: number = this.defaultSliderMin;
   maxStartPrice: number = this.defaultSliderMax;
+  startPriceOptions: Options = {
+    floor: this.defaultSliderMin,
+    ceil: this.defaultSliderMax,
+    translate: (value: number): string => {
+      return value + '$';
+    }
+  };
 
   minCurrentPrice: number = this.defaultSliderMin;
   maxCurrentPrice: number = this.defaultSliderMax;
+  currentPriceOptions: Options = {
+    floor: this.defaultSliderMin,
+    ceil: this.defaultSliderMax,
+    translate: (value: number): string => {
+      return value + '$';
+    }
+  };
 
   startPriceChanged = false;
   currentPriceChanged = false;
@@ -44,6 +60,14 @@ export class AuctionFiltersComponent implements OnInit {
   async ngOnInit(): Promise<void> {
     this.specifications = await this.auctionsQueryParamsService.getAuctionSpecifications();
 
+    this.minStartPrice = this.specifications.minStartPrice ?? this.defaultSliderMin;
+    this.maxStartPrice = this.specifications.maxStartPrice ?? this.defaultSliderMax;
+    this.startPriceChanged = this.specifications.minStartPrice != null || this.specifications.maxStartPrice != null;
+
+    this.minCurrentPrice = this.specifications.minCurrentPrice ?? this.defaultSliderMin;
+    this.maxCurrentPrice = this.specifications.maxCurrentPrice ?? this.defaultSliderMax;
+    this.currentPriceChanged = this.specifications.minCurrentPrice != null || this.specifications.maxCurrentPrice != null;
+
     forkJoin([
       this.auctionResourcesService.getAuctionCategories(),
       this.auctionResourcesService.getAuctionTypes()
@@ -58,106 +82,138 @@ export class AuctionFiltersComponent implements OnInit {
         error: (err) => {
           if (err?.error?.errors && Array.isArray(err.error.errors)) {
             this.toastrService.error(err.error.errors[0], 'Error');
+          } else {
+            this.toastrService.error('Failed to load auction resources.', 'Error');
           }
         }
       });
   }
 
-  async onSearchPressed(event: string) {
-    this.specifications.searchTerm = event;
-
-    this.onFilterChanged.emit(this.specifications);
-  }
-
-  async onCategoryChanged(category: any) {
-    const value = category.target.value;
-
-    if (this.specifications.categoryId == value) {
-      this.specifications.categoryId = null;
-    } else {
-      this.specifications.categoryId = value;
-    }
-
-    await this.auctionsQueryParamsService.setAuctionSpecifications(this.specifications);
-
-    this.onFilterChanged.emit(this.specifications);
-  }
-
-  async onTypeChanged(type: any) {
-    const value = type.target.value;
-
-    if (this.specifications.typeId == value) {
-      this.specifications.typeId = null;
-    } else {
-      this.specifications.typeId = value;
-    }
-
-    await this.auctionsQueryParamsService.setAuctionSpecifications(this.specifications);
-
-    this.onFilterChanged.emit(this.specifications);
-  }
-
   async onStartPriceFilterChange() {
-    this.startPriceChanged = true;
-
-    this.specifications.minStartPrice = this.minStartPrice;
-    this.specifications.maxStartPrice = this.maxStartPrice;
-
+    if (this.minStartPrice === this.defaultSliderMin && this.maxStartPrice === this.defaultSliderMax) {
+      this.specifications.minStartPrice = null;
+      this.specifications.maxStartPrice = null;
+      this.startPriceChanged = false;
+    } else {
+      this.specifications.minStartPrice = this.minStartPrice;
+      this.specifications.maxStartPrice = this.maxStartPrice;
+      this.startPriceChanged = true;
+    }
     await this.auctionsQueryParamsService.setAuctionSpecifications(this.specifications);
-
     this.onFilterChanged.emit(this.specifications);
   }
 
   async resetStartPrice() {
     this.minStartPrice = this.defaultSliderMin;
     this.maxStartPrice = this.defaultSliderMax;
-
     this.specifications.minStartPrice = null;
     this.specifications.maxStartPrice = null;
-
     this.startPriceChanged = false;
+    await this.auctionsQueryParamsService.setAuctionSpecifications(this.specifications);
+    this.onFilterChanged.emit(this.specifications);
+  }
 
-    this.auctionsQueryParamsService.setAuctionSpecifications(this.specifications);
+  async onSearchPressed(event: string) {
+    this.specifications.searchTerm = event;
+
+    await this.auctionsQueryParamsService.setAuctionSpecifications(this.specifications);
 
     this.onFilterChanged.emit(this.specifications);
   }
 
+  async onCategoryChanged(event: Event) {
+    const target = event.target as HTMLInputElement;
+    const value = target.value;
+
+    if (value === 'all') {
+      this.specifications.categoryId = null;
+    } else {
+      if (this.specifications.categoryId?.toString() === value) {
+        this.specifications.categoryId = null;
+      } else {
+        this.specifications.categoryId = parseInt(value);
+      }
+    }
+
+    await this.auctionsQueryParamsService.setAuctionSpecifications(this.specifications);
+    this.onFilterChanged.emit(this.specifications);
+  }
+
+  async onTypeChanged(event: Event) {
+    const target = event.target as HTMLInputElement;
+    const value = target.value;
+
+    if (value === 'all') {
+      this.specifications.typeId = null;
+    } else {
+      if (this.specifications.typeId?.toString() === value) {
+        this.specifications.typeId = null;
+      } else {
+        this.specifications.typeId = parseInt(value);
+      }
+    }
+
+    await this.auctionsQueryParamsService.setAuctionSpecifications(this.specifications);
+    this.onFilterChanged.emit(this.specifications);
+  }
+
+  async onStatusChanged(event: Event) {
+    const target = event.target as HTMLInputElement;
+    const value = target.value;
+
+    if (value === 'all') {
+      this.specifications.auctionStatus = null;
+    } else {
+      const enumValue = AuctionStatusEnum[value as keyof typeof AuctionStatusEnum];
+
+      if (this.specifications.auctionStatus === enumValue) {
+        this.specifications.auctionStatus = null;
+      } else {
+        this.specifications.auctionStatus = enumValue;
+      }
+    }
+
+    await this.auctionsQueryParamsService.setAuctionSpecifications(this.specifications);
+    this.onFilterChanged.emit(this.specifications);
+  }
+
   async onCurrentPriceFilterChange() {
-    this.currentPriceChanged = true;
-
-    this.specifications.minCurrentPrice = this.minCurrentPrice;
-    this.specifications.maxCurrentPrice = this.maxCurrentPrice;
-
-    this.auctionsQueryParamsService.setAuctionSpecifications(this.specifications);
-
+    if (this.minCurrentPrice === this.defaultSliderMin && this.maxCurrentPrice === this.defaultSliderMax) {
+      this.specifications.minCurrentPrice = null;
+      this.specifications.maxCurrentPrice = null;
+      this.currentPriceChanged = false;
+    } else {
+      this.specifications.minCurrentPrice = this.minCurrentPrice;
+      this.specifications.maxCurrentPrice = this.maxCurrentPrice;
+      this.currentPriceChanged = true;
+    }
+    await this.auctionsQueryParamsService.setAuctionSpecifications(this.specifications);
     this.onFilterChanged.emit(this.specifications);
   }
 
   async resetCurrentPrice() {
     this.minCurrentPrice = this.defaultSliderMin;
     this.maxCurrentPrice = this.defaultSliderMax;
-
     this.specifications.minCurrentPrice = null;
     this.specifications.maxCurrentPrice = null;
-
     this.currentPriceChanged = false;
-
-    this.auctionsQueryParamsService.setAuctionSpecifications(this.specifications);
-
+    await this.auctionsQueryParamsService.setAuctionSpecifications(this.specifications);
     this.onFilterChanged.emit(this.specifications);
   }
 
-  async onStatusChanged(status: any) {
-    const value = status.target.value;
+  async resetAllFilters() {
+    this.specifications = new AuctionSpecifications();
 
-    if (this.specifications.auctionStatus == value) {
-      this.specifications.auctionStatus = null;
-    } else {
-      this.specifications.auctionStatus = AuctionStatusEnum[value as keyof typeof AuctionStatusEnum];
-    }
+    this.minStartPrice = this.defaultSliderMin;
+    this.maxStartPrice = this.defaultSliderMax;
+    this.startPriceChanged = false;
 
-    this.auctionsQueryParamsService.setAuctionSpecifications(this.specifications);
+    this.minCurrentPrice = this.defaultSliderMin;
+    this.maxCurrentPrice = this.defaultSliderMax;
+    this.currentPriceChanged = false;
 
+    await this.auctionsQueryParamsService.setAuctionSpecifications(this.specifications);
     this.onFilterChanged.emit(this.specifications);
+    this.toastrService.info('All filters have been reset.', 'Filters Reset');
   }
 }

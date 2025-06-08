@@ -88,7 +88,7 @@ export class AuctionsService {
   }
 
   cancelAuction(request: CancelAuction): Observable<ServiceMessage> {
-    return this.httpClient.put<ServiceMessage>(this.baseUrl, request);
+    return this.httpClient.put<ServiceMessage>(`${this.baseUrl}/cancel`, request);
   }
 
   getAuctionsHistoryDataTableApiUrl() {

@@ -1,0 +1,59 @@
+<div class="checkout-container">
+  <h2>Checkout for Auction</h2>
+
+  <div *ngIf="loading"
+       class="status-message loading">
+    <div class="spinner"></div>
+    <p>Loading auction details...</p>
+  </div>
+
+  <div *ngIf="error"
+       class="status-message alert-error">
+    <p>{{ error }}</p>
+    <button class="close-btn"
+            (click)="error = null">✖</button>
+  </div>
+
+  <div *ngIf="successMessage"
+       class="status-message alert-success">
+    <p>{{ successMessage }}</p>
+    <button class="close-btn"
+            (click)="successMessage = null">✖</button>
+  </div>
+
+  <div *ngIf="!loading && !error && auction">
+    <div class="auction-details-card">
+      <h3>{{ auction.lotTitle }}</h3>
+      <p><strong>Description:</strong> {{ auction.lotDescription }}</p>
+      <p><strong>Winning Price:</strong> ${{ auction.finishPrice | number:'1.2-2' }}</p>
+      <p><strong>Status: </strong> <span class="auction-status-badge">Finished</span></p>
+      <p *ngIf="auction.isPaymentPerformed"
+         class="paid-status">
+        <i class="fa-solid fa-check-circle"></i> This auction has been paid.
+      </p>
+    </div>
+
+    <div *ngIf="!auction.isPaymentPerformed"
+         class="payment-section">
+      <h3>Confirm Payment</h3>
+      <p>You are about to pay ${{ auction.currentPrice | number:'1.2-2' }} for this auction.</p>
+      <button class="btn btn-main-orange"
+              [disabled]="processingPayment || auction.isPaymentPerformed"
+              (click)="processPayment()">
+        <span *ngIf="!processingPayment">Pay Now</span>
+        <span *ngIf="processingPayment">Processing Payment...</span>
+      </button>
+      <p class="note">By clicking "Pay Now", you authorize the charge to your primary payment method linked to your
+        account.</p>
+    </div>
+  </div>
+
+  <div *ngIf="!loading && !error && !auction">
+    <p class="text-center text-muted">Auction details could not be loaded.</p>
+  </div>
+
+  <div *ngIf="auctionId"
+       class="back-link">
+    <a [routerLink]="['/auctions', auctionId, 'details']">Back to Auction Details</a>
+  </div>
+</div>

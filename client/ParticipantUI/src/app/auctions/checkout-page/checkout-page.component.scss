@@ -1,0 +1,197 @@
+.checkout-container {
+  max-width: 700px;
+  margin: 50px auto;
+  padding: 30px;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background-color: #ffffff;
+  color: #333;
+}
+
+h2 {
+  text-align: center;
+  color: #3f51b5;
+  margin-bottom: 25px;
+  font-size: 2em;
+  font-weight: 600;
+}
+
+h3 {
+  color: #3f51b5;
+  margin-bottom: 15px;
+  font-size: 1.5em;
+  font-weight: 500;
+}
+
+.auction-details-card {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 30px;
+  background-color: #f9f9f9;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+
+  p {
+    margin-bottom: 8px;
+    font-size: 1.1em;
+  }
+  strong {
+    color: #555;
+  }
+}
+
+.auction-status-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 5px;
+  font-weight: bold;
+  font-size: 0.9em;
+  background-color: #e0e0e0;
+  color: #555;
+
+  &.Finished { /* Adjust based on your actual enum/status strings */
+    background-color: #d4edda;
+    color: #155724;
+  }
+  &.Active {
+    background-color: #ffebee;
+    color: #d32f2f;
+  }
+}
+
+.paid-status {
+  color: #388e3c;
+  font-weight: bold;
+  font-size: 1.1em;
+  margin-top: 15px;
+  i {
+    margin-right: 8px;
+    color: #4CAF50;
+  }
+}
+
+.payment-section {
+  padding-top: 20px;
+  border-top: 1px dashed #e0e0e0;
+
+  p {
+    margin-bottom: 15px;
+    line-height: 1.6;
+  }
+}
+
+.note {
+  font-size: 0.9em;
+  color: #777;
+  font-style: italic;
+  margin-top: 15px;
+}
+
+.btn {
+  display: block;
+  width: 100%;
+  padding: 14px 25px;
+  background-color: #3f51b5;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 1.1em;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+
+  &:hover:not(:disabled) {
+    background-color: #303f9f;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  }
+
+  &:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+}
+
+.back-link {
+  text-align: center;
+  margin-top: 30px;
+  a {
+    color: #3f51b5;
+    text-decoration: none;
+    font-weight: 500;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+/* Status Messages (reuse from payment-setup-component) */
+.status-message {
+  padding: 15px 20px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  font-size: 0.95em;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+
+  p {
+    margin: 0;
+  }
+}
+
+.alert-error {
+  background-color: #ffebee;
+  color: #d32f2f;
+  border: 1px solid #ef9a9a;
+}
+
+.alert-success {
+  background-color: #e8f5e9;
+  color: #388e3c;
+  border: 1px solid #a5d6a7;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 1.2em;
+  cursor: pointer;
+  color: inherit;
+  padding: 0;
+  line-height: 1;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.spinner {
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-left-color: #3f51b5;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  animation: spin 1s linear infinite;
+  margin-right: 10px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.status-message.loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #e3f2fd;
+    color: #1976d2;
+    border: 1px solid #90caf9;
+}

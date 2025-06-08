@@ -1,0 +1,128 @@
+.filter-container {
+  padding: 10px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.filter-button {
+  background-color: #e9ecef;
+  color: #495057;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+  padding: 0.5rem 1rem;
+  font-weight: 500;
+  transition: all 0.2s ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 120px;
+}
+
+.filter-button:hover {
+  background-color: #dee2e6;
+  border-color: #adb5bd;
+  color: #343a40;
+}
+
+.filter-button.active-filter {
+  background-color: #007bff;
+  color: #fff;
+  border-color: #007bff;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.filter-button.active-filter:hover {
+  background-color: #0056b3;
+  border-color: #0056b3;
+}
+
+.filter-button i {
+  margin-right: 0.5rem;
+}
+
+.popover-content {
+  padding: 15px;
+  min-width: 250px;
+}
+
+.popover-header {
+  font-size: 1.1em;
+  margin-bottom: 10px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid #eee;
+  color: #343a40;
+}
+
+.list-group-item {
+  cursor: pointer;
+  background-color: #fff;
+  border: none;
+  padding: 8px 0;
+}
+
+.list-group-item:hover {
+  background-color: #f8f9fa;
+}
+
+.list-group-item-action {
+  transition: background-color 0.15s ease-in-out;
+}
+
+.form-check-input {
+  margin-right: 0.75rem;
+}
+
+.price-filter-popover {
+  width: 50vw;
+  max-width: none;
+}
+
+.price-filter-popover .input-group-sm .form-control {
+  text-align: center;
+}
+
+.price-filter-popover .input-group-text {
+  background-color: #e9ecef;
+  border-color: #ced4da;
+  color: #495057;
+}
+
+.price-filter-popover .btn {
+  margin-top: 10px;
+}
+
+.price-filter-popover .btn-primary {
+  background-color: #28a745;
+  border-color: #28a745;
+}
+
+.price-filter-popover .btn-primary:hover {
+  background-color: #218838;
+  border-color: #1e7e34;
+}
+
+.price-filter-popover .btn-outline-secondary {
+  border-color: #dc3545;
+  color: #dc3545;
+}
+
+.price-filter-popover .btn-outline-secondary:hover {
+  background-color: #dc3545;
+  color: #fff;
+}
+
+.btn-outline-secondary {
+  border-color: #6c757d;
+  color: #6c757d;
+  transition: all 0.2s ease-in-out;
+}
+
+.btn-outline-secondary:hover {
+  background-color: #6c757d;
+  color: #fff;
+}
+
+.slider-container {
+  padding: 10px 5px;
+}

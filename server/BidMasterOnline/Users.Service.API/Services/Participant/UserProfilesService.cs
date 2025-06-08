@@ -53,6 +53,26 @@ namespace Users.Service.API.Services.Participant
             return result;
         }
 
+        public async Task<ServiceResult<ExtendedUserProfileInfoDTO>> GetOwnUserProfileInfoAsync()
+        {
+            ServiceResult<ExtendedUserProfileInfoDTO> result = new();
+
+            User? user = await _repository.GetFirstOrDefaultAsync<User>(e => e.Id == _userAccessor.UserId);
+
+            if (user == null)
+            {
+                result.IsSuccessfull = false;
+                result.StatusCode = System.Net.HttpStatusCode.NotFound;
+                result.Errors.Add("User not found.");
+
+                return result;
+            }
+
+            result.Data = user.ToExtendedParticipantUserProfileDTO();
+
+            return result;
+        }
+
         public async Task<ServiceResult<UserProfileInfoDTO>> GetUserProfileInfoAsync(long userId)
         {
             ServiceResult<UserProfileInfoDTO> result = new();
@@ -68,9 +88,7 @@ namespace Users.Service.API.Services.Participant
                 return result;
             }
 
-            result.Data = userId == _userAccessor.UserId
-                ? user.ToExpandedParticipantUserProfileDTO()
-                : user.ToParticipantUserProfileDTO();
+            result.Data = user.ToParticipantUserProfileDTO();
 
             return result;
         }

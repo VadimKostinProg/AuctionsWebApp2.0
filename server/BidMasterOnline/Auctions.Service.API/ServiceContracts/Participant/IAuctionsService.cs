@@ -13,6 +13,8 @@ namespace Auctions.Service.API.ServiceContracts.Participant
 
         Task<ServiceResult> CancelAuctionAsync(CancelAuctionDTO request);
 
+        Task<ServiceResult> SetDeliveryWaybillForAuctionAsync(SetDeliveryWaybillDTO request);
+
         Task<bool> FinishAuctionAsync(long id, CancellationToken? token = null);
 
         Task<bool> SwitchAuctionToActiveAsync(long id);

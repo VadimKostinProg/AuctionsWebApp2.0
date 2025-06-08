@@ -43,7 +43,7 @@
       "UpstreamPathTemplate": "/api/participant/auctions/{id}/"
     },
     {
-      "DownstreamPathTemplate": "/api/participant/auctions/{id}/cancel",
+      "DownstreamPathTemplate": "/api/participant/auctions/cancel",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -52,7 +52,19 @@
         }
       ],
       "UpstreamHttpMethod": [ "OPTIONS", "PUT" ],
-      "UpstreamPathTemplate": "/api/participant/auctions/{id}/cancel"
+      "UpstreamPathTemplate": "/api/participant/auctions/cancel"
+    },
+    {
+      "DownstreamPathTemplate": "/api/participant/auctions/deliveries",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7157
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "POST" ],
+      "UpstreamPathTemplate": "/api/participant/auctions/deliveries"
     },
     {
       "DownstreamPathTemplate": "/api/participant/auction-requests/own?{everything}",
@@ -336,6 +348,44 @@
       ],
       "UpstreamHttpMethod": [ "OPTIONS", "DELETE" ],
       "UpstreamPathTemplate": "/api/participant/users"
+    },
+
+    // Payments.Service.API
+    {
+      "DownstreamPathTemplate": "/api/participant/payments/setup-intent",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7016
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "POST" ],
+      "UpstreamPathTemplate": "/api/participant/payments/setup-intent"
+    },
+    {
+      "DownstreamPathTemplate": "/api/participant/payments/setup-intent-confirm",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7016
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "POST" ],
+      "UpstreamPathTemplate": "/api/participant/payments/setup-intent-confirm"
+    },
+    {
+      "DownstreamPathTemplate": "/api/participant/payments/charge-auction-win",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7016
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "POST" ],
+      "UpstreamPathTemplate": "/api/participant/payments/charge-auction-win"
     },
 
     // Moderator routes

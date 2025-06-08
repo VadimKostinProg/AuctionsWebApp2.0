@@ -19,6 +19,10 @@ namespace Auctions.Service.API.DTO.Participant
 
         public decimal? FinishPrice { get; set; }
 
+        public bool IsPaymentPerformed { get; set; }
+
+        public bool IsDeliveryPerformed { get; set; }
+
         public UserSummaryDTO? Winner { get; set; }
     }
 }

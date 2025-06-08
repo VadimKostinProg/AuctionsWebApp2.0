@@ -45,6 +45,11 @@
                     (click)="open(complaintOnUserModal)">
               Complain
             </button>
+            <a *ngIf="isOwnProfile && !userProfileInfo.isPaymentMethodAttached"
+               class="btn"
+               routerLink="/users/setup-payment">
+              Attach payment methods
+            </a>
             <button *ngIf="isOwnProfile"
                     class="btn"
                     (click)="open(changePasswordModal)">

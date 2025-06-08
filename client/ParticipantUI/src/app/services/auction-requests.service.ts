@@ -43,6 +43,10 @@ export class AuctionRequestsService {
       form.append('finishTimeInterval', auctionRequest.finishTimeInterval);
     }
 
+    if (auctionRequest.aimPrice) {
+      form.append('aimPrice', auctionRequest.aimPrice.toString());
+    }
+
     return this.httpClient.post<ServiceMessage>(this.baseUrl, form);
   }
 

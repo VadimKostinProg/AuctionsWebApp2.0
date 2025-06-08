@@ -7,6 +7,8 @@ namespace Users.Service.API.ServiceContracts.Participant
     {
         Task<ServiceResult<UserProfileInfoDTO>> GetUserProfileInfoAsync(long userId);
 
+        Task<ServiceResult<ExtendedUserProfileInfoDTO>> GetOwnUserProfileInfoAsync();
+
         Task<ServiceResult> ResetPasswordAsync(ResetPasswordDTO request);
 
         Task<ServiceResult> DeleteProfileAsync();

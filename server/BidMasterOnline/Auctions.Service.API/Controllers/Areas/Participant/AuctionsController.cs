@@ -50,4 +50,12 @@ public class AuctionsController : BaseController
 
         return FromResult(result);
     }
+
+    [HttpPost("deliveries")]
+    public async Task<IActionResult> SetDeliveryForAuction([FromBody] SetDeliveryWaybillDTO request)
+    {
+        ServiceResult result = await _service.SetDeliveryWaybillForAuctionAsync(request);
+
+        return FromResult(result);
+    }
 }

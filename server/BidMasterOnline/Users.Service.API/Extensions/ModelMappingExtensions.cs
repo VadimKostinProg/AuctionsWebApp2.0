@@ -21,7 +21,7 @@ namespace Users.Service.API.Extensions
                 TotalWins = entity.TotalWins,
             };
 
-        public static DTO.Participant.ExpandedUserProfileInfoDTO ToExpandedParticipantUserProfileDTO(this User entity)
+        public static DTO.Participant.ExtendedUserProfileInfoDTO ToExtendedParticipantUserProfileDTO(this User entity)
             => new()
             {
                 Id = entity.Id,

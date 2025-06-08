@@ -1,6 +1,6 @@
 ﻿namespace Users.Service.API.DTO.Participant
 {
-    public class ExpandedUserProfileInfoDTO : UserProfileInfoDTO
+    public class ExtendedUserProfileInfoDTO : UserProfileInfoDTO
     {
         public bool IsEmailConfirmed { get; set; }
 
