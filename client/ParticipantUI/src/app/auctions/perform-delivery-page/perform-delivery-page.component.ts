@@ -91,7 +91,7 @@ export class PerformDeliveryPageComponent implements OnInit {
 
     this.auctionService.setDeliveryWaybill(this.auctionId, this.waybillNumber).subscribe({
       next: (response: ServiceMessage) => {
-        this.successMessage = response.message!;
+        this.toastrService.success(response.message!, 'Success');
         this.submittingWaybill = false;
 
         this.router.navigate(['/']);

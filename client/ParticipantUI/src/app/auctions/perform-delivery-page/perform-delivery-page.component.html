@@ -12,15 +12,6 @@
     <p>{{ error }}</p>
   </div>
 
-  <div *ngIf="successMessage"
-       class="status-message alert-success">
-    <p>{{ successMessage }}</p>
-    <button class="close-btn"
-            (click)="successMessage = null">
-      <i class="fa-solid fa-xmark"></i>
-    </button>
-  </div>
-
   <div *ngIf="!loadingAuction && !error && auction">
     <div class="auction-details-card">
       <h3>Auction: {{ auction.lotTitle }}</h3>

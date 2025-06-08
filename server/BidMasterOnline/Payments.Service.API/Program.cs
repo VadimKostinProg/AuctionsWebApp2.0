@@ -2,6 +2,8 @@ using BidMasterOnline.Infrastructure;
 using BidMasterOnline.Core;
 using Payments.Service.API.Configuration;
 using Stripe;
+using Payments.Service.API.ServiceContracts;
+using Payments.Service.API.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -41,6 +43,8 @@ builder.Services.AddCors(options =>
 builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("StripeSettings"));
 
 StripeConfiguration.ApiKey = builder.Configuration.GetSection("StripeSettings:SecretKey").Get<string>();
+
+builder.Services.AddScoped<IPaymentsService, PaymentsService>();
 
 builder.Services.AddControllers();
 
