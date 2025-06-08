@@ -41,6 +41,14 @@ namespace Users.Service.API.Controllers.Areas.Participant
             }
         }
 
+        [HttpGet("payment-method-attachment-status")]
+        public async Task<IActionResult> GetPaymentAttachedStatus()
+        {
+            string status = await _service.GetPaymentAttachmentStatusAsync();
+
+            return Ok(new { Status = status });
+        }
+
         [HttpPut("password")]
         public async Task<IActionResult> UpdatePassword([FromBody] ResetPasswordDTO request)
         {

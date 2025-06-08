@@ -426,3 +426,27 @@
        (click)="modal.close()">Ok</a>
   </div>
 </ng-template>
+
+<ng-template #notAttachedPaymentModal
+             let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title"
+        id="modal-basic-title">
+      Cannot place a bid
+    </h4>
+    <button type="button"
+            class="btn-close"
+            aria-label="Close"
+            (click)="modal.close()"></button>
+  </div>
+  <div class="modal-body">
+    <span>You have not attached any payment method yet. Please, attach payment method before participating in
+      auctions.</span>
+  </div>
+  <div class="modal-footer">
+    <a type="button"
+       class="btn btn-outline-dark"
+       routerLink="/"
+       (click)="modal.close()">Ok</a>
+  </div>
+</ng-template>

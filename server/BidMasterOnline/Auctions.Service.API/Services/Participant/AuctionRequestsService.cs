@@ -98,7 +98,7 @@ namespace Auctions.Service.API.Services.Participant
 
             IDbContextTransaction transaction = _transactionsService.BeginTransaction();
 
-            if (!await _userStatusValidationService.IsActiveAsync())
+            if (!await _userStatusValidationService.IsAbleToParticipateInTrades())
             {
                 result.IsSuccessfull = false;
                 result.StatusCode = System.Net.HttpStatusCode.Forbidden;

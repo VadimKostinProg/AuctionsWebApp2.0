@@ -15,14 +15,17 @@ namespace Users.Service.API.Services.Participant
         private readonly IRepository _repository;
         private readonly IUserAccessor _userAccessor;
         private readonly ILogger<UserProfilesService> _logger;
+        private readonly IUserStatusValidationService _userValidationService;
 
         public UserProfilesService(IRepository repository,
             IUserAccessor userAccessor,
-            ILogger<UserProfilesService> logger)
+            ILogger<UserProfilesService> logger,
+            IUserStatusValidationService userValidationService)
         {
             _repository = repository;
             _userAccessor = userAccessor;
             _logger = logger;
+            _userValidationService = userValidationService;
         }
 
         public async Task<ServiceResult> DeleteProfileAsync()
@@ -91,6 +94,13 @@ namespace Users.Service.API.Services.Participant
             result.Data = user.ToParticipantUserProfileDTO();
 
             return result;
+        }
+
+        public async Task<string> GetPaymentAttachmentStatusAsync()
+        {
+            return await _userValidationService.IsPaymentMethodAttachedAsync()
+                ? "Attached"
+                : "NotAttached";
         }
 
         public async Task<ServiceResult> ResetPasswordAsync(ResetPasswordDTO request)

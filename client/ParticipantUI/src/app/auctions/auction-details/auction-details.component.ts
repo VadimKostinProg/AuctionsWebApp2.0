@@ -18,6 +18,7 @@ import { ComplaintTypeEnum } from '../../models/complaints/complaintTypeEnum';
 import { CancelAuction } from '../../models/auctions/CancelAuction';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserStatusEnum } from '../../models/users/userStatusEnum';
+import { UserProfileService } from '../../services/user-profiles.service';
 
 @Component({
   selector: 'app-auction-details',
@@ -26,8 +27,11 @@ import { UserStatusEnum } from '../../models/users/userStatusEnum';
 })
 export class AuctionDetailsComponent implements OnInit {
 
-  @ViewChild(DataTableComponent)
-  bidsDataTable!: DataTableComponent;
+  @ViewChild(DataTableComponent) bidsDataTable!: DataTableComponent;
+
+  @ViewChild('setBidModal') setBidModal: any;
+  @ViewChild('userBlockedModal') userBlockedModal: any;
+  @ViewChild('notAttachedPaymentModal') notAttachedPaymentModal: any;
 
   auctionDetails: Auction | undefined;
 
@@ -48,18 +52,23 @@ export class AuctionDetailsComponent implements OnInit {
 
   UserStatusEnum = UserStatusEnum;
 
+  isPaymentMethodAttached: boolean = false;
+
   constructor(private readonly toastrService: ToastrService,
     private readonly auctionsService: AuctionsService,
     private readonly authService: AuthService,
     private readonly modalService: NgbModal,
     private readonly complaintsService: ComplaintsService,
     private readonly bidsService: BidsService,
-    private readonly route: ActivatedRoute) {
+    private readonly route: ActivatedRoute,
+    private readonly userProfilesService: UserProfileService) {
 
   }
 
   async ngOnInit() {
     this.user = this.authService.user;
+
+    this.isPaymentMethodAttached = await this.userProfilesService.isPaymentMethodAttached();
 
     this.route.paramMap.subscribe(params => {
       const auctionId = params.get('auctionId');
@@ -168,6 +177,16 @@ export class AuctionDetailsComponent implements OnInit {
 
   open(content: TemplateRef<any>) {
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' })
+  }
+
+  handleBidButtonClick(): void {
+    if (!this.isPaymentMethodAttached) {
+      this.open(this.notAttachedPaymentModal);
+    } else if (this.userStatus === UserStatusEnum.Blocked) {
+      this.open(this.userBlockedModal);
+    } else {
+      this.open(this.setBidModal);
+    }
   }
 
   setBid(modal: any) {

@@ -19,6 +19,12 @@ namespace BidMasterOnline.Core.Services
         public Task<bool> IsActiveAsync()
             => _repository.AnyAsync<User>(e => e.Id == _userAccessor.UserId && e.Status == UserStatus.Active);
 
+        public Task<bool> IsPaymentMethodAttachedAsync()
+            => _repository.AnyAsync<User>(e => e.Id == _userAccessor.UserId && e.IsPaymentMethodAttached);
+
+        public Task<bool> IsAbleToParticipateInTrades()
+            => _repository.AnyAsync<User>(e => e.Id == _userAccessor.UserId && e.Status == UserStatus.Active && e.IsPaymentMethodAttached);
+
         public Task<bool> IsInStatusAsync(UserStatus status)
             => _repository.AnyAsync<User>(e => e.Id == _userAccessor.UserId && e.Status == status);
     }

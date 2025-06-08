@@ -349,6 +349,18 @@
       "UpstreamHttpMethod": [ "OPTIONS", "DELETE" ],
       "UpstreamPathTemplate": "/api/participant/users"
     },
+    {
+      "DownstreamPathTemplate": "/api/participant/payment-method-attachment-status",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7220
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "GET" ],
+      "UpstreamPathTemplate": "/api/participant/payment-method-attachment-status"
+    },
 
     // Payments.Service.API
     {

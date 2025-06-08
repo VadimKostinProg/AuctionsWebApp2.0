@@ -9,6 +9,8 @@ namespace Users.Service.API.ServiceContracts.Participant
 
         Task<ServiceResult<ExtendedUserProfileInfoDTO>> GetOwnUserProfileInfoAsync();
 
+        Task<string> GetPaymentAttachmentStatusAsync();
+
         Task<ServiceResult> ResetPasswordAsync(ResetPasswordDTO request);
 
         Task<ServiceResult> DeleteProfileAsync();

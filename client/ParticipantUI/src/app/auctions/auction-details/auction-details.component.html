@@ -95,7 +95,7 @@
           </div>
           <button *ngIf="auctionDetails.status === AuctionStatusEnum.Active"
                   class="btn default-btn-background bid-button"
-                  (click)="userStatus === UserStatusEnum.Active ? open(setBidModal) : open(userBlockedModal)"
+                  (click)="handleBidButtonClick()"
                   [disabled]="isPlacingBidDisabled">
             Place a bid
           </button>
@@ -289,6 +289,29 @@
   </div>
   <div class="modal-body">
     <span>Your account has been blocked! So, you are not able to place bids for now.</span>
+  </div>
+  <div class="modal-footer">
+    <button type="button"
+            class="btn btn-outline-dark"
+            (click)="modal.close()">Ok</button>
+  </div>
+</ng-template>
+
+<ng-template #notAttachedPaymentModal
+             let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title"
+        id="modal-basic-title">
+      Cannot place a bid
+    </h4>
+    <button type="button"
+            class="btn-close"
+            aria-label="Close"
+            (click)="modal.close()"></button>
+  </div>
+  <div class="modal-body">
+    <span>You have not attached any payment method yet. Please, attach payment method before participating in
+      auctions.</span>
   </div>
   <div class="modal-footer">
     <button type="button"

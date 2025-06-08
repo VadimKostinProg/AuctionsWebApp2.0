@@ -11,14 +11,16 @@ import { NgxSpinnerService } from "ngx-spinner";
 import { AuthService } from "../../services/auth.service";
 import { UserStatusEnum } from "../../models/users/userStatusEnum";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
+import { UserProfileService } from "../../services/user-profiles.service";
 
 @Component({
   selector: 'app-new-auction-request',
   standalone: false,
   templateUrl: './new-auction-request.component.html'
 })
-export class NewAuctionRequestComponent implements OnInit, AfterViewInit {
+export class NewAuctionRequestComponent implements OnInit {
   @ViewChild('userBlockedModal') userBlockedModal: TemplateRef<any> | undefined;
+  @ViewChild('notAttachedPaymentModal') notAttachedPaymentModal: TemplateRef<any> | undefined;
 
   createAuctionRequestForm: FormGroup | undefined;
 
@@ -44,41 +46,47 @@ export class NewAuctionRequestComponent implements OnInit, AfterViewInit {
 
   error: string | null = null;
 
+  isPaymentMethodAttached: boolean = false;
+
   constructor(private readonly auctionRequestsService: AuctionRequestsService,
     private readonly auctionResourcesService: AuctionResourcesService,
     private readonly toastrService: ToastrService,
     private readonly router: Router,
     private readonly modalService: NgbModal,
     private readonly spinnerService: NgxSpinnerService,
-    private readonly authSerivce: AuthService) {
+    private readonly authSerivce: AuthService,
+    private readonly userProfilesService: UserProfileService) {
 
   }
 
-  ngOnInit(): void {
-    this.createAuctionRequestForm = new FormGroup({
-      categoryId: new FormControl<number | null>(null, [Validators.required]),
-      typeId: new FormControl<number | null>(null, [Validators.required]),
-      finishMethodId: new FormControl<number | null>(null, [Validators.required]),
-      lotTitle: new FormControl<string | null>(null, [Validators.required]),
-      lotDescription: new FormControl<string | null>(null, [Validators.required]),
-      auctionTimeDays: new FormControl<number | null>(0, [Validators.required, Validators.min(0), Validators.max(99)]),
-      auctionTimeHours: new FormControl<number | null>(1, [Validators.required, Validators.min(0), Validators.max(23)]),
-      startPrice: new FormControl<number | null>(null, [Validators.required, Validators.min(100), Validators.max(10e9)]),
-      requestStartTimeFlag: new FormControl<boolean>(false),
-      requestedStartTime: new FormControl<Date | null>(null),
-      finishTimeIntervalHours: new FormControl<number | null>(null, [Validators.min(0), Validators.max(5)]),
-      finishTimeIntervalMinutes: new FormControl<number | null>(null, [Validators.min(0), Validators.max(59)]),
-      bidAmountInterval: new FormControl<number | null>(null, [Validators.required, Validators.min(0.01), Validators.max(10e5)]),
-      setAimPriceFlag: new FormControl<boolean>(false),
-      aimPrice: new FormControl<number | null>(null, [Validators.min(100), Validators.max(10e9)])
-    });
-  }
+  async ngOnInit(): Promise<void> {
+    this.isPaymentMethodAttached = await this.userProfilesService.isPaymentMethodAttached();
 
-  ngAfterViewInit(): void {
-    if (this.authSerivce.userStatus === UserStatusEnum.Active)
-      this.fetchAuctionRecources();
-    else
+    if (!this.isPaymentMethodAttached)
+      this.modalService.open(this.notAttachedPaymentModal);
+    if (this.authSerivce.userStatus === UserStatusEnum.Blocked)
       this.modalService.open(this.userBlockedModal);
+    else {
+      this.fetchAuctionRecources();
+
+      this.createAuctionRequestForm = new FormGroup({
+        categoryId: new FormControl<number | null>(null, [Validators.required]),
+        typeId: new FormControl<number | null>(null, [Validators.required]),
+        finishMethodId: new FormControl<number | null>(null, [Validators.required]),
+        lotTitle: new FormControl<string | null>(null, [Validators.required]),
+        lotDescription: new FormControl<string | null>(null, [Validators.required]),
+        auctionTimeDays: new FormControl<number | null>(0, [Validators.required, Validators.min(0), Validators.max(99)]),
+        auctionTimeHours: new FormControl<number | null>(1, [Validators.required, Validators.min(0), Validators.max(23)]),
+        startPrice: new FormControl<number | null>(null, [Validators.required, Validators.min(100), Validators.max(10e9)]),
+        requestStartTimeFlag: new FormControl<boolean>(false),
+        requestedStartTime: new FormControl<Date | null>(null),
+        finishTimeIntervalHours: new FormControl<number | null>(null, [Validators.min(0), Validators.max(5)]),
+        finishTimeIntervalMinutes: new FormControl<number | null>(null, [Validators.min(0), Validators.max(59)]),
+        bidAmountInterval: new FormControl<number | null>(null, [Validators.required, Validators.min(0.01), Validators.max(10e5)]),
+        setAimPriceFlag: new FormControl<boolean>(false),
+        aimPrice: new FormControl<number | null>(null, [Validators.min(100), Validators.max(10e9)])
+      });
+    }
   }
 
   fetchAuctionRecources() {

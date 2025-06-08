@@ -19,7 +19,7 @@ namespace Bids.Service.API.Services.Participant
         private readonly IRepository _repository;
         private readonly IUserAccessor _userAccessor;
         private readonly IBidsPlacingStrategyFactory _bidsPlacingStrategyFactory;
-        private readonly IUserStatusValidationService _userStatusValidationService;
+        private readonly IUserStatusValidationService _userValidationService;
         private readonly ILogger<BidsService> _logger;
         private readonly AuctionsGrpcClient _auctionsClient;
 
@@ -35,7 +35,7 @@ namespace Bids.Service.API.Services.Participant
             _repository = repository;
             _userAccessor = userAccessor;
             _bidsPlacingStrategyFactory = bidsPlacingStrategyFactory;
-            _userStatusValidationService = userStatusValidationService;
+            _userValidationService = userStatusValidationService;
             _logger = logger;
             _auctionsClient = auctionsClient;
         }
@@ -105,7 +105,7 @@ namespace Bids.Service.API.Services.Participant
         {
             ServiceResult result = new();
 
-            if (!await _userStatusValidationService.IsActiveAsync())
+            if (!await _userValidationService.IsAbleToParticipateInTrades())
             {
                 result.IsSuccessfull = false;
                 result.StatusCode = System.Net.HttpStatusCode.Forbidden;
