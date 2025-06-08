@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AuctionsService } from '../../services/auctions.Service';
+import { AuctionsService } from '../../services/auctions.service';
 import { AuctionBasic } from '../../models/auctions/AuctionBasic';
 import { forkJoin } from 'rxjs';
 import { AuctionSpecifications } from '../../models/auctions/auctionSpecifications';

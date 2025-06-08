@@ -10,15 +10,15 @@
   <div *ngIf="error"
        class="status-message alert-error">
     <p>{{ error }}</p>
-    <button class="close-btn"
-            (click)="error = null">✖</button>
   </div>
 
   <div *ngIf="successMessage"
        class="status-message alert-success">
     <p>{{ successMessage }}</p>
     <button class="close-btn"
-            (click)="successMessage = null">✖</button>
+            (click)="successMessage = null">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
   </div>
 
   <div *ngIf="!loading && !error && auction">

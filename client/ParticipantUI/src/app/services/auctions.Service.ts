@@ -91,6 +91,15 @@ export class AuctionsService {
     return this.httpClient.put<ServiceMessage>(`${this.baseUrl}/cancel`, request);
   }
 
+  setDeliveryWaybill(auctionId: number, waybill: string): Observable<ServiceMessage> {
+    const body = {
+      auctionid: auctionId,
+      waybill: waybill
+    }
+
+    return this.httpClient.post<ServiceMessage>(`${this.baseUrl}/deliveries`, body);
+  }
+
   getAuctionsHistoryDataTableApiUrl() {
     return `${this.baseUrl}/own`;
   }

@@ -104,6 +104,14 @@
         <ng-template #auctionActionsPopContent>
           <div class="actions-container">
             <a *ngIf="auctionDetails.status === AuctionStatusEnum.Finished &&
+                      !auctionDetails.isDeliveryPerformed &&
+                      ((auctionDetails.type === 'Dutch Auction' && auctionDetails.winner!.userId === user.userId) ||
+                       (auctionDetails.type !== 'Dutch Auction' && auctionDetails.auctioneer!.userId === user.userId))"
+               [routerLink]="['/auctions', auctionDetails.id, 'perform-delivery']"
+               class="btn">
+              Go to Delivery performing
+            </a>
+            <a *ngIf="auctionDetails.status === AuctionStatusEnum.Finished &&
                       !auctionDetails.isPaymentPerformed &&
                       ((auctionDetails.type === 'Dutch Auction' && auctionDetails.auctioneer!.userId === user.userId) ||
                        (auctionDetails.type !== 'Dutch Auction' && auctionDetails.winner!.userId === user.userId))"

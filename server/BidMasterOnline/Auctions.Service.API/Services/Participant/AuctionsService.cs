@@ -269,8 +269,8 @@ namespace Auctions.Service.API.Services.Participant
         }
 
         private bool CheckSellerForAuction(Auction auction, long sellerId)
-            => (auction.Type!.Name == AuctionTypes.DuchAuction && auction.WinnerId != sellerId) ||
-               (auction.Type!.Name != AuctionTypes.DuchAuction && auction.AuctioneerId != sellerId);
+            => (auction.Type!.Name == AuctionTypes.DuchAuction && auction.WinnerId == sellerId) ||
+               (auction.Type!.Name != AuctionTypes.DuchAuction && auction.AuctioneerId == sellerId);
 
         private ISpecification<Auction> GetSpecification(AuctionSpecificationsDTO specifications)
         {

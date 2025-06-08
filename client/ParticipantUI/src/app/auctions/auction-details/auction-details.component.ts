@@ -5,7 +5,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { QueryParamsService } from '../../services/query-params.service';
 import { UserBasic } from '../../models/users/userBasic';
 import { Auction } from '../../models/auctions/Auction';
-import { AuctionsService } from '../../services/auctions.Service';
+import { AuctionsService } from '../../services/auctions.service';
 import { AuthService } from '../../services/auth.service';
 import { BidsService } from '../../services/bids.service';
 import { AuctionStatusEnum } from '../../models/auctions/auctionStatusEnum';
@@ -171,8 +171,52 @@ export class AuctionDetailsComponent implements OnInit {
   }
 
   get auctionActionsAreAvailable() {
-    return this.user && this.auctionDetails?.status !== AuctionStatusEnum.CancelledByModerator &&
-      this.auctionDetails?.status !== AuctionStatusEnum.CancelledByAuctioneer;
+    if (!this.user || !this.auctionDetails)
+      return false;
+
+    const auction = this.auctionDetails;
+    const currentUser = this.user;
+
+    const isNotCancelled = auction.status !== AuctionStatusEnum.CancelledByModerator &&
+      auction.status !== AuctionStatusEnum.CancelledByAuctioneer;
+
+    if (!isNotCancelled) {
+      return false;
+    }
+
+    let isAnyActionAvailable = false;
+
+    const canPerformDelivery = auction.status === AuctionStatusEnum.Finished &&
+      !auction.isDeliveryPerformed &&
+      (
+        (auction.type === 'Dutch Auction' && auction.winner?.userId === currentUser.userId) ||
+        (auction.type !== 'Dutch Auction' && auction.auctioneer?.userId === currentUser.userId)
+      );
+    if (canPerformDelivery) {
+      isAnyActionAvailable = true;
+    }
+
+    const canGoToPayment = auction.status === AuctionStatusEnum.Finished &&
+      !auction.isPaymentPerformed &&
+      (
+        (auction.type === 'Dutch Auction' && auction.auctioneer?.userId === currentUser.userId) ||
+        (auction.type !== 'Dutch Auction' && auction.winner?.userId === currentUser.userId)
+      );
+    if (canGoToPayment) {
+      isAnyActionAvailable = true;
+    }
+
+    const canComplain = auction.auctioneer?.userId !== currentUser.userId;
+    if (canComplain) {
+      isAnyActionAvailable = true;
+    }
+
+    const canCancel = auction.status === AuctionStatusEnum.Active && auction.auctioneer?.userId === currentUser.userId;
+    if (canCancel) {
+      isAnyActionAvailable = true;
+    }
+
+    return isAnyActionAvailable;
   }
 
   open(content: TemplateRef<any>) {

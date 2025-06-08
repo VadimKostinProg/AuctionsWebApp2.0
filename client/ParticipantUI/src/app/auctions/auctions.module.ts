@@ -11,6 +11,7 @@ import { ToastrModule } from "ngx-toastr";
 import { AuctionFiltersComponent } from "./auction-filters/auction-filters.component";
 import { NgxSliderModule } from "@angular-slider/ngx-slider";
 import { CheckoutPageComponent } from "./checkout-page/checkout-page.component";
+import { PerformDeliveryPageComponent } from "./perform-delivery-page/perform-delivery-page.component";
 
 const routes: Routes = [
   {
@@ -20,6 +21,10 @@ const routes: Routes = [
   {
     path: ':auctionId/checkout',
     component: CheckoutPageComponent
+  },
+  {
+    path: ':auctionId/perform-delivery',
+    component: PerformDeliveryPageComponent
   }
 ];
 
@@ -29,7 +34,8 @@ const routes: Routes = [
     AuctionCardComponent,
     CommentsComponent,
     AuctionFiltersComponent,
-    CheckoutPageComponent
+    CheckoutPageComponent,
+    PerformDeliveryPageComponent
   ],
   imports: [
     CommonModule,

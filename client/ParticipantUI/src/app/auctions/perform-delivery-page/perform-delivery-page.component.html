@@ -1,0 +1,68 @@
+<div class="waybill-container">
+  <h2>Enter Delivery Waybill Number</h2>
+
+  <div *ngIf="loadingAuction"
+       class="status-message loading">
+    <div class="spinner"></div>
+    <p>Loading auction details...</p>
+  </div>
+
+  <div *ngIf="error"
+       class="status-message alert-error">
+    <p>{{ error }}</p>
+  </div>
+
+  <div *ngIf="successMessage"
+       class="status-message alert-success">
+    <p>{{ successMessage }}</p>
+    <button class="close-btn"
+            (click)="successMessage = null">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+
+  <div *ngIf="!loadingAuction && !error && auction">
+    <div class="auction-details-card">
+      <h3>Auction: {{ auction.lotTitle }}</h3>
+      <p><strong>Description:</strong> {{ auction.lotDescription }}</p>
+      <p><strong>Winning Price:</strong> ${{ auction.finishPrice | number:'1.2-2' }}</p>
+      <p><strong>Status: </strong> <span class="auction-status-badge">Finished</span></p>
+      <p *ngIf="!auction.isPaymentPerformed"
+         class="text-warning">
+        <i class="fa-solid fa-triangle-exclamation"></i> Payment for this auction is not yet performed.
+      </p>
+    </div>
+
+    <div class="waybill-form-section">
+      <h3>Enter Waybill Number</h3>
+      <form (ngSubmit)="submitWaybill()">
+        <div class="form-group">
+          <label for="waybillInput">Waybill Number:</label>
+          <input type="text"
+                 id="waybillInput"
+                 class="form-control"
+                 [(ngModel)]="waybillNumber"
+                 name="waybillNumber"
+                 required
+                 minlength="3"
+                 maxlength="50">
+        </div>
+
+        <button type="submit"
+                class="btn btn-primary mt-3"
+                [disabled]="submittingWaybill || !waybillNumber.trim()">
+          <span *ngIf="!submittingWaybill">Save Waybill</span>
+          <span *ngIf="submittingWaybill">Saving...</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <div *ngIf="!loadingAuction && !error && !auction">
+    <p class="text-center text-muted">Auction details could not be loaded or are invalid.</p>
+  </div>
+
+  <div class="back-link">
+    <a [routerLink]="['/auctions', auctionId, 'details']">Back to Auction Details</a>
+  </div>
+</div>

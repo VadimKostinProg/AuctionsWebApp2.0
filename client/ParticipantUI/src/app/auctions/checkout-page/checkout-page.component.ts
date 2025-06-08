@@ -2,7 +2,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PaymentsService } from '../../services/payments.service';
-import { AuctionsService } from '../../services/auctions.Service';
+import { AuctionsService } from '../../services/auctions.service';
 import { Auction } from '../../models/auctions/Auction';
 import { AuctionStatusEnum } from '../../models/auctions/auctionStatusEnum';
 import { ServiceMessage } from '../../models/shared/serviceResult';
@@ -35,7 +35,6 @@ export class CheckoutPageComponent implements OnInit {
   ngOnInit(): void {
     const auctionId = this.route.snapshot.paramMap.get('auctionId');
 
-
     if (!auctionId) {
       this.error = 'Invalid route params.';
       this.loading = false;
@@ -57,8 +56,7 @@ export class CheckoutPageComponent implements OnInit {
           if (this.auction.status !== AuctionStatusEnum.Finished) {
             this.error = 'Auction is not finished yet to performe payment.';
           }
-
-          if (this.auction.status === AuctionStatusEnum.Finished) {
+          else {
             if (this.auction.type === 'Dutch Auction' &&
               this.auction.auctioneer.userId !== this.authService.user.userId) {
               this.error = 'You are not allowed to perform payment of this auction.';
