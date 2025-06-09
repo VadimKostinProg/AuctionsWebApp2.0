@@ -45,6 +45,7 @@ builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Str
 StripeConfiguration.ApiKey = builder.Configuration.GetSection("StripeSettings:SecretKey").Get<string>();
 
 builder.Services.AddScoped<IPaymentsService, PaymentsService>();
+builder.Services.AddScoped<INotificationsService, NotificationsService>();
 
 builder.Services.AddControllers();
 

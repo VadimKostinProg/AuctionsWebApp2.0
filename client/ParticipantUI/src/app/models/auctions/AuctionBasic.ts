@@ -1,4 +1,5 @@
 import { UserBasic } from "../users/userBasic";
+import { AuctionStatusEnum } from "./auctionStatusEnum";
 
 export class AuctionBasic {
   public id!: number;
@@ -10,5 +11,6 @@ export class AuctionBasic {
   public currentPrice!: number;
   public averageScore!: number | null;
   public auctioneer!: UserBasic;
+  public status!: AuctionStatusEnum;
   public imageUrls!: string[];
 }

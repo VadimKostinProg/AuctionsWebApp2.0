@@ -73,6 +73,7 @@ namespace Auctions.Service.API.Extensions
                 StartPrice = entity.StartPrice,
                 CurrentPrice = entity.CurrentPrice,
                 AverageScore = entity.AverageScore,
+                Status = entity.Status,
                 Auctioneer = entity.Auctioneer == null
                     ? null
                     : new BidMasterOnline.Core.DTO.UserSummaryDTO

@@ -40,6 +40,14 @@ export class AuctionsService {
     return this.httpClient.get<ServiceResult<PaginatedList<AuctionBasic>>>(this.baseUrl, { params });
   }
 
+  getNotDeliveredAuctionsForBuyer(): Observable<ServiceResult<Auction[]>> {
+    return this.httpClient.get<ServiceResult<Auction[]>>(`${this.baseUrl}/not-delivered`);
+  }
+
+  getNotPayedAuctionsForSeller(): Observable<ServiceResult<Auction[]>> {
+    return this.httpClient.get<ServiceResult<Auction[]>>(`${this.baseUrl}/not-payed`);
+  }
+
   getUserAuctions(pageNumber: number, pageSize: number): Observable<ServiceResult<PaginatedList<UserAuction>>> {
     const params = new HttpParams()
       .set('pageNumber', pageNumber)

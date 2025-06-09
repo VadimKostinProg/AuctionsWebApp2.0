@@ -6,5 +6,6 @@ namespace Users.Service.API.ServiceContracts
     {
         Task SendMessageOfBlockingUserAsync(User user);
         Task SendMessageOfUnblockingUserAsync(User user);
+        Task SendMessageOfDeletingAccountToUser(User recepient);
     }
 }

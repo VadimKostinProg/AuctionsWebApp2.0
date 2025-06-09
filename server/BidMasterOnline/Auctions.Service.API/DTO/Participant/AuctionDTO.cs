@@ -1,5 +1,4 @@
 ﻿using BidMasterOnline.Core.DTO;
-using BidMasterOnline.Domain.Enums;
 
 namespace Auctions.Service.API.DTO.Participant
 {
@@ -14,8 +13,6 @@ namespace Auctions.Service.API.DTO.Participant
         public TimeSpan AuctionTime { get; set; }
 
         public decimal BidAmountInterval { get; set; }
-
-        public AuctionStatus Status { get; set; }
 
         public decimal? FinishPrice { get; set; }
 

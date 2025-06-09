@@ -15,14 +15,17 @@ namespace Payments.Service.API.Services
         private readonly IRepository _repository;
         private readonly IUserAccessor _userAccessor;
         private readonly ILogger<PaymentsService> _logger;
+        private readonly INotificationsService _notificationsService;
 
         public PaymentsService(IRepository repository,
             IUserAccessor userAccessor,
-            ILogger<PaymentsService> logger)
+            ILogger<PaymentsService> logger,
+            INotificationsService notificationsService)
         {
             _repository = repository;
             _userAccessor = userAccessor;
             _logger = logger;
+            _notificationsService = notificationsService;
         }
 
         public async Task<ServiceResult> ChargeAuctionWin(AuctionPaymentRequest paymentRequest)
@@ -96,7 +99,7 @@ namespace Payments.Service.API.Services
                     }
                 };
 
-                // Cpnfirmation of PaymentIntent
+                // Confirmation of PaymentIntent
                 PaymentIntent paymentIntent = await paymentIntentService.CreateAsync(options);
 
                 if (paymentIntent.Status == "succeeded")
@@ -106,6 +109,8 @@ namespace Payments.Service.API.Services
 
                     _repository.Update(auction);
                     await _repository.SaveChangesAsync();
+
+                    await _notificationsService.SendMessageOfPerformingPaymentToSeller(auction);
 
                     result.Message = "Payment successful!";
 
@@ -231,7 +236,7 @@ namespace Payments.Service.API.Services
         }
 
         private bool CheckPayerForAuction(Auction auction, long payerId)
-            => (auction.Type!.Name == AuctionTypes.DuchAuction && auction.AuctioneerId == payerId) ||
-               (auction.Type!.Name != AuctionTypes.DuchAuction && auction.WinnerId == payerId);
+            => (auction.Type!.Name == AuctionTypes.DutchAuction && auction.AuctioneerId == payerId) ||
+               (auction.Type!.Name != AuctionTypes.DutchAuction && auction.WinnerId == payerId);
     }
 }

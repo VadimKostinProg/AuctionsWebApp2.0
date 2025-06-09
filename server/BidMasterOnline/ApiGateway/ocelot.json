@@ -31,6 +31,30 @@
       "UpstreamPathTemplate": "/api/participant/auctions/own?{everything}"
     },
     {
+      "DownstreamPathTemplate": "/api/participant/auctions/not-delivered",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7157
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "GET" ],
+      "UpstreamPathTemplate": "/api/participant/auctions/not-delivered"
+    },
+    {
+      "DownstreamPathTemplate": "/api/participant/auctions/not-payed",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7157
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "GET" ],
+      "UpstreamPathTemplate": "/api/participant/auctions/not-payed"
+    },
+    {
       "DownstreamPathTemplate": "/api/participant/auctions/{id}/",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [

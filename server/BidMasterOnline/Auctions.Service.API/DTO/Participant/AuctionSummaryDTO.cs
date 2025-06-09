@@ -1,4 +1,5 @@
 ﻿using BidMasterOnline.Core.DTO;
+using BidMasterOnline.Domain.Enums;
 
 namespace Auctions.Service.API.DTO.Participant
 {
@@ -19,6 +20,8 @@ namespace Auctions.Service.API.DTO.Participant
         public decimal CurrentPrice { get; set; }
 
         public double? AverageScore { get; set; }
+
+        public AuctionStatus Status { get; set; }
 
         public UserSummaryDTO? Auctioneer { get; set; }
 

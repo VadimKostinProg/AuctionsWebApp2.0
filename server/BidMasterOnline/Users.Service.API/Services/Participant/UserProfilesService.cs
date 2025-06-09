@@ -6,6 +6,7 @@ using BidMasterOnline.Domain.Enums;
 using BidMasterOnline.Domain.Models.Entities;
 using Users.Service.API.DTO.Participant;
 using Users.Service.API.Extensions;
+using Users.Service.API.ServiceContracts;
 using Users.Service.API.ServiceContracts.Participant;
 
 namespace Users.Service.API.Services.Participant
@@ -16,16 +17,19 @@ namespace Users.Service.API.Services.Participant
         private readonly IUserAccessor _userAccessor;
         private readonly ILogger<UserProfilesService> _logger;
         private readonly IUserStatusValidationService _userValidationService;
+        private readonly INotificationsService _notificationsService;
 
         public UserProfilesService(IRepository repository,
             IUserAccessor userAccessor,
             ILogger<UserProfilesService> logger,
-            IUserStatusValidationService userValidationService)
+            IUserStatusValidationService userValidationService,
+            INotificationsService notificationsService)
         {
             _repository = repository;
             _userAccessor = userAccessor;
             _logger = logger;
             _userValidationService = userValidationService;
+            _notificationsService = notificationsService;
         }
 
         public async Task<ServiceResult> DeleteProfileAsync()
@@ -41,6 +45,8 @@ namespace Users.Service.API.Services.Participant
                 _repository.Update(user);
 
                 await _repository.SaveChangesAsync();
+
+                await _notificationsService.SendMessageOfDeletingAccountToUser(user);
 
                 result.Message = "Your profile has been successfully deleted.";
             }

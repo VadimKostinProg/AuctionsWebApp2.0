@@ -14,6 +14,7 @@ using BidMasterOnline.Domain.Models;
 using BidMasterOnline.Domain.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
+using System.Collections.Generic;
 
 namespace Auctions.Service.API.Services.Participant
 {
@@ -101,6 +102,42 @@ namespace Auctions.Service.API.Services.Participant
             return result;
         }
 
+        public async Task<ServiceResult<IEnumerable<AuctionSummaryDTO>>> GetNotDeliveredAuctionsForBuyerAsync()
+        {
+            ServiceResult<IEnumerable<AuctionSummaryDTO>> result = new();
+
+            long userId = _userAccessor.UserId;
+
+            List<Auction> auctions = await _repository.GetFiltered<Auction>(a => 
+                    (a.Status == AuctionStatus.Finished && a.Type!.Name == AuctionTypes.DutchAuction && a.AuctioneerId == userId && !a.IsDeliveryPerformed) ||
+                    (a.Status == AuctionStatus.Finished && a.Type!.Name != AuctionTypes.DutchAuction && a.WinnerId == userId && !a.IsDeliveryPerformed),
+                    includeQuery: query => query.Include(a => a.Type)!)
+                .OrderBy(a => a.FinishTime)
+                .ToListAsync();
+
+            result.Data = auctions.Select(a => a.ToParticipantSummaryDTO());
+
+            return result;
+        }
+
+        public async Task<ServiceResult<IEnumerable<AuctionSummaryDTO>>> GetNotPayedAuctionsForSellerAsync()
+        {
+            ServiceResult<IEnumerable<AuctionSummaryDTO>> result = new();
+
+            long userId = _userAccessor.UserId;
+
+            List<Auction> auctions = await _repository.GetFiltered<Auction>(a =>
+                    (a.Status == AuctionStatus.Finished && a.Type!.Name == AuctionTypes.DutchAuction && a.WinnerId == userId && !a.IsPaymentPerformed) ||
+                    (a.Status == AuctionStatus.Finished && a.Type!.Name != AuctionTypes.DutchAuction && a.AuctioneerId == userId && !a.IsPaymentPerformed),
+                    includeQuery: query => query.Include(a => a.Type)!)
+                .OrderBy(a => a.FinishTime)
+                .ToListAsync();
+
+            result.Data = auctions.Select(a => a.ToParticipantSummaryDTO());
+
+            return result;
+        }
+
         public virtual async Task<ServiceResult> CancelAuctionAsync(CancelAuctionDTO request)
         {
             ServiceResult result = new();
@@ -134,7 +171,8 @@ namespace Auctions.Service.API.Services.Participant
         public async Task<bool> FinishAuctionAsync(long id, CancellationToken? token = null)
         {
             Auction auction = await _repository.GetByIdAsync<Auction>(id,
-                includeQuery: query => query.Include(e => e.Bids)!);
+                includeQuery: query => query.Include(e => e.Type)
+                                            .Include(e => e.Bids)!);
 
             Bid? winningBid = auction.Bids!.OrderByDescending(b => b.CreatedAt)
                 .FirstOrDefault();
@@ -159,8 +197,8 @@ namespace Auctions.Service.API.Services.Participant
                     _repository.Update(auctionist);
                     _repository.Update(winner);
 
-                    // TODO: send notification to auctionist
-                    // TODO: send notification to winner
+                    await _notificationsService.SendMessageOfFinishingAuctionToBuyer(auction);
+                    await _notificationsService.SendMessageOfFinishingAuctionToSeller(auction);
                 }
                 else
                 {
@@ -186,7 +224,7 @@ namespace Auctions.Service.API.Services.Participant
             }
         }
 
-        public async Task<bool> SwitchAuctionToActiveAsync(long id)
+        public async Task<bool> StartPendingAuctionAsync(long id)
         {
             Auction auction = await _repository.GetByIdAsync<Auction>(id);
 
@@ -194,7 +232,7 @@ namespace Auctions.Service.API.Services.Participant
             {
                 auction.Status = AuctionStatus.Active;
 
-                // TODO: send notification to auctionist
+                await _notificationsService.SendMessageOfStartingAuctionToAuctioneer(auction);
 
                 _repository.Update(auction);
                 await _repository.SaveChangesAsync();
@@ -254,6 +292,8 @@ namespace Auctions.Service.API.Services.Participant
                 _repository.Update(auction);
                 await _repository.SaveChangesAsync();
 
+                await _notificationsService.SendMessageOfPerformingDeliveryToBuyer(auction);
+
                 result.Message = "Your waybill has been successfully saved.";
             }
             catch(Exception ex)
@@ -269,8 +309,8 @@ namespace Auctions.Service.API.Services.Participant
         }
 
         private bool CheckSellerForAuction(Auction auction, long sellerId)
-            => (auction.Type!.Name == AuctionTypes.DuchAuction && auction.WinnerId == sellerId) ||
-               (auction.Type!.Name != AuctionTypes.DuchAuction && auction.AuctioneerId == sellerId);
+            => (auction.Type!.Name == AuctionTypes.DutchAuction && auction.WinnerId == sellerId) ||
+               (auction.Type!.Name != AuctionTypes.DutchAuction && auction.AuctioneerId == sellerId);
 
         private ISpecification<Auction> GetSpecification(AuctionSpecificationsDTO specifications)
         {
