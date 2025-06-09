@@ -18,8 +18,6 @@ namespace Users.Service.API.DTO.Participant
 
         public UserStatus Status { get; set; }
 
-        public string? ImageUrl { get; set; }
-
         public int TotalAuctions { get; set; }
 
         public int CompletedAuctions { get; set; }

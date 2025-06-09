@@ -22,9 +22,6 @@ namespace BidMasterOnline.Infrastructure
         public virtual DbSet<Role> Roles { get; set; }
         public virtual DbSet<SupportTicket> TechnicalSupportRequests { get; set; }
         public virtual DbSet<User> Users { get; set; }
-        public virtual DbSet<WatchList> WatchLists { get; set; }
-        public virtual DbSet<Payment> Payments { get; set; }
-        public virtual DbSet<Delivery> Deliveries { get; set; }
         public virtual DbSet<ModerationLog> ModerationLogs { get; set; }
 
         public ApplicationContext(DbContextOptions<ApplicationContext> options,
@@ -51,11 +48,6 @@ namespace BidMasterOnline.Infrastructure
                 options.HasOne(x => x.Role)
                     .WithMany()
                     .HasForeignKey(u => u.RoleId);
-
-                options.HasMany<WatchList>()
-                    .WithOne()
-                    .HasForeignKey(wl => wl.UserId)
-                    .OnDelete(DeleteBehavior.Restrict);
 
                 options.HasMany<Bid>()
                     .WithOne(b => b.Bidder)
@@ -103,11 +95,6 @@ namespace BidMasterOnline.Infrastructure
                 options.HasMany(a => a.Images)
                     .WithOne()
                     .HasForeignKey(i => i.AuctionId)
-                    .OnDelete(DeleteBehavior.Restrict);
-
-                options.HasMany<WatchList>()
-                    .WithOne(wl => wl.Auction)
-                    .HasForeignKey(wl => wl.AuctionId)
                     .OnDelete(DeleteBehavior.Restrict);
 
                 options.HasMany<AuctionComment>()
@@ -187,24 +174,6 @@ namespace BidMasterOnline.Infrastructure
                 options.HasOne(tsr => tsr.Moderator)
                     .WithMany()
                     .HasForeignKey(tsr => tsr.ModeratorId)
-                    .OnDelete(DeleteBehavior.Restrict);
-            });
-
-            modelBuilder.Entity<Delivery>(options =>
-            {
-                options.HasOne<Auction>()
-                    .WithOne()
-                    .HasForeignKey<Delivery>(p => p.AuctionId)
-                    .OnDelete(DeleteBehavior.Restrict);
-
-                options.HasOne<User>()
-                    .WithOne()
-                    .HasForeignKey<Delivery>(p => p.SellerId)
-                    .OnDelete(DeleteBehavior.Restrict);
-
-                options.HasOne<User>()
-                    .WithOne()
-                    .HasForeignKey<Delivery>(p => p.BuyerId)
                     .OnDelete(DeleteBehavior.Restrict);
             });
 

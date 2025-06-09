@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -23,6 +23,7 @@ import { UserProfileService } from '../../services/user-profiles.service';
 @Component({
   selector: 'app-auction-details',
   templateUrl: './auction-details.component.html',
+  styleUrls: ['./auction-details.component.scss'],
   standalone: false
 })
 export class AuctionDetailsComponent implements OnInit {
@@ -53,6 +54,9 @@ export class AuctionDetailsComponent implements OnInit {
   UserStatusEnum = UserStatusEnum;
 
   isPaymentMethodAttached: boolean = false;
+
+  timeLeft: string = 'Calculating...';
+  private countdownInterval: any;
 
   constructor(private readonly toastrService: ToastrService,
     private readonly auctionsService: AuctionsService,
@@ -116,6 +120,10 @@ export class AuctionDetailsComponent implements OnInit {
     this.auctionsService.getAuctionDetailsById(auctionId).subscribe({
       next: (response) => {
         this.auctionDetails = response.data!;
+
+        if (this.auctionDetails.status === AuctionStatusEnum.Active) {
+          this.startCountdown();
+        }
 
         this.reloadSetBidForm();
       },
@@ -327,5 +335,51 @@ export class AuctionDetailsComponent implements OnInit {
 
   getAuctionBidsApiUrl() {
     return this.bidsService.getAuctionBidsApiUrl(this.auctionDetails!.id);
+  }
+
+  private startCountdown(): void {
+    this.countdownInterval = setInterval(() => {
+      this.updateTimeLeft();
+    }, 1000);
+  }
+
+  private stopCountdown(): void {
+    if (this.countdownInterval) {
+      clearInterval(this.countdownInterval);
+    }
+  }
+
+  private updateTimeLeft(): void {
+    if (!this.auctionDetails || !this.auctionDetails.finishTime) {
+      this.timeLeft = 'N/A';
+      this.stopCountdown();
+      return;
+    }
+
+    const finishTime = new Date(this.auctionDetails.finishTime).getTime();
+    const now = new Date().getTime();
+    const distance = finishTime - now;
+
+    if (distance < 0) {
+      this.timeLeft = 'Auction Finished!';
+      this.stopCountdown();
+      if (this.auctionDetails.status === AuctionStatusEnum.Active) {
+        this.auctionDetails.status = AuctionStatusEnum.Finished;
+      }
+      return;
+    }
+
+    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+    let parts: string[] = [];
+    if (days > 0) parts.push(`${days}d`);
+    if (hours > 0 || days > 0) parts.push(`${hours}h`); // Показуємо години, якщо є дні
+    if (minutes > 0 || hours > 0 || days > 0) parts.push(`${minutes}m`); // Показуємо хвилини, якщо є години або дні
+    parts.push(`${seconds}s`); // Секунди завжди
+
+    this.timeLeft = parts.join(' ');
   }
 }

@@ -45,7 +45,7 @@ export class BidsService {
   getAuctionBidsDataTableOptions(): DataTableOptionsModel {
     return {
       id: 'bids',
-      title: 'Bids',
+      title: '',
       resourceName: 'bid',
       showIndexColumn: false,
       allowCreating: false,

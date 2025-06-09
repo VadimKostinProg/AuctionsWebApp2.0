@@ -336,12 +336,16 @@ namespace Auctions.Service.API.Services.Participant
             if (!string.IsNullOrEmpty(specifications.SearchTerm))
                 builder.With(x => x.LotTitle.Contains(specifications.SearchTerm) || x.LotDescription.Contains(specifications.SearchTerm));
 
-            // TODO: implement sorting
-
             if (!string.IsNullOrEmpty(specifications.SortBy))
             {
                 switch (specifications.SortBy)
                 {
+                    case "name":
+                        builder.OrderBy(x => x.LotTitle, specifications.SortDirection);
+                        break;
+                    case "currentPrice":
+                        builder.OrderBy(x => x.CurrentPrice, specifications.SortDirection);
+                        break;
                     case "popularity":
                         builder.With(x => x.Status == AuctionStatus.Active);
                         builder.OrderBy(x => x.Bids!.Count(), SortDirection.DESC);

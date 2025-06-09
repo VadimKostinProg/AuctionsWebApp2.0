@@ -8,8 +8,6 @@
 
         public double? AverageScore { get; set; }
 
-        public string? ImageUrl { get; set; }
-
         public int TotalAuctions { get; set; }
 
         public int CompletedAuctions { get; set; }

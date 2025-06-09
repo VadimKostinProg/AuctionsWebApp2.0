@@ -1,207 +1,243 @@
 <ng-container *ngIf="userProfileInfo"
-              class="container-fluid">
-  <div class="row">
-    <div class="col-3">
-      <img *ngIf="userProfileInfo.imageUrl; else defaultImage"
-           [src]="userProfileInfo.imageUrl"
-           class="account-image">
-
-      <ng-template #defaultImage>
-        <img src="assets/default-user-image.png"
-             class="account-image">
-      </ng-template>
-    </div>
-    <div class="col-9">
-      <div class="d-flex justify-content-between align-items-start">
-        <div class="row">
-          <h3>{{ userProfileInfo.username }}</h3>
-          <div *ngIf="userProfileInfo.status !== UserStatusEnum.Blocked && userProfileInfo.averageScore"
-               class="col-12 mt-2 mb-2">
-            <span class="h5">
-              <b>Score:</b>
-              {{ userProfileInfo.averageScore }}
-              <i class="fa-solid fa-star fa-xl mr-3"
-                 [ngStyle]="{ 'color': '#b6d714' }"></i>
-            </span>
-          </div>
-          <div class="col-6  d-flex flex-column justify-content-between">
-            <span><b>Full name:</b> {{ userProfileInfo.fullName }}</span>
-            <span><b>Email:</b> {{ userProfileInfo.email }}</span>
-            <span><b>Date of birth:</b> {{ userProfileInfo.dateOfBirth }}</span>
-            <span><b>Status:</b> {{ userProfileInfo.status == UserStatusEnum.Active ? 'Active' :
-              userProfileInfo.status == UserStatusEnum.Blocked ? 'Blocked' : 'Deleted' }}</span>
-          </div>
-          <div class="col-6  d-flex flex-column">
-            <span><b>Total auctions:</b> {{ userProfileInfo.totalAuctions }}</span>
-            <span><b>Completed auctions:</b> {{ userProfileInfo.completedAuctions }}</span>
-            <span><b>Total wins:</b> {{ userProfileInfo.totalWins }}</span>
-          </div>
+              class="container py-4">
+  <div class="card shadow-sm border-0 mb-4 profile-card">
+    <div class="card-body">
+      <div class="row align-items-center">
+        <div class="col-lg-3 col-md-12 text-center mb-3 mb-md-0">
+          <img *ngIf="userProfileInfo.imageUrl; else defaultImage"
+               [src]="userProfileInfo.imageUrl"
+               alt="User Profile Image"
+               class="profile-image rounded-circle border border-3 border-light shadow-sm">
+          <ng-template #defaultImage>
+            <img src="assets/default-user-image.png"
+                 alt="Default User Image"
+                 class="profile-image rounded-circle border border-3 border-light shadow-sm">
+          </ng-template>
         </div>
 
-        <ng-template #profileActionsPopContent>
-          <div class="actions-container">
-            <button *ngIf="!isOwnProfile"
-                    class="btn"
-                    (click)="open(complaintOnUserModal)">
-              Complain
-            </button>
-            <a *ngIf="isOwnProfile && !userProfileInfo.isPaymentMethodAttached"
-               class="btn"
-               routerLink="/users/setup-payment">
-              Attach payment methods
-            </a>
-            <button *ngIf="isOwnProfile"
-                    class="btn"
-                    (click)="open(changePasswordModal)">
-              Change password
-            </button>
-            <button *ngIf="isOwnProfile"
-                    class="btn"
-                    (click)="open(deleteProfileModal)">
-              Delete account
-            </button>
-            <a *ngIf="isOwnProfile"
-               class="btn"
-               routerLink="/users/auctions-history">
-              Auctions history
-            </a>
-            <a *ngIf="isOwnProfile"
-               class="btn"
-               routerLink="/users/bids-history">
-              Bids history
-            </a>
-          </div>
-        </ng-template>
+        <div class="col-lg-9 col-md-12">
+          <div class="d-flex justify-content-between align-items-start mb-3">
+            <div>
+              <h2 class="mb-2 d-flex align-items-center">
+                {{ userProfileInfo.username }}
+              </h2>
 
-        <button type="button"
-                class="btn actions-button"
-                placement="bottom"
-                [ngbPopover]="profileActionsPopContent">
-          <i class="fa-solid fa-ellipsis"></i>
-        </button>
+              <div *ngIf="userProfileInfo.status !== UserStatusEnum.Blocked && userProfileInfo.averageScore"
+                   class="mb-3 d-flex align-items-center">
+                <h5 class="mb-0 me-2">
+                  <strong>Score:</strong> {{ userProfileInfo.averageScore | number: '1.1-1' }}
+                </h5>
+                <i class="fa-solid fa-star fa-xl"
+                   [ngStyle]="{ 'color': '#b6d714' }"></i>
+              </div>
+            </div>
+
+            <ng-template #profileActionsPopContent>
+              <div class="list-group list-group-flush">
+                <button *ngIf="!isOwnProfile"
+                        class="list-group-item list-group-item-action d-flex align-items-center"
+                        (click)="open(complaintOnUserModal)">
+                  <i class="fa-solid fa-flag me-2"></i>Complain
+                </button>
+                <a *ngIf="isOwnProfile && !userProfileInfo.isPaymentMethodAttached"
+                   class="list-group-item list-group-item-action d-flex align-items-center"
+                   routerLink="/users/setup-payment">
+                  <i class="fa-solid fa-credit-card me-2"></i>Attach Payment Methods
+                </a>
+                <button *ngIf="isOwnProfile"
+                        class="list-group-item list-group-item-action d-flex align-items-center"
+                        (click)="open(changePasswordModal)">
+                  <i class="fa-solid fa-key me-2"></i>Change Password
+                </button>
+                <a *ngIf="isOwnProfile"
+                   class="list-group-item list-group-item-action d-flex align-items-center"
+                   routerLink="/users/auctions-history">
+                  <i class="fa-solid fa-gavel me-2"></i>Auctions History
+                </a>
+                <a *ngIf="isOwnProfile"
+                   class="list-group-item list-group-item-action d-flex align-items-center"
+                   routerLink="/users/bids-history">
+                  <i class="fa-solid fa-dollar-sign me-2"></i>Bids History
+                </a>
+                <button *ngIf="isOwnProfile"
+                        class="list-group-item list-group-item-action text-danger d-flex align-items-center"
+                        (click)="open(deleteProfileModal)">
+                  <i class="fa-solid fa-trash-can me-2"></i>Delete Account
+                </button>
+              </div>
+            </ng-template>
+
+            <button type="button"
+                    class="btn btn-outline-secondary"
+                    placement="bottom"
+                    [ngbPopover]="profileActionsPopContent"
+                    popoverTitle="Actions">
+              <i class="fa-solid fa-ellipsis-h"></i>
+            </button>
+          </div>
+
+          <div class="row g-3">
+            <div class="col-md-6">
+              <h5 class="text-secondary mb-3"><i class="fa-solid fa-info-circle me-2"></i>Personal Information</h5>
+              <p class="mb-2"><strong>Full name:</strong> {{ userProfileInfo.fullName }}</p>
+              <p class="mb-2"><strong>Email:</strong> {{ userProfileInfo.email }}</p>
+              <p class="mb-2"><strong>Date of birth:</strong> {{ userProfileInfo.dateOfBirth | date: 'MM-dd-yyyy' }}</p>
+              <p class="mb-0"><strong>Status:</strong>
+                <span class="badge"
+                      [ngClass]="{
+                        'bg-success': userProfileInfo.status === UserStatusEnum.Active,
+                        'bg-danger': userProfileInfo.status === UserStatusEnum.Blocked,
+                        'bg-secondary': userProfileInfo.status === UserStatusEnum.Deleted
+                      }">
+                  {{ userProfileInfo.status == UserStatusEnum.Active ? 'Active' :
+                  userProfileInfo.status == UserStatusEnum.Blocked ? 'Blocked' : 'Deleted' }}
+                </span>
+              </p>
+            </div>
+            <div class="col-md-6">
+              <h5 class="text-secondary mb-3"><i class="fa-solid fa-chart-bar me-2"></i>Auction Statistics</h5>
+              <p class="mb-2"><strong>Total auctions:</strong> {{ userProfileInfo.totalAuctions }}</p>
+              <p class="mb-2"><strong>Completed auctions:</strong> {{ userProfileInfo.completedAuctions }}</p>
+              <p class="mb-0"><strong>Total wins:</strong> {{ userProfileInfo.totalWins }}</p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 
-  <div class="mt-3">
-    <app-user-feedbacks [userId]="userId!"></app-user-feedbacks>
+  <div class="card shadow-sm border-0 mt-4">
+    <div class="card-body">
+      <app-user-feedbacks [userId]="userId!"></app-user-feedbacks>
+    </div>
   </div>
 </ng-container>
 
 <ng-template #complaintOnUserModal
              let-modal>
   <div class="modal-header">
-    <h4 class="modal-title"
-        id="modal-basic-title">
-      Complaint on the user
-    </h4>
+    <h4 class="modal-title text-primary">Complaint on the User</h4>
     <button type="button"
             class="btn-close"
             aria-label="Close"
-            (click)="modal.close()"></button>
+            (click)="modal.dismiss('Cross click')"></button>
   </div>
   <div class="modal-body">
     <form *ngIf="complaintOnUserForm"
           [formGroup]="complaintOnUserForm">
-      <div class="form-field flex mb-2">
-        <div>
-          <label for="complaintText"
-                 class="form-label pt">Complaint text:</label>
-        </div>
-
-        <div class="flex-1">
-          <textarea id="complaintText"
-                    class="form-control"
-                    formControlName="complaintText"></textarea>
+      <div class="mb-3">
+        <label for="complaintText"
+               class="form-label fw-bold">Complaint text:</label>
+        <textarea id="complaintText"
+                  class="form-control"
+                  rows="5"
+                  formControlName="complaintText"
+                  [ngClass]="{'is-invalid': complaintOnUserForm.get('complaintText')?.invalid && (complaintOnUserForm.get('complaintText')?.dirty || complaintOnUserForm.get('complaintText')?.touched)}"></textarea>
+        <div *ngIf="complaintOnUserForm.get('complaintText')?.invalid && (complaintOnUserForm.get('complaintText')?.dirty || complaintOnUserForm.get('complaintText')?.touched)"
+             class="invalid-feedback">
+          <div *ngIf="complaintOnUserForm.get('complaintText')?.errors?.['required']">Complaint text is required.</div>
         </div>
       </div>
     </form>
   </div>
   <div class="modal-footer">
     <button type="button"
-            class="btn default-btn-background"
-            (click)="complainOnUser(modal)">Submit</button>
+            class="btn btn-primary"
+            (click)="complainOnUser(modal)"
+            [disabled]="complaintOnUserForm?.invalid">Submit</button>
   </div>
 </ng-template>
 
 <ng-template #changePasswordModal
              let-modal>
   <div class="modal-header">
-    <h4 class="modal-title"
-        id="modal-basic-title">Change password</h4>
+    <h4 class="modal-title text-primary">Change Password</h4>
     <button type="button"
             class="btn-close"
             aria-label="Close"
-            (click)="modal.close()"></button>
+            (click)="modal.dismiss('Cross click')"></button>
   </div>
   <div class="modal-body">
-    <form [formGroup]="changePasswordForm">
-      <div class="form-field flex mb-2">
-        <div>
-          <label for="currentPassword"
-                 class="form-label pt">Current password:</label>
-        </div>
-
-        <div class="flex-1">
-          <input type="password"
-                 id="currentPassword"
-                 class="form-control"
-                 formControlName="currentPassword" />
-        </div>
-      </div>
-
-      <div class="form-field flex mb-2">
-        <div>
-          <label for="newPassword"
-                 class="form-label pt">New password:</label>
-        </div>
-
-        <div class="flex-1">
-          <input type="password"
-                 id="newPassword"
-                 class="form-control"
-                 formControlName="newPassword" />
+    <form *ngIf="changePasswordForm"
+          [formGroup]="changePasswordForm">
+      <div class="mb-3">
+        <label for="currentPassword"
+               class="form-label fw-bold">Current password:</label>
+        <input type="password"
+               id="currentPassword"
+               class="form-control"
+               formControlName="currentPassword"
+               [ngClass]="{'is-invalid': changePasswordForm.get('currentPassword')?.invalid && (changePasswordForm.get('currentPassword')?.dirty || changePasswordForm.get('currentPassword')?.touched)}" />
+        <div *ngIf="changePasswordForm.get('currentPassword')?.invalid && (changePasswordForm.get('currentPassword')?.dirty || changePasswordForm.get('currentPassword')?.touched)"
+             class="invalid-feedback">
+          <div *ngIf="changePasswordForm.get('currentPassword')?.errors?.['required']">Current password is required.
+          </div>
         </div>
       </div>
 
-      <div class="form-field flex mb-2">
-        <div>
-          <label for="repeatNewPassword"
-                 class="form-label pt">Confirmed new password:</label>
+      <div class="mb-3">
+        <label for="newPassword"
+               class="form-label fw-bold">New password:</label>
+        <input type="password"
+               id="newPassword"
+               class="form-control"
+               formControlName="newPassword"
+               [ngClass]="{'is-invalid': changePasswordForm.get('newPassword')?.invalid && (changePasswordForm.get('newPassword')?.dirty || changePasswordForm.get('newPassword')?.touched)}" />
+        <div *ngIf="changePasswordForm.get('newPassword')?.invalid && (changePasswordForm.get('newPassword')?.dirty || changePasswordForm.get('newPassword')?.touched)"
+             class="invalid-feedback">
+          <div *ngIf="changePasswordForm.get('newPassword')?.errors?.['required']">New password is required.</div>
+          <div *ngIf="changePasswordForm.get('newPassword')?.errors?.['minlength']">New password must be at least 6
+            characters long.</div>
         </div>
+      </div>
 
-        <div class="flex-1">
-          <input type="password"
-                 id="repeatNewPassword"
-                 class="form-control"
-                 formControlName="repeatNewPassword" />
+      <div class="mb-3">
+        <label for="repeatNewPassword"
+               class="form-label fw-bold">Confirm new password:</label>
+        <input type="password"
+               id="repeatNewPassword"
+               class="form-control"
+               formControlName="repeatNewPassword"
+               [ngClass]="{'is-invalid': changePasswordForm.get('repeatNewPassword')?.invalid && (changePasswordForm.get('repeatNewPassword')?.dirty || changePasswordForm.get('repeatNewPassword')?.touched) || (changePasswordForm.hasError('mismatch') && (changePasswordForm.get('newPassword')?.dirty || changePasswordForm.get('newPassword')?.touched || changePasswordForm.get('repeatNewPassword')?.dirty || changePasswordForm.get('repeatNewPassword')?.touched))}" />
+        <div *ngIf="changePasswordForm.get('repeatNewPassword')?.invalid && (changePasswordForm.get('repeatNewPassword')?.dirty || changePasswordForm.get('repeatNewPassword')?.touched)"
+             class="invalid-feedback">
+          <div *ngIf="changePasswordForm.get('repeatNewPassword')?.errors?.['required']">Confirm new password is
+            required.</div>
+        </div>
+        <div *ngIf="changePasswordForm.hasError('mismatch') && (changePasswordForm.get('newPassword')?.dirty || changePasswordForm.get('newPassword')?.touched || changePasswordForm.get('repeatNewPassword')?.dirty || changePasswordForm.get('repeatNewPassword')?.touched)"
+             class="invalid-feedback">
+          Passwords do not match.
         </div>
       </div>
     </form>
   </div>
   <div class="modal-footer">
     <button type="button"
-            class="btn btn-outline-dark"
-            (click)="resetPassword(modal)">Submit</button>
+            class="btn btn-primary"
+            (click)="resetPassword(modal)"
+            [disabled]="changePasswordForm?.invalid">Submit</button>
   </div>
 </ng-template>
 
 <ng-template #deleteProfileModal
              let-modal>
   <div class="modal-header">
-    <h4 class="modal-title"
-        id="modal-basic-title">Delete profile</h4>
+    <h4 class="modal-title text-danger">Delete Profile</h4>
     <button type="button"
             class="btn-close"
             aria-label="Close"
-            (click)="modal.close()"></button>
+            (click)="modal.dismiss('Cross click')"></button>
   </div>
   <div class="modal-body">
-    <span>Are you shure you want to delete your profile?</span>
+    <p class="text-danger"><i class="fa-solid fa-circle-exclamation me-2"></i>Are you sure you want to delete your
+      profile? This action cannot be undone.</p>
   </div>
   <div class="modal-footer">
     <button type="button"
-            class="btn btn-outline-dark"
+            class="btn btn-outline-secondary"
+            (click)="modal.close()">Cancel</button>
+    <button type="button"
+            class="btn btn-danger"
             (click)="deleteProfile(modal)">Delete</button>
   </div>
 </ng-template>
