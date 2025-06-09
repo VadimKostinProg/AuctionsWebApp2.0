@@ -45,6 +45,16 @@ namespace BidMasterOnline.Domain.Models.Entities
 
         public decimal? FinishPrice { get; set; }
 
+        public bool IsPaymentPerformed { get; set; }
+
+        public DateTime? PaymentPerformedTime { get; set; }
+
+        public bool IsDeliveryPerformed { get; set; }
+
+        public DateTime? DeliveryPerformedTime { get; set; }
+
+        public string? DeliveryWaybill { get; set; }
+
         public User? Auctioneer { get; set; }
 
         public User? Winner { get; set; }

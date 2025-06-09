@@ -40,6 +40,14 @@ export class AuctionsService {
     return this.httpClient.get<ServiceResult<PaginatedList<AuctionBasic>>>(this.baseUrl, { params });
   }
 
+  getNotDeliveredAuctionsForBuyer(): Observable<ServiceResult<Auction[]>> {
+    return this.httpClient.get<ServiceResult<Auction[]>>(`${this.baseUrl}/not-delivered`);
+  }
+
+  getNotPayedAuctionsForSeller(): Observable<ServiceResult<Auction[]>> {
+    return this.httpClient.get<ServiceResult<Auction[]>>(`${this.baseUrl}/not-payed`);
+  }
+
   getUserAuctions(pageNumber: number, pageSize: number): Observable<ServiceResult<PaginatedList<UserAuction>>> {
     const params = new HttpParams()
       .set('pageNumber', pageNumber)
@@ -88,7 +96,16 @@ export class AuctionsService {
   }
 
   cancelAuction(request: CancelAuction): Observable<ServiceMessage> {
-    return this.httpClient.put<ServiceMessage>(this.baseUrl, request);
+    return this.httpClient.put<ServiceMessage>(`${this.baseUrl}/cancel`, request);
+  }
+
+  setDeliveryWaybill(auctionId: number, waybill: string): Observable<ServiceMessage> {
+    const body = {
+      auctionid: auctionId,
+      waybill: waybill
+    }
+
+    return this.httpClient.post<ServiceMessage>(`${this.baseUrl}/deliveries`, body);
   }
 
   getAuctionsHistoryDataTableApiUrl() {

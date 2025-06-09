@@ -1,0 +1,44 @@
+<div class="payment-setup-container">
+  <h2>Attach Payment Method</h2>
+
+  <div *ngIf="loading"
+       class="status-message loading">
+    <div class="spinner"></div>
+    <p>Loading payment form...</p>
+  </div>
+
+  <div *ngIf="error"
+       class="status-message alert-error">
+    <p>{{ error }}</p>
+    <button class="close-btn"
+            (click)="error = null">✖</button>
+  </div>
+
+  <div *ngIf="message"
+       class="status-message alert-success">
+    <p>{{ message }}</p>
+    <button class="close-btn"
+            (click)="message = null">✖</button>
+  </div>
+
+  <div [hidden]="loading">
+    <p class="instruction-text">Please enter your card details to verify your payment capability.</p>
+    <p class="instruction-text note">Funds will not be debited immediately. This is only to confirm your card for future
+      payments.</p>
+
+    <div class="form-group">
+      <label for="card-element">Card Details</label>
+      <div id="card-element"
+           #cardElementContainer
+           class="stripe-card-element">
+      </div>
+    </div>
+
+    <button (click)="attachPaymentMethod()"
+            [disabled]="loading"
+            class="btn btn-primary">
+      <span *ngIf="!loading">Attach Card</span>
+      <span *ngIf="loading">Processing...</span>
+    </button>
+  </div>
+</div>

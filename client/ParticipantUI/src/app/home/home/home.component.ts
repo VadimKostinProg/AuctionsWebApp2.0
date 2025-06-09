@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AuctionsService } from '../../services/auctions.Service';
+import { AuctionsService } from '../../services/auctions.service';
 import { AuctionBasic } from '../../models/auctions/AuctionBasic';
 import { forkJoin } from 'rxjs';
 import { AuctionSpecifications } from '../../models/auctions/auctionSpecifications';
@@ -9,6 +9,7 @@ import { AuctionsQueryParamsService } from '../../services/auctions-query-params
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
+  styleUrls: ['./home.component.scss'],
   standalone: false
 })
 export class HomeComponent implements OnInit {
@@ -84,8 +85,6 @@ export class HomeComponent implements OnInit {
 
   async checkMode(): Promise<void> {
     this.specifications = await this.auctionsQueryParamsService.getAuctionSpecifications();
-
-    console.log(this.specifications);
 
     this.searchMode = this.checkIfSpecificationsAreNotEmpty(this.specifications);
   }

@@ -9,11 +9,22 @@ import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { RouterModule, Routes } from "@angular/router";
 import { ToastrModule } from "ngx-toastr";
 import { AuctionFiltersComponent } from "./auction-filters/auction-filters.component";
+import { NgxSliderModule } from "@angular-slider/ngx-slider";
+import { CheckoutPageComponent } from "./checkout-page/checkout-page.component";
+import { PerformDeliveryPageComponent } from "./perform-delivery-page/perform-delivery-page.component";
 
 const routes: Routes = [
   {
     path: ':auctionId/details',
     component: AuctionDetailsComponent
+  },
+  {
+    path: ':auctionId/checkout',
+    component: CheckoutPageComponent
+  },
+  {
+    path: ':auctionId/perform-delivery',
+    component: PerformDeliveryPageComponent
   }
 ];
 
@@ -22,7 +33,9 @@ const routes: Routes = [
     AuctionDetailsComponent,
     AuctionCardComponent,
     CommentsComponent,
-    AuctionFiltersComponent
+    AuctionFiltersComponent,
+    CheckoutPageComponent,
+    PerformDeliveryPageComponent
   ],
   imports: [
     CommonModule,
@@ -33,6 +46,7 @@ const routes: Routes = [
     NgbModule,
     RouterModule,
     ToastrModule.forRoot(),
+    NgxSliderModule
   ],
   exports: [
     AuctionDetailsComponent,

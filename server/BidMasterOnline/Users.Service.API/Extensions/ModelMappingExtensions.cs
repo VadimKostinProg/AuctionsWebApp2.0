@@ -15,13 +15,12 @@ namespace Users.Service.API.Extensions
                 Email = entity.Email,
                 AverageScore = entity.AverageScore,
                 Status = entity.Status,
-                ImageUrl = entity.ImageUrl,
                 TotalAuctions = entity.TotalAuctions,
                 CompletedAuctions = entity.CompletedAuctions,
                 TotalWins = entity.TotalWins,
             };
 
-        public static DTO.Participant.ExpandedUserProfileInfoDTO ToExpandedParticipantUserProfileDTO(this User entity)
+        public static DTO.Participant.ExtendedUserProfileInfoDTO ToExtendedParticipantUserProfileDTO(this User entity)
             => new()
             {
                 Id = entity.Id,
@@ -31,7 +30,6 @@ namespace Users.Service.API.Extensions
                 Email = entity.Email,
                 AverageScore = entity.AverageScore,
                 Status = entity.Status,
-                ImageUrl = entity.ImageUrl,
                 IsEmailConfirmed = entity.IsEmailConfirmed,
                 IsPaymentMethodAttached = entity.IsPaymentMethodAttached,
                 UnblockDateTime = entity.UnblockDateTime,
@@ -77,7 +75,6 @@ namespace Users.Service.API.Extensions
                 AverageScore = entity.AverageScore,
                 Status = entity.Status,
                 Role = entity.Role!.Name,
-                ImageUrl = entity.ImageUrl,
                 IsEmailConfirmed = entity.IsEmailConfirmed,
                 IsPaymentMethodAttached = entity.IsPaymentMethodAttached,
                 BlockingReason = entity.BlockingReason,

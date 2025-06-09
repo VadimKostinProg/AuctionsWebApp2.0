@@ -1,11 +1,11 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { QueryParamsService } from '../../services/query-params.service';
 import { UserBasic } from '../../models/users/userBasic';
 import { Auction } from '../../models/auctions/Auction';
-import { AuctionsService } from '../../services/auctions.Service';
+import { AuctionsService } from '../../services/auctions.service';
 import { AuthService } from '../../services/auth.service';
 import { BidsService } from '../../services/bids.service';
 import { AuctionStatusEnum } from '../../models/auctions/auctionStatusEnum';
@@ -18,16 +18,21 @@ import { ComplaintTypeEnum } from '../../models/complaints/complaintTypeEnum';
 import { CancelAuction } from '../../models/auctions/CancelAuction';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserStatusEnum } from '../../models/users/userStatusEnum';
+import { UserProfileService } from '../../services/user-profiles.service';
 
 @Component({
   selector: 'app-auction-details',
   templateUrl: './auction-details.component.html',
+  styleUrls: ['./auction-details.component.scss'],
   standalone: false
 })
 export class AuctionDetailsComponent implements OnInit {
 
-  @ViewChild(DataTableComponent)
-  bidsDataTable!: DataTableComponent;
+  @ViewChild(DataTableComponent) bidsDataTable!: DataTableComponent;
+
+  @ViewChild('setBidModal') setBidModal: any;
+  @ViewChild('userBlockedModal') userBlockedModal: any;
+  @ViewChild('notAttachedPaymentModal') notAttachedPaymentModal: any;
 
   auctionDetails: Auction | undefined;
 
@@ -48,18 +53,26 @@ export class AuctionDetailsComponent implements OnInit {
 
   UserStatusEnum = UserStatusEnum;
 
+  isPaymentMethodAttached: boolean = false;
+
+  timeLeft: string = 'Calculating...';
+  private countdownInterval: any;
+
   constructor(private readonly toastrService: ToastrService,
     private readonly auctionsService: AuctionsService,
     private readonly authService: AuthService,
     private readonly modalService: NgbModal,
     private readonly complaintsService: ComplaintsService,
     private readonly bidsService: BidsService,
-    private readonly route: ActivatedRoute) {
+    private readonly route: ActivatedRoute,
+    private readonly userProfilesService: UserProfileService) {
 
   }
 
   async ngOnInit() {
     this.user = this.authService.user;
+
+    this.isPaymentMethodAttached = await this.userProfilesService.isPaymentMethodAttached();
 
     this.route.paramMap.subscribe(params => {
       const auctionId = params.get('auctionId');
@@ -107,6 +120,10 @@ export class AuctionDetailsComponent implements OnInit {
     this.auctionsService.getAuctionDetailsById(auctionId).subscribe({
       next: (response) => {
         this.auctionDetails = response.data!;
+
+        if (this.auctionDetails.status === AuctionStatusEnum.Active) {
+          this.startCountdown();
+        }
 
         this.reloadSetBidForm();
       },
@@ -162,11 +179,66 @@ export class AuctionDetailsComponent implements OnInit {
   }
 
   get auctionActionsAreAvailable() {
-    return this.user && this.auctionDetails?.status !== AuctionStatusEnum.CancelledByModerator;
+    if (!this.user || !this.auctionDetails)
+      return false;
+
+    const auction = this.auctionDetails;
+    const currentUser = this.user;
+
+    const isNotCancelled = auction.status !== AuctionStatusEnum.CancelledByModerator &&
+      auction.status !== AuctionStatusEnum.CancelledByAuctioneer;
+
+    if (!isNotCancelled) {
+      return false;
+    }
+
+    let isAnyActionAvailable = false;
+
+    const canPerformDelivery = auction.status === AuctionStatusEnum.Finished &&
+      !auction.isDeliveryPerformed &&
+      (
+        (auction.type === 'Dutch Auction' && auction.winner?.userId === currentUser.userId) ||
+        (auction.type !== 'Dutch Auction' && auction.auctioneer?.userId === currentUser.userId)
+      );
+    if (canPerformDelivery) {
+      isAnyActionAvailable = true;
+    }
+
+    const canGoToPayment = auction.status === AuctionStatusEnum.Finished &&
+      !auction.isPaymentPerformed &&
+      (
+        (auction.type === 'Dutch Auction' && auction.auctioneer?.userId === currentUser.userId) ||
+        (auction.type !== 'Dutch Auction' && auction.winner?.userId === currentUser.userId)
+      );
+    if (canGoToPayment) {
+      isAnyActionAvailable = true;
+    }
+
+    const canComplain = auction.auctioneer?.userId !== currentUser.userId;
+    if (canComplain) {
+      isAnyActionAvailable = true;
+    }
+
+    const canCancel = auction.status === AuctionStatusEnum.Active && auction.auctioneer?.userId === currentUser.userId;
+    if (canCancel) {
+      isAnyActionAvailable = true;
+    }
+
+    return isAnyActionAvailable;
   }
 
   open(content: TemplateRef<any>) {
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' })
+  }
+
+  handleBidButtonClick(): void {
+    if (!this.isPaymentMethodAttached) {
+      this.open(this.notAttachedPaymentModal);
+    } else if (this.userStatus === UserStatusEnum.Blocked) {
+      this.open(this.userBlockedModal);
+    } else {
+      this.open(this.setBidModal);
+    }
   }
 
   setBid(modal: any) {
@@ -244,7 +316,7 @@ export class AuctionDetailsComponent implements OnInit {
 
     const model = {
       auctionId: this.auctionDetails!.id,
-      cancelationReason: cancelationReason
+      cancellationReason: cancelationReason
     } as CancelAuction;
 
     this.auctionsService.cancelAuction(model).subscribe({
@@ -263,5 +335,51 @@ export class AuctionDetailsComponent implements OnInit {
 
   getAuctionBidsApiUrl() {
     return this.bidsService.getAuctionBidsApiUrl(this.auctionDetails!.id);
+  }
+
+  private startCountdown(): void {
+    this.countdownInterval = setInterval(() => {
+      this.updateTimeLeft();
+    }, 1000);
+  }
+
+  private stopCountdown(): void {
+    if (this.countdownInterval) {
+      clearInterval(this.countdownInterval);
+    }
+  }
+
+  private updateTimeLeft(): void {
+    if (!this.auctionDetails || !this.auctionDetails.finishTime) {
+      this.timeLeft = 'N/A';
+      this.stopCountdown();
+      return;
+    }
+
+    const finishTime = new Date(this.auctionDetails.finishTime).getTime();
+    const now = new Date().getTime();
+    const distance = finishTime - now;
+
+    if (distance < 0) {
+      this.timeLeft = 'Auction Finished!';
+      this.stopCountdown();
+      if (this.auctionDetails.status === AuctionStatusEnum.Active) {
+        this.auctionDetails.status = AuctionStatusEnum.Finished;
+      }
+      return;
+    }
+
+    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+    let parts: string[] = [];
+    if (days > 0) parts.push(`${days}d`);
+    if (hours > 0 || days > 0) parts.push(`${hours}h`); // Показуємо години, якщо є дні
+    if (minutes > 0 || hours > 0 || days > 0) parts.push(`${minutes}m`); // Показуємо хвилини, якщо є години або дні
+    parts.push(`${seconds}s`); // Секунди завжди
+
+    this.timeLeft = parts.join(' ');
   }
 }

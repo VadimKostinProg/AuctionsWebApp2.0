@@ -15,6 +15,7 @@ import { UserStatusEnum } from '../../models/users/userStatusEnum';
 @Component({
   selector: 'comments',
   templateUrl: './comments.component.html',
+  styleUrls: ['./comments.component.scss'],
   standalone: false
 })
 export class CommentsComponent implements OnInit {

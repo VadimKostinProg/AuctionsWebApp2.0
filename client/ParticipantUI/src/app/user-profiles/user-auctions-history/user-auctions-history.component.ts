@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { AuctionsService } from "../../services/auctions.Service";
+import { AuctionsService } from "../../services/auctions.service";
 
 @Component({
   selector: 'app-user-auctions-history',

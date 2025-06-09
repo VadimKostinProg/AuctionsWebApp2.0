@@ -75,7 +75,7 @@ namespace Auctions.Service.API.BackgroundJobs
 
                 await Parallel.ForEachAsync(pendingAuctionIds, async (auctionId, token) =>
                 {
-                    if (await _service.SwitchAuctionToActiveAsync(auctionId))
+                    if (await _service.StartPendingAuctionAsync(auctionId))
                         Interlocked.Increment(ref succeededAuctions);
                     else
                         Interlocked.Increment(ref failedAuctions);

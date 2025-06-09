@@ -32,11 +32,9 @@ namespace BidMasterOnline.Domain.Models.Entities
 
         public UserStatus Status { get; set; }
 
-        public string? ImageUrl { get; set; }
-
-        public string? ImagePublicId { get; set; }
-
         public bool ForceChangePassword { get; set; } = false;
+
+        public string? StripeCustomerId { get; set; }
 
         public string? PaymentMethodId { get; set; }
 

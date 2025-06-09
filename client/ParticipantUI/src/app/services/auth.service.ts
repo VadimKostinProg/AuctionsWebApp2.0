@@ -48,7 +48,7 @@ export class AuthService {
     const claims = this.identityClaims;
 
     return {
-      userId: claims['sub'],
+      userId: parseInt(claims['sub']),
       username: claims['preferred_username'],
       email: claims['email']
     }

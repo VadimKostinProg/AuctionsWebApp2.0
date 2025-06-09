@@ -8,9 +8,10 @@ export class Auction extends AuctionBasic {
   public lotDescription!: string;
   public auctionTime!: string;
   public bidAmountInterval!: number;
-  public status!: AuctionStatusEnum;
   public finishPrice?: number | null;
   public winner?: UserBasic | null;
+  public isPaymentPerformed!: boolean;
+  public isDeliveryPerformed!: boolean;
 }
 
 abstract class AuctionResource {

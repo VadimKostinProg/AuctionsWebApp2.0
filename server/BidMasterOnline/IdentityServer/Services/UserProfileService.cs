@@ -1,4 +1,5 @@
-﻿using BidMasterOnline.Core.RepositoryContracts;
+﻿using BidMasterOnline.Core.Constants;
+using BidMasterOnline.Core.RepositoryContracts;
 using BidMasterOnline.Domain.Models.Entities;
 using Duende.IdentityModel;
 using Duende.IdentityServer.Extensions;
@@ -40,7 +41,7 @@ namespace IdentityServer.Services
 
         private static List<Claim> GetUserClaims(User user)
         {
-            return new List<Claim>
+            List<Claim> claims = new List<Claim>
             {
                 new Claim(JwtClaimTypes.Subject, user.Id.ToString()),
                 new Claim(JwtClaimTypes.Name, user.FullName ?? string.Empty),
@@ -49,6 +50,8 @@ namespace IdentityServer.Services
                 new Claim(JwtClaimTypes.Role, user.Role!.Name),
                 new Claim("user_status", user.Status.ToString())
             };
+
+            return claims;
         }
     }
 }

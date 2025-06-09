@@ -9,7 +9,7 @@ namespace Bids.Service.API.Services.Participant
         private readonly Dictionary<string, IBidsPlacingStrategy> _strategies = new()
         {
             { AuctionTypes.EnglishAuction, new EnglishBidsPlacingStrategy() },
-            { AuctionTypes.DuchAuction, new DutchBidsPlacingStrategy() },
+            { AuctionTypes.DutchAuction, new DutchBidsPlacingStrategy() },
         };
 
         public IBidsPlacingStrategy GetStategyByAuctionType(AuctionType auctionType)

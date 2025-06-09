@@ -19,6 +19,16 @@ namespace Auctions.Service.API.DTO.Moderator
 
         public double? AverageScore { get; set; }
 
+        public bool IsPaymentPerformed { get; set; }
+
+        public DateTime? PaymentPerformedTime { get; set; }
+
+        public bool IsDeliveryPerformed { get; set; }
+
+        public DateTime? DeliveryPerformedTime { get; set; }
+
+        public string? DeliveryWaybill { get; set; }
+
         public UserSummaryDTO? Auctioneer { get; set; }
 
         public UserSummaryDTO? Winner { get; set; }

@@ -107,6 +107,39 @@
                 <i class="fas fa-check-circle me-2 text-secondary"></i>
                 <b>Finish method:</b> {{ auctionDetails.finishMethod }}
               </p>
+              <p *ngIf="auctionDetails.status === AuctionStatusEnum.Finished"
+                 class="mb-2">
+                <i class="fas fa-credit-card me-2"
+                   [ngClass]="{'text-success': auctionDetails.isPaymentPerformed, 'text-danger': !auctionDetails.isPaymentPerformed}"></i>
+                <b>Payment: </b>
+                <span *ngIf="auctionDetails.isPaymentPerformed"
+                      class="text-success">Performed</span>
+                <span *ngIf="!auctionDetails.isPaymentPerformed"
+                      class="text-danger">Pending</span>
+                <span *ngIf="auctionDetails.paymentPerformedTime"
+                      class="text-muted ms-1">
+                  ({{ auctionDetails.paymentPerformedTime | date: 'MM-dd-yyyy HH:mm' }})
+                </span>
+              </p>
+              <p *ngIf="auctionDetails.status === AuctionStatusEnum.Finished"
+                 class="mb-2">
+                <i class="fas fa-truck me-2"
+                   [ngClass]="{'text-success': auctionDetails.isDeliveryPerformed, 'text-danger': !auctionDetails.isDeliveryPerformed}"></i>
+                <b>Delivery: </b>
+                <span *ngIf="auctionDetails.isDeliveryPerformed"
+                      class="text-success">Shipped</span>
+                <span *ngIf="!auctionDetails.isDeliveryPerformed"
+                      class="text-danger">Pending</span>
+                <span *ngIf="auctionDetails.deliveryPerformedTime"
+                      class="text-muted ms-1">
+                  ({{ auctionDetails.deliveryPerformedTime | date: 'MM-dd-yyyy HH:mm' }})
+                </span>
+              </p>
+              <p *ngIf="auctionDetails.deliveryWaybill"
+                 class="mb-2">
+                <i class="fas fa-clipboard-list me-2 text-info"></i>
+                <b>Waybill: </b> {{ auctionDetails.deliveryWaybill }}
+              </p>
             </div>
           </div>
         </div>

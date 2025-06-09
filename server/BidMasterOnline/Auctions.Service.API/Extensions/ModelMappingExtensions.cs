@@ -73,6 +73,7 @@ namespace Auctions.Service.API.Extensions
                 StartPrice = entity.StartPrice,
                 CurrentPrice = entity.CurrentPrice,
                 AverageScore = entity.AverageScore,
+                Status = entity.Status,
                 Auctioneer = entity.Auctioneer == null
                     ? null
                     : new BidMasterOnline.Core.DTO.UserSummaryDTO
@@ -104,6 +105,8 @@ namespace Auctions.Service.API.Extensions
                 CurrentPrice = entity.CurrentPrice,
                 AverageScore = entity.AverageScore,
                 FinishPrice = entity.FinishPrice,
+                IsPaymentPerformed = entity.IsPaymentPerformed,
+                IsDeliveryPerformed = entity.IsDeliveryPerformed,
                 Auctioneer = entity.Auctioneer == null
                     ? null
                     : entity.Auctioneer.ToSummaryDTO(),
@@ -242,6 +245,11 @@ namespace Auctions.Service.API.Extensions
                 StartPrice = entity.StartPrice,
                 CurrentPrice = entity.CurrentPrice,
                 AverageScore = entity.AverageScore,
+                IsPaymentPerformed = entity.IsPaymentPerformed,
+                PaymentPerformedTime = entity.PaymentPerformedTime,
+                IsDeliveryPerformed = entity.IsDeliveryPerformed,
+                DeliveryPerformedTime = entity.DeliveryPerformedTime,
+                DeliveryWaybill = entity.DeliveryWaybill,
                 CancellationReason = entity.CancellationReason,
                 Auctioneer = entity.Auctioneer == null
                     ? null

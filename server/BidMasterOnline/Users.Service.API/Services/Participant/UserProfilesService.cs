@@ -6,6 +6,7 @@ using BidMasterOnline.Domain.Enums;
 using BidMasterOnline.Domain.Models.Entities;
 using Users.Service.API.DTO.Participant;
 using Users.Service.API.Extensions;
+using Users.Service.API.ServiceContracts;
 using Users.Service.API.ServiceContracts.Participant;
 
 namespace Users.Service.API.Services.Participant
@@ -15,14 +16,20 @@ namespace Users.Service.API.Services.Participant
         private readonly IRepository _repository;
         private readonly IUserAccessor _userAccessor;
         private readonly ILogger<UserProfilesService> _logger;
+        private readonly IUserStatusValidationService _userValidationService;
+        private readonly INotificationsService _notificationsService;
 
         public UserProfilesService(IRepository repository,
             IUserAccessor userAccessor,
-            ILogger<UserProfilesService> logger)
+            ILogger<UserProfilesService> logger,
+            IUserStatusValidationService userValidationService,
+            INotificationsService notificationsService)
         {
             _repository = repository;
             _userAccessor = userAccessor;
             _logger = logger;
+            _userValidationService = userValidationService;
+            _notificationsService = notificationsService;
         }
 
         public async Task<ServiceResult> DeleteProfileAsync()
@@ -39,6 +46,8 @@ namespace Users.Service.API.Services.Participant
 
                 await _repository.SaveChangesAsync();
 
+                await _notificationsService.SendMessageOfDeletingAccountToUser(user);
+
                 result.Message = "Your profile has been successfully deleted.";
             }
             catch(Exception ex)
@@ -49,6 +58,26 @@ namespace Users.Service.API.Services.Participant
                 result.StatusCode = System.Net.HttpStatusCode.InternalServerError;
                 result.Errors.Add("An error occured while deleting profile.");
             }
+
+            return result;
+        }
+
+        public async Task<ServiceResult<ExtendedUserProfileInfoDTO>> GetOwnUserProfileInfoAsync()
+        {
+            ServiceResult<ExtendedUserProfileInfoDTO> result = new();
+
+            User? user = await _repository.GetFirstOrDefaultAsync<User>(e => e.Id == _userAccessor.UserId);
+
+            if (user == null)
+            {
+                result.IsSuccessfull = false;
+                result.StatusCode = System.Net.HttpStatusCode.NotFound;
+                result.Errors.Add("User not found.");
+
+                return result;
+            }
+
+            result.Data = user.ToExtendedParticipantUserProfileDTO();
 
             return result;
         }
@@ -68,11 +97,16 @@ namespace Users.Service.API.Services.Participant
                 return result;
             }
 
-            result.Data = userId == _userAccessor.UserId
-                ? user.ToExpandedParticipantUserProfileDTO()
-                : user.ToParticipantUserProfileDTO();
+            result.Data = user.ToParticipantUserProfileDTO();
 
             return result;
+        }
+
+        public async Task<string> GetPaymentAttachmentStatusAsync()
+        {
+            return await _userValidationService.IsPaymentMethodAttachedAsync()
+                ? "Attached"
+                : "NotAttached";
         }
 
         public async Task<ServiceResult> ResetPasswordAsync(ResetPasswordDTO request)

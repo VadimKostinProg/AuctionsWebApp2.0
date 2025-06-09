@@ -35,6 +35,22 @@ public class AuctionsController : BaseController
         return FromResult(result);
     }
 
+    [HttpGet("not-delivered")]
+    public async Task<IActionResult> GetNotDeliveredAuctions()
+    {
+        ServiceResult<IEnumerable<AuctionSummaryDTO>> result = await _service.GetNotDeliveredAuctionsForBuyerAsync();
+
+        return FromResult(result);
+    }
+
+    [HttpGet("not-payed")]
+    public async Task<IActionResult> GetNotPayedAuctions()
+    {
+        ServiceResult<IEnumerable<AuctionSummaryDTO>> result = await _service.GetNotPayedAuctionsForSellerAsync();
+
+        return FromResult(result);
+    }
+
     [HttpGet("{id}")]
     public async Task<IActionResult> GetAuctionById([FromRoute] long id)
     {
@@ -47,6 +63,14 @@ public class AuctionsController : BaseController
     public async Task<IActionResult> CancelAuction([FromBody] CancelAuctionDTO request)
     {
         ServiceResult result = await _service.CancelAuctionAsync(request);
+
+        return FromResult(result);
+    }
+
+    [HttpPost("deliveries")]
+    public async Task<IActionResult> SetDeliveryForAuction([FromBody] SetDeliveryWaybillDTO request)
+    {
+        ServiceResult result = await _service.SetDeliveryWaybillForAuctionAsync(request);
 
         return FromResult(result);
     }

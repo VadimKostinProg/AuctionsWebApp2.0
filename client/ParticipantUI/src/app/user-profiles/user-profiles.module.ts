@@ -9,6 +9,7 @@ import { UserFeedbacksComponent } from "./user-feedbacks/user-feedbacks.componen
 import { SharedModule } from "../shared/shared.module";
 import { UserAuctionsHistoryComponent } from "./user-auctions-history/user-auctions-history.component";
 import { UserBidsHistoryComponent } from "./user-bids-history/user-bids-history.component";
+import { PaymentSetupComponent } from "./payment-setup/payment-setup.component";
 
 const routes: Routes = [
   {
@@ -18,6 +19,10 @@ const routes: Routes = [
   {
     path: 'bids-history',
     component: UserBidsHistoryComponent
+  },
+  {
+    path: 'setup-payment',
+    component: PaymentSetupComponent
   },
   {
     path: ':userId',
@@ -30,7 +35,8 @@ const routes: Routes = [
     UserProfileComponent,
     UserFeedbacksComponent,
     UserAuctionsHistoryComponent,
-    UserBidsHistoryComponent
+    UserBidsHistoryComponent,
+    PaymentSetupComponent
   ],
   imports: [
     CommonModule,

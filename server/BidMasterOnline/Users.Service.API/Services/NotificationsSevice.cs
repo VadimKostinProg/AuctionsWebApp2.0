@@ -57,5 +57,25 @@ namespace Users.Service.API.Services
 
             await _notificationsQueue.PushNotificationAsync(notification);
         }
+
+        public async Task SendMessageOfDeletingAccountToUser(User recepient)
+        {
+            string title = "Your account has been deleted.";
+
+            string message = "We are informing you that your account has been deleted. " +
+                             "Thank you for collaboration with BidMasterOnline!" +
+                             "<br><br>Best regards," +
+                             "<br>BidMasterOnline Technical Support Team.";
+
+            EmailNotificationDTO notification = new()
+            {
+                RecipientEmail = recepient.Email,
+                RecipientName = recepient.FullName,
+                Subject = title,
+                BodyHtml = message
+            };
+
+            await _notificationsQueue.PushNotificationAsync(notification);
+        }
     }
 }

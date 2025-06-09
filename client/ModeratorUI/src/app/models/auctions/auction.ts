@@ -11,6 +11,11 @@ export class Auction extends AuctionBasic {
   status!: AuctionStatusEnum;
   cancellationReason?: string | null;
   averageScore?: number | null;
+  isPaymentPerformed!: boolean;
+  paymentPerformedTime?: string | null;
+  isDeliveryPerformed!: boolean;
+  deliveryPerformedTime?: string | null;
+  deliveryWaybill?: string | null;
   auctioneer!: UserBasic;
   winner?: UserBasic | null;
   imageUrls!: string[];

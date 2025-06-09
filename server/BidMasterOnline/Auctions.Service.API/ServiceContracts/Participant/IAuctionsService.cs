@@ -9,12 +9,18 @@ namespace Auctions.Service.API.ServiceContracts.Participant
 
         Task<ServiceResult<PaginatedList<AuctionSummaryDTO>>> GetUserAuctionsAsync(PaginationRequestDTO pagination);
 
+        Task<ServiceResult<IEnumerable<AuctionSummaryDTO>>> GetNotDeliveredAuctionsForBuyerAsync();
+
+        Task<ServiceResult<IEnumerable<AuctionSummaryDTO>>> GetNotPayedAuctionsForSellerAsync();
+
         Task<ServiceResult<AuctionDTO>> GetAuctionByIdAsync(long id);
 
         Task<ServiceResult> CancelAuctionAsync(CancelAuctionDTO request);
 
+        Task<ServiceResult> SetDeliveryWaybillForAuctionAsync(SetDeliveryWaybillDTO request);
+
         Task<bool> FinishAuctionAsync(long id, CancellationToken? token = null);
 
-        Task<bool> SwitchAuctionToActiveAsync(long id);
+        Task<bool> StartPendingAuctionAsync(long id);
     }
 }
