@@ -98,6 +98,12 @@
                   <i class="fas fa-calendar-alt me-2 text-muted"></i><b>Requested Start Time:</b>
                   {{auctionRequestDetails.requestedStartTime | date: 'MM-dd-yyyy HH:mm'}}
                 </p>
+                <p class="mb-2">
+                  <i class="fas fa-user me-2 text-muted"></i><b>Requesting user:</b>
+                  <a [routerLink]="['/users', auctionRequestDetails.requestedByUser.userId]">
+                    {{auctionRequestDetails.requestedByUser.username}}
+                  </a>
+                </p>
               </div>
             </div>
 
@@ -221,10 +227,3 @@
             (click)="declineAuctionRequest(modal)">Submit</button>
   </div>
 </ng-template>
-
-<ngx-spinner bdColor="rgba(0,0,0,0.8)"
-             size="medium"
-             color="#fff"
-             type="line-scale-pulse-out"
-             [fullScreen]="true">
-</ngx-spinner>

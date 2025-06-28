@@ -14,7 +14,6 @@ using BidMasterOnline.Domain.Models;
 using BidMasterOnline.Domain.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
-using System.Collections.Generic;
 
 namespace Auctions.Service.API.Services.Participant
 {
@@ -181,6 +180,7 @@ namespace Auctions.Service.API.Services.Participant
 
             try
             {
+                
                 auction.Status = AuctionStatus.Finished;
 
                 if (winningBid != null)

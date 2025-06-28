@@ -6,7 +6,6 @@ import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { RouterModule, Routes } from "@angular/router";
 import { NewAuctionRequestComponent } from "./new-auction-request/new-auction-request.component";
 import { ToastrModule } from "ngx-toastr";
-import { NgxSpinnerModule } from "ngx-spinner";
 import { NgSelectModule } from "@ng-select/ng-select";
 import { AuctionRequestsHistoryComponent } from "./auction-requests-history/auction-requests-history.component";
 import { AuctionRequestDetailsComponent } from "./auction-request-details/auction-request-details.component";
@@ -40,8 +39,7 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     NgbModule,
     NgSelectModule,
-    ToastrModule.forRoot(),
-    NgxSpinnerModule.forRoot(),
+    ToastrModule.forRoot()
   ],
   exports: []
 })

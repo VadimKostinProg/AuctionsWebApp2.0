@@ -1,0 +1,1 @@
+D:\Projects\AuctionsWebApp2.0\server\Notifications.Service.API\.sonarqube\out\2

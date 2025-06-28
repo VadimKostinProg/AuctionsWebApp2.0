@@ -10,7 +10,7 @@
 
         public required string FinishMethod { get; set; }
 
-        public DateTime? RequestedStartTime { get; set; }
+        public DateTimeOffset? RequestedStartTime { get; set; }
 
         public TimeSpan? FinishTimeInterval { get; set; }
 

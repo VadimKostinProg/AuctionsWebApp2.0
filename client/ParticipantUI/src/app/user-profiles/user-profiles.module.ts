@@ -47,8 +47,6 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     RouterModule,
     SharedModule
-  ],
-  exports: [
   ]
 })
 export class UserProfilesModule { }

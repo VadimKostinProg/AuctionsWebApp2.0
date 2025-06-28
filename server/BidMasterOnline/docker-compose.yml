@@ -55,3 +55,23 @@ services:
       context: .
       dockerfile: Users.Service.API/Dockerfile
 
+
+  notifications.service.api:
+    image: ${DOCKER_REGISTRY-}notificationsserviceapi
+    build:
+      context: .
+      dockerfile: Notifications.Service.API/Dockerfile
+
+
+  participant.ui:
+    image: ${DOCKER_REGISTRY-}participantui
+    build:
+      context: ../../client/ParticipantUI
+      dockerfile: Dockerfile
+
+
+  moderator.ui:
+    image: ${DOCKER_REGISTRY-}moderatorui
+    build:
+      context: ../../client/ModeratorUI
+      dockerfile: Dockerfile

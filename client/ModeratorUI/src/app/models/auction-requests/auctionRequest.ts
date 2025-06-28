@@ -1,4 +1,5 @@
 import { BaseEntityModel } from "../baseEntityModel";
+import { UserBasic } from "../users/userBasic";
 import { AuctionRequestStatusEnum } from "./auctionRequestStatusEnum";
 
 export class AuctionRequest extends BaseEntityModel {
@@ -8,6 +9,7 @@ export class AuctionRequest extends BaseEntityModel {
   public type!: string;
   public finishMethod!: string;
   public requestedAuctionTime!: string;
+  public requestedByUser!: UserBasic;
   public startPrice!: number;
   public status!: AuctionRequestStatusEnum;
   public requestedStartTime?: Date | null;

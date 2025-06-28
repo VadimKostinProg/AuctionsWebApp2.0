@@ -192,7 +192,7 @@ namespace Auctions.Service.API.Services
 
             User recepient = await _repository.GetByIdAsync<User>(recipientId);
 
-            string performDeliveryPageLink = $"{_participantUIClientUrl}/auctions/{auction.Id}/checkout";
+            string performDeliveryPageLink = $"{_participantUIClientUrl}/auctions/{auction.Id}/perform-delivery";
 
             string title = isWinner
                 ? "You have won the auction!"
@@ -207,7 +207,7 @@ namespace Auctions.Service.API.Services
                        $"<b>Lot</b>: {auction.LotTitle}<br>" +
                        $"<b>Description</b>: {auction.LotDescription}<br>" +
                        $"<b>Finish price</b>: ${auction.FinishPrice}<br>" +
-                       $"<br><br>Please, go to the <a href=\"${performDeliveryPageLink}\">delivery perorming page</a> and perform delivery of the auction lot." +
+                       $"<br><br>Please, go to the <a href=\"{performDeliveryPageLink}\">delivery perorming page</a> and perform delivery of the auction lot." +
                        "We hope you will manage to perform delivery within 3 days not to make any inconviniance for buyer." +
                        "<br><br>Best regards," +
                        "<br>BidMasterOnline Technical Support Team.";
@@ -248,7 +248,7 @@ namespace Auctions.Service.API.Services
                        $"<b>Lot</b>: {auction.LotTitle}<br>" +
                        $"<b>Description</b>: {auction.LotDescription}<br>" +
                        $"<b>Finish price</b>: ${auction.FinishPrice}<br>" +
-                       $"<br><br>Please, go to the <a href=\"${checkoutPageLink}\">checkout page</a> and peform payment for auction lot." +
+                       $"<br><br>Please, go to the <a href=\"{checkoutPageLink}\">checkout page</a> and peform payment for auction lot." +
                        "We hope you will manage to perform payment within 3 days not to make any inconviniance for seller." +
                        "<br><br>Best regards," +
                        "<br>BidMasterOnline Technical Support Team.";

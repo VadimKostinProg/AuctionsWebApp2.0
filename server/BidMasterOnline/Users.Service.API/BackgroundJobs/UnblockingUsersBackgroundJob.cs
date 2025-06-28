@@ -10,16 +10,16 @@ namespace Users.Service.API.BackgroundJobs
 {
     public class UnblockingUsersBackgroundJob : IJob
     {
+        private readonly IServiceScopeFactory _scopeFactory;
         private readonly IRepository _repository;
-        private readonly IUsersService _userProfilesService;
         private readonly ILogger<UnblockingUsersBackgroundJob> _logger;
 
-        public UnblockingUsersBackgroundJob(IRepository repository,
-            IUsersService userProfilesService,
+        public UnblockingUsersBackgroundJob(IServiceScopeFactory scopeFactory,
+            IRepository repository,
             ILogger<UnblockingUsersBackgroundJob> logger)
         {
+            _scopeFactory = scopeFactory;
             _repository = repository;
-            _userProfilesService = userProfilesService;
             _logger = logger;
         }
 
@@ -28,7 +28,7 @@ namespace Users.Service.API.BackgroundJobs
             _logger.LogInformation("UnblockingUsersBackgroundJob: started work...");
 
             List<long> blockedUserIds = await _repository
-                .GetFiltered<User>(e => e.Status == UserStatus.Blocked && e.UnblockDateTime.HasValue && e.UnblockDateTime >= DateTime.UtcNow)
+                .GetFiltered<User>(e => e.Status == UserStatus.Blocked && e.UnblockDateTime.HasValue && e.UnblockDateTime <= DateTime.UtcNow)
                 .Select(user => user.Id)
                 .ToListAsync();
 
@@ -53,7 +53,11 @@ namespace Users.Service.API.BackgroundJobs
 
                 await Parallel.ForEachAsync(blockedUserIds, async (userId, token) =>
                 {
-                    ServiceResult result = await _userProfilesService.UnblockUserAsync(userId, token);
+                    using IServiceScope scope = _scopeFactory.CreateScope();
+
+                    IUsersService service = scope.ServiceProvider.GetRequiredService<IUsersService>();
+
+                    ServiceResult result = await service.UnblockUserAsync(userId, token);
 
                     if (result.IsSuccessfull)
                         Interlocked.Increment(ref succeededUsers);

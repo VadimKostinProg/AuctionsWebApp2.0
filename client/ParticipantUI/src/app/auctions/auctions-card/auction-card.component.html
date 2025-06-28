@@ -33,10 +33,8 @@
     </p>
 
     <p class="card-text price-info mb-2">
-      <span class="current-price-label">Current Bid:</span>
+      <span class="current-price-label">Current Bid: </span>
       <span class="current-price">${{ auction.currentPrice | number:'1.2-2' }}</span>
-      <span *ngIf="showStartPrice"
-            class="start-price text-muted"> / Start: ${{ auction.startPrice | number:'1.2-2' }}</span>
     </p>
 
     <p *ngIf="showCountdown"

@@ -11,7 +11,8 @@
         "identityserver": "StartDebugging",
         "moderation.service.api": "StartDebugging",
         "payments.service.api": "StartDebugging",
-        "users.service.api": "StartDebugging"
+        "users.service.api": "StartDebugging",
+        "notifications.service.api": "StartDebugging"
       }
     }
   }

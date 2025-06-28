@@ -3,11 +3,9 @@ using BidMasterOnline.Core.Helpers;
 using BidMasterOnline.Core.RepositoryContracts;
 using BidMasterOnline.Domain.Enums;
 using BidMasterOnline.Domain.Models.Entities;
-using Duende.IdentityModel;
 using IdentityServer.Constants;
 using IdentityServer.Services.Contracts;
 using Microsoft.EntityFrameworkCore;
-using System.Security.Claims;
 
 namespace IdentityServer.Services
 {
@@ -47,21 +45,11 @@ namespace IdentityServer.Services
 
             return null;
         }
+
         private async Task<long> GetRoleIdByName(string role)
             => (await _repository.GetFirstOrDefaultAsync<Role>(e => e.Name == role))!.Id;
 
         private bool ValidatePassword(User user, string password)
-            => user.PasswordHashed == CryptographyHelper.Hash(password, user.PasswordSalt); 
-        
-        private static List<Claim> GetUserClaims(User user)
-        {
-            return new List<Claim>
-            {
-                new Claim(JwtClaimTypes.Subject, user.Id.ToString()),
-                new Claim(JwtClaimTypes.Name, user.FullName ?? string.Empty),
-                new Claim(JwtClaimTypes.Email, user.Email ?? string.Empty),
-                new Claim(JwtClaimTypes.Role, user.Role?.Name ?? "User")
-            };
-        }
+            => user.PasswordHashed == CryptographyHelper.Hash(password, user.PasswordSalt);
     }
 }

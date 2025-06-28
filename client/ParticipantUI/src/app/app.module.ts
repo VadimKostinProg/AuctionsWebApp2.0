@@ -1,12 +1,14 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { OAuthModule, OAuthService } from 'angular-oauth2-oidc';
+import { OAuthModule, OAuthService, OAuthStorage } from 'angular-oauth2-oidc';
 import { RouterModule, RouterOutlet, Routes } from '@angular/router';
 import { AuthGuard } from './auth.guard';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { AppComponent } from './app.component';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideToastr } from 'ngx-toastr';
+import { LoadingInterceptor } from './interceptors/loading.interceptor';
+import { DatePipe } from '@angular/common';
 
 const routes: Routes = [
   {
@@ -39,6 +41,9 @@ const routes: Routes = [
     provideHttpClient(withInterceptorsFromDi()),
     provideAnimations(),
     provideToastr(),
+    { provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true },
+    DatePipe,
+    { provide: OAuthStorage, useValue: localStorage },
   ],
   bootstrap: [AppComponent]
 })

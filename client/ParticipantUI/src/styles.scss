@@ -73,6 +73,10 @@ a {
   @extend .radio-container;
 }
 
+.text-muted {
+  text-wrap: wrap;
+}
+
 .auction-info-container {
   @extend .radio-container;
 }

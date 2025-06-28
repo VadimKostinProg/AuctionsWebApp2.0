@@ -6,6 +6,7 @@ using BidMasterOnline.Domain.Enums;
 using BidMasterOnline.Domain.Models.Entities;
 using Users.Service.API.DTO.Participant;
 using Users.Service.API.Extensions;
+using Users.Service.API.GrpcServices.Client;
 using Users.Service.API.ServiceContracts;
 using Users.Service.API.ServiceContracts.Participant;
 
@@ -19,26 +20,47 @@ namespace Users.Service.API.Services.Participant
         private readonly IUserStatusValidationService _userValidationService;
         private readonly INotificationsService _notificationsService;
 
+        private readonly UserAuctionsGrpcClient _auctionsClient;
+        private readonly UserBidsGrpcClient _bidsClient;
+
         public UserProfilesService(IRepository repository,
             IUserAccessor userAccessor,
             ILogger<UserProfilesService> logger,
             IUserStatusValidationService userValidationService,
-            INotificationsService notificationsService)
+            INotificationsService notificationsService,
+            UserAuctionsGrpcClient auctionsClient,
+            UserBidsGrpcClient bidsClient)
         {
             _repository = repository;
             _userAccessor = userAccessor;
             _logger = logger;
             _userValidationService = userValidationService;
             _notificationsService = notificationsService;
+            _auctionsClient = auctionsClient;
+            _bidsClient = bidsClient;
         }
 
         public async Task<ServiceResult> DeleteProfileAsync()
         {
             ServiceResult result = new();
 
+            long userId = _userAccessor.UserId;
+
+            if (await _repository.AnyAsync<Auction>(a =>
+                a.Status == AuctionStatus.Finished &&
+                (a.AuctioneerId == userId || a.WinnerId == userId) &&
+                (!a.IsPaymentPerformed || !a.IsDeliveryPerformed)))
+            {
+                result.IsSuccessfull = false;
+                result.StatusCode = System.Net.HttpStatusCode.BadRequest;
+                result.Errors.Add("Could not delete profile, while payment and delivery are not performed on your auctions yet.");
+
+                return result;
+            }
+
             try
             {
-                User user = await _repository.GetByIdAsync<User>(_userAccessor.UserId);
+                User user = await _repository.GetByIdAsync<User>(userId);
 
                 user.Status = UserStatus.Deleted;
 
@@ -50,7 +72,7 @@ namespace Users.Service.API.Services.Participant
 
                 result.Message = "Your profile has been successfully deleted.";
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occured while deleting profile.");
 
@@ -122,6 +144,15 @@ namespace Users.Service.API.Services.Participant
                 result.IsSuccessfull = false;
                 result.StatusCode = System.Net.HttpStatusCode.BadRequest;
                 result.Errors.Add("Incorrect current password");
+
+                return result;
+            }
+
+            if (!PasswordFormatValidationHelper.ValidatePasswordFormat(request.NewPassword, out string errors))
+            {
+                result.IsSuccessfull = false;
+                result.StatusCode = System.Net.HttpStatusCode.BadRequest;
+                result.Errors.Add(errors);
 
                 return result;
             }

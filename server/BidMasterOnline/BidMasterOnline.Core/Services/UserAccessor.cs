@@ -52,7 +52,7 @@ namespace BidMasterOnline.Core.Services
 
         public long? TryGetUserId()
         {
-            if (!(_httpContext.User.Identity?.IsAuthenticated ?? false))
+            if (!(_httpContext?.User?.Identity?.IsAuthenticated ?? false))
             {
                 return null;
             }
@@ -68,7 +68,7 @@ namespace BidMasterOnline.Core.Services
 
         public string? TryGetUserName()
         {
-            if (!(_httpContext.User.Identity?.IsAuthenticated ?? false))
+            if (!(_httpContext?.User?.Identity?.IsAuthenticated ?? false))
             {
                 return null;
             }

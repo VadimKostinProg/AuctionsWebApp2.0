@@ -1,5 +1,4 @@
 ﻿using BidMasterOnline.Core.DTO;
-using BidMasterOnline.Domain.Enums;
 
 namespace Auctions.Service.API.DTO.Moderator
 {

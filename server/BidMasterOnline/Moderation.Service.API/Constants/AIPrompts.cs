@@ -118,13 +118,14 @@
             4.	Temporal Analysis: Pay close attention to createdAt timestamps to identify rapid successive bids and last-second bids relative to startTime and finishTime.
             5.	Different auction types: Consider auctionDetails.type to determine if the auction has English, Dutch or other type. In English auctions every next bid amount is more then the previous one. And in Dutch auctions every next bid amount is less then the previous one.
             6.	Participant Identification: Identify unique bidders and their roles.
-            7.	Pattern Detection & Reasoning: For each detected suspicion: 
+            7.  When analyzing for Bid Sniping, consider auctionDetails.aimPrice. If aimPrice is not null and the winning bid amount is more or equals to aimPrice, then it should not be considered as Bid Sniping. It is because auction was finished automatically after last bid amount reached aimPrice, in this case last bidder should not be suspected using last_second_bid fraud pattern.
+            8.	Pattern Detection & Reasoning: For each detected suspicion: 
                 Assign a confidenceScore (from 0.0 to 1.0) reflecting your certainty.
                 Provide clear, concise reasoning explaining why you drew that conclusion, referencing specific bid IDs, bidder IDs/usernames, relevant user statistics, and timestamps where appropriate.
                 List specific detectedPatterns (e.g., ""ping_pong_pattern"", ""last_second_bid"", ""consistent_bidding_on_same_seller_auctions_no_win"", ""new_user_aggressive_bidding_early_stage"").
-            8.	Involved Users Collection: For each suspicion, populate the involvedUsers array. Each user object must include id, username, role in the suspicious activity (e.g., ""Auctioneer"", ""Bidder (Potential Accomplice)"", ""Bidder (Sniping)"", ""Bidder (Newly Registered)"", ""Bidder (Participating in Ping-Pong)""), specific reasoning about their involvement, and relatedBidIds highlighting their suspicious actions.
-            9.	Empty Suspicions Array: If no suspicious activity is detected for an auction, its suspicions array should be empty.
-            10.	Strict JSON Format: Return the response strictly in the specified JSON format. Do not include any additional text or markdown outside the JSON object. Ensure all strings are properly quoted and special characters are escaped if necessary.
+            9.	Involved Users Collection: For each suspicion, populate the involvedUsers array. Each user object must include id, username, role in the suspicious activity (e.g., ""Auctioneer"", ""Bidder (Potential Accomplice)"", ""Bidder (Sniping)"", ""Bidder (Newly Registered)"", ""Bidder (Participating in Ping-Pong)""), specific reasoning about their involvement, and relatedBidIds highlighting their suspicious actions.
+            10.	Empty Suspicions Array: If no suspicious activity is detected for an auction, its suspicions array should be empty.
+            11.	Strict JSON Format: Return the response strictly in the specified JSON format. Do not include any additional text or markdown outside the JSON object. Ensure all strings are properly quoted and special characters are escaped if necessary.
         ";
     }
 }

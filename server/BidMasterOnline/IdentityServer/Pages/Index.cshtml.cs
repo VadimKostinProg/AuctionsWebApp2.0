@@ -5,14 +5,18 @@ using Duende.IdentityServer;
 using System.Reflection;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using BidMasterOnline.Core.Constants;
 
 namespace IdentityServerHost.Pages.Home;
 
 [Authorize]
 public class Index : PageModel
 {
-    public Index(IdentityServerLicense? license = null)
+    private readonly IConfiguration _configuration;
+
+    public Index(IConfiguration configuration, IdentityServerLicense? license = null)
     {
+        _configuration = configuration;
         License = license;
     }
 
@@ -23,5 +27,17 @@ public class Index : PageModel
             ?.InformationalVersion.Split('+').First()
             ?? "unavailable";
     }
+
     public IdentityServerLicense? License { get; }
+
+
+    public string? ClientURL { get; set; }
+
+    public async Task OnGet()
+    {
+        if (User.IsInRole(UserRoles.Participant))
+            ClientURL = _configuration["Clients:ParticipantUI"];
+        else if (User.IsInRole(UserRoles.Moderator))
+            ClientURL = _configuration["Clients:ModeratorUI"];
+    }
 }

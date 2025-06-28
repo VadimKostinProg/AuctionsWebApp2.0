@@ -9,6 +9,7 @@ import { SupportTicketBasic } from "../models/support-tickets/supportTicketBasic
 import { SupportTicket } from "../models/support-tickets/supportTicket";
 import { DataTableOptionsModel } from "../models/shared/dataTableOptionsModel";
 import { SupportTicketStatusEnum } from "../models/support-tickets/supportTicketStatusEnum";
+import { DatePipe } from "@angular/common";
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +17,8 @@ import { SupportTicketStatusEnum } from "../models/support-tickets/supportTicket
 export class SupportTicketsService {
   baseUrl: string = `${environment.apiUrl}${environment.apiPrefix}/support-tickets`;
 
-  constructor(private readonly httpClient: HttpClient) { }
+  constructor(private readonly httpClient: HttpClient,
+    private readonly datePipe: DatePipe) { }
 
   getOwnSupportTickets(pageNumber: number, pageSize: number)
     : Observable<ServiceResult<PaginatedList<SupportTicketBasic>>> {
@@ -64,7 +66,8 @@ export class SupportTicketsService {
         {
           title: 'Created At',
           dataPropName: 'createdAt',
-          isOrderable: false
+          isOrderable: false,
+          transformAction: (value) => this.datePipe.transform(value, 'MM-dd-yyyy HH:mm')
         },
         {
           title: 'Title',

@@ -11,9 +11,9 @@ namespace Auctions.Service.API.DTO.Participant
 
         public required string Category { get; set; }
 
-        public DateTime StartTime { get; set; }
+        public DateTimeOffset StartTime { get; set; }
 
-        public DateTime FinishTime { get; set; }
+        public DateTimeOffset FinishTime { get; set; }
 
         public decimal StartPrice { get; set; }
 

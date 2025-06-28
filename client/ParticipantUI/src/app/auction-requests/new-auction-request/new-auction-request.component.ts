@@ -7,7 +7,6 @@ import { AuctionResourcesService } from "../../services/auction-resources.servic
 import { AuctionCategory, AuctionType, AuctionFinishMethod } from "../../models/auctions/Auction";
 import { forkJoin } from "rxjs";
 import { PostAuctionRequest } from "../../models/auction-requests/postAuctionRequest";
-import { NgxSpinnerService } from "ngx-spinner";
 import { AuthService } from "../../services/auth.service";
 import { UserStatusEnum } from "../../models/users/userStatusEnum";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
@@ -53,7 +52,6 @@ export class NewAuctionRequestComponent implements OnInit {
     private readonly toastrService: ToastrService,
     private readonly router: Router,
     private readonly modalService: NgbModal,
-    private readonly spinnerService: NgxSpinnerService,
     private readonly authSerivce: AuthService,
     private readonly userProfilesService: UserProfileService) {
 
@@ -203,7 +201,7 @@ export class NewAuctionRequestComponent implements OnInit {
       lotDescription: formValue.lotDescription,
       requestedAuctionTime: `${formValue.auctionTimeDays}.${formValue.auctionTimeHours}:0:0`,
       startPrice: formValue.startPrice,
-      bidAmountInterval: formValue.bidAmountInterval,
+      bidAmountInterval: formValue.bidAmountInterval
     } as PostAuctionRequest;
 
     if (this.isDynamicFinishMethod(formValue.finishMethodId)) {
@@ -211,26 +209,20 @@ export class NewAuctionRequestComponent implements OnInit {
     }
 
     if (formValue.requestStartTimeFlag) {
-      auctionRequest.requestedStartTime = formValue.requestedStartTime;
+      auctionRequest.requestedStartTime = new Date(formValue.requestedStartTime);
     }
 
     if (this.showAimPrice) {
       auctionRequest.aimPrice = formValue.aimPrice;
     }
 
-    this.spinnerService.show();
-
     this.auctionRequestsService.postAuctionRequest(auctionRequest).subscribe({
       next: (response) => {
-        this.spinnerService.hide();
-
         this.toastrService.success(response.message!, 'Success');
 
         this.router.navigate(['/']);
       },
       error: (err) => {
-        this.spinnerService.hide();
-
         if (err?.error?.errors && Array.isArray(err.error.errors)) {
           this.toastrService.error(err.error.errors[0], 'Error');
         }
@@ -279,12 +271,12 @@ export class NewAuctionRequestComponent implements OnInit {
     currentTimePlusOneMongth.setMonth(currentTimePlusOneMongth.getMonth() + 1);
 
     if (!this.requestedStartTime || new Date(this.requestedStartTime.value) < currentTimePlusTenMins) {
-      this.finishTimeIntervalError = 'You are not allowed to request auction less than in 10 mins.';
+      this.requestedStartTimeError = 'You are not allowed to request auction in the past or less than in 10 mins.';
 
       return false;
     }
 
-    this.finishTimeIntervalError = null;
+    this.requestedStartTimeError = null;
 
     if (!this.requestedStartTime || new Date(this.requestedStartTime.value) > currentTimePlusOneMongth) {
       this.requestedStartTimeError = 'You are not allowed to request auction more than in 1 mongth.';
@@ -307,12 +299,23 @@ export class NewAuctionRequestComponent implements OnInit {
       return false;
     }
 
-    const minAimPrice = this.startPrice!.value + this.bidAmountInterval!.value;
+    if (this.auctionTypes.find(t => t.id == this.typeId!.value)?.name === 'Dutch Auction') {
+      const maxAimPrice = this.startPrice!.value - this.bidAmountInterval!.value;
 
-    if (this.aimPrice!.value <= minAimPrice) {
-      this.aimPriceError = `Aim price should be more then $${minAimPrice}`;
+      if (this.aimPrice!.value > maxAimPrice) {
+        this.aimPriceError = `Aim price should be less then $${maxAimPrice}`;
 
-      return false;
+        return false;
+      }
+    }
+    else {
+      const minAimPrice = this.startPrice!.value + this.bidAmountInterval!.value;
+
+      if (this.aimPrice!.value < minAimPrice) {
+        this.aimPriceError = `Aim price should be more then $${minAimPrice}`;
+
+        return false;
+      }
     }
 
     this.aimPriceError = null;

@@ -376,9 +376,9 @@ export class AuctionDetailsComponent implements OnInit {
 
     let parts: string[] = [];
     if (days > 0) parts.push(`${days}d`);
-    if (hours > 0 || days > 0) parts.push(`${hours}h`); // Показуємо години, якщо є дні
-    if (minutes > 0 || hours > 0 || days > 0) parts.push(`${minutes}m`); // Показуємо хвилини, якщо є години або дні
-    parts.push(`${seconds}s`); // Секунди завжди
+    if (hours > 0 || days > 0) parts.push(`${hours}h`);
+    if (minutes > 0 || hours > 0 || days > 0) parts.push(`${minutes}m`);
+    parts.push(`${seconds}s`);
 
     this.timeLeft = parts.join(' ');
   }

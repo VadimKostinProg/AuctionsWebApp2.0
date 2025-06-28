@@ -78,6 +78,9 @@ namespace Moderation.Service.API.DTO.Gemini
 
         [JsonPropertyName("finishPrice")]
         public decimal? FinishPrice { get; set; }
+
+        [JsonPropertyName("aimPrice")]
+        public decimal? AimPrice { get; set; }
     }
 
     public class AuctionData

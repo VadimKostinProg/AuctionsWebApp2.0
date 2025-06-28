@@ -116,7 +116,7 @@
 <ng-template #complaintOnUserModal
              let-modal>
   <div class="modal-header">
-    <h4 class="modal-title text-primary">Complaint on the User</h4>
+    <h4 class="modal-title">Complaint on the User</h4>
     <button type="button"
             class="btn-close"
             aria-label="Close"
@@ -142,16 +142,16 @@
   </div>
   <div class="modal-footer">
     <button type="button"
-            class="btn btn-primary"
+            class="btn default-btn-background"
             (click)="complainOnUser(modal)"
-            [disabled]="complaintOnUserForm?.invalid">Submit</button>
+            [disabled]="complaintOnUserForm.invalid">Submit</button>
   </div>
 </ng-template>
 
 <ng-template #changePasswordModal
              let-modal>
   <div class="modal-header">
-    <h4 class="modal-title text-primary">Change Password</h4>
+    <h4 class="modal-title">Change Password</h4>
     <button type="button"
             class="btn-close"
             aria-label="Close"
@@ -213,9 +213,8 @@
   </div>
   <div class="modal-footer">
     <button type="button"
-            class="btn btn-primary"
-            (click)="resetPassword(modal)"
-            [disabled]="changePasswordForm?.invalid">Submit</button>
+            class="btn default-btn-background"
+            (click)="resetPassword(modal)">Submit</button>
   </div>
 </ng-template>
 
@@ -237,7 +236,7 @@
             class="btn btn-outline-secondary"
             (click)="modal.close()">Cancel</button>
     <button type="button"
-            class="btn btn-danger"
+            class="btn default-btn-background"
             (click)="deleteProfile(modal)">Delete</button>
   </div>
 </ng-template>

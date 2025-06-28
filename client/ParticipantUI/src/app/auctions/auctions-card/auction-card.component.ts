@@ -64,10 +64,4 @@ export class AuctionCardComponent implements OnInit, OnDestroy {
         }
       });
   }
-
-  get showStartPrice(): boolean {
-    return this.auction?.status !== AuctionStatusEnum.Pending &&
-      this.auction?.status !== AuctionStatusEnum.CancelledByAuctioneer &&
-      this.auction?.status !== AuctionStatusEnum.CancelledByModerator;
-  }
 }

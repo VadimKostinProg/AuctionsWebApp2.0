@@ -9,6 +9,7 @@ import { ComplaintBasic } from "../models/complaints/complaintBasic";
 import { Complaint } from "../models/complaints/complaint";
 import { DataTableOptionsModel } from "../models/shared/dataTableOptionsModel";
 import { ComplaintStatusEnum } from "../models/complaints/complaintStatusEnum";
+import { DatePipe } from "@angular/common";
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +17,8 @@ import { ComplaintStatusEnum } from "../models/complaints/complaintStatusEnum";
 export class ComplaintsService {
   baseUrl: string = `${environment.apiUrl}${environment.apiPrefix}/complaints`;
 
-  constructor(private readonly httpClient: HttpClient) { }
+  constructor(private readonly httpClient: HttpClient,
+    private readonly datePipe: DatePipe) { }
 
   getUserComplaints(pageNumber: number, pageSize: number): Observable<ServiceResult<PaginatedList<ComplaintBasic>>> {
     const params = new HttpParams()
@@ -63,7 +65,8 @@ export class ComplaintsService {
         {
           title: 'Created At',
           dataPropName: 'createdAt',
-          isOrderable: false
+          isOrderable: false,
+          transformAction: (value) => this.datePipe.transform(value, 'MM-dd-yyyy HH:mm')
         },
         {
           title: 'Title',

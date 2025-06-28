@@ -7,6 +7,7 @@ import { Observable } from "rxjs";
 import { ServiceMessage, ServiceResult } from "../models/shared/serviceResult";
 import { Auction } from "../models/auctions/auction";
 import { CancelAuctionModel } from "../models/auctions/cancelAuctionModel";
+import { DatePipe } from "@angular/common";
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +15,8 @@ import { CancelAuctionModel } from "../models/auctions/cancelAuctionModel";
 export class AuctionsService {
   baseUrl: string = `${environment.apiUrl}${environment.apiPrefix}/auctions`;
 
-  constructor(private readonly httpClient: HttpClient) { }
+  constructor(private readonly httpClient: HttpClient,
+    private readonly datePipe: DatePipe) { }
 
   getAuctionDetails(id: number): Observable<ServiceResult<Auction>> {
     return this.httpClient.get<ServiceResult<Auction>>(`${this.baseUrl}/${id}`);
@@ -73,12 +75,14 @@ export class AuctionsService {
         {
           title: 'Start Time',
           dataPropName: 'startTime',
-          isOrderable: true
+          isOrderable: true,
+          transformAction: (value) => this.datePipe.transform(value, 'MM-dd-yyyy HH:mm')
         },
         {
           title: 'Finish Time',
           dataPropName: 'finishTime',
-          isOrderable: true
+          isOrderable: true,
+          transformAction: (value) => this.datePipe.transform(value, 'MM-dd-yyyy HH:mm')
         },
         {
           title: 'Status',
@@ -143,7 +147,8 @@ export class AuctionsService {
         {
           title: 'Start time',
           dataPropName: 'startTime',
-          isOrderable: false
+          isOrderable: false,
+          transformAction: (value) => this.datePipe.transform(value, 'MM-dd-yyyy HH:mm')
         },
         {
           title: 'Current/Completed price',

@@ -1,12 +1,15 @@
 import { Injectable } from "@angular/core";
 import { environment } from "../../environments/environment";
 import { DataTableOptionsModel } from "../models/shared/dataTableOptionsModel";
+import { DatePipe } from "@angular/common";
 
 @Injectable({
   providedIn: 'root'
 })
 export class BidsService {
   baseUrl: string = `${environment.apiUrl}${environment.apiPrefix}`;
+
+  constructor(private readonly datePipe: DatePipe) { }
 
   getDataTableApiUrl(auctionId: number) {
     return `${this.baseUrl}/auctions/${auctionId}/bids`;
@@ -37,7 +40,8 @@ export class BidsService {
         {
           title: 'Date and time',
           dataPropName: 'time',
-          isOrderable: false
+          isOrderable: false,
+          transformAction: (value) => this.datePipe.transform(value, 'MM-dd-yyyy HH:mm')
         },
         {
           title: 'Amount',
@@ -84,7 +88,8 @@ export class BidsService {
         {
           title: 'Date and time',
           dataPropName: 'time',
-          isOrderable: false
+          isOrderable: false,
+          transformAction: (value) => this.datePipe.transform(value, 'MM-dd-yyyy HH:mm')
         },
         {
           title: 'Amount',

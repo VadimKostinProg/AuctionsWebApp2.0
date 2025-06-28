@@ -2,12 +2,14 @@
 // See LICENSE in the project root for license information.
 
 using BidMasterOnline.Core.Constants;
+using BidMasterOnline.Core.Helpers;
 using BidMasterOnline.Domain.Models.Entities;
 using Duende.IdentityModel;
 using Duende.IdentityServer;
 using Duende.IdentityServer.Models;
 using Duende.IdentityServer.Services;
 using IdentityServer.Models;
+using IdentityServer.Services;
 using IdentityServer.Services.Contracts;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -71,6 +73,11 @@ public class Index : PageModel
             }
         }
 
+        if (Input.DateOfBirth!.Value > DateTime.UtcNow.AddYears(-18))
+        {
+            ModelState.AddModelError("Input.DateOfBirth", "Could not register users which are not 18 y.o.");
+        }
+
         if (await _userManager.ExistsWithUsernameAsync(Input.Username!))
         {
             ModelState.AddModelError("Input.Username", "User with this username already exists");
@@ -79,6 +86,11 @@ public class Index : PageModel
         if (await _userManager.ExistsWithEmailAsync(Input.Email!))
         {
             ModelState.AddModelError("Input.Username", "User with this email already exists");
+        }
+
+        if (!PasswordFormatValidationHelper.ValidatePasswordFormat(Input.Password!, out string errors))
+        {
+            ModelState.AddModelError("Input.Password", errors);
         }
 
         if (ModelState.IsValid)

@@ -87,7 +87,7 @@ namespace Auctions.Service.API.Services.Moderator
                     AuctionTimeInTicks = auctionRequest.RequestedAuctionTimeInTicks,
                     StartTime = auctionStartTime,
                     FinishTime = auctionStartTime.AddTicks(auctionRequest.RequestedAuctionTimeInTicks),
-                    Status = auctionRequest.RequestedStartTime == null || auctionRequest.RequestedStartTime <= auctionStartTime
+                    Status = auctionRequest.RequestedStartTime == null || auctionRequest.RequestedStartTime <= DateTime.UtcNow
                         ? AuctionStatus.Active
                         : AuctionStatus.Pending,
                     Images = auctionRequest.Images?.Select(image => new AuctionImage

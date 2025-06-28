@@ -26,8 +26,7 @@ export class AuctionRequestDetailsComponent implements OnInit {
     private readonly toastrService: ToastrService,
     private readonly modalService: NgbModal,
     private readonly router: Router,
-    private readonly route: ActivatedRoute,
-    private readonly spinnerService: NgxSpinnerService) { }
+    private readonly route: ActivatedRoute) { }
 
   ngOnInit(): void {
     this.reloadDeclineAuctionRequestForm();
@@ -67,19 +66,13 @@ export class AuctionRequestDetailsComponent implements OnInit {
   approveAuctionRequest(modal: any) {
     modal.close();
 
-    this.spinnerService.show();
-
     this.auctionRequestsService.approveAuctionRequest(this.auctionRequestDetails!.id).subscribe({
       next: (result) => {
-        this.spinnerService.hide();
-
         this.toastrService.success(result.message!, 'Success');
 
         this.router.navigate(['/auction-requests']);
       },
       error: (err) => {
-        this.spinnerService.hide();
-
         if (err?.error?.errors && Array.isArray(err.error.errors)) {
           this.toastrService.error(err.error.errors[0], 'Error');
         }
@@ -96,19 +89,13 @@ export class AuctionRequestDetailsComponent implements OnInit {
 
     const reason = this.declineAuctionReuqestForm!.value.reasonDeclined;
 
-    this.spinnerService.show();
-
     this.auctionRequestsService.declineAuctionRequest(this.auctionRequestDetails!.id, reason).subscribe({
       next: (result) => {
-        this.spinnerService.hide();
-
         this.toastrService.success(result.message!, 'Success');
 
         this.router.navigate(['/auction-requests']);
       },
       error: (err) => {
-        this.spinnerService.hide();
-
         if (err?.error?.errors && Array.isArray(err.error.errors)) {
           this.toastrService.error(err.error.errors[0], 'Error');
         }

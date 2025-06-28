@@ -91,6 +91,15 @@ namespace Moderation.Service.API.Services
                 // Prepare prompt
                 List<Auction> auctions = await FetchAuctionsForSpecifiedPeriodAsync(period);
 
+                if (!auctions.Any())
+                {
+                    result.IsSuccessfull = false;
+                    result.StatusCode = System.Net.HttpStatusCode.NotFound;
+                    result.Errors.Add("Could not find any auction within selected period.");
+
+                    return result;
+                }
+
                 GeminiInputPayload payload = GetGeminiInputPayload(auctions);
 
                 string payloadSerialized = JsonSerializer.Serialize(payload, new JsonSerializerOptions { WriteIndented = false, DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull });
@@ -213,6 +222,7 @@ namespace Moderation.Service.API.Services
                                 TotalAuctionsCompleted = auction.Winner.CompletedAuctions
                             },
                         FinishPrice = auction.FinishPrice,
+                        AimPrice = auction.AimPrice,
                     },
                     BidHistory = auction.Bids!.Where(b => !b.Deleted).Select(bid => new DTO.Gemini.Bid
                     {
@@ -234,71 +244,6 @@ namespace Moderation.Service.API.Services
                 })
                 .ToList()
             };
-
-        private GeminiInputPayload GetDummyPayload()
-        {
-            var auctionsToAnalyze = new List<AuctionData>
-            {
-                new AuctionData
-                {
-                    AuctionDetails = new AuctionDetails
-                    {
-                        Id = 12345,
-                        AuctioneerId = 101,
-                        Auctioneer = new UserStats { Id = 101, Username = "seller_user", UserRegistrationDate = new DateTime(2024, 1, 1), TotalWins = 5, TotalAuctionsOrganized = 50, TotalAuctionsCompleted = 45 },
-                        LotTitle = "Rare Comic Book #1",
-                        StartTime = new DateTime(2025, 6, 1, 10, 0, 0, DateTimeKind.Utc),
-                        FinishTime = new DateTime(2025, 6, 5, 15, 30, 0, DateTimeKind.Utc),
-                        BidAmountInterval = 5.00m,
-                        Type = "English auction",
-                        Status = "Completed",
-                        WinnerId = 204,
-                        Winner = new UserStats { Id = 204, Username = "winner_user_X", UserRegistrationDate = new DateTime(2024, 3, 15), TotalWins = 25, TotalAuctionsOrganized = 0, TotalAuctionsCompleted = 0 },
-                        FinishPrice = 250.00m
-                    },
-                    BidHistory = new List<DTO.Gemini.Bid>
-                    {
-                        new () { Id = 1, BidderId = 201, Bidder = new UserStats { Id = 201, Username = "bidder_A", UserRegistrationDate = new DateTime(2024, 2, 1), TotalWins = 2, TotalAuctionsOrganized = 0, TotalAuctionsCompleted = 0 }, Amount = 105.00m, PlacedAt = new DateTime(2025, 6, 1, 10, 5, 0, DateTimeKind.Utc) },
-                        new () { Id = 2, BidderId = 202, Bidder = new UserStats { Id = 202, Username = "bidder_B", UserRegistrationDate = new DateTime(2024, 4, 1), TotalWins = 1, TotalAuctionsOrganized = 0, TotalAuctionsCompleted = 0 }, Amount = 110.00m, PlacedAt = new DateTime(2025, 6, 1, 10, 10, 0, DateTimeKind.Utc) },
-                        new () { Id = 3, BidderId = 201, Bidder = new UserStats { Id = 201, Username = "bidder_A", UserRegistrationDate = new DateTime(2024, 2, 1), TotalWins = 2, TotalAuctionsOrganized = 0, TotalAuctionsCompleted = 0 }, Amount = 120.00m, PlacedAt = new DateTime(2025, 6, 1, 10, 11, 0, DateTimeKind.Utc) }, // Shill-like activity
-                        new () { Id = 4, BidderId = 202, Bidder = new UserStats { Id = 202, Username = "bidder_B", UserRegistrationDate = new DateTime(2024, 4, 1), TotalWins = 1, TotalAuctionsOrganized = 0, TotalAuctionsCompleted = 0 }, Amount = 125.00m, PlacedAt = new DateTime(2025, 6, 1, 10, 11, 30, DateTimeKind.Utc) }, // Ping-pong
-                        new () { Id = 5, BidderId = 203, Bidder = new UserStats { Id = 203, Username = "bidder_C", UserRegistrationDate = new DateTime(2024, 1, 1), TotalWins = 10, TotalAuctionsOrganized = 5, TotalAuctionsCompleted = 4 }, Amount = 240.00m, PlacedAt = new DateTime(2025, 6, 5, 15, 29, 50, DateTimeKind.Utc) },
-                        new () { Id = 6, BidderId = 204, Bidder = new UserStats { Id = 204, Username = "winner_user_X", UserRegistrationDate = new DateTime(2024, 3, 15), TotalWins = 25, TotalAuctionsOrganized = 0, TotalAuctionsCompleted = 0 }, Amount = 245.00m, PlacedAt = new DateTime(2025, 6, 5, 15, 29, 58, DateTimeKind.Utc) }, // Sniping
-                        new () { Id = 7, BidderId = 204, Bidder = new UserStats { Id = 204, Username = "winner_user_X", UserRegistrationDate = new DateTime(2024, 3, 15), TotalWins = 25, TotalAuctionsOrganized = 0, TotalAuctionsCompleted = 0 }, Amount = 250.00m, PlacedAt = new DateTime(2025, 6, 5, 15, 29, 59, DateTimeKind.Utc) }  // Winning Sniping
-                    }
-                    .OrderByDescending(x => x.Id).ToList()
-                },
-                new AuctionData
-                {
-                    AuctionDetails = new AuctionDetails
-                    {
-                        Id = 12346,
-                        AuctioneerId = 101,
-                        Auctioneer = new UserStats { Id = 101, Username = "seller_user", UserRegistrationDate = new DateTime(2024, 1, 1), TotalWins = 5, TotalAuctionsOrganized = 50, TotalAuctionsCompleted = 45 },
-                        LotTitle = "Rare Stamp Collection",
-                        StartTime = new DateTime(2025, 6, 2, 9, 0, 0, DateTimeKind.Utc),
-                        FinishTime = new DateTime(2025, 6, 6, 14, 0, 0, DateTimeKind.Utc),
-                        BidAmountInterval = 10.00m,
-                        Type = "English auction",
-                        Status = "Active",
-                        WinnerId = null,
-                        Winner = null,
-                        FinishPrice = null
-                    },
-                    BidHistory = new List<DTO.Gemini.Bid>
-                    {
-                        new () { Id = 10, BidderId = 201, Bidder = new UserStats { Id = 201, Username = "bidder_A", UserRegistrationDate = new DateTime(2024, 2, 1), TotalWins = 2, TotalAuctionsOrganized = 0, TotalAuctionsCompleted = 0 }, Amount = 80.00m, PlacedAt = new DateTime(2025, 6, 2, 9, 11, 0, DateTimeKind.Utc) },
-                        new () { Id = 9, BidderId = 205, Bidder = new UserStats { Id = 205, Username = "bidder_D", UserRegistrationDate = new DateTime(2025, 5, 20), TotalWins = 0, TotalAuctionsOrganized = 0, TotalAuctionsCompleted = 0 }, Amount = 70.00m, PlacedAt = new DateTime(2025, 6, 2, 9, 10, 0, DateTimeKind.Utc) }, // New user aggressive
-                        new () { Id = 8, BidderId = 201, Bidder = new UserStats { Id = 201, Username = "bidder_A", UserRegistrationDate = new DateTime(2024, 2, 1), TotalWins = 2, TotalAuctionsOrganized = 0, TotalAuctionsCompleted = 0 }, Amount = 60.00m, PlacedAt = new DateTime(2025, 6, 2, 9, 5, 0, DateTimeKind.Utc) },
-                    }
-                }
-            };
-
-            return new()
-            {
-                AuctionsToAnalyze = auctionsToAnalyze
-            };
-        }
 
         private string CleanGeminiJsonResponse(string rawResponseText)
         {

@@ -8,6 +8,7 @@ import { HttpClient, HttpParams } from "@angular/common/http";
 import { ServiceMessage, ServiceResult } from "../models/shared/serviceResult";
 import { AuctionBid } from "../models/bids/auctionBid";
 import { PostBid } from "../models/bids/postBid";
+import { DatePipe } from "@angular/common";
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,8 @@ import { PostBid } from "../models/bids/postBid";
 export class BidsService {
   baseUrl: string = `${environment.apiUrl}${environment.apiPrefix}/auctions`;
 
-  constructor(private readonly httpClient: HttpClient) { }
+  constructor(private readonly httpClient: HttpClient,
+    private readonly datePipe: DatePipe) { }
 
   getUserBids(pageNumber: number, pageSize: number): Observable<ServiceResult<PaginatedList<UserBid>>> {
     const params = new HttpParams()
@@ -72,7 +74,8 @@ export class BidsService {
         {
           title: 'Amount',
           dataPropName: 'amount',
-          isOrderable: false
+          isOrderable: false,
+          transformAction: (value) => `$${value}`
         },
       ]
     } as DataTableOptionsModel;
@@ -113,12 +116,14 @@ export class BidsService {
         {
           title: 'Date and time',
           dataPropName: 'time',
-          isOrderable: false
+          isOrderable: false,
+          transformAction: (value) => this.datePipe.transform(value, 'MM-dd-yyyy HH:mm')
         },
         {
           title: 'Amount',
           dataPropName: 'amount',
-          isOrderable: false
+          isOrderable: false,
+          transformAction: (value) => `$${value}`
         },
       ]
     } as DataTableOptionsModel;

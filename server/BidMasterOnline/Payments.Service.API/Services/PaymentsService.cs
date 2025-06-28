@@ -48,7 +48,7 @@ namespace Payments.Service.API.Services
             {
                 result.IsSuccessfull = false;
                 result.StatusCode = System.Net.HttpStatusCode.BadRequest;
-                result.Errors.Add("Only winner of auction is allowed to perform payment.");
+                result.Errors.Add("You could not perform payment for this auction.");
                 return result;
             }
 
@@ -71,13 +71,13 @@ namespace Payments.Service.API.Services
                 return result;
             }
 
-            if (auction.WinnerId == null || auction.WinnerId != payerUser.Id)
-            {
-                result.IsSuccessfull = false;
-                result.StatusCode = System.Net.HttpStatusCode.BadRequest;
-                result.Errors.Add("Only winner of auction allowed to proceed payment of it.");
-                return result;
-            }
+            //if (auction.WinnerId == null || auction.WinnerId != payerUser.Id)
+            //{
+            //    result.IsSuccessfull = false;
+            //    result.StatusCode = System.Net.HttpStatusCode.BadRequest;
+            //    result.Errors.Add("Only winner of auction allowed to proceed payment of it.");
+            //    return result;
+            //}
 
             try
             {

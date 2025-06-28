@@ -49,7 +49,9 @@ namespace Auctions.Service.API.Extensions
                 Category = entity.Category?.Name ?? string.Empty,
                 Type = entity.Type?.Name ?? string.Empty,
                 FinishMethod = entity.FinishMethod?.Name ?? string.Empty,
-                RequestedStartTime = entity.RequestedStartTime,
+                RequestedStartTime = entity.RequestedStartTime != null
+                    ? new DateTimeOffset(entity.RequestedStartTime.Value, TimeSpan.Zero)
+                    : null,
                 FinishTimeInterval = entity.FinishTimeIntervalInTicks == null
                     ? null
                     : TimeSpan.FromTicks(entity.FinishTimeIntervalInTicks.Value),
@@ -67,9 +69,9 @@ namespace Auctions.Service.API.Extensions
             {
                 Id = entity.Id,
                 LotTitle = entity.LotTitle,
-                Category = entity.Category!.Name,
-                StartTime = entity.StartTime,
-                FinishTime = entity.FinishTime,
+                Category = entity.Category?.Name ?? string.Empty,
+                StartTime = new DateTimeOffset(entity.StartTime, TimeSpan.Zero),
+                FinishTime = new DateTimeOffset(entity.FinishTime, TimeSpan.Zero),
                 StartPrice = entity.StartPrice,
                 CurrentPrice = entity.CurrentPrice,
                 AverageScore = entity.AverageScore,
@@ -82,7 +84,7 @@ namespace Auctions.Service.API.Extensions
                         Username = entity.Auctioneer.Username,
                         Email = entity.Auctioneer.Email
                     },
-                ImageUrls = entity.Images?.Select(entity => entity.Url).ToList() ?? []
+                ImageUrls = entity.Images?.Select(entity => entity.Url)?.ToList() ?? []
             };
         }
 
@@ -98,8 +100,8 @@ namespace Auctions.Service.API.Extensions
                 FinishMethod = entity.FinishMethod?.Name ?? string.Empty,
                 BidAmountInterval = entity.BidAmountInterval,
                 Status = entity.Status,
-                StartTime = entity.StartTime,
-                FinishTime = entity.FinishTime,
+                StartTime = new DateTimeOffset(entity.StartTime, TimeSpan.Zero),
+                FinishTime = new DateTimeOffset(entity.FinishTime, TimeSpan.Zero),
                 AuctionTime = TimeSpan.FromTicks(entity.AuctionTimeInTicks),
                 StartPrice = entity.StartPrice,
                 CurrentPrice = entity.CurrentPrice,

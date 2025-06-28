@@ -101,6 +101,16 @@ export class UserProfileComponent implements OnInit {
       return;
     }
 
+    const formatValidationResult = this.isPasswordFormatValid(this.changePasswordForm.value.newPassword);
+
+    if (!formatValidationResult.isValid) {
+      this.toastrService.error(formatValidationResult.errors, 'Error');
+
+      this.reloadChangePasswordForm();
+
+      return;
+    }
+
     const resetPasswordModel = this.changePasswordForm.value as ResetPasswordModel;
 
     this.userProfileService.resetPassword(resetPasswordModel).subscribe(
@@ -162,5 +172,42 @@ export class UserProfileComponent implements OnInit {
         this.toastrService.error(error.error, 'Error');
       }
     });
+  }
+
+  private isPasswordFormatValid(password: string): { isValid: boolean, errors: string } {
+    let isValid = true;
+    let errors = '';
+
+    if (!password) {
+      isValid = false;
+      errors = 'Password should not be empty.';
+    }
+    else {
+      if (password.length < 8 || password.length > 64) {
+        errors += "Password should contain 8-64 symbols.\n";
+        isValid = false;
+      }
+
+      if (!/[a-zA-Z]/.test(password)) {
+        errors += "Password should contain at least one letter.\n";
+        isValid = false;
+      }
+
+      if (!/\d/.test(password)) {
+        errors += "Password should contain at least one digit.\n";
+        isValid = false;
+      }
+
+      const specialCharsRegex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
+      if (!specialCharsRegex.test(password)) {
+        errors += "Password should contain at least one special symbol.\n";
+        isValid = false;
+      }
+    }
+
+    return {
+      isValid: isValid,
+      errors: errors
+    };
   }
 }

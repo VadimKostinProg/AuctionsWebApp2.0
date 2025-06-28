@@ -14,10 +14,11 @@
       <button class="btn btn-main-orange"
               (click)="generateReport()"
               [disabled]="loading">
-        <span *ngIf="loading"
-              class="spinner-border spinner-border-sm me-2"
-              role="status"
-              aria-hidden="true"></span>
+        <div *ngIf="loading"
+             class="report-spinner-sm"
+             role="status">
+          <i class="fa-solid fa-spinner"></i> <span class="visually-hidden">Loading...</span>
+        </div>
         Generate Report
       </button>
     </div>
@@ -25,9 +26,9 @@
 
   <div *ngIf="loading"
        class="text-center mt-5">
-    <div class="spinner-border text-primary"
+    <div class="report-spinner default-color"
          role="status">
-      <span class="visually-hidden">Loading...</span>
+      <i class="fa-solid fa-spinner"></i> <span class="visually-hidden">Loading...</span>
     </div>
     <p>Generating report...</p>
   </div>
@@ -101,19 +102,6 @@
                     </span>
                   </p>
                   <p><strong>Reasoning:</strong> {{ suspicion.reasoning }}</p>
-
-                  <ng-container *ngIf="suspicion.type === 'Bid Sniping'">
-                    <p><strong>Potentially Problematic:</strong>
-                      <span *ngIf="suspicion.isPotentiallyProblematic"
-                            class="text-success">
-                        <i class="fas fa-check-circle"></i> Yes
-                      </span>
-                      <span *ngIf="!suspicion.isPotentiallyProblematic"
-                            class="text-secondary">
-                        <i class="fas fa-times-circle"></i> No
-                      </span>
-                    </p>
-                  </ng-container>
 
                   <p><strong>Detected Patterns: </strong>
                     <span *ngFor="let pattern of suspicion.detectedPatterns"

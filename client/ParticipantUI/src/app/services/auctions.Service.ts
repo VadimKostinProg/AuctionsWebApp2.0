@@ -10,6 +10,7 @@ import { CancelAuction } from "../models/auctions/CancelAuction";
 import { DataTableOptionsModel } from "../models/shared/dataTableOptionsModel";
 import { UserAuction } from "../models/auctions/userAuction";
 import { AuctionSpecifications } from "../models/auctions/auctionSpecifications";
+import { DatePipe } from "@angular/common";
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +19,8 @@ export class AuctionsService {
 
   baseUrl: string = `${environment.apiUrl}${environment.apiPrefix}/auctions`;
 
-  constructor(private readonly httpClient: HttpClient) { }
+  constructor(private readonly httpClient: HttpClient,
+    private readonly datePipe: DatePipe) { }
 
   getPopularAuctions(): Observable<ServiceResult<PaginatedList<AuctionBasic>>> {
     const params = new HttpParams()
@@ -148,7 +150,8 @@ export class AuctionsService {
         {
           title: 'Start time',
           dataPropName: 'startTime',
-          isOrderable: false
+          isOrderable: false,
+          transformAction: (value) => this.datePipe.transform(value, 'MM-dd-yyyy HH:mm')
         },
         {
           title: 'Current/Completed price',

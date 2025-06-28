@@ -1,0 +1,1 @@
+D:\Projects\AuctionsWebApp2.0\server\BidMasterOnline\Users.Service.API\.sonarqube\out\0

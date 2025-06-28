@@ -8,6 +8,7 @@ import { ServiceMessage, ServiceResult } from "../models/shared/serviceResult";
 import { SupportTicket } from "../models/support-tickets/supportTicket";
 import { AssignSupportTicketModel } from "../models/support-tickets/assignSupportTicketModel";
 import { CompleteSupportTicketModel } from "../models/support-tickets/completeSupportTicketModel";
+import { DatePipe } from "@angular/common";
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,8 @@ import { CompleteSupportTicketModel } from "../models/support-tickets/completeSu
 export class SupportTicketsService {
   baseUrl: string = `${environment.apiUrl}${environment.apiPrefix}/support-tickets`;
 
-  constructor(private readonly httpClient: HttpClient) { }
+  constructor(private readonly httpClient: HttpClient,
+    private readonly datePipe: DatePipe) { }
 
   getSupportTicketDetails(supportTicketId: number): Observable<ServiceResult<SupportTicket>> {
     return this.httpClient.get<ServiceResult<SupportTicket>>(`${this.baseUrl}/${supportTicketId}`);
@@ -72,7 +74,8 @@ export class SupportTicketsService {
         {
           title: 'Submitted time',
           dataPropName: 'submittedTime',
-          isOrderable: false
+          isOrderable: false,
+          transformAction: (value) => this.datePipe.transform(value, 'MM-dd-yyyy HH:mm')
         },
         {
           title: 'Assigned on',

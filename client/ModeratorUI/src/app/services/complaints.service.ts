@@ -8,6 +8,7 @@ import { Complaint } from "../models/complaints/complaint";
 import { AssignComplaintModel } from "../models/complaints/assignComplaintModel";
 import { CompleteComplaintModel } from "../models/complaints/completeComplaintModel";
 import { ComplaintStatusEnum } from "../models/complaints/complaintStatusEnum";
+import { DatePipe } from "@angular/common";
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,8 @@ import { ComplaintStatusEnum } from "../models/complaints/complaintStatusEnum";
 export class ComplaintsService {
   baseUrl: string = `${environment.apiUrl}${environment.apiPrefix}/complaints`;
 
-  constructor(private readonly httpClient: HttpClient) { }
+  constructor(private readonly httpClient: HttpClient,
+    private readonly datePipe: DatePipe) { }
 
   getComplaintDetails(complaintId: number): Observable<ServiceResult<Complaint>> {
     return this.httpClient.get<ServiceResult<Complaint>>(`${this.baseUrl}/${complaintId}`);
@@ -72,7 +74,8 @@ export class ComplaintsService {
         {
           title: 'Submitted time',
           dataPropName: 'submittedTime',
-          isOrderable: false
+          isOrderable: false,
+          transformAction: (value) => this.datePipe.transform(value, 'MM-dd-yyyy HH:mm')
         },
         {
           title: 'Assigned on',

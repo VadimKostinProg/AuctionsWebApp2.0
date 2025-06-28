@@ -19,9 +19,9 @@ namespace IdentityServer
                             RequireClientSecret = false,
                             AllowedScopes = ["openid", "profile", "participantScope"],
                             AlwaysIncludeUserClaimsInIdToken = true,
-                            RedirectUris = { "http://localhost:4200/auth/callback" },
-                            PostLogoutRedirectUris = { "http://localhost:4200/" },
-                            AllowedCorsOrigins = { "http://localhost:4200" },
+                            RedirectUris = { $"{configuration["Clients:ParticipantUI"]!}/auth/callback" },
+                            PostLogoutRedirectUris = { $"{configuration["Clients:ParticipantUI"]!}/" },
+                            AllowedCorsOrigins = { configuration["Clients:ParticipantUI"]! },
                         },
                         new Client
                         {
@@ -30,9 +30,9 @@ namespace IdentityServer
                             RequirePkce = true,
                             RequireClientSecret = false,
                             AllowedScopes = ["openid", "profile", "moderatorScope"],
-                            RedirectUris = { "http://localhost:4201/auth/callback" },
-                            PostLogoutRedirectUris = { "http://localhost:4201/" },
-                            AllowedCorsOrigins = { "http://localhost:4201" },
+                            RedirectUris = { $"{configuration["Clients:ModeratorUI"]!}/auth/callback" },
+                            PostLogoutRedirectUris = { $"{configuration["Clients:ModeratorUI"]!}/" },
+                            AllowedCorsOrigins = { configuration["Clients:ModeratorUI"]! },
                         },
                         new Client
                         {

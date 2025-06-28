@@ -9,5 +9,5 @@ export const authConfig: AuthConfig = {
   responseType: 'code',
   showDebugInformation: !environment.production,
   requireHttps: false,
-  strictDiscoveryDocumentValidation: false
+  strictDiscoveryDocumentValidation: false,
 };
