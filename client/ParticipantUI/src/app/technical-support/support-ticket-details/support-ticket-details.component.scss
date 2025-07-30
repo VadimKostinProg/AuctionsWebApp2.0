@@ -1,0 +1,34 @@
+.support-ticket-details {
+  width: 80%;
+  max-width: 600px;
+}
+
+.info-row {
+  display: flex;
+  margin-bottom: 0.5rem;
+}
+
+.info-label {
+  font-weight: bold;
+  margin-right: 1rem;
+  min-width: 120px;
+}
+
+.details-property {
+  font-weight: bold;
+}
+
+.status-pending {
+  color: orange;
+  font-weight: bold;
+}
+
+.status-active {
+  color: green;
+  font-weight: bold;
+}
+
+.status-completed {
+  color: blue;
+  font-weight: bold;
+}

@@ -1,0 +1,229 @@
+<ng-container *ngIf="auction">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h4 class="mb-0"><i class="fas fa-comments me-2"></i>Comments</h4>
+
+    <button class="btn btn-primary add-comment-btn"
+            (click)="userStatus === UserStatusEnum.Active ? open(commentModal) : open(userBlockedModal)"
+            [disabled]="auction.auctioneer.userId == userId"
+            title="Add a new comment">
+      <i class="fa-solid fa-plus me-2"></i> Add Comment
+    </button>
+  </div>
+
+  <div *ngIf="comments && comments.length > 0; else noComments"
+       class="comments-list">
+    <div *ngFor="let comment of comments"
+         class="card comment-card shadow-sm mb-3">
+      <div class="card-body">
+        <div class="d-flex align-items-start justify-content-between">
+          <div class="d-flex align-items-center mb-3">
+            <div>
+              <a class="h5 fw-bold text-decoration-none text-primary d-block"
+                 [routerLink]="['/users', comment.userId]">
+                {{comment.username}}
+              </a>
+              <small class="text-muted d-block mt-1">
+                <i class="far fa-clock me-1"></i>
+                {{comment.createdAt | date: 'MM-dd-yyyy HH:mm'}}
+              </small>
+            </div>
+          </div>
+
+          <button type="button"
+                  class="btn btn-sm btn-outline-secondary actions-button"
+                  placement="bottom"
+                  [ngbPopover]="actionsPopContent"
+                  popoverTitle="Actions"
+                  container="body">
+            <i class="fa-solid fa-ellipsis-h"></i>
+          </button>
+
+          <ng-template #actionsPopContent>
+            <div class="actions-container d-flex flex-column gap-2 p-2">
+              <button *ngIf="comment.userId !== userId"
+                      class="list-group-item list-group-item-action d-flex align-items-center"
+                      (click)="openActionModal(complaintOnCommentModal, comment)">
+                <i class="fa-solid fa-flag me-2"></i>Complain
+              </button>
+              <button *ngIf="comment.userId === userId"
+                      class="list-group-item list-group-item-action d-flex align-items-center"
+                      (click)="openActionModal(deleteCommentModal, comment)">
+                <i class="fa-solid fa-trash-can me-2"></i>Delete
+              </button>
+            </div>
+          </ng-template>
+        </div>
+
+        <div class="mb-3">
+          <app-score [readonly]="true"
+                     [selectedScore]="comment.score"></app-score>
+        </div>
+
+        <div class="comment-text p-3 bg-light rounded border">
+          <p class="card-text mb-0">{{ comment.commentText }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="hasNext"
+         class="text-center mt-4">
+      <button class="btn btn-outline-primary btn-lg load-more-button"
+              (click)="loadComments()">
+        <i class="fas fa-redo me-2"></i>Load more comments
+      </button>
+    </div>
+  </div>
+
+  <ng-template #noComments>
+    <div class="alert alert-info text-center"
+         role="alert">
+      <i class="fas fa-info-circle me-2"></i>No comments available for this auction yet.
+    </div>
+  </ng-template>
+
+</ng-container>
+
+<ng-template #commentModal
+             let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title"
+        id="commentModalTitle">Leave a comment</h4>
+    <button type="button"
+            class="btn-close"
+            aria-label="Close"
+            (click)="modal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body">
+    <form *ngIf="commentForm"
+          [formGroup]="commentForm">
+      <div class="mb-3">
+        <label for="score"
+               class="form-label mb-2">Score:</label>
+        <app-score (onScoreSet)="onScoreUpdated($event)"></app-score>
+        <input type="hidden"
+               formControlName="score" />
+      </div>
+
+      <div class="mb-3">
+        <label for="commentText"
+               class="form-label">Comment text:</label>
+        <textarea id="commentText"
+                  class="form-control"
+                  formControlName="commentText"
+                  rows="4"
+                  placeholder="Enter your comment here..."></textarea>
+        <div *ngIf="commentText?.invalid && (commentText?.dirty || commentText?.touched)"
+             class="invalid-feedback d-block">
+          <div *ngIf="commentText?.errors?.['required']">
+            Comment text is required.
+          </div>
+          <div *ngIf="commentText?.errors?.['minlength']">
+            Comment must be at least {{ commentText?.errors?.['minlength'].requiredLength }} characters.
+          </div>
+          <div *ngIf="commentText?.errors?.['maxlength']">
+            Comment cannot exceed {{ commentText?.errors?.['maxlength'].requiredLength }} characters.
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer d-flex justify-content-between">
+    <button type="button"
+            class="btn btn-outline-secondary"
+            (click)="modal.dismiss('Cancel click'); reloadCommentForm()">Cancel</button>
+    <button type="button"
+            class="btn default-btn-background"
+            [disabled]="commentForm.invalid"
+            (click)="leaveComment(modal)">Submit</button>
+  </div>
+</ng-template>
+
+<ng-template #deleteCommentModal
+             let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title"
+        id="deleteCommentModalTitle">Delete comment</h4>
+    <button type="button"
+            class="btn-close"
+            aria-label="Close"
+            (click)="modal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body">
+    <p>Are you sure you want to delete this comment?</p>
+  </div>
+  <div class="modal-footer d-flex justify-content-between">
+    <button type="button"
+            class="btn btn-outline-secondary"
+            (click)="modal.dismiss('Cancel click')">Cancel</button>
+    <button type="button"
+            class="btn btn-danger"
+            (click)="deleteComment(modal)">Delete</button>
+  </div>
+</ng-template>
+
+<ng-template #complaintOnCommentModal
+             let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title"
+        id="complaintModalTitle">Submit Complaint</h4>
+    <button type="button"
+            class="btn-close"
+            aria-label="Close"
+            (click)="modal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body">
+    <form *ngIf="complaintForm"
+          [formGroup]="complaintForm">
+      <div class="mb-3">
+        <label for="complaintText"
+               class="form-label">Complaint text:</label>
+        <textarea id="complaintText"
+                  class="form-control"
+                  formControlName="complaintText"
+                  rows="4"
+                  placeholder="Describe your complaint..."></textarea>
+        <div *ngIf="complaintText?.invalid && (complaintText?.dirty || complaintText?.touched)"
+             class="invalid-feedback d-block">
+          <div *ngIf="complaintText?.errors?.['required']">
+            Complaint text is required.
+          </div>
+          <div *ngIf="complaintText?.errors?.['minlength']">
+            Complaint must be at least {{ complaintText?.errors?.['minlength'].requiredLength }} characters.
+          </div>
+          <div *ngIf="complaintText?.errors?.['maxlength']">
+            Complaint cannot exceed {{ complaintText?.errors?.['maxlength'].requiredLength }} characters.
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer d-flex justify-content-between">
+    <button type="button"
+            class="btn btn-outline-secondary"
+            (click)="modal.dismiss('Cancel click'); reloadComplaintForm()">Cancel</button>
+    <button type="button"
+            class="btn default-btn-background"
+            [disabled]="complaintForm.invalid"
+            (click)="complainOnComment(modal)">Submit</button>
+  </div>
+</ng-template>
+
+<ng-template #userBlockedModal
+             let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title"
+        id="userBlockedModalTitle">Cannot leave an auction comment</h4>
+    <button type="button"
+            class="btn-close"
+            aria-label="Close"
+            (click)="modal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body">
+    <p class="text-danger">Your account has been blocked! So, you are not able to leave auction comments for now.</p>
+  </div>
+  <div class="modal-footer">
+    <button type="button"
+            class="btn btn-outline-dark"
+            (click)="modal.dismiss('Ok click')">Ok</button>
+  </div>
+</ng-template>

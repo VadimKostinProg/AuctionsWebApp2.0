@@ -306,7 +306,7 @@ obj/
 
 # Gradle and Maven with auto-import
 # When using Gradle or Maven with auto-import, you should exclude module files,
-# since they will be recreated, and may cause churn.  Uncomment if using
+# since they will be recreated, and may cause churn.  Uncomment if using
 # auto-import.
 # .idea/artifacts
 # .idea/compiler.xml
@@ -375,3 +375,20 @@ psd
 thumb
 sketch
 Migrations
+
+
+appsettings.Development.json
+server/BidMasterOnline/Auctions.Service.API/appsettings.Development.json
+server/BidMasterOnline/Feedbacks.Service.API/appsettings.Development.json
+server/BidMasterOnline/Feedbacks.Service.API/appsettings.Development.json
+server/BidMasterOnline/Users.Service.API/appsettings.Development.json
+server/BidMasterOnline/Bids.Service.API/appsettings.Development.json
+server/BidMasterOnline/Moderation.Service.API/appsettings.Development.json
+/server/BidMasterOnline/Users.Service.API/appsettings.Development.json
+/server/BidMasterOnline/Auctions.Service.API/appsettings.Development.json
+/server/BidMasterOnline/Feedbacks.Service.API/appsettings.Development.json
+/server/BidMasterOnline/Bids.Service.API/appsettings.Development.json
+/server/BidMasterOnline/Payments.Service.API/appsettings.Development.json
+/server/BidMasterOnline/Moderation.Service.API/appsettings.Development.json
+/server/BidMasterOnline/IdentityServer/appsettings.Development.json
+/server/BidMasterOnline/ApiGateway/appsettings.Development.json

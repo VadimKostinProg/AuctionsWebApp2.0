@@ -1,0 +1,39 @@
+<div class="container-fluid">
+  <h3>Technical support</h3>
+
+  <a [routerLink]="'/technical-support/support-tickets'">
+    View my support tickets history
+  </a>
+  <div class="mt-4">
+    <span>If you have some technical issues or other questions related to auctions organization, bids placing or user
+      status, please send the
+      support ticket to our team. Our moderators will review it as soon as possible!</span>
+    <form *ngIf="requestForm"
+          [formGroup]="requestForm"
+          class="mt-3">
+      <div class="form-field mb-2">
+        <label for="supportTicketTitle"
+               class="form-label">Title:</label>
+        <input type="text"
+               class="form-control"
+               formControlName="supportTicketTitle" />
+
+        <div *ngIf="!supportTicketTitle?.valid && (supportTicketTitle?.dirty || supportTicketTitle?.touched)">
+          <span class="text-danger">Support ticket title is required</span>
+        </div>
+
+        <label for="supportTicketText"
+               class="form-label mt-3">Text:</label>
+        <textarea class="form-control"
+                  formControlName="supportTicketText"></textarea>
+
+        <div *ngIf="!supportTicketText?.valid && (supportTicketText?.dirty || supportTicketText?.touched)">
+          <span class="text-danger">Support ticket text is required</span>
+        </div>
+      </div>
+    </form>
+
+    <button class="btn default-btn-background mt-3"
+            (click)="sendSupportTicket()">Submit</button>
+  </div>
+</div>

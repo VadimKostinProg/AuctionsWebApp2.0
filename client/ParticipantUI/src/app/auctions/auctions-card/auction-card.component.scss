@@ -1,0 +1,129 @@
+.auction-card {
+  border-radius: 12px;
+  overflow: hidden;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  cursor: pointer;
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.auction-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.card-img-wrapper {
+  position: relative;
+  width: 100%;
+  padding-bottom: 75%;
+  overflow: hidden;
+  background-color: #f0f0f0;
+}
+
+.auction-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.auction-card:hover .auction-image {
+  transform: scale(1.05);
+}
+
+.auction-status-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 4px 8px;
+  border-radius: 5px;
+  font-size: 0.75em;
+  font-weight: bold;
+  color: white;
+  text-transform: uppercase;
+  z-index: 10;
+}
+
+.badge-active { background-color: #28a745; }
+.badge-finished { background-color: #6c757d; }
+.badge-cancelled { background-color: #dc3545; }
+
+
+.card-body {
+  padding: 15px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-title {
+  font-size: 1.15rem;
+  font-weight: 600;
+  line-height: 1.3;
+  margin-bottom: 0.4rem;
+  color: #343a40;
+}
+
+.card-text {
+  font-size: 0.9rem;
+  color: #555;
+  margin-bottom: 0.4rem;
+}
+
+.current-price-label {
+  font-weight: 500;
+  color: #444;
+}
+
+.current-price {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: #28a745;
+  margin-right: 5px;
+}
+
+.start-price {
+  font-size: 0.85rem;
+  text-decoration: line-through;
+}
+
+.countdown-timer {
+  font-size: 1rem;
+  color: #dc3545;
+  font-weight: bold;
+}
+
+.auctioneer-info {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: auto;
+}
+
+.default-btn-background {
+  background-color: orange;
+  color: white;
+  border-radius: 8px;
+  font-weight: 600;
+  padding: 8px 12px;
+  font-size: 0.95rem;
+  text-decoration: none;
+  text-align: center;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    background-color: darkorange;
+    box-shadow: 0 4px 10px rgba(44, 0, 0, 0.1);
+  }
+}
+
+i {
+  width: 16px;
+  text-align: center;
+}

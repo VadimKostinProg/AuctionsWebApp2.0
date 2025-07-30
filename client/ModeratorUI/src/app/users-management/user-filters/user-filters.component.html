@@ -1,0 +1,45 @@
+<div class="card p-3 mb-3">
+  <h5 class="card-title">Filter Users</h5>
+  <div class="row g-3">
+    <div class="col-md-4">
+      <label for="userId"
+             class="form-label">User ID</label>
+      <input type="text"
+             class="form-control"
+             id="userId"
+             [(ngModel)]="userId"
+             placeholder="e.g., 12345">
+    </div>
+
+    <div class="col-md-4">
+      <label for="searchTerm"
+             class="form-label">Search Term</label>
+      <input type="text"
+             class="form-control"
+             id="searchTerm"
+             [(ngModel)]="searchTerm"
+             placeholder="e.g., John Doe or john@example.com">
+    </div>
+
+    <div class="col-md-4">
+      <label for="statusSelect"
+             class="form-label">Status</label>
+      <select class="form-select"
+              id="statusSelect"
+              [(ngModel)]="selectedStatus">
+        <option [ngValue]="null">All Statuses</option>
+        <option *ngFor="let status of statusOptions"
+                [ngValue]="status.value">
+          {{ getUserStatusText(status.value) }}
+        </option>
+      </select>
+    </div>
+  </div>
+
+  <div class="mt-3 d-flex justify-content-end">
+    <button class="btn btn-outline-secondary me-2"
+            (click)="clearFilters()">Clear Filters</button>
+    <button class="btn btn-main-orange"
+            (click)="onSearchClicked()">Search</button>
+  </div>
+</div>

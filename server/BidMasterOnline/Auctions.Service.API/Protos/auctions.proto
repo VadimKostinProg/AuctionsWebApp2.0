@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+option csharp_namespace = "AuctionsGrpc";
+
+package AuctionsGrpc;
+
+service Auctions {
+	rpc FinishAuction(FinishAuctionRequest) returns (ActionResponse) {
+
+	}
+}
+
+message FinishAuctionRequest {
+	int64 auctionId = 1;
+}
+
+message ActionResponse {
+	bool success = 1;
+}

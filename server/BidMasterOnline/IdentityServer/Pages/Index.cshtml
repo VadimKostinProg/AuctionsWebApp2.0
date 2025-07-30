@@ -1,0 +1,24 @@
+@page
+@model IdentityServerHost.Pages.Home.Index
+
+<div class="welcome-page">
+    <h1>
+        BidMasterOnline
+    </h1>
+
+    @if (!string.IsNullOrEmpty(Model.ClientURL))
+    {
+        <a class="h5 mt-3" href="@Model.ClientURL">Go to home page.</a>
+    }
+
+    @if(Model.License != null)
+    {
+        <h2>License</h2>
+        <dl>
+            <dt>Serial Number</dt>
+            <dd>@Model.License.SerialNumber</dd>
+            <dt>Expiration</dt>
+            <dd>@Model.License.Expiration!.Value.ToLongDateString()</dd>
+        </dl>
+    }
+</div>

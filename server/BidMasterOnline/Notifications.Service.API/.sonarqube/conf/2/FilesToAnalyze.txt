@@ -1,0 +1,9 @@
+﻿D:\Projects\AuctionsWebApp2.0\server\Notifications.Service.API\Program.cs
+D:\Projects\AuctionsWebApp2.0\server\Notifications.Service.API\Services\ConsumerStartupService.cs
+D:\Projects\AuctionsWebApp2.0\server\Notifications.Service.API\Services\EmailSender.cs
+D:\Projects\AuctionsWebApp2.0\server\Notifications.Service.API\obj\Debug\net8.0\Notifications.Service.API.GlobalUsings.g.cs
+D:\Projects\AuctionsWebApp2.0\server\Notifications.Service.API\obj\Debug\net8.0\.NETCoreApp,Version=v8.0.AssemblyAttributes.cs
+D:\Projects\AuctionsWebApp2.0\server\Notifications.Service.API\obj\Debug\net8.0\Notifications.Service.API.AssemblyInfo.cs
+D:\Projects\AuctionsWebApp2.0\server\Notifications.Service.API\appsettings.Development.json
+D:\Projects\AuctionsWebApp2.0\server\Notifications.Service.API\appsettings.json
+D:\Projects\AuctionsWebApp2.0\server\Notifications.Service.API\Properties\launchSettings.json

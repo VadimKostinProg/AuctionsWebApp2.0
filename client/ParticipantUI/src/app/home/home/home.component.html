@@ -1,0 +1,50 @@
+<div class="home-page-wrapper">
+  <app-auction-filters (onFilterChanged)="onFilterChanged($event)"></app-auction-filters>
+
+  <ng-container *ngIf="searchMode && searchedAuctions">
+    <section class="search-results-section mt-4">
+      <div class="container-fluid">
+        <h4 class="section-title">Search Results</h4>
+        <div class="auction-cards-grid-container">
+          <auction-card *ngFor="let auction of searchedAuctions"
+                        [auction]="auction"></auction-card>
+        </div>
+        <button *ngIf="hasNext"
+                class="btn btn-outline-dark w-100 load-more-btn"
+                (click)="fetchSearchedAuctions()">Load more...</button>
+      </div>
+    </section>
+  </ng-container>
+
+  <ng-container *ngIf="!searchMode">
+    <section class="popular-auctions-section mt-5">
+      <div class="container-fluid">
+        <h4 class="section-title">Popular Auctions</h4>
+        <div *ngIf="popularAuctions && popularAuctions.length > 0; else emptyList"
+             class="auctions-cards-scroll-container">
+          <auction-card *ngFor="let auction of popularAuctions"
+                        [auction]="auction"></auction-card>
+        </div>
+      </div>
+    </section>
+
+    <section class="finishing-auctions-section mt-5">
+      <div class="container-fluid">
+        <h4 class="section-title">Finishing Soon</h4>
+        <div *ngIf="finishingAuctions && finishingAuctions.length > 0; else emptyList"
+             class="auctions-cards-scroll-container">
+          <auction-card *ngFor="let auction of finishingAuctions"
+                        [auction]="auction"></auction-card>
+        </div>
+      </div>
+    </section>
+
+    <ng-template #emptyList>
+      <div class="empty-list-message">
+        <i class="fa-solid fa-exclamation-triangle me-2"></i>
+        <span>No data available.</span>
+      </div>
+    </ng-template>
+  </ng-container>
+
+</div>

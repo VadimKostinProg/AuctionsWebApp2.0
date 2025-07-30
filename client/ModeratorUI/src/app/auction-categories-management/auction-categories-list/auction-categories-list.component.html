@@ -1,0 +1,15 @@
+<div class="container-fluid">
+  <h3 class="mb-4">Auction categories</h3>
+
+  <search-bar [placeholder]="placeholder"
+              (onSubmit)="onSearchClicked()"></search-bar>
+
+  <div class="mt-5">
+    <data-table *ngIf="options"
+                [apiUrl]="dataTableApiUrl"
+                [options]="options"
+                (onCreate)="onCreateCategory()"
+                (onEdit)="onEditCategory()"
+                (onDelete)="onDeleteCategory($event)"></data-table>
+  </div>
+</div>

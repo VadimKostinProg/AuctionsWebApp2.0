@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+option csharp_namespace = "BidsGrpc";
+
+package BidsGrpc;
+
+service Bids {
+	rpc ClearBidsForAuction(ClearBidsRequest) returns (BidActionResponse) {
+
+	}
+}
+
+message ClearBidsRequest {
+	int64 auctionId = 1;
+}
+
+message BidActionResponse {
+	bool success = 1;
+}

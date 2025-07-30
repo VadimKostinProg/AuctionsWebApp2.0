@@ -1,0 +1,43 @@
+@using Duende.IdentityServer.Extensions
+@{
+#nullable enable
+    string? name = null;
+    bool isAdmin = false;
+    if (!true.Equals(ViewData["signed-out"]))
+    {
+        name = Context.User?.GetDisplayName();
+        isAdmin = Context.User?.IsInRole("Admin") ?? false;
+    }
+}
+
+<div class="nav-page">
+    <nav class="navbar navbar-expand-lg">
+
+        <a href="~/" class="navbar-brand">
+            BidMasterOnline
+        </a>
+
+        @if (isAdmin)
+        {
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" asp-page="/Admin/StaffList/Index">Staff Management</a>
+                </li>
+            </ul>
+        }
+
+        @if (!string.IsNullOrWhiteSpace(name))
+        {
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">@name <b class="caret"></b></a>
+
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" asp-page="/Account/Logout/Index">Logout</a>
+                    </div>
+                </li>
+            </ul>
+        }
+
+    </nav>
+</div>

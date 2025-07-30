@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BidMasterOnline.Application\BidMasterOnline.Application.csproj" />
+    <ProjectReference Include="..\BidMasterOnline.Core\BidMasterOnline.Core.csproj" />
     <ProjectReference Include="..\BidMasterOnline.Domain\BidMasterOnline.Domain.csproj" />
   </ItemGroup>
 

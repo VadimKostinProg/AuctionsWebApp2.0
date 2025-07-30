@@ -1,0 +1,48 @@
+﻿using BidMasterOnline.Core.Constants;
+using BidMasterOnline.Core.DTO;
+using Feedbacks.Service.API.DTO.Participant;
+using Feedbacks.Service.API.ServiceContracts.Participant;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+
+namespace Feedbacks.Service.API.Controllers.Areas.Participant
+{
+    [Route("api/participant/auctions")]
+    [ApiController]
+    [Authorize(Roles = UserRoles.Participant)]
+    public class CommentsController : BaseController
+    {
+        private readonly IAuctionCommentsService _service;
+
+        public CommentsController(IAuctionCommentsService participantAuctionCommentsService)
+        {
+            _service = participantAuctionCommentsService;
+        }
+
+        [HttpGet("{auctionId}/comments")]
+        public async Task<IActionResult> GetAuctionComments([FromRoute] long auctionId, 
+            [FromQuery] PaginationRequestDTO pagination)
+        {
+            ServiceResult<PaginatedList<AuctionCommentDTO>> result = 
+                await _service.GetAuctionCommentsAsync(auctionId, pagination);
+
+            return FromResult(result);
+        }
+
+        [HttpPost("comments")]
+        public async Task<IActionResult> PostAuctionComment([FromBody] PostCommentDTO commentDTO)
+        {
+            ServiceResult result = await _service.PostAuctionCommentAsync(commentDTO);
+
+            return FromResult(result);
+        }
+
+        [HttpDelete("comments/{commentId}")]
+        public async Task<IActionResult> DeleteComment([FromRoute] long commentId)
+        {
+            ServiceResult result = await _service.DeleteCommentAsync(commentId);
+
+            return FromResult(result);
+        }
+    }
+}

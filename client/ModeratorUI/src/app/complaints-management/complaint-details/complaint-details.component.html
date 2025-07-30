@@ -1,0 +1,237 @@
+<div class="margin-auto d-flex justify-content-center">
+  <div *ngIf="complaintDetails"
+       class="container-fluid complaint-details-page">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h3>
+        <i class="fas fa-exclamation-triangle text-danger me-2"></i> Complaint #{{ complaintDetails.id }}
+      </h3>
+      <button *ngIf="complaintDetails.status === ComplaintStatusEnum.Pending || complaintDetails.moderatorId === currentModeratorId"
+              type="button"
+              class="btn actions-button btn-outline-secondary"
+              placement="bottom"
+              [ngbPopover]="actionsPopContent"
+              popoverTitle="Actions">
+        <i class="fa-solid fa-ellipsis-h"></i> </button>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+      <div class="card-body">
+        <div class="row g-3">
+          <div class="col-md-6">
+            <h5 class="card-title mb-3"><i class="fas fa-info-circle me-2"></i>Complaint Info</h5>
+            <p class="card-text">
+              <i class="fas fa-user-circle me-2 text-muted"></i>
+              <b>Accusing User:</b>
+              <a [routerLink]="['/users', complaintDetails.accusingUserId]"
+                 class="text-decoration-none">
+                {{ complaintDetails.accusingUserName }}
+              </a>
+            </p>
+            <p class="card-text">
+              <i class="fas fa-user-times me-2 text-muted"></i> <b>Accused User:</b>
+              <a [routerLink]="['/users', complaintDetails.accusedUserId]"
+                 class="text-decoration-none">
+                {{ complaintDetails.accusedUsername }}
+              </a>
+            </p>
+            <p class="card-text">
+              <i class="fas fa-clock me-2 text-muted"></i>
+              <b>Submitted:</b>
+              {{ complaintDetails.createdAt | date: 'MM-dd-yyyy hh:mm' }}
+            </p>
+            <p class="card-text">
+              <i class="fas fa-tags me-2"
+                 [ngClass]="{
+                  'text-warning': complaintDetails.status === ComplaintStatusEnum.Pending,
+                  'text-primary': complaintDetails.status === ComplaintStatusEnum.Active,
+                  'text-success': complaintDetails.status === ComplaintStatusEnum.Completed
+                 }">
+              </i>
+              <b>Status:</b>
+              <span [ngStyle]="{
+                'color': complaintDetails.status === ComplaintStatusEnum.Pending ? 'var(--bs-warning)' :
+                         complaintDetails.status === ComplaintStatusEnum.Active ? 'var(--bs-primary)' :
+                         'var(--bs-success)',
+                'font-weight': 'bold'
+              }">
+                {{ complaintDetails.status === ComplaintStatusEnum.Pending ? 'Pending' :
+                complaintDetails.status === ComplaintStatusEnum.Active ? 'Active' : 'Completed' }}
+              </span>
+            </p>
+            <p class="card-text">
+              <i class="fas fa-bookmark me-2 text-muted"></i> <b>Complaint Type:</b>
+              <span> {{ getComplaintTypeText(complaintDetails.type) }}</span>
+            </p>
+            <p *ngIf="complaintDetails.moderatorId"
+               class="card-text">
+              <i class="fas fa-user-tie me-2 text-muted"></i>
+              <b>Assigned on:</b>
+              <a [routerLink]="['/users', complaintDetails.moderatorId]"
+                 class="text-decoration-none">
+                {{ complaintDetails.moderatorName }}
+              </a>
+            </p>
+          </div>
+
+          <div class="col-md-6">
+            <h5 class="card-title mb-3"><i class="fas fa-comment-dots me-2"></i>Complaint Content</h5>
+            <div class="mb-3">
+              <p class="fw-bold mb-1">Title:</p>
+              <p class="card-text border p-2 rounded bg-light">{{ complaintDetails.title }}</p>
+            </div>
+            <div>
+              <p class="fw-bold mb-1">Details:</p>
+              <p class="card-text border p-2 rounded bg-light">{{ complaintDetails.complaintText }}</p>
+            </div>
+
+            <div class="mt-4 pt-3 border-top"
+                 *ngIf="complaintDetails.accusedAuctionId || complaintDetails.accusedCommentId || complaintDetails.accusedUserFeedbackId">
+              <h5 class="card-title mb-3"><i class="fas fa-bullseye me-2"></i>Accused Item Details</h5>
+
+              <div *ngIf="complaintDetails.accusedAuctionId">
+                <p class="card-text mb-1">
+                  <i class="fas fa-gavel me-2 text-info"></i><b>Auction:</b>
+                  <a [routerLink]="['/auctions', complaintDetails.accusedAuctionId]"
+                     class="text-decoration-none">
+                    {{ complaintDetails.accusedAuctionName || 'N/A' }} (#{{complaintDetails.accusedAuctionId}})
+                  </a>
+                </p>
+              </div>
+
+              <div *ngIf="complaintDetails.accusedCommentId && complaintDetails.accusedComment">
+                <p class="card-text mb-1">
+                  <i class="fas fa-comment me-2 text-info"></i><b>Auction Comment:</b>
+                  <a [routerLink]="['/auctions', complaintDetails.accusedComment.auctionId]"
+                     class="text-decoration-none">
+                    Comment by {{ complaintDetails.accusedComment.username }} on Auction {{
+                    complaintDetails.accusedComment.auctionId }}
+                  </a>
+                </p>
+                <div class="p-2 border rounded bg-light mt-1 ms-4">
+                  <p class="mb-0 small text-muted">Score: <app-score [readonly]="true"
+                               [selectedScore]="complaintDetails.accusedComment.score"></app-score></p>
+                  <p class="mb-0 small text-muted">Text: {{ complaintDetails.accusedComment.commentText }}</p>
+                </div>
+              </div>
+
+              <div *ngIf="complaintDetails.accusedUserFeedbackId && complaintDetails.accusedUserFeedback">
+                <p class="card-text mb-1">
+                  <i class="fas fa-star me-2 text-info"></i><b>User Feedback:</b>
+                  <a [routerLink]="['/users', complaintDetails.accusedUserFeedback.toUserId]"
+                     class="text-decoration-none">
+                    Feedback from {{ complaintDetails.accusedUserFeedback.fromUsername }} to {{
+                    complaintDetails.accusedUserFeedback.toUsername }}
+                  </a>
+                </p>
+                <div class="p-2 border rounded bg-light mt-1 ms-4">
+                  <p class="mb-0 small text-muted">Score: <app-score [readonly]="true"
+                               [selectedScore]="complaintDetails.accusedUserFeedback.score"></app-score></p>
+                  <p class="mb-0 small text-muted">Comment: {{ complaintDetails.accusedUserFeedback.comment }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="complaintDetails.status === ComplaintStatusEnum.Completed && complaintDetails.moderatorConclusion"
+             class="mt-4 pt-3 border-top">
+          <h5 class="card-title mb-3"><i class="fas fa-clipboard-check me-2"></i>Moderator's Conclusion</h5>
+          <p class="card-text p-3 bg-light rounded shadow-sm">{{ complaintDetails.moderatorConclusion }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #actionsPopContent>
+  <div *ngIf="complaintDetails"
+       class="list-group list-group-flush">
+    <button *ngIf="complaintDetails.status === ComplaintStatusEnum.Pending || complaintDetails.moderatorId === currentModeratorId"
+            class="list-group-item list-group-item-action d-flex align-items-center"
+            (click)="open(assignComplaintModal)">
+      <i class="fa-solid fa-user-plus me-2"></i>Assign to
+    </button>
+    <button *ngIf="complaintDetails.status === ComplaintStatusEnum.Active && complaintDetails.moderatorId === currentModeratorId"
+            class="list-group-item list-group-item-action d-flex align-items-center"
+            (click)="open(completeComplaintModal)">
+      <i class="fa-solid fa-circle-check me-2"></i>Complete
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #assignComplaintModal
+             let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title"
+        id="modal-basic-title">
+      <i class="fas fa-user-tag me-2"></i>Assign Complaint
+    </h4>
+    <button type="button"
+            class="btn-close"
+            aria-label="Close"
+            (click)="modal.close()"></button>
+  </div>
+  <div class="modal-body">
+    <div class="mb-3">
+      <label for="moderatorTypeahead"
+             class="form-label fw-bold">Assign to:</label>
+      <input id="moderatorTypeahead"
+             type="text"
+             class="form-control"
+             [(ngModel)]="assignedModerator"
+             [ngbTypeahead]="searchModerators"
+             [resultFormatter]="formatter"
+             [inputFormatter]="formatter"
+             placeholder="Search for a moderator by name or username"
+             [editable]="false"
+             [disabled]="moderators === undefined || moderators.length === 0">
+      <div *ngIf="!moderators || moderators.length === 0"
+           class="text-muted mt-2">
+        No moderators available or still loading...
+      </div>
+    </div>
+    <div class="d-flex justify-content-end mt-2">
+      <button type="button"
+              class="btn btn-main-orange me-2"
+              (click)="assignToMyselfClicked()"
+              [disabled]="currentModeratorId === undefined || !moderators">
+        <i class="fas fa-user-plus me-2"></i>Assign to myself
+      </button>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button"
+            class="btn btn-outline-dark"
+            (click)="assignComplaint(modal)">Submit</button>
+  </div>
+</ng-template>
+
+<ng-template #completeComplaintModal
+             let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title"
+        id="modal-basic-title">
+      <i class="fas fa-check-double me-2"></i>Complete Complaint
+    </h4>
+    <button type="button"
+            class="btn-close"
+            aria-label="Close"
+            (click)="modal.close()"></button>
+  </div>
+  <div class="modal-body">
+    <div class="mb-3">
+      <label for="moderatorConclusion"
+             class="form-label fw-bold">Moderator Conclusion:</label>
+      <textarea class="form-control"
+                id="moderatorConclusion"
+                [(ngModel)]="moderatorConclusion"
+                rows="5"
+                placeholder="Enter the moderator's conclusion for this complaint..."></textarea>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button"
+            class="btn btn-outline-dark"
+            (click)="completeComplaint(modal)">Submit</button>
+  </div>
+</ng-template>

@@ -1,0 +1,206 @@
+<search-bar [placeholder]="'Search auctions...'"
+            (onSubmit)="onSearchPressed($event)"></search-bar>
+
+<ng-container *ngIf="allResourcesInitialized">
+  <div class="d-flex flex-wrap justify-content-between align-items-center mt-3 filter-container">
+
+    <div class="filter-group d-flex flex-grow-1 justify-content-around">
+      <button type="button"
+              class="btn filter-button me-2"
+              [ngClass]="{'active-filter': specifications.categoryId}"
+              placement="bottom"
+              [ngbPopover]="categoryPopContent"
+              container="body">
+        <i class="fa-solid fa-tag me-1"></i>
+        Category
+      </button>
+
+      <button type="button"
+              class="btn filter-button me-2"
+              [ngClass]="{'active-filter': specifications.typeId}"
+              placement="bottom"
+              [ngbPopover]="typePopContent"
+              container="body">
+        <i class="fa-solid fa-boxes-stacked me-1"></i>
+        Type
+      </button>
+
+      <button type="button"
+              class="btn filter-button me-2"
+              [ngClass]="{'active-filter': specifications.minStartPrice || specifications.maxStartPrice}"
+              placement="bottom"
+              [ngbPopover]="startPricePopContent"
+              [autoClose]="'outside'"
+              container="body">
+        <i class="fa-solid fa-dollar-sign me-1"></i>
+        Start price
+      </button>
+
+      <button type="button"
+              class="btn filter-button me-2"
+              [ngClass]="{'active-filter': specifications.minCurrentPrice || specifications.maxCurrentPrice}"
+              placement="bottom"
+              [ngbPopover]="currentPricePopContent"
+              [autoClose]="'outside'"
+              container="body">
+        <i class="fa-solid fa-sack-dollar me-1"></i>
+        Current price
+      </button>
+
+      <button type="button"
+              class="btn filter-button"
+              [ngClass]="{'active-filter': specifications.auctionStatus}"
+              placement="bottom"
+              [ngbPopover]="statusPopContent"
+              container="body">
+        <i class="fa-solid fa-circle-info me-1"></i>
+        Status
+      </button>
+    </div>
+
+    <div class="ms-3">
+      <button type="button"
+              class="btn btn-outline-secondary"
+              (click)="resetAllFilters()">
+        <i class="fa-solid fa-arrows-rotate me-1"></i> Reset All
+      </button>
+    </div>
+  </div>
+</ng-container>
+
+<ng-template #categoryPopContent>
+  <div class="popover-content">
+    <h6 class="popover-header">Filter by Category</h6>
+    <div class="list-group list-group-flush">
+      <label class="list-group-item list-group-item-action py-2 d-flex align-items-center"
+             *ngFor="let category of categories">
+        <input class="form-check-input me-2"
+               type="radio"
+               name="categoryRadio"
+               [value]="category.id"
+               [checked]="category.id == specifications.categoryId"
+               (change)="onCategoryChanged($event)">
+        <span>{{ category.name }}</span>
+      </label>
+      <label class="list-group-item list-group-item-action py-2 d-flex align-items-center">
+        <input class="form-check-input me-2"
+               type="radio"
+               name="categoryRadio"
+               [value]="'all'"
+               [checked]="specifications.categoryId == null"
+               (change)="onCategoryChanged($event)">
+        <span>All Categories</span>
+      </label>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #typePopContent>
+  <div class="popover-content">
+    <h6 class="popover-header">Filter by Type</h6>
+    <div class="list-group list-group-flush">
+      <label class="list-group-item list-group-item-action py-2 d-flex align-items-center"
+             *ngFor="let type of types">
+        <input class="form-check-input me-2"
+               type="radio"
+               name="typeRadio"
+               [value]="type.id"
+               [checked]="type.id == specifications.typeId"
+               (change)="onTypeChanged($event)">
+        <span>{{ type.name }}</span>
+      </label>
+      <label class="list-group-item list-group-item-action py-2 d-flex align-items-center">
+        <input class="form-check-input me-2"
+               type="radio"
+               name="typeRadio"
+               [value]="'all'"
+               [checked]="specifications.typeId == null"
+               (change)="onTypeChanged($event)">
+        <span>All Types</span>
+      </label>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #startPricePopContent>
+  <div class="popover-content">
+    <h6 class="popover-header">Filter by Start Price</h6>
+
+    <div class="slider-container mb-3">
+      <ngx-slider [(value)]="minStartPrice"
+                  [(highValue)]="maxStartPrice"
+                  [options]="startPriceOptions"></ngx-slider>
+    </div>
+
+    <div class="d-flex justify-content-between">
+      <button class="btn btn-primary btn-sm"
+              (click)="onStartPriceFilterChange()">
+        <i class="fa-solid fa-check me-1"></i> Apply
+      </button>
+      <button *ngIf="startPriceChanged"
+              class="btn btn-outline-secondary btn-sm"
+              (click)="resetStartPrice()">
+        <i class="fa-solid fa-xmark me-1"></i> Reset
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #currentPricePopContent>
+  <div class="popover-content">
+    <h6 class="popover-header">Filter by Current Price</h6>
+
+    <div class="slider-container mb-3">
+      <ngx-slider [(value)]="minCurrentPrice"
+                  [(highValue)]="maxCurrentPrice"
+                  [options]="currentPriceOptions"></ngx-slider>
+    </div>
+
+    <div class="d-flex justify-content-between">
+      <button class="btn btn-primary btn-sm"
+              (click)="onCurrentPriceFilterChange()">
+        <i class="fa-solid fa-check me-1"></i> Apply
+      </button>
+      <button *ngIf="currentPriceChanged"
+              class="btn btn-outline-secondary btn-sm"
+              (click)="resetCurrentPrice()">
+        <i class="fa-solid fa-xmark me-1"></i> Reset
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #statusPopContent>
+  <div class="popover-content">
+    <h6 class="popover-header">Filter by Status</h6>
+    <div class="list-group list-group-flush">
+      <label class="list-group-item list-group-item-action py-2 d-flex align-items-center">
+        <input class="form-check-input me-2"
+               type="radio"
+               name="statusRadio"
+               [value]="AuctionStatusEnum.Active"
+               [checked]="specifications.auctionStatus === AuctionStatusEnum.Active"
+               (change)="onStatusChanged($event)" />
+        <span>Active</span>
+      </label>
+      <label class="list-group-item list-group-item-action py-2 d-flex align-items-center">
+        <input class="form-check-input me-2"
+               type="radio"
+               name="statusRadio"
+               [value]="AuctionStatusEnum.Finished"
+               [checked]="specifications.auctionStatus === AuctionStatusEnum.Finished"
+               (change)="onStatusChanged($event)" />
+        <span>Finished</span>
+      </label>
+      <label class="list-group-item list-group-item-action py-2 d-flex align-items-center">
+        <input class="form-check-input me-2"
+               type="radio"
+               name="statusRadio"
+               [value]="'all'"
+               [checked]="specifications.auctionStatus == null"
+               (change)="onStatusChanged($event)" />
+        <span>All Statuses</span>
+      </label>
+    </div>
+  </div>
+</ng-template>

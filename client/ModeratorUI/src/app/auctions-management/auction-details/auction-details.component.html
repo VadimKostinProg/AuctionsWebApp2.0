@@ -1,0 +1,296 @@
+<div *ngIf="auctionDetails"
+     class="container auction-details-page py-4">
+  <div class="row g-4">
+    <div class="col-md-5">
+      <div id="auctionImagesCarousel"
+           class="carousel slide carousel-fade border rounded shadow-sm"
+           data-bs-ride="carousel">
+        <div class="carousel-inner rounded">
+          <div *ngFor="let imageUrl of auctionDetails.imageUrls; let i = index"
+               [class.carousel-item]="true"
+               [class.active]="i === 0">
+            <img [src]="imageUrl"
+                 alt="Auction Image {{i + 1}}"
+                 class="d-block w-100 carousel-image">
+          </div>
+        </div>
+        <div *ngIf="auctionDetails.imageUrls!.length > 1">
+          <div class="carousel-indicators">
+            <button *ngFor="let imageUrl of auctionDetails.imageUrls; let i = index"
+                    type="button"
+                    [attr.data-bs-target]="'#auctionImagesCarousel'"
+                    [attr.data-bs-slide-to]="i"
+                    [class.active]="i === 0"
+                    [attr.aria-current]="i === 0 ? 'true' : null"
+                    [attr.aria-label]="'Slide ' + (i + 1)">
+            </button>
+          </div>
+
+          <button class="carousel-control-prev"
+                  type="button"
+                  data-bs-target="#auctionImagesCarousel"
+                  data-bs-slide="prev">
+            <span class="carousel-control-prev-icon"
+                  aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+          </button>
+          <button class="carousel-control-next"
+                  type="button"
+                  data-bs-target="#auctionImagesCarousel"
+                  data-bs-slide="next">
+            <span class="carousel-control-next-icon"
+                  aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+          </button>
+        </div>
+        <div *ngIf="!auctionDetails.imageUrls || auctionDetails.imageUrls.length === 0"
+             class="carousel-item active placeholder-image rounded">
+          <img src="assets/no-image-available.png"
+               alt="No image available"
+               class="d-block w-100">
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-7">
+      <div class="d-flex justify-content-between align-items-start mb-3">
+        <h2 class="mb-0">{{ auctionDetails.lotTitle }}</h2>
+        <button *ngIf="auctionDetails.status === AuctionStatusEnum.Active ||
+                         auctionDetails.status === AuctionStatusEnum.Pending ||
+                         auctionDetails.status === AuctionStatusEnum.CancelledByModerator"
+                type="button"
+                class="btn actions-button btn-outline-secondary"
+                placement="bottom"
+                [ngbPopover]="auctionActionsPopContent"
+                popoverTitle="Actions">
+          <i class="fa-solid fa-ellipsis-h"></i>
+        </button>
+      </div>
+
+      <div class="card shadow-sm mb-4">
+        <div class="card-body">
+          <h5 class="card-title mb-3"><i class="fas fa-info-circle me-2"></i>Auction Details</h5>
+          <div class="row g-2">
+            <div class="col-sm-6">
+              <p class="mb-2">
+                <i class="fas fa-star me-2 text-warning"></i>
+                <b>Score:</b>
+                <span *ngIf="auctionDetails.averageScore">{{ auctionDetails.averageScore }}</span>
+                <span *ngIf="!auctionDetails.averageScore">N/A</span>
+              </p>
+              <p class="mb-2">
+                <i class="fas fa-tag me-2 text-primary"></i>
+                <b>Category:</b> {{ auctionDetails.category }}
+              </p>
+              <p class="mb-2">
+                <i class="fas fa-user-tag me-2 text-muted"></i>
+                <b>Auctioneer:</b>
+                <a [routerLink]="['/users', auctionDetails.auctioneer!.userId]"
+                   class="text-decoration-none">
+                  {{ auctionDetails.auctioneer!.username }}
+                </a>
+              </p>
+              <p class="mb-2">
+                <i class="fas fa-gavel me-2 text-info"></i>
+                <b>Auction type:</b> {{ auctionDetails.type }}
+              </p>
+            </div>
+            <div class="col-sm-6">
+              <p class="mb-2">
+                <i class="fas fa-clock me-2 text-secondary"></i>
+                <b>Start time:</b> {{ auctionDetails.startTime | date: 'MM-dd-yyyy HH:mm' }}
+              </p>
+              <p class="mb-2">
+                <i class="fas fa-hourglass-end me-2 text-secondary"></i>
+                <b>Finish time:</b> {{ auctionDetails.finishTime | date: 'MM-dd-yyyy HH:mm' }}
+              </p>
+              <p class="mb-2">
+                <i class="fas fa-check-circle me-2 text-secondary"></i>
+                <b>Finish method:</b> {{ auctionDetails.finishMethod }}
+              </p>
+              <p *ngIf="auctionDetails.status === AuctionStatusEnum.Finished"
+                 class="mb-2">
+                <i class="fas fa-credit-card me-2"
+                   [ngClass]="{'text-success': auctionDetails.isPaymentPerformed, 'text-danger': !auctionDetails.isPaymentPerformed}"></i>
+                <b>Payment: </b>
+                <span *ngIf="auctionDetails.isPaymentPerformed"
+                      class="text-success">Performed</span>
+                <span *ngIf="!auctionDetails.isPaymentPerformed"
+                      class="text-danger">Pending</span>
+                <span *ngIf="auctionDetails.paymentPerformedTime"
+                      class="text-muted ms-1">
+                  ({{ auctionDetails.paymentPerformedTime | date: 'MM-dd-yyyy HH:mm' }})
+                </span>
+              </p>
+              <p *ngIf="auctionDetails.status === AuctionStatusEnum.Finished"
+                 class="mb-2">
+                <i class="fas fa-truck me-2"
+                   [ngClass]="{'text-success': auctionDetails.isDeliveryPerformed, 'text-danger': !auctionDetails.isDeliveryPerformed}"></i>
+                <b>Delivery: </b>
+                <span *ngIf="auctionDetails.isDeliveryPerformed"
+                      class="text-success">Shipped</span>
+                <span *ngIf="!auctionDetails.isDeliveryPerformed"
+                      class="text-danger">Pending</span>
+                <span *ngIf="auctionDetails.deliveryPerformedTime"
+                      class="text-muted ms-1">
+                  ({{ auctionDetails.deliveryPerformedTime | date: 'MM-dd-yyyy HH:mm' }})
+                </span>
+              </p>
+              <p *ngIf="auctionDetails.deliveryWaybill"
+                 class="mb-2">
+                <i class="fas fa-clipboard-list me-2 text-info"></i>
+                <b>Waybill: </b> {{ auctionDetails.deliveryWaybill }}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card shadow-sm mb-4">
+        <div class="card-body d-flex justify-content-between align-items-center">
+          <div>
+            <h5 class="card-title mb-2"><i class="fas fa-money-bill-wave me-2"></i>Pricing</h5>
+            <div
+                 *ngIf="auctionDetails.status !== AuctionStatusEnum.CancelledByAuctioneer && auctionDetails.status !== AuctionStatusEnum.CancelledByModerator">
+              <p class="h4 text-success mb-0">
+                <b>Current Bid:</b> {{ auctionDetails.currentPrice }}$
+                <small class="text-muted">(Start: {{ auctionDetails.startPrice }}$)</small>
+              </p>
+            </div>
+            <p *ngIf="auctionDetails.status === AuctionStatusEnum.Finished && auctionDetails.winner"
+               class="mb-0 mt-2">
+              <i class="fas fa-trophy me-2 text-warning"></i>
+              <b>Winner:</b>
+              <a [routerLink]="['/users', auctionDetails.winner.userId]"
+                 class="text-decoration-none">
+                {{ auctionDetails.winner!.username }}
+              </a>
+            </p>
+          </div>
+
+          <div>
+            <h5 class="card-title mb-2"><i class="fas fa-info-circle me-2"></i>Status</h5>
+            <span class="h4 fw-bold"
+                  [ngClass]="{
+                    'text-warning': auctionDetails.status === AuctionStatusEnum.Pending,
+                    'text-success': auctionDetails.status === AuctionStatusEnum.Active || auctionDetails.status === AuctionStatusEnum.Finished,
+                    'text-danger': auctionDetails.status === AuctionStatusEnum.CancelledByAuctioneer || auctionDetails.status === AuctionStatusEnum.CancelledByModerator
+                  }">
+              {{ auctionStatus }} </span>
+            <p *ngIf="(auctionDetails.status === AuctionStatusEnum.CancelledByAuctioneer || auctionDetails.status === AuctionStatusEnum.CancelledByModerator) && auctionDetails.cancellationReason"
+               class="text-danger small mt-2">
+              <i class="fas fa-times-circle me-1"></i>
+              Reason: {{ auctionDetails.cancellationReason }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card shadow-sm mt-4 mb-4">
+    <div class="card-body">
+      <h4 class="card-title mb-3"><i class="fas fa-align-left me-2"></i>Lot Description</h4>
+      <p class="card-text">{{ auctionDetails.lotDescription }}</p>
+    </div>
+  </div>
+
+  <div *ngIf="showBidsList"
+       class="mt-4">
+    <h4 class="mb-3"><i class="fas fa-dollar-sign me-2"></i>Bids History</h4>
+    <data-table #bidsDataTable
+                *ngIf="bidsDataTableOptions"
+                [apiUrl]="bidsDataTableApiUrl"
+                [options]="bidsDataTableOptions">
+    </data-table>
+  </div>
+
+  <div *ngIf="auctionDetails.status !== AuctionStatusEnum.CancelledByAuctioneer && auctionDetails.status !== AuctionStatusEnum.CancelledByModerator"
+       class="mt-4">
+    <app-auction-comments [auction]="auctionDetails"></app-auction-comments>
+  </div>
+</div>
+
+<ng-template #auctionActionsPopContent>
+  <div *ngIf="auctionDetails"
+       class="list-group list-group-flush">
+    <button *ngIf="auctionDetails.status === AuctionStatusEnum.Active || auctionDetails.status === AuctionStatusEnum.Pending"
+            class="list-group-item list-group-item-action d-flex align-items-center"
+            (click)="open(cancelAuctionModal)">
+      <i class="fa-solid fa-xmark me-2"></i>Cancel Auction
+    </button>
+    <button *ngIf="auctionDetails.status === AuctionStatusEnum.CancelledByModerator"
+            class="list-group-item list-group-item-action d-flex align-items-center"
+            (click)="open(recoverAuctionModal)">
+      <i class="fa-solid fa-arrow-rotate-left"></i>Recover Auction
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #cancelAuctionModal
+             let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title"
+        id="modal-basic-title">
+      Cancel auction
+    </h4>
+    <button type="button"
+            class="btn-close"
+            aria-label="Close"
+            (click)="modal.close()"></button>
+  </div>
+  <div class="modal-body">
+    <form *ngIf="cancelationForm"
+          [formGroup]="cancelationForm">
+      <input type="text"
+             id="auctionId"
+             class="form-control"
+             formControlName="auctionId"
+             hidden />
+
+      <div class="form-field flex mb-2">
+        <div>
+          <label for="cancelationReason"
+                 class="form-label pt">Cancelation reason:</label>
+        </div>
+
+        <div class="flex-1">
+          <textarea type="text"
+                    id="cancelationReason"
+                    class="form-control"
+                    formControlName="cancelationReason"></textarea>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button"
+            class="btn btn-outline-dark"
+            (click)="cancelAuction(modal)">Submit</button>
+  </div>
+</ng-template>
+
+<ng-template #recoverAuctionModal
+             let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title"
+        id="modal-basic-title">
+      Recover auction
+    </h4>
+    <button type="button"
+            class="btn-close"
+            aria-label="Close"
+            (click)="modal.close()"></button>
+  </div>
+  <div class="modal-body">
+    Are you sure you want to recover this auction?
+  </div>
+  <div class="modal-footer">
+    <button type="button"
+            class="btn btn-outline-dark"
+            (click)="modal.close()">No</button>
+    <button type="button"
+            class="btn btn-outline-dark"
+            (click)="recoverAuction(modal)">Yes</button>
+  </div>
+</ng-template>

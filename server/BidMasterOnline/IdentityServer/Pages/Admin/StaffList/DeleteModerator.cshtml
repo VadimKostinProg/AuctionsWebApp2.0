@@ -1,0 +1,44 @@
+﻿@page
+@model IdentityServer.Pages.Admin.DeleteModeratorModel
+@{
+}
+@{
+    ViewData["Title"] = "Delete Moderator";
+}
+
+<h2>Delete Moderator</h2>
+
+<form method="post">
+    <div class="form-group">
+        <label for="id">Id:</label>
+        <input for="id" value="@Model.Moderator!.Id" class="form-control" readonly />
+    </div>
+
+    <div class="form-group">
+        <label for="username">Username:</label>
+        <input for="username" value="@Model.Moderator.Username" class="form-control" readonly />
+    </div>
+
+    <div class="form-group">
+        <label for="email">Email:</label>
+        <input for="email" value="@Model.Moderator.Email" class="form-control" readonly />
+    </div>
+
+    <div class="form-group">
+        <label for="fullName">Full name:</label>
+        <input for="fullName" value="@Model.Moderator.FullName" class="form-control" readonly />
+    </div>
+
+    <div class="form-group">
+        <label for="dateOfBirth">Date of birth:</label>
+        <input for="dateOfBirth" type="date" value="@Model.Moderator.DateOfBirth" class="form-control" readonly />
+    </div>
+
+    <div class="form-group">
+        <label for="createdAt">Joined on:</label>
+        <input for="createdAt" type="date" value="@Model.Moderator.DateOfBirth" class="form-control" readonly />
+    </div>
+
+    <button type="submit" class="btn btn-danger">Delete</button>
+    <a asp-page="./Index" class="btn btn-secondary">Cancel</a>
+</form>

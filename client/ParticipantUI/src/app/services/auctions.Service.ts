@@ -1,0 +1,169 @@
+import { Injectable } from "@angular/core";
+import { Observable } from "rxjs";
+import { AuctionBasic } from "../models/auctions/AuctionBasic";
+import { HttpClient, HttpParams } from "@angular/common/http";
+import { environment } from "../../environments/environment";
+import { PaginatedList } from "../models/shared/paginatedList";
+import { ServiceMessage, ServiceResult } from "../models/shared/serviceResult";
+import { Auction } from "../models/auctions/Auction";
+import { CancelAuction } from "../models/auctions/CancelAuction";
+import { DataTableOptionsModel } from "../models/shared/dataTableOptionsModel";
+import { UserAuction } from "../models/auctions/userAuction";
+import { AuctionSpecifications } from "../models/auctions/auctionSpecifications";
+import { DatePipe } from "@angular/common";
+
+@Injectable({
+  providedIn: 'root'
+})
+export class AuctionsService {
+
+  baseUrl: string = `${environment.apiUrl}${environment.apiPrefix}/auctions`;
+
+  constructor(private readonly httpClient: HttpClient,
+    private readonly datePipe: DatePipe) { }
+
+  getPopularAuctions(): Observable<ServiceResult<PaginatedList<AuctionBasic>>> {
+    const params = new HttpParams()
+      .set('sortBy', 'popularity')
+      .set('status', 'active')
+      .set('pageNumber', 1)
+      .set('pageSize', 15);
+
+    return this.httpClient.get<ServiceResult<PaginatedList<AuctionBasic>>>(this.baseUrl, { params });
+  }
+
+  getFinishingAuctions(): Observable<ServiceResult<PaginatedList<AuctionBasic>>> {
+    const params = new HttpParams()
+      .set('sortBy', 'finishTime')
+      .set('status', 'active')
+      .set('pageNumber', 1)
+      .set('pageSize', 15);
+
+    return this.httpClient.get<ServiceResult<PaginatedList<AuctionBasic>>>(this.baseUrl, { params });
+  }
+
+  getNotDeliveredAuctionsForBuyer(): Observable<ServiceResult<Auction[]>> {
+    return this.httpClient.get<ServiceResult<Auction[]>>(`${this.baseUrl}/not-delivered`);
+  }
+
+  getNotPayedAuctionsForSeller(): Observable<ServiceResult<Auction[]>> {
+    return this.httpClient.get<ServiceResult<Auction[]>>(`${this.baseUrl}/not-payed`);
+  }
+
+  getUserAuctions(pageNumber: number, pageSize: number): Observable<ServiceResult<PaginatedList<UserAuction>>> {
+    const params = new HttpParams()
+      .set('pageNumber', pageNumber)
+      .set('pageSize', pageSize);
+
+    return this.httpClient.get<ServiceResult<PaginatedList<UserAuction>>>(`${this.baseUrl}/own`, { params });
+  }
+
+  searchAuctions(specs: AuctionSpecifications, pageNumber: number, pageSize: number)
+    : Observable<ServiceResult<PaginatedList<AuctionBasic>>> {
+    let params = new HttpParams()
+      .set('pageNumber', pageNumber)
+      .set('pageSize', pageSize);
+
+    if (specs.searchTerm)
+      params = params.set('searchTerm', specs.searchTerm);
+
+    if (specs.categoryId)
+      params = params.set('categoryId', specs.categoryId);
+
+    if (specs.typeId)
+      params = params.set('typeId', specs.typeId);
+
+    if (specs.minStartPrice && specs.maxStartPrice)
+      params = params.set('minStartPrice', specs.minStartPrice)
+        .set('maxStartPrice', specs.maxStartPrice);
+
+    if (specs.minCurrentPrice && specs.maxCurrentPrice)
+      params = params.set('minCurrentPrice', specs.minCurrentPrice)
+        .set('maxCurrentPrice', specs.maxCurrentPrice);
+
+    if (specs.auctionStatus)
+      params = params.set('auctionStatus', specs.auctionStatus);
+
+    if (specs.sortBy)
+      params = params.set('sortBy', specs.sortBy);
+
+    if (specs.sortDirection)
+      params = params.set('sortDirection', specs.sortDirection);
+
+    return this.httpClient.get<ServiceResult<PaginatedList<AuctionBasic>>>(this.baseUrl, { params });
+  }
+
+  getAuctionDetailsById(auctionId: number): Observable<ServiceResult<Auction>> {
+    return this.httpClient.get<ServiceResult<Auction>>(`${this.baseUrl}/${auctionId}`);
+  }
+
+  cancelAuction(request: CancelAuction): Observable<ServiceMessage> {
+    return this.httpClient.put<ServiceMessage>(`${this.baseUrl}/cancel`, request);
+  }
+
+  setDeliveryWaybill(auctionId: number, waybill: string): Observable<ServiceMessage> {
+    const body = {
+      auctionid: auctionId,
+      waybill: waybill
+    }
+
+    return this.httpClient.post<ServiceMessage>(`${this.baseUrl}/deliveries`, body);
+  }
+
+  getAuctionsHistoryDataTableApiUrl() {
+    return `${this.baseUrl}/own`;
+  }
+
+  getAuctionsHistoryDataTableOptions() {
+    return {
+      id: 'auctions',
+      title: 'Auctions History',
+      resourceName: 'auction',
+      showIndexColumn: false,
+      allowCreating: false,
+      createFormOptions: null,
+      allowEdit: false,
+      editFormOptions: null,
+      allowDelete: false,
+      optionalAction: null,
+      emptyListDisplayLabel: 'You have not had any auction. Submit an auction request to start one!',
+      columnSettings: [
+        {
+          title: 'Id',
+          dataPropName: 'id',
+          isOrderable: false,
+          isLink: true,
+          pageLink: '/auctions/$routeParam$/details',
+          linkRouteParamName: 'id',
+          transformAction: (value) => `#${value}`
+        },
+        {
+          title: 'Name',
+          dataPropName: 'lotTitle',
+          isOrderable: false
+        },
+        {
+          title: 'Category',
+          dataPropName: 'category',
+          isOrderable: false
+        },
+        {
+          title: 'Start time',
+          dataPropName: 'startTime',
+          isOrderable: false,
+          transformAction: (value) => this.datePipe.transform(value, 'MM-dd-yyyy HH:mm')
+        },
+        {
+          title: 'Current/Completed price',
+          dataPropName: 'currentPrice',
+          isOrderable: false
+        },
+        {
+          title: 'Score',
+          dataPropName: 'averageScore',
+          isOrderable: false
+        },
+      ]
+    } as DataTableOptionsModel;
+  }
+}

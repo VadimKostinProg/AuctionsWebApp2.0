@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<UserSecretsId>75675c37-156b-43b1-b995-2865a4a98c92</UserSecretsId>
+		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+		<DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <PackageReference Include="Duende.IdentityServer" Version="7.2.2" />
+	  <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="8.0.1" />
+	  <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.6" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\BidMasterOnline.Core\BidMasterOnline.Core.csproj" />
+	  <ProjectReference Include="..\BidMasterOnline.Domain\BidMasterOnline.Domain.csproj" />
+	  <ProjectReference Include="..\BidMasterOnline.Infrastructure\BidMasterOnline.Infrastructure.csproj" />
+	</ItemGroup>
+
+</Project>

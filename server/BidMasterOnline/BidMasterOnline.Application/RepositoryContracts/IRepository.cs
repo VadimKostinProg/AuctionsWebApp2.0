@@ -1,5 +1,5 @@
 ﻿using BidMasterOnline.Application.Specifications;
-using BidMasterOnline.Domain.Entities;
+using BidMasterOnline.Domain.Models.Entities;
 using System.Linq.Expressions;
 
 namespace BidMasterOnline.Application.RepositoryContracts
@@ -56,10 +56,10 @@ namespace BidMasterOnline.Application.RepositoryContracts
         /// Method for searching the entity of the specific type from the data source by its id.
         /// </summary>
         /// <typeparam name="T">Type of entity to search.</typeparam>
-        /// <param name="id">Guid of the entity.</param>
+        /// <param name="id">long of the entity.</param>
         /// <param name="disableTracking">Flag for enabling a tracking.</param>
         /// <returns>Found entity of the specific type, null - if entity with passed id was not found.</returns>
-        Task<T?> GetByIdAsync<T>(Guid id, bool disableTracking = false) where T : EntityBase;
+        Task<T?> GetByIdAsync<T>(long id, bool disableTracking = false) where T : EntityBase;
 
         /// <summary>
         /// Method for searching the entity of the specific type from the data source by specific criteria.
@@ -112,8 +112,8 @@ namespace BidMasterOnline.Application.RepositoryContracts
         /// Method for deleting existent entity form the data source by its identifier.
         /// </summary>
         /// <typeparam name="T">Type of entity to delete.</typeparam>
-        /// <param name="id">Guid of entity to delete.</param>
-        Task DeleteAsync<T>(Guid id) where T : EntityBase;
+        /// <param name="id">long of entity to delete.</param>
+        Task DeleteAsync<T>(long id) where T : EntityBase;
 
         /// <summary>
         /// Method for deleting the collection of the entities.

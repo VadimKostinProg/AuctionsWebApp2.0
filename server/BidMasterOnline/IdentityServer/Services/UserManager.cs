@@ -1,0 +1,191 @@
+﻿using BidMasterOnline.Core.Constants;
+using BidMasterOnline.Core.DTO;
+using BidMasterOnline.Core.Enums;
+using BidMasterOnline.Core.Extensions;
+using BidMasterOnline.Core.Helpers;
+using BidMasterOnline.Core.RepositoryContracts;
+using BidMasterOnline.Core.Specifications;
+using BidMasterOnline.Domain.Enums;
+using BidMasterOnline.Domain.Models;
+using BidMasterOnline.Domain.Models.Entities;
+using IdentityServer.Models;
+using IdentityServer.Services.Contracts;
+using Microsoft.Extensions.Caching.Memory;
+
+namespace IdentityServer.Services
+{
+    public class UserManager : IUserManager
+    {
+        private readonly IRepository _repository;
+        private readonly IMemoryCache _memoryCache;
+
+        public UserManager(IRepository repository, IMemoryCache memoryCache)
+        {
+            _repository = repository;
+            _memoryCache = memoryCache;
+        }
+
+        public string GenerateEmailConfirmationCodeForUser(long userId)
+        {
+            string code = Guid.NewGuid().ToString().Substring(0, 8).ToUpper();
+
+            string key = $"user_{userId}_confirmation_code";
+
+            MemoryCacheEntryOptions cacheEntryOptions = new MemoryCacheEntryOptions()
+                .SetAbsoluteExpiration(TimeSpan.FromMinutes(5));
+
+            _memoryCache.Set(key, code, cacheEntryOptions);
+
+            return code;
+        }
+
+        public async Task<bool> ConfirmEmailAsync(long userId, string code)
+        {
+            string key = $"user_{userId}_confirmation_code";
+
+            string? actualCode;
+
+            if (!_memoryCache.TryGetValue(key, out actualCode))
+            {
+                return false;
+            }
+
+            if (code != actualCode)
+            {
+                return false;
+            }
+
+            User user = await _repository.GetByIdAsync<User>(userId);
+            user.IsEmailConfirmed = true;
+
+            _repository.Update(user);
+            await _repository.SaveChangesAsync();
+
+            return true;
+        }
+
+        public async Task<PaginatedList<User>> GetStaffListAsync(StaffListSpecifications specifications)
+        {
+            SpecificationBuilder<User> specificationBuilder = new();
+
+            long moderatorRoleId = await GetRoleIdByName(UserRoles.Moderator);
+
+            specificationBuilder.With(e => e.RoleId == moderatorRoleId);
+
+            if (!specifications.IncludeDeleted)
+                specificationBuilder.With(e => e.Status == UserStatus.Active);
+
+            if (!string.IsNullOrEmpty(specifications.Search))
+                specificationBuilder.With(e => e.Username.Contains(specifications.Search) ||
+                                               e.FullName.Contains(specifications.Search) ||
+                                               e.Email.Contains(specifications.Search));
+
+            if (!string.IsNullOrEmpty(specifications.SortColumn) && !string.IsNullOrEmpty(specifications.SortDirection))
+                specificationBuilder.OrderBy(
+                        sortBy: specifications.SortColumn switch
+                        {
+                            "Username" => e => e.Username,
+                            "FullName" => e => e.FullName,
+                            "Email" => e => e.Email,
+                            "DateOfBirth" => e => e.DateOfBirth,
+                            "CreatedAt" => e => e.CreatedAt,
+                            _ => e => e.Deleted
+                        },
+                        sortOrder: specifications.SortDirection switch
+                        {
+                            "asc" => SortDirection.ASC,
+                            _ => SortDirection.DESC,
+                        }
+                    );
+
+            specificationBuilder.WithPagination(specifications.PageSize, specifications.PageNumber);
+
+            ListModel<User> usersList = await _repository.GetFilteredAndPaginated(specificationBuilder.Build());
+
+            return usersList.ToPaginatedList();
+        }
+
+        public async Task<User> CreateUserAsync(CreateUserModel userModel, string role)
+        {
+            string passwordSalt = CryptographyHelper.GenerateSalt(size: 128);
+            string passwordHashed = CryptographyHelper.Hash(userModel.Password, passwordSalt);
+
+            long roleId = await GetRoleIdByName(role);
+
+            User user = new()
+            {
+                Username = userModel.Username,
+                FullName = userModel.FullName,
+                Email = userModel.Email,
+                DateOfBirth = userModel.DateOfBirth,
+                PasswordHashed = passwordHashed,
+                PasswordSalt = passwordSalt,
+                ForceChangePassword = role == UserRoles.Moderator,
+                IsEmailConfirmed = role == UserRoles.Moderator,
+                RoleId = roleId
+            };
+
+            await _repository.AddAsync(user);
+            await _repository.SaveChangesAsync();
+
+            return user;
+        }
+
+        public Task<bool> ExistsWithUsernameAsync(string username)
+            => _repository.AnyAsync<User>(e => e.Username == username);
+
+        public Task<bool> ExistsWithEmailAsync(string email)
+            => _repository.AnyAsync<User>(e => e.Email == email && !e.Deleted);
+
+        public Task<User> GetByIdAsync(long id)
+            => _repository.GetByIdAsync<User>(id);
+
+        public async Task DeleteUserAsync(long id)
+        {
+            User user = await _repository.GetByIdAsync<User>(id);
+
+            user.Status = UserStatus.Deleted;
+
+            _repository.Update(user);
+            await _repository.SaveChangesAsync();
+        }
+
+        public async Task<ServiceResult<User>> ChangePasswordAsync(long userId, string newPassword, bool forceChange = false)
+        {
+            ServiceResult<User> result = new();
+
+            User user = await _repository.GetByIdAsync<User>(userId);
+
+            if (forceChange && CheckIfPasswordIsTheSame(user, newPassword))
+            {
+                result.IsSuccessfull = false;
+                result.StatusCode = System.Net.HttpStatusCode.BadRequest;
+                result.Errors.Add("Password must not be the same as previous.");
+            }
+
+            string passwordSalt = CryptographyHelper.GenerateSalt(size: 128);
+            string passwordHashed = CryptographyHelper.Hash(newPassword, passwordSalt);
+
+            user.PasswordSalt = passwordSalt;
+            user.PasswordHashed = passwordHashed;
+
+            if (forceChange)
+            {
+                user.ForceChangePassword = false;
+            }
+
+            _repository.Update(user);
+            await _repository.SaveChangesAsync();
+
+            result.Data = user;
+
+            return result;
+        }
+
+        private bool CheckIfPasswordIsTheSame(User user, string newPassword)
+            => user.PasswordHashed == CryptographyHelper.Hash(newPassword, user.PasswordSalt);
+
+        private async Task<long> GetRoleIdByName(string role)
+            => (await _repository.GetFirstOrDefaultAsync<Role>(e => e.Name == role))!.Id;
+    }
+}

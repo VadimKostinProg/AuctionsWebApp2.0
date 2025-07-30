@@ -1,0 +1,11 @@
+<div class="container-fluid">
+  <h3>Support tickets</h3>
+
+  <div class="mt-3">
+    <app-support-ticket-filters (onFiltersChanged)="onFiltersChanged()"></app-support-ticket-filters>
+  </div>
+
+  <data-table *ngIf="dataTableApiUrl && dataTableOptions"
+              [apiUrl]="dataTableApiUrl"
+              [options]="dataTableOptions"></data-table>
+</div>

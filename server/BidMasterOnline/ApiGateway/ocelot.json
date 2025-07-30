@@ -1,0 +1,932 @@
+{
+  "GlobalConfiguration": {
+    "BaseUrl": "https://localhost:7097"
+  },
+  "Routes": [
+    // Participant routes
+
+    // Auctions.Service.API
+    {
+      "DownstreamPathTemplate": "/api/participant/auctions?{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7157
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "GET" ],
+      "UpstreamPathTemplate": "/api/participant/auctions?{everything}"
+    },
+    {
+      "DownstreamPathTemplate": "/api/participant/auctions/own?{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7157
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "GET" ],
+      "UpstreamPathTemplate": "/api/participant/auctions/own?{everything}"
+    },
+    {
+      "DownstreamPathTemplate": "/api/participant/auctions/not-delivered",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7157
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "GET" ],
+      "UpstreamPathTemplate": "/api/participant/auctions/not-delivered"
+    },
+    {
+      "DownstreamPathTemplate": "/api/participant/auctions/not-payed",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7157
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "GET" ],
+      "UpstreamPathTemplate": "/api/participant/auctions/not-payed"
+    },
+    {
+      "DownstreamPathTemplate": "/api/participant/auctions/{id}/",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7157
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "GET" ],
+      "UpstreamPathTemplate": "/api/participant/auctions/{id}/"
+    },
+    {
+      "DownstreamPathTemplate": "/api/participant/auctions/cancel",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7157
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "PUT" ],
+      "UpstreamPathTemplate": "/api/participant/auctions/cancel"
+    },
+    {
+      "DownstreamPathTemplate": "/api/participant/auctions/deliveries",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7157
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "POST" ],
+      "UpstreamPathTemplate": "/api/participant/auctions/deliveries"
+    },
+    {
+      "DownstreamPathTemplate": "/api/participant/auction-requests/own?{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7157
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "GET" ],
+      "UpstreamPathTemplate": "/api/participant/auction-requests/own?{everything}"
+    },
+    {
+      "DownstreamPathTemplate": "/api/participant/auction-requests",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7157
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "POST" ],
+      "UpstreamPathTemplate": "/api/participant/auction-requests"
+    },
+    {
+      "DownstreamPathTemplate": "/api/participant/auction-requests/{id}/",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7157
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "GET" ],
+      "UpstreamPathTemplate": "/api/participant/auction-requests/{id}/"
+    },
+    {
+      "DownstreamPathTemplate": "/api/participant/auction-requests/{id}/cancel",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7157
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "PUT" ],
+      "UpstreamPathTemplate": "/api/participant/auction-requests/{id}/cancel"
+    },
+    {
+      "DownstreamPathTemplate": "/api/participant/auction-categories",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7157
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "GET" ],
+      "UpstreamPathTemplate": "/api/participant/auction-categories"
+    },
+    {
+      "DownstreamPathTemplate": "/api/participant/auction-types",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7157
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "GET" ],
+      "UpstreamPathTemplate": "/api/participant/auction-types"
+    },
+    {
+      "DownstreamPathTemplate": "/api/participant/auction-finish-methods",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7157
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "GET" ],
+      "UpstreamPathTemplate": "/api/participant/auction-finish-methods"
+    },
+
+    // Bids.Service.API
+    {
+      "DownstreamPathTemplate": "/api/participant/auctions/bids/own?{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7024
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "GET" ],
+      "UpstreamPathTemplate": "/api/participant/auctions/bids/own?{everything}"
+    },
+    {
+      "DownstreamPathTemplate": "/api/participant/auctions/{auctionId}/bids?{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7024
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "GET" ],
+      "UpstreamPathTemplate": "/api/participant/auctions/{auctionId}/bids?{everything}"
+    },
+    {
+      "DownstreamPathTemplate": "/api/participant/auctions/bids",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7024
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "POST" ],
+      "UpstreamPathTemplate": "/api/participant/auctions/bids"
+    },
+
+    // Feedbacks.Service.API
+    {
+      "DownstreamPathTemplate": "/api/participant/auctions/{auctionId}/comments?{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7291
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "GET" ],
+      "UpstreamPathTemplate": "/api/participant/auctions/{auctionId}/comments?{everything}"
+    },
+    {
+      "DownstreamPathTemplate": "/api/participant/auctions/comments",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7291
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "POST" ],
+      "UpstreamPathTemplate": "/api/participant/auctions/comments"
+    },
+    {
+      "DownstreamPathTemplate": "/api/participant/auctions/comments/{commentId}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7291
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "DELETE" ],
+      "UpstreamPathTemplate": "/api/participant/auctions/comments/{commentId}"
+    },
+    {
+      "DownstreamPathTemplate": "/api/participant/complaints?{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7291
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "GET", "POST" ],
+      "UpstreamPathTemplate": "/api/participant/complaints?{everything}"
+    },
+    {
+      "DownstreamPathTemplate": "/api/participant/complaints/{complaintId}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7291
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "GET" ],
+      "UpstreamPathTemplate": "/api/participant/complaints/{complaintId}"
+    },
+    {
+      "DownstreamPathTemplate": "/api/participant/support-tickets?{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7291
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "GET", "POST" ],
+      "UpstreamPathTemplate": "/api/participant/support-tickets?{everything}"
+    },
+    {
+      "DownstreamPathTemplate": "/api/participant/support-tickets/{ticketId}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7291
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "GET" ],
+      "UpstreamPathTemplate": "/api/participant/support-tickets/{ticketId}"
+    },
+    {
+      "DownstreamPathTemplate": "/api/participant/users/{userId}/feedbacks?{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7291
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "GET" ],
+      "UpstreamPathTemplate": "/api/participant/users/{userId}/feedbacks?{everything}"
+    },
+    {
+      "DownstreamPathTemplate": "/api/participant/users/feedbacks",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7291
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "POST" ],
+      "UpstreamPathTemplate": "/api/participant/users/feedbacks"
+    },
+    {
+      "DownstreamPathTemplate": "/api/participant/users/feedbacks/{feedbackId}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7291
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "DELETE" ],
+      "UpstreamPathTemplate": "/api/participant/users/feedbacks/{feedbackId}"
+    },
+
+    // Users.Service.API
+
+    {
+      "DownstreamPathTemplate": "/api/participant/users/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7220
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "GET" ],
+      "UpstreamPathTemplate": "/api/participant/users/{id}"
+    },
+    {
+      "DownstreamPathTemplate": "/api/participant/users/password",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7220
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "PUT" ],
+      "UpstreamPathTemplate": "/api/participant/users/password"
+    },
+    {
+      "DownstreamPathTemplate": "/api/participant/users",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7220
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "DELETE" ],
+      "UpstreamPathTemplate": "/api/participant/users"
+    },
+    {
+      "DownstreamPathTemplate": "/api/participant/payment-method-attachment-status",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7220
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "GET" ],
+      "UpstreamPathTemplate": "/api/participant/payment-method-attachment-status"
+    },
+
+    // Payments.Service.API
+    {
+      "DownstreamPathTemplate": "/api/participant/payments/setup-intent",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7016
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "POST" ],
+      "UpstreamPathTemplate": "/api/participant/payments/setup-intent"
+    },
+    {
+      "DownstreamPathTemplate": "/api/participant/payments/setup-intent-confirm",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7016
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "POST" ],
+      "UpstreamPathTemplate": "/api/participant/payments/setup-intent-confirm"
+    },
+    {
+      "DownstreamPathTemplate": "/api/participant/payments/charge-auction-win",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7016
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "POST" ],
+      "UpstreamPathTemplate": "/api/participant/payments/charge-auction-win"
+    },
+
+    // Moderator routes
+
+    // Auctions.Service.API
+    {
+      "DownstreamPathTemplate": "/api/moderator/auctions?{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7157
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "GET" ],
+      "UpstreamPathTemplate": "/api/moderator/auctions?{everything}"
+    },
+    {
+      "DownstreamPathTemplate": "/api/moderator/users/{id}/auctions?{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7157
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "GET" ],
+      "UpstreamPathTemplate": "/api/moderator/users/{id}/auctions?{everything}"
+    },
+    {
+      "DownstreamPathTemplate": "/api/moderator/auctions/{id}/",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7157
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "GET" ],
+      "UpstreamPathTemplate": "/api/moderator/auctions/{id}/"
+    },
+    {
+      "DownstreamPathTemplate": "/api/moderator/auctions/cancel",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7157
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "PUT" ],
+      "UpstreamPathTemplate": "/api/moderator/auctions/cancel"
+    },
+    {
+      "DownstreamPathTemplate": "/api/moderator/auctions/recover",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7157
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "PUT" ],
+      "UpstreamPathTemplate": "/api/moderator/auctions/recover"
+    },
+    {
+      "DownstreamPathTemplate": "/api/moderator/auction-requests?{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7157
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "GET" ],
+      "UpstreamPathTemplate": "/api/moderator/auction-requests?{everything}"
+    },
+    {
+      "DownstreamPathTemplate": "/api/moderator/auction-requests/{id}/",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7157
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "GET" ],
+      "UpstreamPathTemplate": "/api/moderator/auction-requests/{id}/"
+    },
+    {
+      "DownstreamPathTemplate": "/api/moderator/auction-requests/approve",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7157
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "PUT" ],
+      "UpstreamPathTemplate": "/api/moderator/auction-requests/approve"
+    },
+    {
+      "DownstreamPathTemplate": "/api/moderator/auction-requests/decline",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7157
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "PUT" ],
+      "UpstreamPathTemplate": "/api/moderator/auction-requests/decline"
+    },
+    {
+      "DownstreamPathTemplate": "/api/moderator/auction-categories?{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7157
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "GET" ],
+      "UpstreamPathTemplate": "/api/moderator/auction-categories?{everything}"
+    },
+    {
+      "DownstreamPathTemplate": "/api/moderator/auction-categories/all",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7157
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "GET" ],
+      "UpstreamPathTemplate": "/api/moderator/auction-categories/all"
+    },
+    {
+      "DownstreamPathTemplate": "/api/moderator/auction-categories",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7157
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "POST" ],
+      "UpstreamPathTemplate": "/api/moderator/auction-categories"
+    },
+    {
+      "DownstreamPathTemplate": "/api/moderator/auction-categories/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7157
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "PUT", "DELETE" ],
+      "UpstreamPathTemplate": "/api/moderator/auction-categories/{id}"
+    },
+    {
+      "DownstreamPathTemplate": "/api/moderator/auction-types?{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7157
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "GET" ],
+      "UpstreamPathTemplate": "/api/moderator/auction-types?{everything}"
+    },
+    {
+      "DownstreamPathTemplate": "/api/moderator/auction-types/all",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7157
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "GET" ],
+      "UpstreamPathTemplate": "/api/moderator/auction-types/all"
+    },
+    {
+      "DownstreamPathTemplate": "/api/moderator/auction-types",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7157
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "POST" ],
+      "UpstreamPathTemplate": "/api/moderator/auction-types"
+    },
+    {
+      "DownstreamPathTemplate": "/api/moderator/auction-types/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7157
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "PUT" ],
+      "UpstreamPathTemplate": "/api/moderator/auction-types/{id}"
+    },
+    {
+      "DownstreamPathTemplate": "/api/moderator/auction-finish-methods?{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7157
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "GET" ],
+      "UpstreamPathTemplate": "/api/moderator/auction-finish-methods?{everything}"
+    },
+    {
+      "DownstreamPathTemplate": "/api/moderator/auction-finish-methods",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7157
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "POST" ],
+      "UpstreamPathTemplate": "/api/moderator/auction-finish-methods"
+    },
+    {
+      "DownstreamPathTemplate": "/api/moderator/auction-finish-methods/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7157
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "PUT" ],
+      "UpstreamPathTemplate": "/api/moderator/auction-finish-methods/{id}"
+    },
+
+    // Bids.Service.API
+    {
+      "DownstreamPathTemplate": "/api/moderator/users/{userId}/bids?{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7024
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "GET" ],
+      "UpstreamPathTemplate": "/api/moderator/users/{userId}/bids?{everything}"
+    },
+    {
+      "DownstreamPathTemplate": "/api/moderator/auctions/{auctionId}/bids?{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7024
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "GET" ],
+      "UpstreamPathTemplate": "/api/moderator/auctions/{auctionId}/bids?{everything}"
+    },
+
+    // Feedbacks.Service.API
+    {
+      "DownstreamPathTemplate": "/api/moderator/auctions/{auctionId}/comments?{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7291
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "GET" ],
+      "UpstreamPathTemplate": "/api/moderator/auctions/{auctionId}/comments?{everything}"
+    },
+    {
+      "DownstreamPathTemplate": "/api/moderator/auctions/comments/{commentId}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7291
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "DELETE" ],
+      "UpstreamPathTemplate": "/api/moderator/auctions/comments/{commentId}"
+    },
+    {
+      "DownstreamPathTemplate": "/api/moderator/complaints?{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7291
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "GET" ],
+      "UpstreamPathTemplate": "/api/moderator/complaints?{everything}"
+    },
+    {
+      "DownstreamPathTemplate": "/api/moderator/complaints/{complaintId}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7291
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "GET" ],
+      "UpstreamPathTemplate": "/api/moderator/complaints/{complaintId}"
+    },
+    {
+      "DownstreamPathTemplate": "/api/moderator/complaints/assign",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7291
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "PUT" ],
+      "UpstreamPathTemplate": "/api/moderator/complaints/assign"
+    },
+    {
+      "DownstreamPathTemplate": "/api/moderator/complaints/complete",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7291
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "PUT" ],
+      "UpstreamPathTemplate": "/api/moderator/complaints/complete"
+    },
+    {
+      "DownstreamPathTemplate": "/api/moderator/support-tickets?{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7291
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "GET" ],
+      "UpstreamPathTemplate": "/api/moderator/support-tickets?{everything}"
+    },
+    {
+      "DownstreamPathTemplate": "/api/moderator/support-tickets/{ticketId}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7291
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "GET" ],
+      "UpstreamPathTemplate": "/api/moderator/support-tickets/{ticketId}"
+    },
+    {
+      "DownstreamPathTemplate": "/api/moderator/support-tickets/assign",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7291
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "PUT" ],
+      "UpstreamPathTemplate": "/api/moderator/support-tickets/assign"
+    },
+    {
+      "DownstreamPathTemplate": "/api/moderator/support-tickets/complete",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7291
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "PUT" ],
+      "UpstreamPathTemplate": "/api/moderator/support-tickets/complete"
+    },
+    {
+      "DownstreamPathTemplate": "/api/moderator/users/{userId}/feedbacks?{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7291
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "GET" ],
+      "UpstreamPathTemplate": "/api/moderator/users/{userId}/feedbacks?{everything}"
+    },
+    {
+      "DownstreamPathTemplate": "/api/moderator/users/feedbacks/{feedbackId}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7291
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "DELETE" ],
+      "UpstreamPathTemplate": "/api/moderator/users/feedbacks/{feedbackId}"
+    },
+
+    // Users.Service.API
+    {
+      "DownstreamPathTemplate": "/api/moderator/moderators",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7220
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "GET" ],
+      "UpstreamPathTemplate": "/api/moderator/moderators"
+    },
+    {
+      "DownstreamPathTemplate": "/api/moderator/users?{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7220
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "GET" ],
+      "UpstreamPathTemplate": "/api/moderator/users?{everything}"
+    },
+    {
+      "DownstreamPathTemplate": "/api/moderator/users/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7220
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "GET" ],
+      "UpstreamPathTemplate": "/api/moderator/users/{id}"
+    },
+    {
+      "DownstreamPathTemplate": "/api/moderator/users/{id}/block",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7220
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "PUT" ],
+      "UpstreamPathTemplate": "/api/moderator/users/{id}/block"
+    },
+    {
+      "DownstreamPathTemplate": "/api/moderator/users/{id}/unblock",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7220
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "PUT" ],
+      "UpstreamPathTemplate": "/api/moderator/users/{id}/unblock"
+    },
+
+    // Moderation.Service.API
+
+    {
+      "DownstreamPathTemplate": "/api/moderator/suspicious-activity-reports?{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7232
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "GET" ],
+      "UpstreamPathTemplate": "/api/moderator/suspicious-activity-reports?{everything}"
+    },
+    {
+      "DownstreamPathTemplate": "/api/moderator/suspicious-activity-reports/auction-analyses/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7232
+        }
+      ],
+      "UpstreamHttpMethod": [ "OPTIONS", "PUT" ],
+      "UpstreamPathTemplate": "/api/moderator/suspicious-activity-reports/auction-analyses/{id}"
+    }
+  ]
+}

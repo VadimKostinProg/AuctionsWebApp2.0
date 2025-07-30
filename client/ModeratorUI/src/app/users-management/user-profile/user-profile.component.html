@@ -1,0 +1,220 @@
+<ng-container *ngIf="userProfileInfo">
+  <div class="container user-profile-page py-4">
+    <div class="card shadow-sm mb-4">
+      <div class="card-body p-4">
+        <div class="row align-items-center">
+
+          <div class="col-md-3 text-center mb-3 mb-md-0">
+            <img *ngIf="userProfileInfo.imageUrl; else defaultImage"
+                 [src]="userProfileInfo.imageUrl"
+                 alt="User Profile"
+                 class="profile-image rounded-circle border border-3 border-light shadow-sm">
+
+            <ng-template #defaultImage>
+              <img src="assets/default-user-image.png"
+                   alt="Default User"
+                   class="profile-image rounded-circle border border-3 border-light shadow-sm">
+            </ng-template>
+          </div>
+
+          <div class="col-md-9">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h2 class="mb-0">
+                {{ userProfileInfo.username }}
+              </h2>
+              <button *ngIf="userProfileInfo.role === 'Participant'"
+                      type="button"
+                      class="btn actions-button btn-outline-secondary"
+                      placement="bottom"
+                      [ngbPopover]="profileActionsPopContent"
+                      popoverTitle="Actions">
+                <i class="fa-solid fa-ellipsis-h"></i>
+              </button>
+            </div>
+
+            <div *ngIf="userProfileInfo.averageScore && userProfileInfo.role === 'Participant'"
+                 class="row mb-2">
+              <h5>
+                <i class="fas fa-star me-2 text-warning"></i>
+                Average Score: <span class="fw-bold">{{ userProfileInfo.averageScore | number:'1.1-1' }}</span>
+              </h5>
+            </div>
+            <div class="row g-3">
+              <div class="col-md-6 d-flex flex-column gap-2">
+                <p class="mb-0">
+                  <i class="fas fa-address-card me-2 text-muted"></i>
+                  <b>Full name:</b> {{ userProfileInfo.fullName }}
+                </p>
+                <p class="mb-0">
+                  <i class="fas fa-envelope me-2 text-muted"></i>
+                  <b>Email:</b> {{ userProfileInfo.email }}
+                </p>
+                <p class="mb-0">
+                  <i class="fas fa-calendar-alt me-2 text-muted"></i>
+                  <b>Date of birth:</b> {{ userProfileInfo.dateOfBirth | date: 'MM-dd-yyyy' }}
+                </p>
+                <p class="mb-0">
+                  <i class="fas fa-toggle-on me-2"
+                     [ngClass]="{
+                       'text-success': userProfileInfo.status === UserStatusEnum.Active,
+                       'text-danger': userProfileInfo.status === UserStatusEnum.Blocked,
+                       'text-muted': userProfileInfo.status === UserStatusEnum.Deleted
+                     }">
+                  </i>
+                  <b>Status:</b>
+                  <span [ngStyle]="{
+                    'color': userProfileInfo.status == UserStatusEnum.Active ? 'green' :
+                             userProfileInfo.status == UserStatusEnum.Blocked ? 'red' : 'gray',
+                    'font-weight': 'bold'
+                  }">
+                    {{ userProfileInfo.status == UserStatusEnum.Active ? 'Active' :
+                    userProfileInfo.status == UserStatusEnum.Blocked ? 'Blocked' : 'Deleted' }}
+                  </span>
+                </p>
+                <p *ngIf="userProfileInfo.status === UserStatusEnum.Blocked && userProfileInfo.blockingReason"
+                   class="mb-0">
+                  <i class="fas fa-exclamation-triangle me-2 text-danger"></i>
+                  <b>Reason blocked:</b> {{ userProfileInfo.blockingReason }}
+                </p>
+                <p *ngIf="userProfileInfo.status === UserStatusEnum.Blocked && userProfileInfo.unblockDateTime"
+                   class="mb-0">
+                  <i class="fas fa-calendar-alt me-2 text-danger"></i>
+                  <b>Unblocking time:</b> {{ userProfileInfo.unblockDateTime | date: 'MM-dd-yyyy HH:mm' }}
+                </p>
+              </div>
+
+              <div *ngIf="userProfileInfo.role === 'Participant'"
+                   class="col-md-6 d-flex flex-column gap-2">
+                <p class="mb-0">
+                  <i class="fas fa-gavel me-2 text-muted"></i>
+                  <b>Total auctions:</b> {{ userProfileInfo.totalAuctions }}
+                </p>
+                <p class="mb-0">
+                  <i class="fas fa-check-double me-2 text-muted"></i>
+                  <b>Completed auctions:</b> {{ userProfileInfo.completedAuctions }}
+                </p>
+                <p class="mb-0">
+                  <i class="fas fa-trophy me-2 text-muted"></i>
+                  <b>Total wins:</b> {{ userProfileInfo.totalWins }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="showUserFeedbacks"
+         class="mt-4">
+      <app-user-feedbacks [userId]="userId!"></app-user-feedbacks>
+    </div>
+  </div>
+</ng-container>
+
+<ng-template #profileActionsPopContent>
+  <div class="list-group list-group-flush">
+    <button *ngIf="userProfileInfo?.status === UserStatusEnum.Active"
+            class="list-group-item list-group-item-action d-flex align-items-center"
+            (click)="open(blockAccountModal)">
+      <i class="fa-solid fa-user-slash me-2"></i>Block account
+    </button>
+    <button *ngIf="userProfileInfo?.status === UserStatusEnum.Blocked"
+            class="list-group-item list-group-item-action d-flex align-items-center"
+            (click)="open(unblockAccountModal)">
+      <i class="fa-solid fa-user-check me-2"></i>Unblock account
+    </button>
+    <a class="list-group-item list-group-item-action d-flex align-items-center"
+       [routerLink]="['/users', userId, 'auctions-history']">
+      <i class="fa-solid fa-gavel me-2"></i>Auctions history
+    </a>
+    <a class="list-group-item list-group-item-action d-flex align-items-center"
+       [routerLink]="['/users', userId, 'bids-history']">
+      <i class="fa-solid fa-money-bill-transfer me-2"></i>Bids history
+    </a>
+  </div>
+</ng-template>
+
+<ng-template #blockAccountModal
+             let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title"
+        id="modal-basic-title">
+      Block user account
+    </h4>
+    <button type="button"
+            class="btn-close"
+            aria-label="Close"
+            (click)="modal.close()"></button>
+  </div>
+  <div class="modal-body">
+    <form *ngIf="blockUserForm"
+          [formGroup]="blockUserForm">
+      <div class="form-field flex mb-2">
+        <div>
+          <label for="blockingReason"
+                 class="form-label pt">Reason:</label>
+        </div>
+
+        <div class="flex-1">
+          <textarea id="blockingReason"
+                    class="form-control"
+                    formControlName="blockingReason"></textarea>
+        </div>
+      </div>
+
+      <div class="form-field flex align-items-center mt-3 mb-2">
+        <div>
+          <input type="checkbox"
+                 id="setBlockingPeriod"
+                 class="form-field"
+                 formControlName="setBlockingPeriod"
+                 (change)="onSetBlockingPeriodFlagChange()" />
+          <label for="setBlockingPeriod"
+                 class="form-label ms-2">Set blocking period</label>
+        </div>
+      </div>
+
+      <div *ngIf="showBlockingPeriodField"
+           class="form-field flex mb-2">
+        <div>
+          <label for="blockingPeriodInDays"
+                 class="form-label pt">Blocking period (days):</label>
+        </div>
+
+        <div class="flex-1">
+          <input type="number"
+                 [min]="1"
+                 [max]="30"
+                 id="blockingPeriodInDays"
+                 class="form-control"
+                 formControlName="blockingPeriodInDays" />
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button"
+            class="btn default-btn-background"
+            (click)="blockUserAccount(modal)">Submit</button>
+  </div>
+</ng-template>
+
+<ng-template #unblockAccountModal
+             let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title"
+        id="modal-basic-title">Unblock account</h4>
+    <button type="button"
+            class="btn-close"
+            aria-label="Close"
+            (click)="modal.close()"></button>
+  </div>
+  <div class="modal-body">
+    <span>Are you shure you want to unblock account of this user?</span>
+  </div>
+  <div class="modal-footer">
+    <button type="button"
+            class="btn btn-outline-dark"
+            (click)="unblockUserAccount(modal)">Unblock</button>
+  </div>
+</ng-template>

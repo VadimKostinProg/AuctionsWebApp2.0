@@ -1,0 +1,150 @@
+<div class="margin-auto">
+  <div class="container-fluid"
+       *ngIf="auctionRequestDetails">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h2>Auction request #{{ auctionRequestDetails.id }}</h2>
+
+      <button *ngIf="auctionRequestDetails.status === AuctionRequestStatusEnum.Pending"
+              type="button"
+              class="btn btn-secondary actions-button"
+              placement="bottom-end"
+              [ngbPopover]="auctionRequestActionsPopContent"
+              popoverTitle="Actions">
+        <i class="fa-solid fa-ellipsis-vertical"></i> </button>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-5 col-md-6 mb-4">
+        <div id="carouselExample"
+             class="carousel slide"
+             data-bs-ride="carousel">
+          <div class="carousel-inner">
+            <div *ngFor="let imageUrl of auctionRequestDetails.imageUrls; let i = index"
+                 class="carousel-item"
+                 [class.active]="i === 0"> <img [src]="imageUrl"
+                   class="d-block w-100 rounded shadow-sm"
+                   alt="Auction Image"> </div>
+          </div>
+          <div *ngIf="auctionRequestDetails.imageUrls! && auctionRequestDetails.imageUrls.length > 1">
+            <button class="carousel-control-prev"
+                    type="button"
+                    data-bs-target="#carouselExample"
+                    data-bs-slide="prev">
+              <span class="carousel-control-prev-icon"
+                    aria-hidden="true"></span>
+              <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next"
+                    type="button"
+                    data-bs-target="#carouselExample"
+                    data-bs-slide="next">
+              <span class="carousel-control-next-icon"
+                    aria-hidden="true"></span>
+              <span class="visually-hidden">Next</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-7 col-md-6">
+        <div class="card shadow-sm h-100">
+          <div class="card-body">
+            <h5 class="card-title mb-3">Auction Request Details</h5>
+            <dl class="row mb-0">
+              <dt class="col-sm-5 mb-2">Lot title:</dt>
+              <dd class="col-sm-7 mb-2">{{ auctionRequestDetails.lotTitle }}</dd>
+
+              <dt class="col-sm-5 mb-2">Auction category:</dt>
+              <dd class="col-sm-7 mb-2">{{ auctionRequestDetails.category }}</dd>
+
+              <dt class="col-sm-5 mb-2">Auction type:</dt>
+              <dd class="col-sm-7 mb-2">{{ auctionRequestDetails.type }}</dd>
+
+              <dt class="col-sm-5 mb-2">Finish method:</dt>
+              <dd class="col-sm-7 mb-2">{{ auctionRequestDetails.finishMethod }}</dd>
+
+              <ng-container *ngIf="auctionRequestDetails.requestedFinishInterval">
+                <dt class="col-sm-5 mb-2">Finish time interval:</dt>
+                <dd class="col-sm-7 mb-2">{{ auctionRequestDetails.requestedFinishInterval }}</dd>
+              </ng-container>
+
+              <dt class="col-sm-5 mb-2">Lot description:</dt>
+              <dd class="col-sm-7 mb-2">{{ auctionRequestDetails.lotDescription }}</dd>
+
+              <dt class="col-sm-5 mb-2">Requested auction time:</dt>
+              <dd class="col-sm-7 mb-2">{{ auctionRequestDetails.requestedAuctionTime }}</dd>
+
+              <dt class="col-sm-5 mb-2">Start price:</dt>
+              <dd class="col-sm-7 mb-2"><b>${{ auctionRequestDetails.startPrice }}</b></dd>
+
+              <dt class="col-sm-5 mb-2">Bid step:</dt>
+              <dd class="col-sm-7 mb-2"><b>${{ auctionRequestDetails.bidAmountInterval }}</b></dd>
+
+              <ng-container *ngIf="auctionRequestDetails.requestedStartTime">
+                <dt class="col-sm-5 mb-2">Start time:</dt>
+                <dd class="col-sm-7 mb-2">{{auctionRequestDetails.requestedStartTime}}</dd>
+              </ng-container>
+
+              <ng-container *ngIf="auctionRequestDetails.aimPrice">
+                <dt class="col-sm-5 mb-2">Aim price:</dt>
+                <dd class="col-sm-7 mb-2">${{auctionRequestDetails.aimPrice}}</dd>
+              </ng-container>
+
+              <dt class="col-sm-5 mb-2">Status:</dt>
+              <dd class="col-sm-7 mb-2">
+                <span class="badge"
+                      [ngClass]="{
+                  'bg-warning text-dark': auctionRequestDetails.status === AuctionRequestStatusEnum.Pending,
+                  'bg-danger': auctionRequestDetails.status === AuctionRequestStatusEnum.Approved,
+                  'bg-success': auctionRequestDetails.status === AuctionRequestStatusEnum.Declined
+                }">
+                  {{ getAuctionRequestStatusText(auctionRequestDetails.status) }}
+                </span>
+              </dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="auctionRequestDetails.reasonDeclined"
+         class="card text-danger mt-4 shadow-sm">
+      <div class="card-body">
+        <h5 class="card-title"><i class="fa-solid fa-triangle-exclamation me-2"></i>Reason Declined:</h5>
+        <p class="card-text">{{ auctionRequestDetails.reasonDeclined }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #auctionRequestActionsPopContent>
+  <div class="list-group list-group-flush">
+    <button class="list-group-item list-group-item-action d-flex align-items-center"
+            (click)="open(cancelAuctionRequestModal)">
+      <i class="fa-solid fa-xmark me-2"></i> Cancel Request
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #cancelAuctionRequestModal
+             let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title"
+        id="modal-basic-title">Cancel Auction Request</h4>
+    <button type="button"
+            class="btn-close"
+            aria-label="Close"
+            (click)="modal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body">
+    Are you sure you want to cancel this auction request?
+  </div>
+  <div class="modal-footer">
+    <button type="button"
+            class="btn btn-secondary"
+            (click)="modal.dismiss('Cancel click')">No</button>
+    <button type="button"
+            class="btn btn-danger"
+            (click)="cancelAuctionRequest(modal)">Yes, Cancel</button>
+  </div>
+</ng-template>
